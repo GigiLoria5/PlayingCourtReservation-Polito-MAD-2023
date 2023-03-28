@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Playing Court Reservation</string>
+    <!-- Activities Title -->
+    <string name="activity_show_profile_title">Profile</string>
+    <string name="edit_show_profile_title">Edit Profile</string>
+    <!-- Activity Show Profile -->
+    <string name="default_username">NoobSmasher</string>
+    <string name="default_position">Attacker</string>
+    <integer name="default_rating">0</integer>
+    <string name="default_fullname">Giacinto Milanesi</string>
+    <integer name="default_age">21</integer>
+    <string name="default_gender">M</string>
+    <string name="default_location">Turin</string>
+    <integer name="default_organized">0</integer>
+    <integer name="default_played">0</integer>
+    <string name="default_wdl">0/0/0</string>
+    <integer name="default_goals">0</integer>
+    <integer name="default_assists">0</integer>
+    <integer name="default_mvp">0</integer>
+    <string name="avatar_description">User profile avatar</string>
+    <string name="rating_description">User skill level</string>
 </resources>
