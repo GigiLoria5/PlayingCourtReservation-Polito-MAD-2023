@@ -60,14 +60,38 @@
             app:layout_constraintStart_toStartOf="@+id/horizontal_guideline"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/username"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/username_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/default_username"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/custom_black"
-                android:textSize="18sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_username"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/custom_black"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/warning_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_warning_24"
+                    android:visibility="gone"
+                    android:contentDescription="@string/warning_icon_description"
+                    tools:ignore="ImageContrastCheck" />
+
+                <ImageView
+                    android:id="@+id/danger_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_dangerous_24"
+                    android:visibility="gone"
+                    android:contentDescription="@string/danger_icon_description" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/position"
@@ -84,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/ratingBar"
                 android:numStars="5"
-                android:rating="@integer/default_rating"
+                android:rating="@fraction/default_rating"
                 android:contentDescription="@string/rating_description"
                 android:isIndicator="true"
                 style="?android:attr/ratingBarStyleIndicator" />

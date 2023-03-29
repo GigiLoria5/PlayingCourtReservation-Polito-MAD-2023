@@ -17,7 +17,7 @@
     <string name="games_mvp_title">MVP</string>
     <string name="default_username">NoobSmasher</string>
     <string name="default_position">Attacker</string>
-    <integer name="default_rating">0</integer>
+    <fraction name="default_rating">0</fraction>
     <string name="default_fullname">Giacinto Milanesi</string>
     <integer name="default_age">21</integer>
     <string name="default_gender">M</string>
@@ -30,4 +30,8 @@
     <integer name="default_mvp">0</integer>
     <string name="avatar_description">User profile avatar</string>
     <string name="rating_description">User skill level</string>
+    <string name="warning_icon_description">Warning Icon</string>
+    <string name="warning_icon_tooltip">Warning: player was late or missed one of the last 10 games</string>
+    <string name="danger_icon_description">Danger Icon</string>
+    <string name="danger_icon_tooltip">Unreliable player: arrived late or missed more than 5 games in the last 10</string>
 </resources>
