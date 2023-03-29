@@ -58,9 +58,10 @@
 
             <LinearLayout
                 android:id="@+id/username_container"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal">
 
                 <TextView
                     android:id="@+id/username"
@@ -96,7 +97,8 @@
                 android:layout_marginVertical="8dp"
                 android:text="@string/default_position"
                 android:textColor="@color/grey"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_gravity="center" />
 
             <RatingBar
                 android:id="@+id/rating"
@@ -107,7 +109,8 @@
                 android:isIndicator="true"
                 android:numStars="5"
                 android:rating="@fraction/default_rating"
-                android:theme="@style/ratingBar" />
+                android:theme="@style/ratingBar"
+                android:layout_gravity="center" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -121,7 +124,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
 
             <!-- Secondary Information -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -129,7 +133,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bottom_border"
-                android:padding="16dp">
+                android:paddingVertical="16dp"
+                android:layout_marginHorizontal="16dp">
 
                 <it.polito.mad.g26.playingcourtreservation.CustomTextView
                     android:id="@+id/fullname"
@@ -193,7 +198,8 @@
                 android:id="@+id/stats_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:paddingVertical="16dp"
+                android:layout_marginHorizontal="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/vertical_guideline"
                 app:layout_constraintTop_toBottomOf="@+id/secondary_information">
