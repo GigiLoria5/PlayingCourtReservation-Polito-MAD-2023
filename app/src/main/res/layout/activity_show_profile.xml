@@ -15,6 +15,7 @@
         app:layout_constraintGuide_percent="0.3" />
 
     <!-- Primary Information -->
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/primary_info"
         android:layout_width="0dp"
@@ -111,44 +112,151 @@
             app:title="@string/fullname_title"
             app:value="@string/default_fullname" />
 
-        <it.polito.mad.g26.playingcourtreservation.CustomTextView
-            android:id="@+id/age"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toStartOf="@+id/gender"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fullname"
-            app:title="@string/age_title"
-            app:value="@integer/default_age" />
-
-        <it.polito.mad.g26.playingcourtreservation.CustomTextView
-            android:id="@+id/gender"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/user_information_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toStartOf="@+id/location"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/age"
-            app:layout_constraintTop_toBottomOf="@+id/fullname"
-            app:title="@string/gender_title"
-            app:value="@string/default_gender" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fullname">
+
+            <it.polito.mad.g26.playingcourtreservation.CustomTextView
+                android:id="@+id/age"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:title="@string/age_title"
+                app:value="@integer/default_age" />
+
+            <it.polito.mad.g26.playingcourtreservation.CustomTextView
+                android:id="@+id/gender"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:title="@string/gender_title"
+                app:value="@string/default_gender" />
+
+            <it.polito.mad.g26.playingcourtreservation.CustomTextView
+                android:id="@+id/placeholder"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:title=""
+                app:value="" />
+        </LinearLayout>
 
         <it.polito.mad.g26.playingcourtreservation.CustomTextView
             android:id="@+id/location"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/gender"
-            app:layout_constraintTop_toBottomOf="@+id/fullname"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_information_container"
             app:title="@string/location_title"
             app:value="@string/default_location" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Stats Container -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/stats_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/secondary_information">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/stats_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/stats_container_title"
+                android:textColor="@color/custom_black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Games Stats -->
+            <LinearLayout
+                android:id="@+id/game_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stats_title">
+
+                <it.polito.mad.g26.playingcourtreservation.CustomTextView
+                    android:id="@+id/organized"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="@string/games_organized_title"
+                    app:value="@integer/default_organized" />
+
+                <it.polito.mad.g26.playingcourtreservation.CustomTextView
+                    android:id="@+id/played"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="@string/games_played_title"
+                    app:value="@integer/default_played" />
+
+                <it.polito.mad.g26.playingcourtreservation.CustomTextView
+                    android:id="@+id/record"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="@string/games_record_title"
+                    app:value="@string/default_wdl" />
+            </LinearLayout>
+
+            <!-- Personal Stats -->
+            <LinearLayout
+                android:id="@+id/personal_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stats_title">
+
+                <it.polito.mad.g26.playingcourtreservation.CustomTextView
+                    android:id="@+id/goals"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="@string/games_goals_title"
+                    app:value="@integer/default_goals" />
+
+                <it.polito.mad.g26.playingcourtreservation.CustomTextView
+                    android:id="@+id/assists"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="@string/games_assists_title"
+                    app:value="@integer/default_assists" />
+
+                <it.polito.mad.g26.playingcourtreservation.CustomTextView
+                    android:id="@+id/mvp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="@string/games_mvp_title"
+                    app:value="@integer/default_mvp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
