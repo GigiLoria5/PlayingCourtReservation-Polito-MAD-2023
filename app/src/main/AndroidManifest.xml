@@ -12,9 +12,13 @@
         android:theme="@style/Theme.PlayingCourtReservation"
         tools:targetApi="31">
         <activity
+            android:name=".EditProfileActivity"
+            android:exported="false"
+            android:label="@string/edit_show_profile_title" />
+        <activity
             android:name=".ShowProfileActivity"
-            android:label="@string/activity_show_profile_title"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/activity_show_profile_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
