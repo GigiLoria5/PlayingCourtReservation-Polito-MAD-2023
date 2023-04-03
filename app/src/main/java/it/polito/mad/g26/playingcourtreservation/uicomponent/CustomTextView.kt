@@ -1,9 +1,10 @@
-package it.polito.mad.g26.playingcourtreservation
+package it.polito.mad.g26.playingcourtreservation.uicomponent
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import android.widget.TextView
+import it.polito.mad.g26.playingcourtreservation.R
 
 class CustomTextView(
     context: Context,

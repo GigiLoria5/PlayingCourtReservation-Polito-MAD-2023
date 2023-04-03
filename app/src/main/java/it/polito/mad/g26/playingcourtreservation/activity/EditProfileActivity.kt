@@ -1,9 +1,10 @@
-package it.polito.mad.g26.playingcourtreservation
+package it.polito.mad.g26.playingcourtreservation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import it.polito.mad.g26.playingcourtreservation.R
 
 class EditProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

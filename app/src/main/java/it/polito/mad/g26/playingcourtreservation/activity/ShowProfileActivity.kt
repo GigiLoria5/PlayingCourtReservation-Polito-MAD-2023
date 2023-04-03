@@ -1,4 +1,4 @@
-package it.polito.mad.g26.playingcourtreservation
+package it.polito.mad.g26.playingcourtreservation.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import androidx.appcompat.widget.TooltipCompat
+import it.polito.mad.g26.playingcourtreservation.R
 
 class ShowProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

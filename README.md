@@ -1,26 +1,32 @@
 # Playing Court Reservation App
-Welcome to the "Playing Court Reservation" Android application repository, developed in Kotlin by Group 26 for the Mobile Application Development course at Politecnico di Torino (academic year 2022-23).
+
+Welcome to the "Playing Court Reservation" Android application repository, developed in Kotlin by
+Group 26 for the Mobile Application Development course at Politecnico di Torino (academic year
+2022-23).
 
 # Purpose
-The purpose of the application is to support sport associations in managing reservations of sports courts. Users can search for available sports courts by location, sport, or date and time, and make reservations. They can also manage their own profile, view court availability and prices in real-time, and rate and review courts based on quality and facilities.
+
+The purpose of the application is to connects people to play 5-a-side football at local
+sports fields. The app helps users find matches based on certain filters and/or matching their
+profile information. Users can search for matches that are open to all (anyone can participate) or
+by invitation (the organizer must accept/reject each request).
 
 # Features
-* User profile management, with the ability to choose sports of interest and declare skill level and sports achievements
-* Search for available sports courts by location, sport, or date and time
-* Real-time display of sports court availability and prices
-* Sports court reservation and receipt of a reservation confirmation
-* Cancellation or modification of an existing reservation
-* Rating and review of sports courts based on quality and facilities
-* Search for teammates to play with and accept or reject received invitations
 
-# Repository Content
-The repository contains the source code of the application and other related files, including the following:
-* README.md: this file, providing an overview of the project
-* app/src/main/java/: the Kotlin source files of the application
-* app/src/main/res/: the resources used by the application (e.g., layout, strings, images)
+* User profile management
+* Search for matches based on location, time, and other filters
+* Real-time display of match availability
+* Join matches and receive a confirmation from the organizer
+* Cancel or modify participation in an existing match
+* Rating and review of other players based on game quality and reliability
+* Each player has a value which indicates their worth in the matches they have played and the
+  ratings they have received
+* Unreliable users have certain service limitations
 
 # Installation
+
 To install the application on an Android device or emulator, follow these steps:
+
 1. Clone the repository on your machine
 2. Open Android Studio
 3. Select "Open an existing Android Studio project" and select the cloned repository
@@ -28,7 +34,8 @@ To install the application on an Android device or emulator, follow these steps:
 5. Click on the "Run" button to launch the application on a connected device or emulator
 
 # Contributing
-6. Create a new branch from the dev branch (e.g., feature/my-new-feature)
-7. Implement your changes and commit them to the new branch
-8. Push the branch
-9. Open a pull request against the dev branch of the original repository (describing your changes)
+
+1. Create a new branch from the dev branch (e.g., feature/my-new-feature)
+2. Implement your changes and commit them to the new branch
+3. Push the branch
+4. Open a pull request against the dev branch of the original repository (describing your changes)
