@@ -1,11 +1,11 @@
 package it.polito.mad.g26.playingcourtreservation.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.TooltipCompat
 import it.polito.mad.g26.playingcourtreservation.R
 
@@ -13,6 +13,9 @@ class ShowProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
+
+        // Change Title
+        supportActionBar?.setTitle(R.string.activity_show_profile_title)
 
         // Add Tooltips
         val warningIcon = findViewById<ImageView>(R.id.warning_icon)

@@ -1,4 +1,4 @@
-package it.polito.mad.g26.playingcourtreservation.uicomponent
+package it.polito.mad.g26.playingcourtreservation.ui
 
 import android.content.Context
 import android.util.AttributeSet

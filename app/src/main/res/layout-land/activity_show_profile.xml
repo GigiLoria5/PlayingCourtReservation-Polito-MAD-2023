@@ -137,7 +137,7 @@
                 android:background="@drawable/bottom_border"
                 android:paddingBottom="16dp">
 
-                <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                     android:id="@+id/fullname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -156,7 +156,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/fullname">
 
-                    <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                         android:id="@+id/age"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -164,7 +164,7 @@
                         app:title="@string/age_title"
                         app:value="@integer/default_age" />
 
-                    <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                         android:id="@+id/gender"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -172,7 +172,7 @@
                         app:title="@string/gender_title"
                         app:value="@string/default_gender" />
 
-                    <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                         android:id="@+id/placeholder"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
                         app:value="" />
                 </LinearLayout>
 
-                <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                     android:id="@+id/location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -232,7 +232,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/stats_title">
 
-                        <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                             android:id="@+id/organized"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -240,7 +240,7 @@
                             app:title="@string/games_organized_title"
                             app:value="@integer/default_organized" />
 
-                        <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                             android:id="@+id/played"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -248,7 +248,7 @@
                             app:title="@string/games_played_title"
                             app:value="@integer/default_played" />
 
-                        <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                             android:id="@+id/record"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -267,7 +267,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/stats_title">
 
-                        <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                             android:id="@+id/goals"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -275,7 +275,7 @@
                             app:title="@string/games_goals_title"
                             app:value="@integer/default_goals" />
 
-                        <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                             android:id="@+id/assists"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -283,7 +283,7 @@
                             app:title="@string/games_assists_title"
                             app:value="@integer/default_assists" />
 
-                        <it.polito.mad.g26.playingcourtreservation.uicomponent.CustomTextView
+                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                             android:id="@+id/mvp"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
