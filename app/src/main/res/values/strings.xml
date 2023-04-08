@@ -45,6 +45,8 @@
     <string name="edit_profile_ok_update_dialog_message">Profile succesfully updated</string>
     <string name="edit_profile_no_ok_update_dialog_title">Invalid data</string>
     <string name="edit_profile_no_ok_update_dialog_message">Unable to update the profile. Some field are wrong</string>
+    <string name="camera">Camera</string>
+    <string name="galley">Gallery</string>
 
     <string-array name="position_array">
         <item>Attacker</item>

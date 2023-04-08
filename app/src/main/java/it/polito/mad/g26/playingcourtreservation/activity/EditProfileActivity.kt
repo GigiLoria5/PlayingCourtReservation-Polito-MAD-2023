@@ -1,18 +1,36 @@
 package it.polito.mad.g26.playingcourtreservation.activity
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ContentValues
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.icu.text.SimpleDateFormat
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.ParcelFileDescriptor
+import android.provider.MediaStore
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.EditText
+import android.widget.*
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
+import java.io.FileDescriptor
+import java.io.IOException
 import java.util.*
 
 class EditProfileActivity : AppCompatActivity() {
@@ -33,6 +51,24 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var autoCompleteGender: AutoCompleteTextView
 
     private val myCalendar = Calendar.getInstance()
+
+    private lateinit var avatarImage: ImageView
+    private var imageUri: Uri? = null
+    private lateinit var bitMapImage: Bitmap
+
+    //get the image from gallery and display it
+    private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) {
+        processResponseGallery(it)
+    }
+    private fun processResponseGallery(response: ActivityResult){
+        if (response.resultCode == RESULT_OK) {
+            imageUri = response.data?.data
+            val inputImage: Bitmap? = uriToBitmap(imageUri)
+            bitMapImage = rotateBitmap(inputImage!!)
+            avatarImage.setImageBitmap(bitMapImage)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +143,48 @@ class EditProfileActivity : AppCompatActivity() {
         locationContainer = findViewById(R.id.location_container)
         locationEditText.addTextChangedListener {
             locationContainer.helperText = validLocation()
+        }
+
+        avatarImage = findViewById(R.id.avatar)
+        val editBtn = findViewById<ImageButton>(R.id.imageButton)
+
+        editBtn.setOnClickListener {
+            val alertCustomDialog = LayoutInflater.from(this).inflate(R.layout.custom_dialog_photo, null)
+            val builder = AlertDialog.Builder(this)
+            builder.setView(alertCustomDialog)
+            val galleryBtn = alertCustomDialog.findViewById<ImageButton>(R.id.gallery)
+            val cameraBtn = alertCustomDialog.findViewById<ImageButton>(R.id.camera)
+            // Create the AlertDialog
+            val alertDialog: AlertDialog = builder.create()
+            // Set other dialog properties
+            alertDialog.setCancelable(true)
+            alertDialog.show()
+
+            galleryBtn.setOnClickListener{
+                val galleryIntent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+
+                galleryActivityResultLauncher.launch(galleryIntent)
+                alertDialog.dismiss()
+            }
+            cameraBtn.setOnClickListener{
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                        checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+                    {
+                        val permission = arrayOf(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                        requestPermissions(permission, 112)
+                    } else {
+                        openCamera()
+                    }
+                } else {
+                    openCamera()
+                }
+                alertDialog.dismiss()
+            }
         }
     }
 
@@ -219,6 +297,8 @@ class EditProfileActivity : AppCompatActivity() {
         outState.putInt("YEAR", myCalendar.get(Calendar.YEAR))
         outState.putInt("MONTH", myCalendar.get(Calendar.MONTH))
         outState.putInt("DAY_OF_MONTH", myCalendar.get(Calendar.DAY_OF_MONTH))
+        //salvo avatar image
+        outState.putString("imageUri", imageUri.toString())
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -239,6 +319,67 @@ class EditProfileActivity : AppCompatActivity() {
         val adapterGender = ArrayAdapter(this, R.layout.list_item, genderItems)
         autoCompleteGender.setAdapter(adapterGender)
 
+        //ripristino avatar image
+        imageUri = Uri.parse(savedInstanceState.getString("imageUri"))
+        val inputImage: Bitmap? = uriToBitmap(imageUri)
+        bitMapImage = rotateBitmap(inputImage!!)
+        avatarImage.setImageBitmap(bitMapImage)
 
+
+    }
+
+    //opens camera so that user can capture image
+    private fun openCamera() {
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, "New Picture")
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
+        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+        cameraActivityResultLauncher.launch(cameraIntent)
+    }
+
+    private val cameraActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) {
+        processResponseCamera(it)
+    }
+
+    private fun processResponseCamera(response: ActivityResult){
+        if (response.resultCode == RESULT_OK) {
+            val inputImage: Bitmap? = uriToBitmap(imageUri)
+            bitMapImage = rotateBitmap(inputImage!!)
+            avatarImage.setImageBitmap(bitMapImage)
+        }
+    }
+
+    //takes URI of the image and returns bitmap
+    private fun uriToBitmap(selectedFileUri: Uri?): Bitmap? {
+        try {
+            val parcelFileDescriptor: ParcelFileDescriptor? = contentResolver.openFileDescriptor(selectedFileUri!!, "r")
+            val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
+            val image: Bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+            parcelFileDescriptor.close()
+            return image
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    //rotate image if image captured on samsung devices
+    //Most phone cameras are landscape, meaning if you take the photo in portrait, the resulting photos will be rotated 90 degrees.
+    @SuppressLint("Range")
+    fun rotateBitmap(input: Bitmap): Bitmap {
+        val orientationColumn = arrayOf(MediaStore.Images.Media.ORIENTATION)
+        val cur: Cursor? = contentResolver.query(imageUri!!, orientationColumn, null, null, null)
+        var orientation = -1
+        if (cur != null && cur.moveToFirst()) {
+            orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]))
+            cur.close()
+        }
+        Log.d("tryOrientation", orientation.toString() + "")
+        val rotationMatrix = Matrix()
+        rotationMatrix.setRotate(orientation.toFloat())
+        return Bitmap.createBitmap(input, 0, 0, input.width, input.height, rotationMatrix, true)
     }
 }
