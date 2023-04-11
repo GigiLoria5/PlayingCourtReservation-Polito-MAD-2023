@@ -36,7 +36,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/primary_info"
+                    android:id="@+id/primary_information"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:layout_constraintBottom_toTopOf="@+id/vertical_guideline"
