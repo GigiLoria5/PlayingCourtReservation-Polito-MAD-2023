@@ -10,11 +10,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:fillViewport="true"
+        android:paddingBottom="16dp"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -25,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.30" />
+                app:layout_constraintGuide_percent="0.33" />
 
             <!-- Primary Information -->
             <HorizontalScrollView
@@ -102,7 +104,8 @@
                                 android:contentDescription="@string/warning_icon_description"
                                 android:src="@drawable/baseline_warning_24"
                                 android:visibility="gone"
-                                tools:ignore="ImageContrastCheck" />
+                                tools:ignore="ImageContrastCheck"
+                                />
 
                             <ImageView
                                 android:id="@+id/danger_icon"

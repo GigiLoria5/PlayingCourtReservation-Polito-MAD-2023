@@ -40,12 +40,12 @@
             android:id="@+id/imageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/set_profile_image"
             app:layout_constraintBottom_toBottomOf="@+id/avatar"
             app:layout_constraintEnd_toEndOf="@+id/avatar"
-            app:srcCompat="@android:drawable/ic_menu_camera"
-            android:contentDescription="@string/set_profile_image"
-            />
+            app:srcCompat="@android:drawable/ic_menu_camera" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
@@ -54,14 +54,12 @@
         app:layout_constraintGuide_percent="0.33" />
 
 
-
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="8dp"
-
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -70,34 +68,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            >
+            app:layout_constraintEnd_toEndOf="parent">
 
             <!-- USERNAME -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/username_container"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:helperTextTextColor="@color/red"
                     app:counterEnabled="true"
                     app:counterMaxLength="30"
-                    >
+                    app:helperTextTextColor="@color/red">
+
                     <EditText
                         android:id="@+id/username_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:hint="@string/username_title"
-                        android:inputType="text"
                         android:importantForAutofill="no"
+                        android:inputType="text"
                         android:text="@string/default_username"
-                        />
+                        tools:ignore="VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -109,11 +107,10 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:id="@+id/position_container"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
                         android:id="@+id/position_autocomplete"
@@ -131,26 +128,24 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="16dp"
-                >
+                android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/fullname_container"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:helperTextTextColor="@color/red"
-                    >
+                    app:helperTextTextColor="@color/red">
 
                     <EditText
                         android:id="@+id/fullname_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autofillHints="name"
                         android:ems="10"
                         android:hint="@string/fullname_title"
                         android:inputType="text"
-                        android:autofillHints="name"
                         android:text="@string/default_fullname"
                         tools:ignore="VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -167,8 +162,7 @@
                     android:id="@+id/dob_container"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/dob_et"
@@ -183,7 +177,7 @@
                         android:hint="@string/dob_title"
                         android:importantForAutofill="no"
                         android:inputType="date"
-                        tools:ignore="SpeakableTextPresentCheck" />
+                        tools:ignore="SpeakableTextPresentCheck,VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -195,11 +189,10 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:id="@+id/gender_container"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     >
 
                     <AutoCompleteTextView
@@ -208,8 +201,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/gender_title"
                         android:inputType="none"
-
-                        />
+                        tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -218,28 +210,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="16dp"
-                >
+                android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/location_container"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:helperTextTextColor="@color/red"
-                    >
+                    app:helperTextTextColor="@color/red">
 
                     <EditText
                         android:id="@+id/location_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autofillHints="postalAddress"
                         android:ems="10"
                         android:hint="@string/location_title"
                         android:inputType="text"
                         android:text="@string/default_location"
-                        android:autofillHints="postalAddress"
-                        />
+                        tools:ignore="VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 

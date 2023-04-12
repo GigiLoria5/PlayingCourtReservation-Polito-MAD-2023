@@ -9,19 +9,19 @@
 
 
     <ScrollView
-
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingBottom="16dp"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/user_photo_view"
@@ -121,12 +121,12 @@
                             android:id="@+id/position_autocomplete"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:freezesText="true"
                             android:hint="@string/position_title"
                             android:inputType="none"
                             android:maxWidth="488dp"
                             android:textColorHint="#757575"
-                            android:freezesText="true"
-                            tools:ignore="TextContrastCheck" />
+                            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
@@ -153,7 +153,8 @@
                             android:ems="10"
                             android:hint="@string/fullname_title"
                             android:inputType="text"
-                            android:text="@string/default_fullname" />
+                            android:text="@string/default_fullname"
+                            tools:ignore="VisualLintTextFieldSize" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
