@@ -26,6 +26,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
@@ -55,6 +56,7 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var avatarImage: ImageView
     private var imageUri: Uri? = null
     private lateinit var bitMapImage: Bitmap
+    private lateinit var alertDialog: AlertDialog
 
     //get the image from gallery and display it
     private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
@@ -146,45 +148,47 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         avatarImage = findViewById(R.id.avatar)
+        bitMapImage = avatarImage.drawable.toBitmap()
         val editBtn = findViewById<ImageButton>(R.id.imageButton)
 
-        editBtn.setOnClickListener {
-            val alertCustomDialog = LayoutInflater.from(this).inflate(R.layout.custom_dialog_photo, null)
-            val builder = AlertDialog.Builder(this)
-            builder.setView(alertCustomDialog)
-            val galleryBtn = alertCustomDialog.findViewById<ImageButton>(R.id.gallery)
-            val cameraBtn = alertCustomDialog.findViewById<ImageButton>(R.id.camera)
-            // Create the AlertDialog
-            val alertDialog: AlertDialog = builder.create()
-            // Set other dialog properties
-            alertDialog.setCancelable(true)
-            alertDialog.show()
+        val alertCustomDialog = LayoutInflater.from(this).inflate(R.layout.custom_dialog_photo, null)
+        var builder = AlertDialog.Builder(this)
+        builder.setView(alertCustomDialog)
+        val galleryBtn = alertCustomDialog.findViewById<ImageButton>(R.id.gallery)
+        val cameraBtn = alertCustomDialog.findViewById<ImageButton>(R.id.camera)
+        // Create the AlertDialog
+        alertDialog = builder.create()
+        // Set other dialog properties
+        alertDialog.setCancelable(true)
 
-            galleryBtn.setOnClickListener{
-                val galleryIntent =
-                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        galleryBtn.setOnClickListener{
+            val galleryIntent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 
-                galleryActivityResultLauncher.launch(galleryIntent)
-                alertDialog.dismiss()
-            }
-            cameraBtn.setOnClickListener{
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                        checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-                    {
-                        val permission = arrayOf(
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        )
-                        requestPermissions(permission, 112)
-                    } else {
-                        openCamera()
-                    }
+            galleryActivityResultLauncher.launch(galleryIntent)
+            alertDialog.dismiss()
+        }
+        cameraBtn.setOnClickListener{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+                {
+                    val permission = arrayOf(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    requestPermissions(permission, 112)
                 } else {
                     openCamera()
                 }
-                alertDialog.dismiss()
+            } else {
+                openCamera()
             }
+            alertDialog.dismiss()
+        }
+
+        editBtn.setOnClickListener {
+            alertDialog.show()
         }
     }
 
@@ -298,7 +302,15 @@ class EditProfileActivity : AppCompatActivity() {
         outState.putInt("MONTH", myCalendar.get(Calendar.MONTH))
         outState.putInt("DAY_OF_MONTH", myCalendar.get(Calendar.DAY_OF_MONTH))
         //salvo avatar image
-        outState.putString("imageUri", imageUri.toString())
+        if (imageUri != null){
+            outState.putString("imageUri", imageUri.toString())
+        }else{
+            outState.putString("imageUri", "null")
+        }
+        if(alertDialog.isShowing){
+            alertDialog.dismiss()
+        }
+
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -320,11 +332,12 @@ class EditProfileActivity : AppCompatActivity() {
         autoCompleteGender.setAdapter(adapterGender)
 
         //ripristino avatar image
-        imageUri = Uri.parse(savedInstanceState.getString("imageUri"))
-        val inputImage: Bitmap? = uriToBitmap(imageUri)
-        bitMapImage = rotateBitmap(inputImage!!)
-        avatarImage.setImageBitmap(bitMapImage)
-
+        if (savedInstanceState.getString("imageUri") != "null"){
+            imageUri = Uri.parse(savedInstanceState.getString("imageUri"))
+            val inputImage: Bitmap? = uriToBitmap(imageUri)
+            bitMapImage = rotateBitmap(inputImage!!)
+            avatarImage.setImageBitmap(bitMapImage)
+        }
 
     }
 
