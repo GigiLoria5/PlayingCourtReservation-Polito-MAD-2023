@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -30,6 +31,8 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+import org.json.JSONObject
 import java.io.FileDescriptor
 import java.io.IOException
 import java.util.*
@@ -80,8 +83,47 @@ class EditProfileActivity : AppCompatActivity() {
         // Set Back Button
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        //PERSISTENZA
+
+        val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)//CAN'T OUTSIDE ONCREATE
+
+
+        if(sharedPref.contains("profile")){//work to replace all the strings
+            val json= JSONObject(sharedPref.getString("profile","Default"))
+            usernameEditText = findViewById(R.id.username_et)
+            usernameEditText.setText(json.getString("username"))
+            autoCompletePosition= findViewById(R.id.position_autocomplete)
+            autoCompletePosition.setText(json.getString("position"),false)
+            fullNameEditText = findViewById(R.id.fullname_et)
+            fullNameEditText.setText(json.getString("fullName"))
+            dateOfBirthEditText = findViewById(R.id.dob_et) //DA FARE
+            //val age=findViewById<CustomTextView>(R.id.age).findViewById<TextView>(R.id.value)
+            //age.text=json.getString("age")
+            autoCompleteGender = findViewById(R.id.gender_autocomplete)
+            autoCompleteGender.setText(json.getString("gender"), false)
+            locationEditText = findViewById(R.id.location_et)
+            locationEditText.setText(json.getString("location"))
+        }else{//put the default value
+            usernameEditText = findViewById(R.id.username_et)
+            autoCompletePosition = findViewById(R.id.position_autocomplete)
+            autoCompletePosition.setText("Attacker", false)
+            fullNameEditText = findViewById(R.id.fullname_et)
+            dateOfBirthEditText = findViewById(R.id.dob_et)
+            autoCompleteGender = findViewById(R.id.gender_autocomplete)
+            autoCompleteGender.setText("Ornitorinco", false)//need string on resources to be tranlsated
+            locationEditText = findViewById(R.id.location_et)
+            locationEditText.setText("Turin")
+            /*val editor= sharedPref.edit()
+            editor.putString("profile", json.toString())
+            editor.apply()*/
+        }
+
+
+
+
+
         //username management
-        usernameEditText = findViewById(R.id.username_et)
+        //usernameEditText = findViewById(R.id.username_et)
         usernameContainer = findViewById(R.id.username_container)
         usernameEditText.addTextChangedListener {
             usernameContainer.helperText = validUsername()
@@ -89,23 +131,23 @@ class EditProfileActivity : AppCompatActivity() {
 
         //position dropdown management
         val positionItems = resources.getStringArray(R.array.position_array)
-        autoCompletePosition = findViewById(R.id.position_autocomplete)
+        //autoCompletePosition = findViewById(R.id.position_autocomplete)
         val adapterPos = ArrayAdapter(this, R.layout.list_item, positionItems)
         autoCompletePosition.setAdapter(adapterPos)
         // Imposto il primo elemento come valore predefinito //MOCK
-        if (positionItems.isNotEmpty()) {
+        /*if (positionItems.isNotEmpty()) {
             autoCompletePosition.setText(positionItems[0], false)
-        }
+        }*/
 
         //fullName management
-        fullNameEditText = findViewById(R.id.fullname_et)
+        //fullNameEditText = findViewById(R.id.fullname_et)
         fullNameContainer = findViewById(R.id.fullname_container)
         fullNameEditText.addTextChangedListener {
             fullNameContainer.helperText = validFullName()
         }
 
         //Date of birth management
-        dateOfBirthEditText = findViewById(R.id.dob_et)
+        //dateOfBirthEditText = findViewById(R.id.dob_et)
         //imposto data nascita a 21 anni fa
         myCalendar.add(Calendar.YEAR, -21)
         updateDateOfBirthEditText(myCalendar)
@@ -132,21 +174,22 @@ class EditProfileActivity : AppCompatActivity() {
 
         //gender dropdown management
         val genderItems = resources.getStringArray(R.array.gender_array)
-        autoCompleteGender = findViewById(R.id.gender_autocomplete)
+        //autoCompleteGender = findViewById(R.id.gender_autocomplete)
         val adapterGen = ArrayAdapter(this, R.layout.list_item, genderItems)
         autoCompleteGender.setAdapter(adapterGen)
         // Imposto il primo elemento come valore predefinito. MOCK
-        if (genderItems.isNotEmpty()) {
+        /*if (genderItems.isNotEmpty()) {
             autoCompleteGender.setText(genderItems[0], false)
-        }
+        }*/
 
         //location management
-        locationEditText = findViewById(R.id.location_et)
+        //locationEditText = findViewById(R.id.location_et)
         locationContainer = findViewById(R.id.location_container)
         locationEditText.addTextChangedListener {
             locationContainer.helperText = validLocation()
         }
 
+        //image management
         avatarImage = findViewById(R.id.avatar)
         bitMapImage = avatarImage.drawable.toBitmap()
         val editBtn = findViewById<ImageButton>(R.id.imageButton)
