@@ -1,3 +1,64 @@
 <resources>
     <string name="app_name">Playing Court Reservation</string>
+    <!-- Activities Title -->
+    <string name="activity_show_profile_title">Profile</string>
+    <string name="edit_show_profile_title">Edit Profile</string>
+    <!-- Activity Show Profile -->
+    <string name="fullname_title">Fullname</string>
+    <string name="username_title">Username</string>
+    <string name="age_title">Age</string>
+    <string name="gender_title">Gender</string>
+    <string name="location_title">Location</string>
+    <string name="position_title">Position</string>
+    <string name="dob_title">Date of birth</string>
+    <string name="stats_container_title">Stats</string>
+    <string name="games_organized_title">Organized</string>
+    <string name="games_played_title">Played</string>
+    <string name="games_record_title">W/D/L</string>
+    <string name="games_goals_title">Goals</string>
+    <string name="games_assists_title">Assists</string>
+    <string name="games_mvp_title">MVP</string>
+    <string name="default_username">NoobSmasher</string>
+    <string name="default_position">Attacker</string>
+    <fraction name="default_rating">0</fraction>
+    <string name="default_fullname">Giacinto Milanesi</string>
+    <integer name="default_age">21</integer>
+    <string name="default_gender">M</string>
+    <string name="default_location">Turin</string>
+    <integer name="default_organized">0</integer>
+    <integer name="default_played">0</integer>
+    <string name="default_wdl">0/0/0</string>
+    <integer name="default_goals">0</integer>
+    <integer name="default_assists">0</integer>
+    <integer name="default_mvp">0</integer>
+    <string name="avatar_description">User profile avatar</string>
+    <string name="rating_description">User skill level</string>
+    <string name="warning_icon_description">Warning Icon</string>
+    <string name="warning_icon_tooltip">Warning: player was late or missed one of the last 10 games</string>
+    <string name="danger_icon_description">Danger Icon</string>
+    <string name="danger_icon_tooltip">Unreliable player: arrived late or missed more than 5 games in the last 10</string>
+    <string name="required">Required</string>
+    <string name="set_profile_image">set profile image</string>
+    <string name="required_helper">Required</string>
+    <string name="invalid_field_helper">Invalid field</string>
+    <string name="edit_profile_ok_update_dialog_title">Profile updated</string>
+    <string name="edit_profile_ok_update_dialog_message">Profile succesfully updated</string>
+    <string name="edit_profile_no_ok_update_dialog_title">Invalid data</string>
+    <string name="edit_profile_no_ok_update_dialog_message">Unable to update the profile. Some field are wrong</string>
+    <string name="camera">Camera</string>
+    <string name="galley">Gallery</string>
+
+    <string-array name="position_array">
+        <item>Attacker</item>
+        <item>Midfielder</item>
+        <item>Defender</item>
+        <item>Goalkeeper</item>
+    </string-array>
+
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
 </resources>
