@@ -97,8 +97,7 @@ class EditProfileActivity : AppCompatActivity() {
             fullNameEditText = findViewById(R.id.fullname_et)
             fullNameEditText.setText(json.getString("fullName"))
             dateOfBirthEditText = findViewById(R.id.dob_et) //DA FARE
-            //val age=findViewById<CustomTextView>(R.id.age).findViewById<TextView>(R.id.value)
-            //age.text=json.getString("age")
+            dateOfBirthEditText.setText(json.getString("date"))
             autoCompleteGender = findViewById(R.id.gender_autocomplete)
             autoCompleteGender.setText(json.getString("gender"), false)
             locationEditText = findViewById(R.id.location_et)
@@ -331,9 +330,14 @@ class EditProfileActivity : AppCompatActivity() {
                 json.put("location", locationEditText.text.toString())
                 json.put("gender",autoCompleteGender.text.toString())
                 json.put("position",autoCompletePosition.text.toString())
-                json.put("age", 23)
+                json.put("date", dateOfBirthEditText.text.toString())
+                val year=myCalendar.get(Calendar.YEAR)
+                val todayCalendar = Calendar.getInstance(TimeZone.getDefault());
+                val currentYear=todayCalendar.get(Calendar.YEAR)
+                val age=currentYear-year
+                json.put("age", age)
                 val editor= sharedPref.edit()
-                editor.clear()//delete old profile, but in theory overwrite
+                //overwrite the precedent profile
                 editor.putString("profile", json.toString())
                 editor.apply()
                 submitForm()
