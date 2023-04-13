@@ -40,7 +40,7 @@ class ShowProfileActivity : AppCompatActivity() {
             position.text=json.getString("position")
             val age=findViewById<CustomTextView>(R.id.age).findViewById<TextView>(R.id.value)
             age.text=json.getString("age")
-            val gender=findViewById<TextView>(R.id.gender).findViewById<TextView>(R.id.value)
+            val gender=findViewById<CustomTextView>(R.id.gender).findViewById<TextView>(R.id.value)
             gender.text=json.getString("gender")
             val fullName=findViewById<CustomTextView>(R.id.fullname).findViewById<TextView>(R.id.value)
             fullName.text=json.getString("fullName")

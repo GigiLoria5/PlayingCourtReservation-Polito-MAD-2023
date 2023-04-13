@@ -85,7 +85,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         //PERSISTENZA
 
-        val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)//CAN'T OUTSIDE ONCREATE
+        val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)
 
 
         if(sharedPref.contains("profile")){//work to replace all the strings
@@ -113,9 +113,6 @@ class EditProfileActivity : AppCompatActivity() {
             autoCompleteGender.setText("Ornitorinco", false)//need string on resources to be tranlsated
             locationEditText = findViewById(R.id.location_et)
             locationEditText.setText("Turin")
-            /*val editor= sharedPref.edit()
-            editor.putString("profile", json.toString())
-            editor.apply()*/
         }
 
 
@@ -327,7 +324,18 @@ class EditProfileActivity : AppCompatActivity() {
             }
             // Confirm Changes
             R.id.confirm_menu_item -> {
-                // TODO: save changes
+                val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)
+                val json=JSONObject()
+                json.put("username",usernameEditText.text.toString())
+                json.put( "fullName",fullNameEditText.text.toString())
+                json.put("location", locationEditText.text.toString())
+                json.put("gender",autoCompleteGender.text.toString())
+                json.put("position",autoCompletePosition.text.toString())
+                json.put("age", 23)
+                val editor= sharedPref.edit()
+                editor.clear()//delete old profile, but in theory overwrite
+                editor.putString("profile", json.toString())
+                editor.apply()
                 submitForm()
 
                 true
