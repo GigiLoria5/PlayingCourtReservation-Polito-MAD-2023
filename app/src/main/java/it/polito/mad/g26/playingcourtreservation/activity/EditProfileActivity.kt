@@ -27,6 +27,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputLayout
@@ -85,10 +86,8 @@ class EditProfileActivity : AppCompatActivity() {
         // Set Back Button
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        //PERSISTENZA
-
+        //PERSISTENCE
         val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)
-
 
         if(sharedPref.contains("profile")){//work to replace all the strings
             val json= JSONObject(sharedPref.getString("profile","Default"))
@@ -105,21 +104,20 @@ class EditProfileActivity : AppCompatActivity() {
             locationEditText = findViewById(R.id.location_et)
             locationEditText.setText(json.getString("location"))
 
-
         }else{//put the default value
             usernameEditText = findViewById(R.id.username_et)
             autoCompletePosition = findViewById(R.id.position_autocomplete)
-            autoCompletePosition.setText("Attacker", false)
+            autoCompletePosition.setText(getString(R.string.default_position), false)
             fullNameEditText = findViewById(R.id.fullname_et)
             dateOfBirthEditText = findViewById(R.id.dob_et)
             autoCompleteGender = findViewById(R.id.gender_autocomplete)
-            autoCompleteGender.setText("Ornitorinco", false)//need string on resources to be tranlsated
+            autoCompleteGender.setText(getString(R.string.default_gender), false)
             locationEditText = findViewById(R.id.location_et)
-            locationEditText.setText("Turin")
+            locationEditText.setText(getString(R.string.default_location))
         }
 
+        //IMAGE MANAGEMENT
         avatarImage = findViewById(R.id.avatar)
-        //Entry in the local file system
         val fileInput= openFileInput("imageBit")
         if(fileInput.available()>0){
             val bitmap= BitmapFactory.decodeStream(fileInput)//already decompressed
@@ -307,13 +305,6 @@ class EditProfileActivity : AppCompatActivity() {
             AlertDialog.Builder(this).setTitle(getString(R.string.edit_profile_ok_update_dialog_title))
                 .setMessage(getString(R.string.edit_profile_ok_update_dialog_message)).setPositiveButton("Ok") { _, _ ->
                 }.setOnDismissListener {
-                    //X PRENDERE I VALORI:
-//                  usernameEditText.text.toString()
-//                    fullNameEditText.text.toString()
-//                   locationEditText.text.toString()
-//                   dateOfBirthEditText.text.toString()
-//                      autoCompleteGender.text.toString()
-//                      autoCompletePosition.text.toString()
                     finish()
                 }.show()
 
@@ -340,35 +331,40 @@ class EditProfileActivity : AppCompatActivity() {
             }
             // Confirm Changes
             R.id.confirm_menu_item -> {
+
+                //Save new profile
                 val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)
                 val json=JSONObject()
-                //here because need to save before submit no?
                 json.put("username",usernameEditText.text.toString())
                 json.put( "fullName",fullNameEditText.text.toString())
                 json.put("location", locationEditText.text.toString())
                 json.put("gender",autoCompleteGender.text.toString())
                 json.put("position",autoCompletePosition.text.toString())
                 json.put("date", dateOfBirthEditText.text.toString())
+
+                //Calculate and save age
                 val year=myCalendar.get(Calendar.YEAR)
+                val day=myCalendar.get(Calendar.DAY_OF_YEAR)
                 val todayCalendar = Calendar.getInstance(TimeZone.getDefault());
                 val currentYear=todayCalendar.get(Calendar.YEAR)
-                val age=currentYear-year
+                var age=currentYear-year
+                val currentDay=todayCalendar.get(Calendar.DAY_OF_YEAR)
+                if(day>currentDay){
+                    age--
+                }
                 json.put("age", age)
+
                 val editor= sharedPref.edit()
-                //overwrite the precedent profile
                 editor.putString("profile", json.toString())
                 editor.apply()
 
-                //bitMapImage
-
+                //Saving image
                 val stream = ByteArrayOutputStream()
                 bitMapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream)
                 val byteArray = stream.toByteArray()
-                //overwrite the precedent data
                 val fileOut= applicationContext.openFileOutput("imageBit", Context.MODE_PRIVATE)
                 fileOut.write(byteArray)
                 fileOut.close()
-
 
                 submitForm()
 

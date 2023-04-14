@@ -30,10 +30,9 @@ class ShowProfileActivity : AppCompatActivity() {
         val dangerIcon = findViewById<ImageView>(R.id.danger_icon)
         TooltipCompat.setTooltipText(dangerIcon, getString(R.string.danger_icon_tooltip))
 
-        //Persistence
+        //PROFILE MANAGEMENT
+        //Load if already exist, otherwise it will load the hardcoded data
         val sharedPref = getSharedPreferences("test", MODE_PRIVATE)
-
-        //Replace if a profile exists
         if(sharedPref.contains("profile")){
             val json= JSONObject(sharedPref.getString("profile","Default"))
             val username =findViewById<TextView>(R.id.username)
@@ -48,17 +47,6 @@ class ShowProfileActivity : AppCompatActivity() {
             fullName.text=json.getString("fullName")
             val location=findViewById<CustomTextView>(R.id.location).findViewById<TextView>(R.id.value)
             location.text=json.getString("location")
-            val file = applicationContext.getFileStreamPath("imageBit")
-            if(file.exists()){
-                val fileInput= openFileInput("imageBit")
-                if(fileInput.available()>0){
-                    val bitmap= BitmapFactory.decodeStream(fileInput)//already decompressed
-                    val avatarImage = findViewById<ImageView>(R.id.avatar)
-                    avatarImage.setImageBitmap(bitmap)
-                }
-                fileInput.close()
-            }
-
 
             //TO REMOVE ALL EXISTING VALUES INSIDE SHARED PREFERENCES
             /*val editor= sharedPref.edit()
@@ -66,6 +54,56 @@ class ShowProfileActivity : AppCompatActivity() {
             editor.apply()*/
         }
 
+        //IMAGE MANAGEMENT
+        //Load if exists, otherwise it will load the hardcoded image
+        val file = applicationContext.getFileStreamPath("imageBit")
+        if(file.exists()){
+            val fileInput= openFileInput("imageBit")
+            if(fileInput.available()>0){
+                val bitmap= BitmapFactory.decodeStream(fileInput)//already decompressed
+                val avatarImage = findViewById<ImageView>(R.id.avatar)
+                avatarImage.setImageBitmap(bitmap)
+            }
+            fileInput.close()
+        }
+
+
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+
+        //PROFILE MANAGEMENT
+        //Load if already exist, otherwise it will load the hardcoded data
+        val sharedPref = getSharedPreferences("test", MODE_PRIVATE)
+        if(sharedPref.contains("profile")){
+            val json= JSONObject(sharedPref.getString("profile","Default"))
+            val username =findViewById<TextView>(R.id.username)
+            username.text= json.getString("username")
+            val position=findViewById<TextView>(R.id.position)
+            position.text=json.getString("position")
+            val age=findViewById<CustomTextView>(R.id.age).findViewById<TextView>(R.id.value)
+            age.text=json.getString("age")
+            val gender=findViewById<CustomTextView>(R.id.gender).findViewById<TextView>(R.id.value)
+            gender.text=json.getString("gender")
+            val fullName=findViewById<CustomTextView>(R.id.fullname).findViewById<TextView>(R.id.value)
+            fullName.text=json.getString("fullName")
+            val location=findViewById<CustomTextView>(R.id.location).findViewById<TextView>(R.id.value)
+            location.text=json.getString("location")
+        }
+
+        //IMAGE MANAGEMENT
+        //Load if exists, otherwise it will load the hardcoded image
+        val file = applicationContext.getFileStreamPath("imageBit")
+        if(file.exists()){
+            val fileInput= openFileInput("imageBit")
+            if(fileInput.available()>0){
+                val bitmap= BitmapFactory.decodeStream(fileInput)//already decompressed
+                val avatarImage = findViewById<ImageView>(R.id.avatar)
+                avatarImage.setImageBitmap(bitmap)
+            }
+            fileInput.close()
+        }
 
     }
 

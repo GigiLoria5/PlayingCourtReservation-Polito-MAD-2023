@@ -23,7 +23,7 @@
     <fraction name="default_rating">0</fraction>
     <string name="default_fullname">Giacinto Milanesi</string>
     <integer name="default_age">21</integer>
-    <string name="default_gender">M</string>
+    <string name="default_gender">Male</string>
     <string name="default_location">Turin</string>
     <integer name="default_organized">0</integer>
     <integer name="default_played">0</integer>
@@ -47,6 +47,7 @@
     <string name="edit_profile_no_ok_update_dialog_message">Unable to update the profile. Some field are wrong</string>
     <string name="camera">Camera</string>
     <string name="galley">Gallery</string>
+    <string name="default_profile">Default profile</string>
 
     <string-array name="position_array">
         <item>Attacker</item>
