@@ -32,7 +32,6 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
@@ -196,7 +195,7 @@ class EditProfileActivity : AppCompatActivity() {
         val editBtn = findViewById<ImageButton>(R.id.imageButton)
 
         val alertCustomDialog = LayoutInflater.from(this).inflate(R.layout.custom_dialog_photo, null)
-        var builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this)
         builder.setView(alertCustomDialog)
         val galleryBtn = alertCustomDialog.findViewById<ImageButton>(R.id.gallery)
         val cameraBtn = alertCustomDialog.findViewById<ImageButton>(R.id.camera)
@@ -436,6 +435,8 @@ class EditProfileActivity : AppCompatActivity() {
             val inputImage: Bitmap? = uriToBitmap(imageUri)
             bitMapImage = rotateBitmap(inputImage!!)
             avatarImage.setImageBitmap(bitMapImage)
+        }else{
+            contentResolver.delete(imageUri!!, null, null)
         }
     }
 
