@@ -105,6 +105,10 @@ class EditProfileActivity : AppCompatActivity() {
             dateOfBirthEditText.setText(json.getString("date"))
             autoCompleteGender.setText(json.getString("gender"), false)
             locationEditText.setText(json.getString("location"))
+            myCalendar.set(Calendar.YEAR, json.getInt("year"))
+            myCalendar.set(Calendar.MONTH, json.getInt("month"))
+            myCalendar.set(Calendar.DAY_OF_MONTH, json.getInt("day"))
+
 
         }else{//put the default value
             usernameEditText.setText(getString(R.string.default_username))
@@ -113,6 +117,7 @@ class EditProfileActivity : AppCompatActivity() {
             dateOfBirthEditText.setText(getString(R.string.default_date))
             autoCompleteGender.setText(getString(R.string.default_gender), false)
             locationEditText.setText(getString(R.string.default_location))
+            myCalendar.add(Calendar.YEAR, -21)
         }
 
         //IMAGE MANAGEMENT
@@ -153,12 +158,13 @@ class EditProfileActivity : AppCompatActivity() {
 
         //Date of birth management
         //imposto data nascita a 21 anni fa
-        myCalendar.add(Calendar.YEAR, -21)
-        updateDateOfBirthEditText(myCalendar)
+        //myCalendar.add(Calendar.YEAR, -21)
+        //updateDateOfBirthEditText(myCalendar)
         val datePicker = DatePickerDialog.OnDateSetListener { _, year, month, day ->
             myCalendar.set(Calendar.YEAR, year)
             myCalendar.set(Calendar.MONTH, month)
             myCalendar.set(Calendar.DAY_OF_MONTH, day)
+            updateDateOfBirthEditText(myCalendar)
         }
         dateOfBirthEditText.setOnClickListener {
             val dp = DatePickerDialog(
@@ -325,6 +331,9 @@ class EditProfileActivity : AppCompatActivity() {
                 json.put("gender",autoCompleteGender.text.toString())
                 json.put("position",autoCompletePosition.text.toString())
                 json.put("date", dateOfBirthEditText.text.toString())
+                json.put("year",myCalendar.get(Calendar.YEAR))
+                json.put("month",myCalendar.get(Calendar.MONTH))
+                json.put("day",myCalendar.get(Calendar.DAY_OF_MONTH))
 
                 //Calculate and save age
                 val year=myCalendar.get(Calendar.YEAR)
