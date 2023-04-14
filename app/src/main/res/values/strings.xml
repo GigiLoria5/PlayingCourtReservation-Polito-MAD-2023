@@ -48,6 +48,7 @@
     <string name="camera">Camera</string>
     <string name="galley">Gallery</string>
     <string name="default_profile">Default profile</string>
+    <string name="default_date">14-04-2002</string>
 
     <string-array name="position_array">
         <item>Attacker</item>

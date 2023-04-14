@@ -65,6 +65,8 @@ class ShowProfileActivity : AppCompatActivity() {
                 avatarImage.setImageBitmap(bitmap)
             }
             fileInput.close()
+            //DELETE IMAGE
+            //file.delete()
         }
 
 
