@@ -2,6 +2,7 @@ package it.polito.mad.g26.playingcourtreservation.activity
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import androidx.appcompat.widget.TooltipCompat
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import org.json.JSONObject
+
 
 class ShowProfileActivity : AppCompatActivity() {
 
@@ -29,7 +31,7 @@ class ShowProfileActivity : AppCompatActivity() {
         TooltipCompat.setTooltipText(dangerIcon, getString(R.string.danger_icon_tooltip))
 
         //Persistence
-        val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)
+        val sharedPref = getSharedPreferences("test", MODE_PRIVATE)
 
         //Replace if a profile exists
         if(sharedPref.contains("profile")){
@@ -46,7 +48,19 @@ class ShowProfileActivity : AppCompatActivity() {
             fullName.text=json.getString("fullName")
             val location=findViewById<CustomTextView>(R.id.location).findViewById<TextView>(R.id.value)
             location.text=json.getString("location")
-            //TO REMOVE ALL EXISTING VALUES INSIDE SHAREDPREFERENCES
+            val file = applicationContext.getFileStreamPath("imageBit")
+            if(file.exists()){
+                val fileInput= openFileInput("imageBit")
+                if(fileInput.available()>0){
+                    val bitmap= BitmapFactory.decodeStream(fileInput)//already decompressed
+                    val avatarImage = findViewById<ImageView>(R.id.avatar)
+                    avatarImage.setImageBitmap(bitmap)
+                }
+                fileInput.close()
+            }
+
+
+            //TO REMOVE ALL EXISTING VALUES INSIDE SHARED PREFERENCES
             /*val editor= sharedPref.edit()
             editor.clear()
             editor.apply()*/

@@ -33,9 +33,11 @@ import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
 import java.io.IOException
 import java.util.*
+
 
 class EditProfileActivity : AppCompatActivity() {
 
@@ -102,6 +104,8 @@ class EditProfileActivity : AppCompatActivity() {
             autoCompleteGender.setText(json.getString("gender"), false)
             locationEditText = findViewById(R.id.location_et)
             locationEditText.setText(json.getString("location"))
+
+
         }else{//put the default value
             usernameEditText = findViewById(R.id.username_et)
             autoCompletePosition = findViewById(R.id.position_autocomplete)
@@ -114,7 +118,20 @@ class EditProfileActivity : AppCompatActivity() {
             locationEditText.setText("Turin")
         }
 
+        avatarImage = findViewById(R.id.avatar)
+        //Entry in the local file system
+        val fileInput= openFileInput("imageBit")
+        if(fileInput.available()>0){
+            val bitmap= BitmapFactory.decodeStream(fileInput)//already decompressed
+            avatarImage.setImageBitmap(bitmap)
+            bitMapImage=bitmap
+        }else{
+            avatarImage.setImageBitmap(getDrawable(R.drawable.profile_default)!!.toBitmap())
+            bitMapImage= avatarImage.drawable.toBitmap()
+        }
 
+
+        fileInput.close()
 
 
 
@@ -186,8 +203,8 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         //image management
-        avatarImage = findViewById(R.id.avatar)
-        bitMapImage = avatarImage.drawable.toBitmap()
+        //avatarImage = findViewById(R.id.avatar)
+        //bitMapImage = avatarImage.drawable.toBitmap()
         val editBtn = findViewById<ImageButton>(R.id.imageButton)
 
         val alertCustomDialog = LayoutInflater.from(this).inflate(R.layout.custom_dialog_photo, null)
@@ -325,6 +342,7 @@ class EditProfileActivity : AppCompatActivity() {
             R.id.confirm_menu_item -> {
                 val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)
                 val json=JSONObject()
+                //here because need to save before submit no?
                 json.put("username",usernameEditText.text.toString())
                 json.put( "fullName",fullNameEditText.text.toString())
                 json.put("location", locationEditText.text.toString())
@@ -340,6 +358,18 @@ class EditProfileActivity : AppCompatActivity() {
                 //overwrite the precedent profile
                 editor.putString("profile", json.toString())
                 editor.apply()
+
+                //bitMapImage
+
+                val stream = ByteArrayOutputStream()
+                bitMapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                val byteArray = stream.toByteArray()
+                //overwrite the precedent data
+                val fileOut= applicationContext.openFileOutput("imageBit", Context.MODE_PRIVATE)
+                fileOut.write(byteArray)
+                fileOut.close()
+
+
                 submitForm()
 
                 true
