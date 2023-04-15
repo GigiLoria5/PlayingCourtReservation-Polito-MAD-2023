@@ -23,7 +23,7 @@
     <fraction name="default_rating">0</fraction>
     <string name="default_fullname">Giacinto Milanesi</string>
     <integer name="default_age">21</integer>
-    <string name="default_gender">M</string>
+    <string name="default_gender">Male</string>
     <string name="default_location">Turin</string>
     <integer name="default_organized">0</integer>
     <integer name="default_played">0</integer>
@@ -42,11 +42,15 @@
     <string name="required_helper">Required</string>
     <string name="invalid_field_helper">Invalid field</string>
     <string name="edit_profile_ok_update_dialog_title">Profile updated</string>
-    <string name="edit_profile_ok_update_dialog_message">Profile succesfully updated</string>
+    <string name="edit_profile_ok_update_dialog_message">Profile successfully updated</string>
     <string name="edit_profile_no_ok_update_dialog_title">Invalid data</string>
     <string name="edit_profile_no_ok_update_dialog_message">Unable to update the profile. Some field are wrong</string>
     <string name="camera">Camera</string>
     <string name="galley">Gallery</string>
+    <string name="default_profile">Default profile</string>
+    <string name="default_date">14-04-2002</string>
+    <string name="username_min_length">Username min length is 8 characters</string>
+    <string name="username_max_length">Username max length is 30 characters</string>
 
     <string-array name="position_array">
         <item>Attacker</item>

@@ -1,15 +1,22 @@
 package it.polito.mad.g26.playingcourtreservation.activity
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.TooltipCompat
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+import org.json.JSONObject
+
 
 class ShowProfileActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
@@ -22,6 +29,84 @@ class ShowProfileActivity : AppCompatActivity() {
         TooltipCompat.setTooltipText(warningIcon, getString(R.string.warning_icon_tooltip))
         val dangerIcon = findViewById<ImageView>(R.id.danger_icon)
         TooltipCompat.setTooltipText(dangerIcon, getString(R.string.danger_icon_tooltip))
+
+        //PROFILE MANAGEMENT
+        //Load if already exist, otherwise it will load the hardcoded data
+        val sharedPref = getSharedPreferences("test", MODE_PRIVATE)
+        if(sharedPref.contains("profile")){
+            val json= JSONObject(sharedPref.getString("profile","Default"))
+            val username =findViewById<TextView>(R.id.username)
+            username.text= json.getString("username")
+            val position=findViewById<TextView>(R.id.position)
+            position.text=json.getString("position")
+            val age=findViewById<CustomTextView>(R.id.age).findViewById<TextView>(R.id.value)
+            age.text=json.getString("age")
+            val gender=findViewById<CustomTextView>(R.id.gender).findViewById<TextView>(R.id.value)
+            gender.text=json.getString("gender")
+            val fullName=findViewById<CustomTextView>(R.id.fullname).findViewById<TextView>(R.id.value)
+            fullName.text=json.getString("fullName")
+            val location=findViewById<CustomTextView>(R.id.location).findViewById<TextView>(R.id.value)
+            location.text=json.getString("location")
+
+            //TO REMOVE ALL EXISTING VALUES INSIDE SHARED PREFERENCES
+            /*val editor= sharedPref.edit()
+            editor.clear()
+            editor.apply()*/
+        }
+
+        //IMAGE MANAGEMENT
+        //Load if exists, otherwise it will load the hardcoded image
+        val file = applicationContext.getFileStreamPath("imageBit")
+        if(file.exists()){
+            val fileInput= openFileInput("imageBit")
+            if(fileInput.available()>0){
+                val bitmap= BitmapFactory.decodeStream(fileInput)//already decompressed
+                val avatarImage = findViewById<ImageView>(R.id.avatar)
+                avatarImage.setImageBitmap(bitmap)
+            }
+            fileInput.close()
+            //DELETE IMAGE
+            //file.delete()
+        }
+
+
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+
+        //PROFILE MANAGEMENT
+        //Load if already exist, otherwise it will load the hardcoded data
+        val sharedPref = getSharedPreferences("test", MODE_PRIVATE)
+        if(sharedPref.contains("profile")){
+            val json= JSONObject(sharedPref.getString("profile","Default"))
+            val username =findViewById<TextView>(R.id.username)
+            username.text= json.getString("username")
+            val position=findViewById<TextView>(R.id.position)
+            position.text=json.getString("position")
+            val age=findViewById<CustomTextView>(R.id.age).findViewById<TextView>(R.id.value)
+            age.text=json.getString("age")
+            val gender=findViewById<CustomTextView>(R.id.gender).findViewById<TextView>(R.id.value)
+            gender.text=json.getString("gender")
+            val fullName=findViewById<CustomTextView>(R.id.fullname).findViewById<TextView>(R.id.value)
+            fullName.text=json.getString("fullName")
+            val location=findViewById<CustomTextView>(R.id.location).findViewById<TextView>(R.id.value)
+            location.text=json.getString("location")
+        }
+
+        //IMAGE MANAGEMENT
+        //Load if exists, otherwise it will load the hardcoded image
+        val file = applicationContext.getFileStreamPath("imageBit")
+        if(file.exists()){
+            val fileInput= openFileInput("imageBit")
+            if(fileInput.available()>0){
+                val bitmap= BitmapFactory.decodeStream(fileInput)//already decompressed
+                val avatarImage = findViewById<ImageView>(R.id.avatar)
+                avatarImage.setImageBitmap(bitmap)
+            }
+            fileInput.close()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
