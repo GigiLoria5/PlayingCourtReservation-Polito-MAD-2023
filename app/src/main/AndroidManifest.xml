@@ -15,6 +15,9 @@
         android:theme="@style/Theme.PlayingCourtReservation"
         tools:targetApi="31">
         <activity
+            android:name=".SearchCourtFragment"
+            android:exported="false" />
+        <activity
             android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -25,8 +28,7 @@
         </activity>
         <activity
             android:name=".activity.ShowProfileActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".activity.EditProfileActivity"
             android:exported="false"

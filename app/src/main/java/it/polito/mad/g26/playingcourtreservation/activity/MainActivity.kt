@@ -12,6 +12,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNav.setOnItemReselectedListener {
+            when(it.itemId){
+                R.id.home -> supportFragmentManager.beginTransaction().replace(R.id.frame_layout, SearchCourtFragment()).commit()
+                //R.id.reservations -> supportFragmentManager.beginTransaction().replace(R.id.frame_layout, Reservation()).commit() DA IMPLEMENTARE
+                //R.id.profile -> supportFragmentManager.beginTransaction().replace(R.id.frame_layout, ShowProfileActivity()).commit()
+            }
+        }
     }
 
 }
