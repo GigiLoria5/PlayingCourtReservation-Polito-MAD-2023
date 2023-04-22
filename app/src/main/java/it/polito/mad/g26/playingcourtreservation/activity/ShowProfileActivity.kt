@@ -5,125 +5,96 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import org.json.JSONObject
 
 
-class ShowProfileActivity : AppCompatActivity() {
+class ShowProfileActivity : Fragment(R.layout.activity_show_profile) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_show_profile)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.show_profile_menu, menu)
+            }
 
+            override fun onMenuItemSelected(item: MenuItem): Boolean {
+                // Handle the menu selection
+                return when (item.itemId) {
+                    // Edit
+                    R.id.edit_menu_item -> {
+                        val intent = Intent(activity, EditProfileActivity::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
         // Change Title
-        supportActionBar?.setTitle(R.string.activity_show_profile_title)
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "Profile"
 
         // Add Tooltips
-        val warningIcon = findViewById<ImageView>(R.id.warning_icon)
+        val warningIcon = view.findViewById<ImageView>(R.id.warning_icon)
         TooltipCompat.setTooltipText(warningIcon, getString(R.string.warning_icon_tooltip))
-        val dangerIcon = findViewById<ImageView>(R.id.danger_icon)
+        val dangerIcon = view.findViewById<ImageView>(R.id.danger_icon)
         TooltipCompat.setTooltipText(dangerIcon, getString(R.string.danger_icon_tooltip))
 
-        //PROFILE MANAGEMENT
-        //Load if already exist, otherwise it will load the hardcoded data
-        val sharedPref = getSharedPreferences("test", MODE_PRIVATE)
-        if(sharedPref.contains("profile")){
-            val json= JSONObject(sharedPref.getString("profile","Default"))
-            val username =findViewById<TextView>(R.id.username)
-            username.text= json.getString("username")
-            val position=findViewById<TextView>(R.id.position)
-            position.text=json.getString("position")
-            val age=findViewById<CustomTextView>(R.id.age).findViewById<TextView>(R.id.value)
-            age.text=json.getString("age")
-            val gender=findViewById<CustomTextView>(R.id.gender).findViewById<TextView>(R.id.value)
-            gender.text=json.getString("gender")
-            val fullName=findViewById<CustomTextView>(R.id.fullname).findViewById<TextView>(R.id.value)
-            fullName.text=json.getString("fullName")
-            val location=findViewById<CustomTextView>(R.id.location).findViewById<TextView>(R.id.value)
-            location.text=json.getString("location")
-
-            //TO REMOVE ALL EXISTING VALUES INSIDE SHARED PREFERENCES
-            /*val editor= sharedPref.edit()
-            editor.clear()
-            editor.apply()*/
-        }
-
-        //IMAGE MANAGEMENT
-        //Load if exists, otherwise it will load the hardcoded image
-        val file = applicationContext.getFileStreamPath("imageBit")
-        if(file.exists()){
-            val fileInput= openFileInput("imageBit")
-            if(fileInput.available()>0){
-                val bitmap= BitmapFactory.decodeStream(fileInput)//already decompressed
-                val avatarImage = findViewById<ImageView>(R.id.avatar)
-                avatarImage.setImageBitmap(bitmap)
-            }
-            fileInput.close()
-            //DELETE IMAGE
-            //file.delete()
-        }
-
-
+        loadProfikeAndImage()
     }
 
-    override fun onRestart() {
-        super.onRestart()
+    fun loadProfikeAndImage(){
 
         //PROFILE MANAGEMENT
         //Load if already exist, otherwise it will load the hardcoded data
-        val sharedPref = getSharedPreferences("test", MODE_PRIVATE)
+        val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
         if(sharedPref.contains("profile")){
             val json= JSONObject(sharedPref.getString("profile","Default"))
-            val username =findViewById<TextView>(R.id.username)
+            val username =requireView().findViewById<TextView>(R.id.username)
             username.text= json.getString("username")
-            val position=findViewById<TextView>(R.id.position)
+            val position=requireView().findViewById<TextView>(R.id.position)
             position.text=json.getString("position")
-            val age=findViewById<CustomTextView>(R.id.age).findViewById<TextView>(R.id.value)
+            val age=requireView().findViewById<CustomTextView>(R.id.age).findViewById<TextView>(R.id.value)
             age.text=json.getString("age")
-            val gender=findViewById<CustomTextView>(R.id.gender).findViewById<TextView>(R.id.value)
+            val gender=requireView().findViewById<CustomTextView>(R.id.gender).findViewById<TextView>(R.id.value)
             gender.text=json.getString("gender")
-            val fullName=findViewById<CustomTextView>(R.id.fullname).findViewById<TextView>(R.id.value)
+            val fullName=requireView().findViewById<CustomTextView>(R.id.fullname).findViewById<TextView>(R.id.value)
             fullName.text=json.getString("fullName")
-            val location=findViewById<CustomTextView>(R.id.location).findViewById<TextView>(R.id.value)
+            val location=requireView().findViewById<CustomTextView>(R.id.location).findViewById<TextView>(R.id.value)
             location.text=json.getString("location")
         }
 
         //IMAGE MANAGEMENT
         //Load if exists, otherwise it will load the hardcoded image
-        val file = applicationContext.getFileStreamPath("imageBit")
+        val file = requireContext().getFileStreamPath("imageBit")
         if(file.exists()){
-            val fileInput= openFileInput("imageBit")
+            val fileInput= requireActivity().openFileInput("imageBit")
             if(fileInput.available()>0){
                 val bitmap= BitmapFactory.decodeStream(fileInput)//already decompressed
-                val avatarImage = findViewById<ImageView>(R.id.avatar)
+                val avatarImage = requireView().findViewById<ImageView>(R.id.avatar)
                 avatarImage.setImageBitmap(bitmap)
             }
             fileInput.close()
         }
-
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.show_profile_menu, menu)
-        return true
+    override fun onResume() {
+        super.onResume()
+        loadProfikeAndImage()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        return when (item.itemId) {
-            // Edit
-            R.id.edit_menu_item -> {
-                val intent = Intent(this, EditProfileActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 }
