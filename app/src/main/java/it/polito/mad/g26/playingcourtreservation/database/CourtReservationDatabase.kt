@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import it.polito.mad.g26.playingcourtreservation.dao.CourtReservationDao
+import it.polito.mad.g26.playingcourtreservation.dao.*
 import it.polito.mad.g26.playingcourtreservation.model.*
 import java.io.File
 
@@ -17,7 +17,13 @@ import java.io.File
     SportCenterServices::class,
     Sport::class], version = 1)
 abstract class CourtReservationDatabase: RoomDatabase() {
-    abstract fun courtReservationDao(): CourtReservationDao
+    abstract fun courtDao(): CourtDao
+    abstract fun reservationDao(): ReservationDao
+    abstract fun reservationServiceDao(): ReservationServicesDao
+    abstract fun serviceDao(): ServiceDao
+    abstract fun sportCenterDao(): SportCenterDao
+    abstract fun sportCenterServiceDao(): SportCenterServicesDao
+    abstract fun sportDao(): SportDao
 
     companion object{
         @Volatile
