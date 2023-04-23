@@ -28,16 +28,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
 import java.io.IOException
 import java.util.*
-
 
 class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
@@ -85,7 +88,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /*
+
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -98,14 +101,14 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                 return when (item.itemId) {
                     // Back
                     android.R.id.home -> {
-                        finish()
+                        findNavController().navigate(R.id.action_editProfileFragment_to_showProfileFragment)
                         true
                     }
                     // Confirm Changes
                     R.id.confirm_menu_item -> {
 
                         //Save new profile
-                        val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)
+                        val sharedPref = requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
                         val json = JSONObject()
                         json.put("username", usernameEditText.text.toString())
                         json.put("fullName", fullNameEditText.text.toString())
@@ -137,7 +140,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                         val stream = ByteArrayOutputStream()
                         bitMapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream)
                         val byteArray = stream.toByteArray()
-                        val fileOut = applicationContext.openFileOutput("imageBit", Context.MODE_PRIVATE)
+                        val fileOut = requireActivity().openFileOutput("imageBit", Context.MODE_PRIVATE)
                         fileOut.write(byteArray)
                         fileOut.close()
 
@@ -145,11 +148,10 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
                         true
                     }
-                    else -> super.onOptionsItemSelected(item)
+                    else -> false
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        */
         // Change Title
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Edit Profile"
 
@@ -434,60 +436,6 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         }else
             outState.putBoolean("confirmAlertDialogShowing", false)
     }
-
-    /*
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        //take calendar
-        myCalendar.set(Calendar.YEAR, savedInstanceState.getInt("YEAR"))
-        myCalendar.set(Calendar.MONTH, savedInstanceState.getInt("MONTH"))
-        myCalendar.set(Calendar.DAY_OF_MONTH, savedInstanceState.getInt("DAY_OF_MONTH"))
-
-        //restore datePickerDialog
-        val datePickerDialogOn =
-            savedInstanceState.getBoolean("datePickerDialogShowing")
-        if (datePickerDialogOn) {
-         datePickerDialog.updateDate(
-             savedInstanceState.getInt("YEAR_SEL"),
-             savedInstanceState.getInt("MONTH_SEL"),
-             savedInstanceState.getInt("DAY_OF_MONTH_SEL")
-         )
-            datePickerDialog.show()
-        }
-
-
-        //restore dropdown position
-        val positionItems = resources.getStringArray(R.array.position_array)
-        val adapterPos = ArrayAdapter(this, R.layout.list_item, positionItems)
-        autoCompletePosition.setAdapter(adapterPos)
-
-        //restore dropdown gender
-        val genderItems = resources.getStringArray(R.array.gender_array)
-        val adapterGender = ArrayAdapter(this, R.layout.list_item, genderItems)
-        autoCompleteGender.setAdapter(adapterGender)
-
-        //restore avatar image
-        if (savedInstanceState.getString("imageUri") != "null") {
-            imageUri = Uri.parse(savedInstanceState.getString("imageUri"))
-            val inputImage: Bitmap? = uriToBitmap(imageUri)
-            bitMapImage = rotateBitmap(inputImage!!)
-            avatarImage.setImageBitmap(bitMapImage)
-        }
-
-        //restore profilePictureAlertDialog
-        val profilePictureAlertOn =
-            savedInstanceState.getBoolean("profilePictureAlertDialogShowing")
-        if (profilePictureAlertOn)
-            profilePictureAlertDialog.show()
-
-        //restore confirmAlertDialog
-        val confirmAlertOn = savedInstanceState.getBoolean("confirmAlertDialogShowing")
-        if (confirmAlertOn)
-            submitForm()
-
-    }
-    */
 
     //opens camera so that user can capture image
     private fun openCamera() {
