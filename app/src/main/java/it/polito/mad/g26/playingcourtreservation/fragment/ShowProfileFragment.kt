@@ -1,4 +1,4 @@
-package it.polito.mad.g26.playingcourtreservation.activity
+package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.content.Context
 import android.content.Intent
@@ -17,11 +17,12 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.activity.EditProfileActivity
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import org.json.JSONObject
 
 
-class ShowProfileActivity : Fragment(R.layout.activity_show_profile) {
+class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

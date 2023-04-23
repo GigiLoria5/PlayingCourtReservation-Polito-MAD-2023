@@ -8,7 +8,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/frame_layout"
-        android:name="it.polito.mad.g26.playingcourtreservation.activity.SearchCourtFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.SearchCourtFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
@@ -16,7 +16,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/activity_search_court_fragment" />
+        tools:layout="@layout/fragment_search_court" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
