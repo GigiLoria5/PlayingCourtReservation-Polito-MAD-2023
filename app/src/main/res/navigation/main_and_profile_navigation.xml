@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_navigation"
+    app:startDestination="@id/searchCourtFragment">
+
+    <fragment
+        android:id="@+id/showProfileFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.ShowProfileFragment"
+        android:label="activity_show_profile"
+        tools:layout="@layout/activity_show_profile" >
+        <action
+            android:id="@+id/action_showProfileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.EditProfileFragment"
+        android:label="activity_edit_profile"
+        tools:layout="@layout/activity_edit_profile" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_showProfileFragment"
+            app:destination="@id/showProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchCourtFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.SearchCourtFragment"
+        android:label="fragment_search_court"
+        tools:layout="@layout/fragment_search_court" />
+    <fragment
+        android:id="@+id/reservationsFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.ReservationsFragment"
+        android:label="fragment_reservations"
+        tools:layout="@layout/fragment_reservations" />
+</navigation>

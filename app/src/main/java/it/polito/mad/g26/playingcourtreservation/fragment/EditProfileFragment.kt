@@ -1,7 +1,8 @@
-package it.polito.mad.g26.playingcourtreservation.activity
+package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ContentValues
@@ -19,9 +20,7 @@ import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
+import android.view.*
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -30,16 +29,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
 import java.io.IOException
 import java.util.*
 
 
-class EditProfileActivity : AppCompatActivity() {
+class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
     private lateinit var usernameEditText: EditText
     private lateinit var usernameContainer: TextInputLayout
@@ -83,24 +83,87 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_profile)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        /*
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.edit_profile_menu, menu)
+            }
+
+            override fun onMenuItemSelected(item: MenuItem): Boolean {
+                // Handle the menu selection
+                return when (item.itemId) {
+                    // Back
+                    android.R.id.home -> {
+                        finish()
+                        true
+                    }
+                    // Confirm Changes
+                    R.id.confirm_menu_item -> {
+
+                        //Save new profile
+                        val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)
+                        val json = JSONObject()
+                        json.put("username", usernameEditText.text.toString())
+                        json.put("fullName", fullNameEditText.text.toString())
+                        json.put("location", locationEditText.text.toString())
+                        json.put("gender", autoCompleteGender.text.toString())
+                        json.put("position", autoCompletePosition.text.toString())
+                        json.put("date", dateOfBirthEditText.text.toString())
+                        json.put("year", myCalendar.get(Calendar.YEAR))
+                        json.put("month", myCalendar.get(Calendar.MONTH))
+                        json.put("day", myCalendar.get(Calendar.DAY_OF_MONTH))
+
+                        //Calculate and save age
+                        val year = myCalendar.get(Calendar.YEAR)
+                        val day = myCalendar.get(Calendar.DAY_OF_YEAR)
+                        val todayCalendar = Calendar.getInstance(TimeZone.getDefault())
+                        val currentYear = todayCalendar.get(Calendar.YEAR)
+                        var age = currentYear - year
+                        val currentDay = todayCalendar.get(Calendar.DAY_OF_YEAR)
+                        if (day > currentDay) {
+                            age--
+                        }
+                        json.put("age", age)
+
+                        val editor = sharedPref.edit()
+                        editor.putString("profile", json.toString())
+                        editor.apply()
+
+                        //Saving image
+                        val stream = ByteArrayOutputStream()
+                        bitMapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                        val byteArray = stream.toByteArray()
+                        val fileOut = applicationContext.openFileOutput("imageBit", Context.MODE_PRIVATE)
+                        fileOut.write(byteArray)
+                        fileOut.close()
+
+                        submitForm()
+
+                        true
+                    }
+                    else -> super.onOptionsItemSelected(item)
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        */
         // Change Title
-        supportActionBar?.setTitle(R.string.edit_show_profile_title)
-        // Set Back Button
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "Edit Profile"
+
 
         //PERSISTENCE
-        val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)
+        val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
 
-        usernameEditText = findViewById(R.id.username_et)
-        autoCompletePosition = findViewById(R.id.position_autocomplete)
-        fullNameEditText = findViewById(R.id.fullname_et)
-        dateOfBirthEditText = findViewById(R.id.dob_et)
-        autoCompleteGender = findViewById(R.id.gender_autocomplete)
-        locationEditText = findViewById(R.id.location_et)
-        avatarImage = findViewById(R.id.avatar)
+        usernameEditText = view.findViewById(R.id.username_et)
+        autoCompletePosition = view.findViewById(R.id.position_autocomplete)
+        fullNameEditText = view.findViewById(R.id.fullname_et)
+        dateOfBirthEditText = view.findViewById(R.id.dob_et)
+        autoCompleteGender = view.findViewById(R.id.gender_autocomplete)
+        locationEditText = view.findViewById(R.id.location_et)
+        avatarImage = view.findViewById(R.id.avatar)
 
         if (sharedPref.contains("profile")) {//work to replace all the strings
             val json = JSONObject(sharedPref.getString("profile", "Default"))
@@ -126,9 +189,9 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         //IMAGE MANAGEMENT
-        val file = applicationContext.getFileStreamPath("imageBit")
+        val file = requireActivity().applicationContext.getFileStreamPath("imageBit")
         if (file.exists()) {
-            val fileInput = openFileInput("imageBit")
+            val fileInput = requireActivity().openFileInput("imageBit")
             if (fileInput.available() > 0) {
                 val bitmap = BitmapFactory.decodeStream(fileInput)//already decompressed
                 avatarImage.setImageBitmap(bitmap)
@@ -136,7 +199,7 @@ class EditProfileActivity : AppCompatActivity() {
             } else {
                 avatarImage.setImageBitmap(
                     AppCompatResources.getDrawable(
-                        this,
+                        requireContext(),
                         R.drawable.profile_default
                     )!!.toBitmap()
                 )
@@ -146,7 +209,7 @@ class EditProfileActivity : AppCompatActivity() {
         } else {
             avatarImage.setImageBitmap(
                 AppCompatResources.getDrawable(
-                    this,
+                    requireContext(),
                     R.drawable.profile_default
                 )!!.toBitmap()
             )
@@ -155,18 +218,18 @@ class EditProfileActivity : AppCompatActivity() {
 
 
         //username management
-        usernameContainer = findViewById(R.id.username_container)
+        usernameContainer = view.findViewById(R.id.username_container)
         usernameEditText.addTextChangedListener {
             usernameContainer.helperText = validUsername()
         }
 
         //position dropdown management
         val positionItems = resources.getStringArray(R.array.position_array)
-        val adapterPos = ArrayAdapter(this, R.layout.list_item, positionItems)
+        val adapterPos = ArrayAdapter(requireContext(), R.layout.list_item, positionItems)
         autoCompletePosition.setAdapter(adapterPos)
 
         //fullName management
-        fullNameContainer = findViewById(R.id.fullname_container)
+        fullNameContainer = view.findViewById(R.id.fullname_container)
         fullNameEditText.addTextChangedListener {
             fullNameContainer.helperText = validFullName()
         }
@@ -180,7 +243,7 @@ class EditProfileActivity : AppCompatActivity() {
             updateDateOfBirthEditText(myCalendar)
         }
         datePickerDialog = DatePickerDialog(
-            this,
+            requireContext(),
             datePicker,
             myCalendar.get(Calendar.YEAR),
             myCalendar.get(Calendar.MONTH),
@@ -196,21 +259,21 @@ class EditProfileActivity : AppCompatActivity() {
 
         //gender dropdown management
         val genderItems = resources.getStringArray(R.array.gender_array)
-        val adapterGen = ArrayAdapter(this, R.layout.list_item, genderItems)
+        val adapterGen = ArrayAdapter(requireContext(), R.layout.list_item, genderItems)
         autoCompleteGender.setAdapter(adapterGen)
 
         //location management
-        locationContainer = findViewById(R.id.location_container)
+        locationContainer = view.findViewById(R.id.location_container)
         locationEditText.addTextChangedListener {
             locationContainer.helperText = validLocation()
         }
 
         //image management
-        val editBtn = findViewById<ImageButton>(R.id.imageButton)
+        val editBtn = view.findViewById<ImageButton>(R.id.imageButton)
 
         val alertCustomDialog =
-            LayoutInflater.from(this).inflate(R.layout.custom_dialog_photo, null)
-        val builder = AlertDialog.Builder(this)
+            LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_photo, null)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setView(alertCustomDialog)
         val galleryBtn = alertCustomDialog.findViewById<ImageButton>(R.id.gallery)
         val cameraBtn = alertCustomDialog.findViewById<ImageButton>(R.id.camera)
@@ -228,8 +291,8 @@ class EditProfileActivity : AppCompatActivity() {
         }
         cameraBtn.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+                if (requireActivity().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                    requireActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
                 ) {
                     val permission = arrayOf(
                         Manifest.permission.CAMERA,
@@ -309,13 +372,13 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun confirmAlertDialogBuilder(isOk: Boolean): AlertDialog {
         val builder: AlertDialog.Builder = if (isOk) {
-            AlertDialog.Builder(this)
+            AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.edit_profile_ok_update_dialog_title))
                 .setMessage(getString(R.string.edit_profile_ok_update_dialog_message))
-                .setPositiveButton("Ok") { _, _ -> finish()
-                }.setOnCancelListener { finish() }
+                .setPositiveButton("Ok") { _, _ -> findNavController().navigate(R.id.action_editProfileFragment_to_showProfileFragment)
+                }.setOnCancelListener { findNavController().navigate(R.id.action_editProfileFragment_to_showProfileFragment) }
         } else {
-            AlertDialog.Builder(this)
+            AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.edit_profile_no_ok_update_dialog_title))
                 .setMessage(getString(R.string.edit_profile_no_ok_update_dialog_message))
                 .setPositiveButton("Modify") { _, _ ->
@@ -327,66 +390,6 @@ class EditProfileActivity : AppCompatActivity() {
     private fun submitForm() {
         confirmAlertDialog = confirmAlertDialogBuilder(validInputData())
         confirmAlertDialog.show()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.edit_profile_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            // Back
-            android.R.id.home -> {
-                finish()
-                true
-            }
-            // Confirm Changes
-            R.id.confirm_menu_item -> {
-
-                //Save new profile
-                val sharedPref = getSharedPreferences("test", Context.MODE_PRIVATE)
-                val json = JSONObject()
-                json.put("username", usernameEditText.text.toString())
-                json.put("fullName", fullNameEditText.text.toString())
-                json.put("location", locationEditText.text.toString())
-                json.put("gender", autoCompleteGender.text.toString())
-                json.put("position", autoCompletePosition.text.toString())
-                json.put("date", dateOfBirthEditText.text.toString())
-                json.put("year", myCalendar.get(Calendar.YEAR))
-                json.put("month", myCalendar.get(Calendar.MONTH))
-                json.put("day", myCalendar.get(Calendar.DAY_OF_MONTH))
-
-                //Calculate and save age
-                val year = myCalendar.get(Calendar.YEAR)
-                val day = myCalendar.get(Calendar.DAY_OF_YEAR)
-                val todayCalendar = Calendar.getInstance(TimeZone.getDefault())
-                val currentYear = todayCalendar.get(Calendar.YEAR)
-                var age = currentYear - year
-                val currentDay = todayCalendar.get(Calendar.DAY_OF_YEAR)
-                if (day > currentDay) {
-                    age--
-                }
-                json.put("age", age)
-
-                val editor = sharedPref.edit()
-                editor.putString("profile", json.toString())
-                editor.apply()
-
-                //Saving image
-                val stream = ByteArrayOutputStream()
-                bitMapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                val byteArray = stream.toByteArray()
-                val fileOut = applicationContext.openFileOutput("imageBit", Context.MODE_PRIVATE)
-                fileOut.write(byteArray)
-                fileOut.close()
-
-                submitForm()
-
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
 
@@ -432,6 +435,7 @@ class EditProfileActivity : AppCompatActivity() {
             outState.putBoolean("confirmAlertDialogShowing", false)
     }
 
+    /*
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
@@ -483,13 +487,14 @@ class EditProfileActivity : AppCompatActivity() {
             submitForm()
 
     }
+    */
 
     //opens camera so that user can capture image
     private fun openCamera() {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "New Picture")
         values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
-        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        imageUri = requireActivity().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         cameraActivityResultLauncher.launch(cameraIntent)
@@ -508,7 +513,7 @@ class EditProfileActivity : AppCompatActivity() {
             bitMapImage = rotateBitmap(inputImage!!)
             avatarImage.setImageBitmap(bitMapImage)
         } else {
-            contentResolver.delete(imageUri!!, null, null)
+            requireActivity().contentResolver.delete(imageUri!!, null, null)
         }
     }
 
@@ -516,7 +521,7 @@ class EditProfileActivity : AppCompatActivity() {
     private fun uriToBitmap(selectedFileUri: Uri?): Bitmap? {
         try {
             val parcelFileDescriptor: ParcelFileDescriptor? =
-                contentResolver.openFileDescriptor(selectedFileUri!!, "r")
+                requireActivity().contentResolver.openFileDescriptor(selectedFileUri!!, "r")
             val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
             val image: Bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
             parcelFileDescriptor.close()
@@ -532,7 +537,7 @@ class EditProfileActivity : AppCompatActivity() {
     @SuppressLint("Range")
     fun rotateBitmap(input: Bitmap): Bitmap {
         val orientationColumn = arrayOf(MediaStore.Images.Media.ORIENTATION)
-        val cur: Cursor? = contentResolver.query(imageUri!!, orientationColumn, null, null, null)
+        val cur: Cursor? = requireActivity().contentResolver.query(imageUri!!, orientationColumn, null, null, null)
         var orientation = -1
         if (cur != null && cur.moveToFirst()) {
             orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]))

@@ -16,8 +16,8 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.activity.EditProfileActivity
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import org.json.JSONObject
 
@@ -38,8 +38,7 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
                 return when (item.itemId) {
                     // Edit
                     R.id.edit_menu_item -> {
-                        val intent = Intent(activity, EditProfileActivity::class.java)
-                        startActivity(intent)
+                        findNavController().navigate(R.id.action_showProfileFragment_to_editProfileFragment)
                         true
                     }
                     else -> false
