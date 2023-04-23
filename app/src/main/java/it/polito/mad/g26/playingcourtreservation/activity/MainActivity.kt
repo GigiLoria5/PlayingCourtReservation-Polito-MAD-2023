@@ -6,9 +6,16 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.*
+import it.polito.mad.g26.playingcourtreservation.viewmodel.*
 
 class MainActivity : AppCompatActivity() {
-    val vm by viewModels<SimpleVM>()
+    private val courtVM by viewModels<CourtVM>()
+    private val reservationVM by viewModels<ReservationVM>()
+    private val reservationServiceVM by viewModels<ReservationServiceVM>()
+    private val serviceVM by viewModels<ServiceVM>()
+    private val sportCenterVM by viewModels<SportCenterVM>()
+    private val sportCenterServicesVM by viewModels<SportCenterServicesVM>()
+    private val sportVM by viewModels<SportVM>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,37 +23,37 @@ class MainActivity : AppCompatActivity() {
         val courtObserver = Observer<List<Court>> { c ->
             println("Court: $c")
         }
-        vm.courtList.observe(this, courtObserver )
+        courtVM.courtList.observe(this, courtObserver )
 
         val reservationObserver = Observer<List<Reservation>> { r ->
             println("Reservations: $r")
         }
-        vm.reservationList.observe(this, reservationObserver )
+        reservationVM.reservationList.observe(this, reservationObserver )
 
         val reservationServicesObserver = Observer<List<ReservationServices>> { rs ->
             println("Reservation Sevices: $rs")
         }
-        vm.reservationServicesList.observe(this, reservationServicesObserver )
+        reservationServiceVM.reservationServicesList.observe(this, reservationServicesObserver )
 
         val servicesObserver = Observer<List<Service>> { s ->
             println("Service: $s")
         }
-        vm.serviceList.observe(this, servicesObserver )
+        serviceVM.serviceList.observe(this, servicesObserver )
 
         val sportObserver = Observer<List<Sport>> { s ->
             println("Sport: $s")
         }
-        vm.sportsList.observe(this, sportObserver )
+        sportVM.sportsList.observe(this, sportObserver )
 
         val sportCenterObserver = Observer<List<SportCenter>> { sc ->
             println("Sport Center: $sc")
         }
-        vm.sportCenterList.observe(this, sportCenterObserver )
+        sportCenterVM.sportCenterList.observe(this, sportCenterObserver )
 
         val sportCenterServicesObserver = Observer<List<SportCenterServices>> { scs ->
             println("Sport Center Services: $scs")
         }
-        vm.sportCenterServiceList.observe(this, sportCenterServicesObserver )
+        sportCenterServicesVM.sportCenterServicesList.observe(this, sportCenterServicesObserver )
 
     }
 }
