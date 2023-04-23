@@ -1,7 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.model
 
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "service")

@@ -1,26 +1,30 @@
 package it.polito.mad.g26.playingcourtreservation.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.ForeignKey.Companion.CASCADE
 
 @Entity(tableName = "reservation_services", primaryKeys = ["id_reservation", "id_service"], foreignKeys = [
     ForeignKey(
         entity = Reservation::class,
         parentColumns = ["id"],
         childColumns = ["id_reservation"],
-        onDelete = 5
+        onDelete = CASCADE
     ),
     ForeignKey(
         entity = Service::class,
         parentColumns = ["id"],
         childColumns = ["id_service"],
-        onDelete = 5
+        onDelete = CASCADE
     )
 ])
 class ReservationServices {
-    var id_reservation:Int = 0
+    @ColumnInfo(name = "id_reservation")
+    var idReservation:Int = 0
 
-    var id_service:Int = 1
+    @ColumnInfo(name = "id_service")
+    var idService:Int = 0
 
-    override fun toString() = "{ id_reservation: $id_reservation, id_services: $id_service }"
+    override fun toString() = "{ id_reservation: $idReservation, id_services: $idService }"
 }

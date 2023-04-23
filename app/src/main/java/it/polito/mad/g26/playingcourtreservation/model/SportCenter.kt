@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -15,17 +16,20 @@ class SportCenter {
 
     var city:String = ""
 
-    var longitude:Float? = null
+    var longitude:Double? = null
 
-    var latitude:Float? = null
+    var latitude:Double? = null
 
-    var phone_number:String = ""
+    @ColumnInfo(name = "phone_number")
+    var phoneNumber:String = ""
 
-    var open_time:String = ""
+    @ColumnInfo(name = "open_time")
+    var openTime:String = ""
 
-    var close_time:String = ""
+    @ColumnInfo(name = "close_time")
+    var closeTime:String = ""
 
     override fun toString() = "{ id: $id, name:\"$name\", address:\"$address\", " +
             "city:\"$city\", longitude:\"$longitude\", latitude:\"$latitude\", " +
-            "phone_number:\"$phone_number\", open_time:\"$open_time\", close_time:\"$close_time\" }"
+            "phone_number:\"$phoneNumber\", open_time:\"$openTime\", close_time:\"$closeTime\" }"
 }
