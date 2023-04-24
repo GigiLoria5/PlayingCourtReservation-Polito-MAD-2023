@@ -33,8 +33,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.searchCourtFragment -> bottomNav.menu.findItem(R.id.home).isChecked = true
                 R.id.reservationsFragment -> bottomNav.menu.findItem(R.id.reservations).isChecked =
                     true
-                R.id.showProfileFragment -> bottomNav.menu.findItem(R.id.profile).isChecked = true
-                R.id.editProfileFragment -> bottomNav.menu.findItem(R.id.profile).isChecked = true
+                R.id.showProfileFragment , R.id.editProfileFragment-> bottomNav.menu.findItem(R.id.profile).isChecked = true
             }
         }
     }
