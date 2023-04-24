@@ -9,7 +9,7 @@
         android:id="@+id/showProfileFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ShowProfileFragment"
         android:label="activity_show_profile"
-        tools:layout="@layout/activity_show_profile" >
+        tools:layout="@layout/activity_show_profile">
         <action
             android:id="@+id/action_showProfileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
@@ -18,11 +18,7 @@
         android:id="@+id/editProfileFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.EditProfileFragment"
         android:label="activity_edit_profile"
-        tools:layout="@layout/activity_edit_profile" >
-        <action
-            android:id="@+id/action_editProfileFragment_to_showProfileFragment"
-            app:destination="@id/showProfileFragment" />
-    </fragment>
+        tools:layout="@layout/activity_edit_profile" />
     <fragment
         android:id="@+id/searchCourtFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.SearchCourtFragment"

@@ -15,7 +15,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
@@ -27,6 +26,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -59,7 +59,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
     private lateinit var autoCompleteGender: AutoCompleteTextView
 
     private val myCalendar = Calendar.getInstance()
-    private lateinit var datePickerDialog : DatePickerDialog
+    private lateinit var datePickerDialog: DatePickerDialog
 
     private lateinit var confirmAlertDialog: AlertDialog
 
@@ -68,7 +68,14 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
     private lateinit var bitMapImage: Bitmap
     private lateinit var profilePictureAlertDialog: AlertDialog
 
-    //get the image from gallery and display it
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions[Manifest.permission.CAMERA] == true && permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true) {
+                openCamera()
+            }
+        }
+
+    // get the image from gallery and display it
     private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -88,7 +95,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        //save current calendar selection
+        // save current calendar selection
         outState.putInt("YEAR", myCalendar.get(Calendar.YEAR))
         outState.putInt("MONTH", myCalendar.get(Calendar.MONTH))
         outState.putInt("DAY_OF_MONTH", myCalendar.get(Calendar.DAY_OF_MONTH))
@@ -103,26 +110,27 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         } else
             outState.putBoolean("datePickerDialogShowing", false)
 
-        //save avatar image
+        // save avatar image
         if (imageUri != null) {
             outState.putString("imageUri", imageUri.toString())
         } else {
             outState.putString("imageUri", "null")
         }
 
-        //save profilePictureAlertDialog
+        // save profilePictureAlertDialog
         if (::profilePictureAlertDialog.isInitialized && profilePictureAlertDialog.isShowing) {
             outState.putBoolean("profilePictureAlertDialogShowing", true)
             profilePictureAlertDialog.dismiss()
         } else
             outState.putBoolean("profilePictureAlertDialogShowing", false)
 
-        //save confirmAlertDialog
-        if(::confirmAlertDialog.isInitialized &&
-            confirmAlertDialog.isShowing){
+        // save confirmAlertDialog
+        if (::confirmAlertDialog.isInitialized &&
+            confirmAlertDialog.isShowing
+        ) {
             outState.putBoolean("confirmAlertDialogShowing", true)
             confirmAlertDialog.dismiss()
-        }else
+        } else
             outState.putBoolean("confirmAlertDialogShowing", false)
     }
 
@@ -150,16 +158,16 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
 
         if (sharedPref.contains("profile")) {//work to replace all the strings
-            val json = JSONObject(sharedPref.getString("profile", "Default"))
-            usernameEditText.setText(json.getString("username"))
-            autoCompletePosition.setText(json.getString("position"), false)
-            fullNameEditText.setText(json.getString("fullName"))
-            dateOfBirthEditText.setText(json.getString("date"))
-            autoCompleteGender.setText(json.getString("gender"), false)
-            locationEditText.setText(json.getString("location"))
-            myCalendar.set(Calendar.YEAR, json.getInt("year"))
-            myCalendar.set(Calendar.MONTH, json.getInt("month"))
-            myCalendar.set(Calendar.DAY_OF_MONTH, json.getInt("day"))
+            val json = sharedPref.getString("profile", "Default")?.let { JSONObject(it) }
+            usernameEditText.setText(json?.getString("username"))
+            autoCompletePosition.setText(json?.getString("position"), false)
+            fullNameEditText.setText(json?.getString("fullName"))
+            dateOfBirthEditText.setText(json?.getString("date"))
+            autoCompleteGender.setText(json?.getString("gender"), false)
+            locationEditText.setText(json?.getString("location"))
+            json?.getInt("year")?.let { myCalendar.set(Calendar.YEAR, it) }
+            json?.getInt("month")?.let { myCalendar.set(Calendar.MONTH, it) }
+            json?.getInt("day")?.let { myCalendar.set(Calendar.DAY_OF_MONTH, it) }
         } else {//put the default value
             usernameEditText.setText(getString(R.string.default_username))
             autoCompletePosition.setText(getString(R.string.default_position), false)
@@ -214,7 +222,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         profilePictureAlertDialog.setCancelable(true)
 
         //Restore status
-        if (savedInstanceState !== null){
+        if (savedInstanceState !== null) {
             //take calendar
             myCalendar.set(Calendar.YEAR, savedInstanceState.getInt("YEAR"))
             myCalendar.set(Calendar.MONTH, savedInstanceState.getInt("MONTH"))
@@ -253,13 +261,24 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         }
 
         //IMAGE MANAGEMENT
-        val file = requireActivity().applicationContext.getFileStreamPath("imageBit")
-        if (file.exists()) {
-            val fileInput = requireActivity().openFileInput("imageBit")
-            if (fileInput.available() > 0) {
-                val bitmap = BitmapFactory.decodeStream(fileInput)//already decompressed
-                avatarImage.setImageBitmap(bitmap)
-                bitMapImage = bitmap
+        if (imageUri == null) {
+            val file = requireActivity().applicationContext.getFileStreamPath("imageBit")
+            if (file.exists()) {
+                val fileInput = requireActivity().openFileInput("imageBit")
+                bitMapImage = if (fileInput.available() > 0) {
+                    val bitmap = BitmapFactory.decodeStream(fileInput)//already decompressed
+                    avatarImage.setImageBitmap(bitmap)
+                    bitmap
+                } else {
+                    avatarImage.setImageBitmap(
+                        AppCompatResources.getDrawable(
+                            requireContext(),
+                            R.drawable.profile_default
+                        )!!.toBitmap()
+                    )
+                    avatarImage.drawable.toBitmap()
+                }
+                fileInput.close()
             } else {
                 avatarImage.setImageBitmap(
                     AppCompatResources.getDrawable(
@@ -269,17 +288,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                 )
                 bitMapImage = avatarImage.drawable.toBitmap()
             }
-            fileInput.close()
-        } else {
-            avatarImage.setImageBitmap(
-                AppCompatResources.getDrawable(
-                    requireContext(),
-                    R.drawable.profile_default
-                )!!.toBitmap()
-            )
-            bitMapImage = avatarImage.drawable.toBitmap()
         }
-
 
         //username management
         usernameEditText.addTextChangedListener {
@@ -308,19 +317,22 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             galleryActivityResultLauncher.launch(galleryIntent)
             profilePictureAlertDialog.dismiss()
         }
+
         cameraBtn.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (requireActivity().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                    requireActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
-                ) {
-                    val permission = arrayOf(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    )
-                    requestPermissions(permission, 112)
-                } else {
-                    openCamera()
-                }
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_DENIED ||
+                ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_DENIED
+            ) {
+                val permission = arrayOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                requestPermissionLauncher.launch(permission)
             } else {
                 openCamera()
             }
@@ -343,14 +355,15 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                 return when (item.itemId) {
                     // Back
                     android.R.id.home -> {
-                        findNavController().navigate(R.id.action_editProfileFragment_to_showProfileFragment)
+                        findNavController().popBackStack()
                         true
                     }
                     // Confirm Changes
                     R.id.confirm_menu_item -> {
 
                         //Save new profile
-                        val sharedPref = requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
+                        val sharedPreferences =
+                            requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
                         val json = JSONObject()
                         json.put("username", usernameEditText.text.toString())
                         json.put("fullName", fullNameEditText.text.toString())
@@ -374,7 +387,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                         }
                         json.put("age", age)
 
-                        val editor = sharedPref.edit()
+                        val editor = sharedPreferences.edit()
                         editor.putString("profile", json.toString())
                         editor.apply()
 
@@ -382,7 +395,8 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                         val stream = ByteArrayOutputStream()
                         bitMapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream)
                         val byteArray = stream.toByteArray()
-                        val fileOut = requireActivity().openFileOutput("imageBit", Context.MODE_PRIVATE)
+                        val fileOut =
+                            requireActivity().openFileOutput("imageBit", Context.MODE_PRIVATE)
                         fileOut.write(byteArray)
                         fileOut.close()
 
@@ -470,8 +484,10 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.edit_profile_ok_update_dialog_title))
                 .setMessage(getString(R.string.edit_profile_ok_update_dialog_message))
-                .setPositiveButton("Ok") { _, _ -> findNavController().navigate(R.id.action_editProfileFragment_to_showProfileFragment)
-                }.setOnCancelListener { findNavController().navigate(R.id.action_editProfileFragment_to_showProfileFragment) }
+                .setPositiveButton("Ok") { _, _ ->
+                    findNavController().popBackStack()
+                }
+                .setOnCancelListener { findNavController().popBackStack() }
         } else {
             AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.edit_profile_no_ok_update_dialog_title))
@@ -492,7 +508,10 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "New Picture")
         values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
-        imageUri = requireActivity().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        imageUri = requireActivity().contentResolver.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            values
+        )
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         cameraActivityResultLauncher.launch(cameraIntent)
@@ -535,7 +554,8 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
     @SuppressLint("Range")
     fun rotateBitmap(input: Bitmap): Bitmap {
         val orientationColumn = arrayOf(MediaStore.Images.Media.ORIENTATION)
-        val cur: Cursor? = requireActivity().contentResolver.query(imageUri!!, orientationColumn, null, null, null)
+        val cur: Cursor? =
+            requireActivity().contentResolver.query(imageUri!!, orientationColumn, null, null, null)
         var orientation = -1
         if (cur != null && cur.moveToFirst()) {
             orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]))
