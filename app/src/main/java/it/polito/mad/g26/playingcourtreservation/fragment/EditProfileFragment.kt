@@ -142,6 +142,10 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         locationEditText = view.findViewById(R.id.location_et)
         avatarImage = view.findViewById(R.id.avatar)
 
+        usernameContainer = view.findViewById(R.id.username_container)
+        fullNameContainer = view.findViewById(R.id.fullname_container)
+        locationContainer = view.findViewById(R.id.location_container)
+
         //PERSISTENCE
         val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
 
@@ -278,13 +282,11 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
 
         //username management
-        usernameContainer = view.findViewById(R.id.username_container)
         usernameEditText.addTextChangedListener {
             usernameContainer.helperText = validUsername()
         }
 
         //fullName management
-        fullNameContainer = view.findViewById(R.id.fullname_container)
         fullNameEditText.addTextChangedListener {
             fullNameContainer.helperText = validFullName()
         }
@@ -295,7 +297,6 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
 
         //location management
-        locationContainer = view.findViewById(R.id.location_container)
         locationEditText.addTextChangedListener {
             locationContainer.helperText = validLocation()
         }
