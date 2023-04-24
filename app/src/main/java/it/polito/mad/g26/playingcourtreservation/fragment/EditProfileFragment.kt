@@ -396,6 +396,18 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
+    override fun onResume() {
+        super.onResume()
+        //position dropdown management
+        val positionItems = resources.getStringArray(R.array.position_array)
+        val adapterPos = ArrayAdapter(requireContext(), R.layout.list_item, positionItems)
+        autoCompletePosition.setAdapter(adapterPos)
+        //gender dropdown management
+        val genderItems: Array<String> = resources.getStringArray(R.array.gender_array)
+        val adapterGen = ArrayAdapter(requireContext(), R.layout.list_item, genderItems)
+        autoCompleteGender.setAdapter(adapterGen)
+    }
+
     private fun validUsername(): String? {
         val usernameText = usernameEditText.text.toString()
         val regex =
