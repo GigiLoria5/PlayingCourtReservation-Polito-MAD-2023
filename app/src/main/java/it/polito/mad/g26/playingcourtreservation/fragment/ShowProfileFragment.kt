@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import org.json.JSONObject
 
@@ -47,6 +48,8 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
         // Change Title
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Profile"
+        // Set Back Button
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         // Add Tooltips
         val warningIcon = view.findViewById<ImageView>(R.id.warning_icon)

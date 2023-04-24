@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 
 class SearchCourtFragment: Fragment(R.layout.fragment_search_court) {
 
@@ -13,5 +14,7 @@ class SearchCourtFragment: Fragment(R.layout.fragment_search_court) {
 
         //Update Title
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Search Court"
+        // Set Back Button
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 }

@@ -93,7 +93,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         outState.putInt("MONTH", myCalendar.get(Calendar.MONTH))
         outState.putInt("DAY_OF_MONTH", myCalendar.get(Calendar.DAY_OF_MONTH))
         //save datePickerDialog
-        if (datePickerDialog.isShowing) {
+        if (::datePickerDialog.isInitialized && datePickerDialog.isShowing) {
             outState.putBoolean("datePickerDialogShowing", true)
             //save selected date
             outState.putInt("YEAR_SEL", datePickerDialog.datePicker.year)
@@ -103,7 +103,6 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         } else
             outState.putBoolean("datePickerDialogShowing", false)
 
-
         //save avatar image
         if (imageUri != null) {
             outState.putString("imageUri", imageUri.toString())
@@ -112,7 +111,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         }
 
         //save profilePictureAlertDialog
-        if (profilePictureAlertDialog.isShowing) {
+        if (::profilePictureAlertDialog.isInitialized && profilePictureAlertDialog.isShowing) {
             outState.putBoolean("profilePictureAlertDialogShowing", true)
             profilePictureAlertDialog.dismiss()
         } else
@@ -212,7 +211,6 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
         //Restore status
         if (savedInstanceState !== null){
-            println("HELLLO!!!!!!!!!!!!!!!!!!")
             //take calendar
             myCalendar.set(Calendar.YEAR, savedInstanceState.getInt("YEAR"))
             myCalendar.set(Calendar.MONTH, savedInstanceState.getInt("MONTH"))
@@ -229,16 +227,6 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                 )
                 datePickerDialog.show()
             }
-
-            //position dropdown management
-            val positionItems = resources.getStringArray(R.array.position_array)
-            val adapterPos = ArrayAdapter(requireContext(), R.layout.list_item, positionItems)
-            autoCompletePosition.setAdapter(adapterPos)
-
-            //gender dropdown management
-            val genderItems: Array<String> = resources.getStringArray(R.array.gender_array)
-            val adapterGen = ArrayAdapter(requireContext(), R.layout.list_item, genderItems)
-            autoCompleteGender.setAdapter(adapterGen)
 
             //restore avatar image
             if (savedInstanceState.getString("imageUri") != "null") {
