@@ -70,7 +70,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            if (permissions[Manifest.permission.CAMERA] == true && permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true) {
+            if (permissions[Manifest.permission.CAMERA] == true && (android.os.Build.VERSION.SDK_INT > 29 || permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true)) {
                 openCamera()
             }
         }
@@ -323,10 +323,11 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                     requireContext(),
                     Manifest.permission.CAMERA
                 ) == PackageManager.PERMISSION_DENIED ||
-                ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_DENIED
+                (android.os.Build.VERSION.SDK_INT < 30 &&
+                        ActivityCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) == PackageManager.PERMISSION_DENIED)
             ) {
                 val permission = arrayOf(
                     Manifest.permission.CAMERA,
