@@ -51,6 +51,9 @@
     <string name="default_date">14-04-2002</string>
     <string name="username_min_length">Username min length is 8 characters</string>
     <string name="username_max_length">Username max length is 30 characters</string>
+    <string name="home">Home</string>
+    <string name="reservations">Reservations</string>
+    <string name="profile">Profile</string>
 
     <string-array name="position_array">
         <item>Attacker</item>
@@ -64,5 +67,7 @@
         <item>Female</item>
         <item>Other</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
