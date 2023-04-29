@@ -28,5 +28,5 @@
         android:id="@+id/reservationsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ReservationsFragment"
         android:label="fragment_reservations"
-        tools:layout="@layout/fragment_reservations" />
+        tools:layout="@layout/reservations_fragment" />
 </navigation>

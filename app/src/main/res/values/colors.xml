@@ -9,9 +9,9 @@
     <color name="custom_black">#1B1C1D</color>
     <color name="grey">#6E6E6E</color>
     <color name="grey_light">#E1E2E6</color>
-    <color name="green_200">#A4E86D</color>
-    <color name="green_500">#60B922</color>
-    <color name="green_700">#2D6E0F</color>
+    <color name="green_200">#6ABF85</color>
+    <color name="green_500">#0F9D57</color>
+    <color name="green_700">#007D46</color>
     <color name="yellow">#FFDF37</color>
     <color name="red">#FF4F37</color>
 </resources>

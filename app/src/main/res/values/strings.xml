@@ -3,7 +3,7 @@
     <!-- Activities Title -->
     <string name="activity_show_profile_title">Profile</string>
     <string name="edit_show_profile_title">Edit Profile</string>
-    <!-- Activity Show Profile -->
+    <!-- Show Profile -->
     <string name="fullname_title">Fullname</string>
     <string name="username_title">Username</string>
     <string name="age_title">Age</string>
@@ -48,7 +48,7 @@
     <string name="camera">Camera</string>
     <string name="galley">Gallery</string>
     <string name="default_profile">Default profile</string>
-    <string name="default_date">14-04-2002</string>
+    <string name="default_date">14–04–2002</string>
     <string name="username_min_length">Username min length is 8 characters</string>
     <string name="username_max_length">Username max length is 30 characters</string>
     <string name="home">Home</string>
@@ -67,6 +67,12 @@
         <item>Female</item>
         <item>Other</item>
     </string-array>
+
+    <!-- Reservations -->
+    <string name="previousMonth">Previous Month</string>
+    <string name="nextMonth">Next Month</string>
+    <string name="has_reservation">Has Reservation</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
