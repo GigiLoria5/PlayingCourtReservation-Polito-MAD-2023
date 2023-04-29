@@ -30,10 +30,14 @@ class MainActivity : AppCompatActivity() {
         // Handle Active Menu Item in the Navbar
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.searchCourtFragment -> bottomNav.menu.findItem(R.id.home).isChecked = true
-                R.id.reservationsFragment -> bottomNav.menu.findItem(R.id.reservations).isChecked =
-                    true
-                R.id.showProfileFragment , R.id.editProfileFragment-> bottomNav.menu.findItem(R.id.profile).isChecked = true
+                R.id.searchCourtFragment ->
+                    bottomNav.menu.findItem(R.id.home).isChecked = true
+
+                R.id.reservationsFragment ->
+                    bottomNav.menu.findItem(R.id.reservations).isChecked = true
+
+                R.id.showProfileFragment, R.id.editProfileFragment ->
+                    bottomNav.menu.findItem(R.id.profile).isChecked = true
             }
         }
     }
