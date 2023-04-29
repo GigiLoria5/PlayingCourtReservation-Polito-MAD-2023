@@ -16,12 +16,12 @@ fun YearMonth.displayText(short: Boolean = false): String {
 
 fun Month.displayText(short: Boolean = true): String {
     val style = if (short) TextStyle.SHORT else TextStyle.FULL
-    return getDisplayName(style, Locale.ENGLISH)
+    return getDisplayName(style, Locale.getDefault())
 }
 
 fun DayOfWeek.displayText(uppercase: Boolean = false): String {
-    return getDisplayName(TextStyle.SHORT, Locale.ENGLISH).let { value ->
-        if (uppercase) value.uppercase(Locale.ENGLISH) else value
+    return getDisplayName(TextStyle.SHORT, Locale.getDefault()).let { value ->
+        if (uppercase) value.uppercase(Locale.getDefault()) else value
     }
 }
 

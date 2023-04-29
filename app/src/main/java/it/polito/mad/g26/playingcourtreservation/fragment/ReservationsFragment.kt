@@ -103,8 +103,8 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
             // Called every time we need to reuse a container
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 container.day = data
-                container.dateTextView.text = data.date.displayDay()
                 container.dayTextView.text = data.date.dayOfWeek.displayText()
+                container.dateTextView.text = data.date.displayDay()
                 // TODO: change colors or other things
             }
         }
