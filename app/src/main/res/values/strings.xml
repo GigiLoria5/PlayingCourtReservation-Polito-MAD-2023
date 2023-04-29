@@ -69,8 +69,8 @@
     </string-array>
 
     <!-- Reservations -->
-    <string name="previousMonth">Previous Month</string>
-    <string name="nextMonth">Next Month</string>
+    <string name="calendarPrevious">Go Previous</string>
+    <string name="calendarNext">Go Next</string>
     <string name="has_reservation">Has Reservation</string>
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -28,12 +28,12 @@
             android:padding="14dp">
 
             <ImageView
-                android:id="@+id/calendarPreviousMonthImage"
+                android:id="@+id/calendarPreviousImage"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginEnd="22dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/previousMonth"
+                android:contentDescription="@string/calendarPrevious"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -45,20 +45,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:textColor="@color/green_500"
+                android:textColor="@color/custom_black"
                 android:textSize="22sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/calendarNextMonthImage"
-                app:layout_constraintStart_toEndOf="@id/calendarPreviousMonthImage"
+                app:layout_constraintEnd_toStartOf="@id/calendarNextImage"
+                app:layout_constraintStart_toEndOf="@id/calendarPreviousImage"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="April 2023" />
 
             <ImageView
-                android:id="@+id/calendarNextMonthImage"
+                android:id="@+id/calendarNextImage"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/nextMonth"
+                android:contentDescription="@string/calendarNext"
                 app:tint="@color/green_500"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -76,12 +76,13 @@
         android:layout_height="match_parent">
 
         <!-- Calendar -->
-        <com.kizitonwose.calendar.view.CalendarView
+        <com.kizitonwose.calendar.view.WeekCalendarView
             android:id="@+id/reservationsCalendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cv_dayViewResource="@layout/reservations_calendar_day"
-            app:cv_monthHeaderResource="@layout/reservations_calendar_header" />
+            app:cv_daySize="seventhWidth"
+            android:orientation="horizontal" />
 
         <!-- Reservations -->
         <androidx.recyclerview.widget.RecyclerView

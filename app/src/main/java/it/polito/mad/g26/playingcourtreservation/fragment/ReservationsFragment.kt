@@ -4,72 +4,64 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.kizitonwose.calendar.core.CalendarDay
-import com.kizitonwose.calendar.core.CalendarMonth
-import com.kizitonwose.calendar.core.DayPosition
-import com.kizitonwose.calendar.core.daysOfWeek
-import com.kizitonwose.calendar.core.nextMonth
-import com.kizitonwose.calendar.core.previousMonth
-import com.kizitonwose.calendar.view.CalendarView
-import com.kizitonwose.calendar.view.MonthDayBinder
-import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
+import com.kizitonwose.calendar.core.WeekDay
+import com.kizitonwose.calendar.core.atStartOfMonth
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.ViewContainer
+import com.kizitonwose.calendar.view.WeekCalendarView
+import com.kizitonwose.calendar.view.WeekDayBinder
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
+import it.polito.mad.g26.playingcourtreservation.util.getWeekPageTitle
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationVM
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 
 class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
     private val reservationVM by viewModels<ReservationVM>()
 
-    private var selectedDate: LocalDate? = null
     private val today = LocalDate.now()
+    private var selectedDate: LocalDate = today
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Reservations"  // Update Title
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false) // Hide Back Button
 
-        // Setup CalendarView
-        val calendarView = view.findViewById<CalendarView>(R.id.reservationsCalendarView)
-        val daysOfWeek = daysOfWeek()
+        // Setup WeekCalendarView
+        val weekCalendarView = view.findViewById<WeekCalendarView>(R.id.reservationsCalendarView)
         val currentMonth = YearMonth.now()
-        val startMonth = currentMonth.minusMonths(200)
-        val endMonth = currentMonth.plusMonths(200)
-        configureBinders(view, daysOfWeek)
-        calendarView.setup(startMonth, endMonth, daysOfWeek.first())
-        calendarView.scrollToMonth(currentMonth)
+        val startDate = currentMonth.minusMonths(200).atStartOfMonth()
+        val endDate = currentMonth.plusMonths(200).atEndOfMonth()
+        configureBinders(view)
+        weekCalendarView.setup(startDate, endDate, firstDayOfWeekFromLocale())
+        weekCalendarView.scrollToDate(today)
 
         // Current Month Selected Text
         val currentMonthView = view.findViewById<TextView>(R.id.calendarMonthYearText)
-        calendarView.monthScrollListener = { month ->
-            currentMonthView.text = month.yearMonth.displayText()
-            // Clear selection if we scroll to a new month
-            selectedDate?.let {
-                selectedDate = null
-            }
+        weekCalendarView.weekScrollListener = { weekDays ->
+            currentMonthView.text = getWeekPageTitle(weekDays)
+            // Update selectedDate to 7 days before or after
+            selectedDate =
+                if (weekDays.days.first().date.isBefore(selectedDate))
+                    selectedDate.minusDays(7)
+                else
+                    selectedDate.plusDays(7)
         }
 
-        // Navigate Between Months
-        val previousMonthImage = view.findViewById<ImageView>(R.id.calendarPreviousMonthImage)
-        previousMonthImage.setOnClickListener {
-            calendarView.findFirstVisibleMonth()?.let {
-                calendarView.smoothScrollToMonth(it.yearMonth.previousMonth)
-            }
+        // Navigate Between Weeks
+        val previousWeekImage = view.findViewById<ImageView>(R.id.calendarPreviousImage)
+        previousWeekImage.setOnClickListener {
+            weekCalendarView.smoothScrollToDate(selectedDate.minusDays(7))
         }
-        val nextMonthImage = view.findViewById<ImageView>(R.id.calendarNextMonthImage)
-        nextMonthImage.setOnClickListener {
-            calendarView.findFirstVisibleMonth()?.let {
-                calendarView.smoothScrollToMonth(it.yearMonth.nextMonth)
-            }
+        val nextWeekImage = view.findViewById<ImageView>(R.id.calendarNextImage)
+        nextWeekImage.setOnClickListener {
+            weekCalendarView.smoothScrollToDate(selectedDate.plusDays(7))
         }
 
         // Get All Reservations
@@ -77,53 +69,43 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         reservations.observe(viewLifecycleOwner) {
             println(it)
         }
+        // TODO: Show Reservations
     }
 
-    private fun configureBinders(view: View, daysOfWeek: List<DayOfWeek>) {
-        val calendarView = view.findViewById<CalendarView>(R.id.reservationsCalendarView)
+    private fun configureBinders(view: View) {
+        val calendarView = view.findViewById<WeekCalendarView>(R.id.reservationsCalendarView)
 
         // Setup Day Container
         class DayViewContainer(view: View) : ViewContainer(view) {
-            lateinit var day: CalendarDay // Will be set when this container is bound.
+            lateinit var day: WeekDay // Will be set when this container is bound
+            val dateTextView: TextView = view.findViewById(R.id.reservationsCalendarDateText)
             val dayTextView: TextView = view.findViewById(R.id.reservationsCalendarDayText)
 
             init {
                 view.setOnClickListener {
-                    if (day.position == DayPosition.MonthDate && selectedDate != day.date) {
+                    if (selectedDate != day.date) {
+                        // val oldDate = selectedDate
                         selectedDate = day.date
                         println(selectedDate)
                         calendarView.notifyDateChanged(day.date)
+                        // oldDate?.let { calendarView.notifyDateChanged(it) }
                         // TODO: update Reservations RV with new date
                     }
                 }
             }
+
         }
 
-        calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
-            // Called only when a new container is needed.
+        calendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
+            // Called only when a new container is needed
             override fun create(view: View) = DayViewContainer(view)
 
-            // Called every time we need to reuse a container.
-            override fun bind(container: DayViewContainer, data: CalendarDay) {
-                container.dayTextView.text = data.date.dayOfMonth.toString()
-            }
-        }
-
-        // Setup Month Headers
-        class MonthViewContainer(view: View) : ViewContainer(view) {
-            val legendLayout: LinearLayout = view.findViewById(R.id.calendarLegendLayout)
-        }
-
-        calendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
-            override fun create(view: View) = MonthViewContainer(view)
-            override fun bind(container: MonthViewContainer, data: CalendarMonth) {
-                if (container.legendLayout.tag == null) {
-                    container.legendLayout.tag = data.yearMonth
-                    container.legendLayout.children.map { it as TextView }
-                        .forEachIndexed { index, tv ->
-                            tv.text = daysOfWeek[index].displayText(uppercase = true)
-                        }
-                }
+            // Called every time we need to reuse a container
+            override fun bind(container: DayViewContainer, data: WeekDay) {
+                container.day = data
+                container.dateTextView.text = data.date.displayDay()
+                container.dayTextView.text = data.date.dayOfWeek.displayText()
+                // TODO: change colors or other things
             }
         }
 
