@@ -47,3 +47,4 @@ fun getWeekPageTitle(week: Week): String {
         }
     }
 }
+

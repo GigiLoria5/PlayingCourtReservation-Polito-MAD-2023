@@ -1,43 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingVertical="10dp"
-        tools:ignore="UselessParent">
+        android:paddingVertical="10dp">
 
         <TextView
             android:id="@+id/reservationsCalendarDayText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="12sp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/dayHasReservationImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Mon" />
 
         <ImageView
             android:id="@+id/dayHasReservationImage"
             android:layout_width="4.5dp"
             android:layout_height="4.5dp"
+            android:contentDescription="@string/has_reservation"
             android:src="@drawable/baseline_circle_24"
-            android:layout_marginTop="3dp"
-            android:contentDescription="@string/has_reservation" />
+            android:layout_marginVertical="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/reservationsCalendarDateText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reservationsCalendarDayText" />
 
         <TextView
-            android:layout_marginTop="4dp"
             android:id="@+id/reservationsCalendarDateText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            tools:text="5" />
+            android:background="@drawable/calendar_selected_bg"
+            android:padding="8dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dayHasReservationImage"
+            tools:text="15" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

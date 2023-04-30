@@ -18,6 +18,7 @@ import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
 import it.polito.mad.g26.playingcourtreservation.util.getWeekPageTitle
+import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationVM
 import java.time.LocalDate
 import java.time.YearMonth
@@ -27,6 +28,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
     private val today = LocalDate.now()
     private var selectedDate: LocalDate = today
+    private var isInitialDateSet = false // Keep track of the initial selected date
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,14 +46,17 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
         // Current Month Selected Text
         val currentMonthView = view.findViewById<TextView>(R.id.calendarMonthYearText)
-        weekCalendarView.weekScrollListener = { weekDays ->
+        weekCalendarView.weekScrollListener = weekScrollListener@{ weekDays ->
             currentMonthView.text = getWeekPageTitle(weekDays)
             // Update selectedDate to 7 days before or after
-            selectedDate =
-                if (weekDays.days.first().date.isBefore(selectedDate))
-                    selectedDate.minusDays(7)
-                else
-                    selectedDate.plusDays(7)
+            if (!isInitialDateSet) {
+                isInitialDateSet = true
+                return@weekScrollListener
+            }
+            val newDate =
+                if (weekDays.days.first().date.isBefore(selectedDate)) selectedDate.minusDays(7)
+                else selectedDate.plusDays(7)
+            updateSelectedDate(weekCalendarView, newDate)
         }
 
         // Navigate Between Weeks
@@ -73,7 +78,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
     }
 
     private fun configureBinders(view: View) {
-        val calendarView = view.findViewById<WeekCalendarView>(R.id.reservationsCalendarView)
+        val weekCalendarView = view.findViewById<WeekCalendarView>(R.id.reservationsCalendarView)
 
         // Setup Day Container
         class DayViewContainer(view: View) : ViewContainer(view) {
@@ -83,32 +88,60 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
             init {
                 view.setOnClickListener {
-                    if (selectedDate != day.date) {
-                        // val oldDate = selectedDate
-                        selectedDate = day.date
-                        println(selectedDate)
-                        calendarView.notifyDateChanged(day.date)
-                        // oldDate?.let { calendarView.notifyDateChanged(it) }
-                        // TODO: update Reservations RV with new date
-                    }
+                    updateSelectedDate(weekCalendarView, day.date)
                 }
             }
 
         }
 
-        calendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
+        weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             // Called only when a new container is needed
             override fun create(view: View) = DayViewContainer(view)
 
             // Called every time we need to reuse a container
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 container.day = data
-                container.dayTextView.text = data.date.dayOfWeek.displayText()
-                container.dateTextView.text = data.date.displayDay()
-                // TODO: change colors or other things
+                val dayTextView = container.dayTextView
+                val dateTextView = container.dateTextView
+                dayTextView.text = data.date.dayOfWeek.displayText()
+                dateTextView.text = data.date.displayDay()
+                // TODO: Show/Hide "hasReservation" icon
+                // Handle Date UI
+                val colorToday = R.color.green_500
+                val colorSelected = R.color.white
+                val colorUnselected = R.color.black
+                when (data.date) {
+                    selectedDate -> {
+                        dateTextView.setTextColorRes(colorSelected)
+                        dateTextView.setBackgroundResource(R.drawable.calendar_selected_bg)
+                        if (today.isEqual(selectedDate)) {
+                            // TODO: change background color to colorToday
+                            // dateTextView.setBackgroundColor(Color.GREEN)
+                        }
+                    }
+
+                    today -> {
+                        dateTextView.setTextColorRes(colorToday)
+                        dateTextView.background = null
+                    }
+
+                    else -> {
+                        dateTextView.setTextColorRes(colorUnselected)
+                        dateTextView.background = null
+                    }
+                }
             }
         }
+    }
 
+    private fun updateSelectedDate(weekCalendarView: WeekCalendarView, newDate: LocalDate) {
+        if (selectedDate == newDate)
+            return
+        val oldDate = selectedDate
+        selectedDate = newDate
+        weekCalendarView.notifyDateChanged(oldDate)
+        weekCalendarView.notifyDateChanged(newDate)
+        // TODO: update Reservations RV with new date
     }
 
 }
