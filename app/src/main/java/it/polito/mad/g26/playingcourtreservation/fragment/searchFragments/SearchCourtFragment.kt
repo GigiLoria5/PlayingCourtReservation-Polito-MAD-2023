@@ -21,11 +21,20 @@ class SearchCourtFragment : Fragment(R.layout.fragment_search_court) {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         val cityTV = view.findViewById<TextView>(R.id.cityTV)
+        val selectCityMCV = view.findViewById<MaterialCardView>(R.id.selectCityMCV)
+        val searchMCV = view.findViewById<MaterialCardView>(R.id.searchMCV)
         cityTV.text = "Turin" //TODO TAKE USER CITY
-        val cityMCV = view.findViewById<MaterialCardView>(R.id.cityMCV)
-        cityMCV.setOnClickListener {
+
+        selectCityMCV.setOnClickListener {
             val direction =
                 SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtActionFragment(
+                    cityTV.text.toString()
+                )
+            findNavController().navigate(direction)
+        }
+        searchMCV.setOnClickListener {
+            val direction =
+                SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtResultsFragment(
                     cityTV.text.toString()
                 )
             findNavController().navigate(direction)

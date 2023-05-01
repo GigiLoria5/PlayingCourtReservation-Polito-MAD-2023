@@ -7,11 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsFragmentUtil
@@ -20,11 +21,14 @@ import it.polito.mad.g26.playingcourtreservation.viewmodel.SearchCourtResultsVM
 class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_results) {
 
     private val args: SearchCourtResultsFragmentArgs by navArgs()
-    val vm by viewModels<SearchCourtResultsVM>()
+    private val vm by viewModels<SearchCourtResultsVM>()
 
     /*   VISUAL COMPONENTS       */
-    private lateinit var dateButton: Button
-    private lateinit var hourButton: Button
+    private lateinit var dateMCV: MaterialCardView
+    private lateinit var dateTV: TextView
+    private lateinit var hourMCV: MaterialCardView
+    private lateinit var hourTV: TextView
+
     private lateinit var courtTypeACTV: AutoCompleteTextView
 
     /* LOGIC OBJECT OF THIS FRAGMENT */
@@ -76,18 +80,20 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         val adapterCourt = ArrayAdapter(view.context, R.layout.list_item, courtsType)
         courtTypeACTV.setAdapter(adapterCourt)
 
-        /* DATE BUTTON MANAGEMENT*/
-        dateButton = view.findViewById(R.id.dateButton)
-        dateButton.setOnClickListener {
+        /* DATE MATERIAL CARD VIEW MANAGEMENT*/
+        dateMCV = view.findViewById(R.id.dateMCV)
+        dateTV = view.findViewById(R.id.dateTV)
+        dateMCV.setOnClickListener {
             searchResultUtils.showDatePickerDialog(
                 view.context,
                 vm
             )
         }
 
-        /* HOUR BUTTON MANAGEMENT*/
-        hourButton = view.findViewById(R.id.hourButton)
-        hourButton.setOnClickListener {
+        /* HOUR MATERIAL CARD VIEW MANAGEMENT*/
+        hourMCV = view.findViewById(R.id.hourMCV)
+        hourTV = view.findViewById(R.id.hourTV)
+        hourMCV.setOnClickListener {
             searchResultUtils.showNumberPickerDialog(
                 view.context,
                 vm
@@ -97,12 +103,12 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
             val c = Calendar.getInstance()
             c.timeInMillis = vm.selectedDateTimeMillis.value!!
-            searchResultUtils.setDateTimeButtonText(
+            searchResultUtils.setDateTimeTextViews(
                 c,
                 getString(R.string.dateFormat),
                 getString(R.string.hourFormat),
-                dateButton,
-                hourButton
+                dateTV,
+                hourTV
             )
         }
     }

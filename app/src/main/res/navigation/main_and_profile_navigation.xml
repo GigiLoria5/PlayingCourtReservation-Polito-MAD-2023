@@ -31,6 +31,9 @@
                 android:name="comingFrom"
                 android:defaultValue="0" />
         </action>
+        <action
+            android:id="@+id/action_searchCourtFragment_to_searchCourtResultsFragment"
+            app:destination="@id/searchCourtResultsFragment" />
     </fragment>
     <fragment
         android:id="@+id/reservationsFragment"

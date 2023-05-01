@@ -62,7 +62,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/dateTimeButtonsMCV"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginVertical="@dimen/pageExternalMargin"
                     android:layout_marginStart="@dimen/pageExternalMargin"
                     android:layout_marginEnd="@dimen/dateTypeInternalMargin"
@@ -79,21 +79,29 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <Button
-                            android:id="@+id/dateButton"
-                            style="@style/Widget.AppCompat.Button.Borderless"
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/dateMCV"
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:text="20 Apr"
-                            android:textAllCaps="false"
-                            android:textColor="@color/green_500"
-                            android:textSize="@dimen/dateTypeButtonsTextSize"
-                            android:textStyle="normal"
+                            android:layout_height="0dp"
+                            app:cardElevation="0dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@id/dateTimeDivider"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="TextContrastCheck,VisualLintButtonSize" />
+                            app:strokeWidth="0dp">
+
+                            <TextView
+                                android:id="@+id/dateTV"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="20 Apr"
+                                android:textAllCaps="false"
+                                android:textColor="@color/green_500"
+                                android:textSize="@dimen/dateTypeButtonsTextSize"
+                                android:textStyle="normal" />
+                        </com.google.android.material.card.MaterialCardView>
+
 
                         <View
                             android:id="@+id/dateTimeDivider"
@@ -106,21 +114,29 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-                        <Button
-                            android:id="@+id/hourButton"
-                            style="@style/Widget.AppCompat.Button.Borderless"
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/hourMCV"
                             android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:text="19:00"
-                            android:textAllCaps="false"
-                            android:textColor="@color/green_500"
-                            android:textSize="@dimen/dateTypeButtonsTextSize"
-                            android:textStyle="normal"
+                            android:layout_height="0dp"
+                            app:cardElevation="0dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/dateTimeDivider"
                             app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="TextContrastCheck,VisualLintButtonSize" />
+                            app:strokeWidth="0dp">
+
+                            <TextView
+                                android:id="@+id/hourTV"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="19:00"
+                                android:textAllCaps="false"
+                                android:textColor="@color/green_500"
+                                android:textSize="@dimen/dateTypeButtonsTextSize"
+                                android:textStyle="normal" />
+                        </com.google.android.material.card.MaterialCardView>
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -159,10 +175,10 @@
 
                         <AutoCompleteTextView
                             android:id="@+id/courtTypeACTV"
-                            style="@style/Widget.AppCompat.Button.Borderless"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@color/white"
+                            android:gravity="center"
                             android:inputType="none"
                             android:maxLines="1"
                             android:paddingTop="0dp"

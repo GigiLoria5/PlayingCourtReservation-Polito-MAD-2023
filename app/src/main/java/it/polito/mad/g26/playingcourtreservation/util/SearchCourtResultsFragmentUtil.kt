@@ -6,8 +6,8 @@ import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.text.format.DateUtils
 import android.view.LayoutInflater
-import android.widget.Button
 import android.widget.NumberPicker
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.viewmodel.SearchCourtResultsVM
@@ -21,19 +21,19 @@ object SearchCourtResultsFragmentUtil {
         return c
     }
 
-    fun setDateTimeButtonText(
+    fun setDateTimeTextViews(
         calendar: Calendar,
         dateFormat: String,
         hourFormat: String,
-        dateButton: Button,
-        hourButton: Button
+        dateTextView: TextView,
+        hourTextView: TextView
     ) {
         val dateFormatted = SimpleDateFormat(dateFormat, Locale.ITALY).format(calendar.time)
-        dateButton.text = dateFormatted
+        dateTextView.text = dateFormatted
 
         var hourFormatted = SimpleDateFormat(hourFormat, Locale.ITALY).format(calendar.time)
         if (hourFormatted == "24:00") hourFormatted = "00:00"
-        hourButton.text = hourFormatted
+        hourTextView.text = hourFormatted
     }
 
     private fun getDelayedCalendar(): Calendar {

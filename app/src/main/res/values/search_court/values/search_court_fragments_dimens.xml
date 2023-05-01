@@ -3,7 +3,7 @@
     <dimen name="pageExternalMargin">11dp</dimen>
     <dimen name="searchImageSize">40dp</dimen>
     <dimen name="searchInfoTextSize">12sp</dimen>
-    <dimen name="searchCityTextSize">30sp</dimen>
+    <dimen name="searchCityTextSize">25sp</dimen>
     <dimen name="dateTypeInternalMargin">4dp</dimen>
     <dimen name="cornerRadius">14dp</dimen>
     <dimen name="searchIconPadding">30dp</dimen>
