@@ -33,13 +33,11 @@
                 android:id="@+id/structureInfoCL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/pageExternalMargin"
+                android:paddingHorizontal="@dimen/pageExternalSpace"
                 app:layout_constraintBottom_toTopOf="@id/structureServicesCL"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-
-                >
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/structureNameTV"
@@ -91,9 +89,9 @@
                         android:id="@+id/imageView2"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
+                        android:contentDescription="call sport center"
                         android:padding="5dp"
-                        app:srcCompat="@android:drawable/stat_sys_phone_call"
-                        android:contentDescription="call sport center" />
+                        app:srcCompat="@android:drawable/stat_sys_phone_call" />
                 </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -112,7 +110,7 @@
                     android:id="@+id/availableServicesTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/pageExternalMargin"
+                    android:paddingHorizontal="@dimen/pageExternalSpace"
                     android:text="Choose your services"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/green_500"
@@ -147,7 +145,7 @@
                     android:id="@+id/selectCourtTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/pageExternalMargin"
+                    android:paddingHorizontal="@dimen/pageExternalSpace"
                     android:text="Select your court"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/green_500"

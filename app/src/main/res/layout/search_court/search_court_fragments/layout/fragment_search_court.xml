@@ -4,26 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_light"
+    android:paddingBottom="@dimen/pageExternalSpace"
     tools:context=".fragment.searchFragments.SearchCourtFragment">
+
+    <TextView
+        android:id="@+id/searchInfoTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/pageExternalSpace"
+        android:gravity="center"
+
+        android:text="Where do you want to play"
+        android:textSize="@dimen/searchInfoTextSize"
+        app:layout_constraintBottom_toTopOf="@id/cityMCV"
+
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cityMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/pageExternalMargin"
-        android:layout_marginStart="@dimen/pageExternalMargin"
-        android:layout_marginEnd="@dimen/pageExternalMargin"
+        android:layout_margin="@dimen/pageExternalSpace"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="@dimen/cornerRadius"
-        app:cardElevation="@dimen/standardElevation"
-        app:cardMaxElevation="@dimen/standardElevation"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
         app:cardPreventCornerOverlap="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -43,19 +55,8 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/pageExternalMargin">
+                    android:padding="@dimen/pageExternalSpace">
 
-                    <TextView
-                        android:id="@+id/searchInfoTV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-
-                        android:text="Where do you want to play"
-                        android:textSize="@dimen/searchInfoTextSize"
-                        app:layout_constraintBottom_toTopOf="@id/cityTV"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/cityTV"
@@ -66,7 +67,7 @@
                         android:textSize="@dimen/searchCityTextSize"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/searchInfoTV" />
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -75,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.85" />
+                app:layout_constraintGuide_percent="0.8" />
 
 
             <com.google.android.material.card.MaterialCardView
@@ -83,6 +84,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:cardElevation="0dp"
+                app:contentPadding="@dimen/pageExternalSpace"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/horizontal_guideline"

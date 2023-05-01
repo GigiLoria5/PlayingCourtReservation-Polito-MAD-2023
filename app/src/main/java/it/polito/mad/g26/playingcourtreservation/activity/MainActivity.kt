@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.activity
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -59,6 +60,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }, this, Lifecycle.State.RESUMED)
+
+            window.navigationBarColor = getColor(R.color.grey_light);
+
+
     }
 
 }

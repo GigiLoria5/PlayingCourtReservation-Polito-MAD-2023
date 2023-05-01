@@ -16,7 +16,7 @@ class SearchCourtFragment : Fragment(R.layout.fragment_search_court) {
         super.onViewCreated(view, savedInstanceState)
 
         //Update Title
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Search Court"
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "Playing Court Reservation"
         // Set Back Button
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 

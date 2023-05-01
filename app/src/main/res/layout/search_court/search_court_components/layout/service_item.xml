@@ -9,7 +9,7 @@
         style="@style/CustomChipChoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/pageExternalMargin"
+        android:layout_marginStart="@dimen/pageExternalSpace"
         android:layout_marginEnd="3dp"
         android:elevation="3dp"
         android:text="Service name"
