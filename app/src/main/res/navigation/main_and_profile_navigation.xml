@@ -21,12 +21,51 @@
         tools:layout="@layout/activity_edit_profile" />
     <fragment
         android:id="@+id/searchCourtFragment"
-        android:name="it.polito.mad.g26.playingcourtreservation.fragment.SearchCourtFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtFragment"
         android:label="fragment_search_court"
-        tools:layout="@layout/fragment_search_court" />
+        tools:layout="@layout/fragment_search_court">
+        <action
+            android:id="@+id/action_searchCourtFragment_to_searchCourtActionFragment"
+            app:destination="@id/searchCourtActionFragment">
+            <argument
+                android:name="comingFrom"
+                android:defaultValue="0" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/reservationsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ReservationsFragment"
         android:label="fragment_reservations"
         tools:layout="@layout/fragment_reservations" />
+    <fragment
+        android:id="@+id/searchCourtActionFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtActionFragment"
+        android:label="fragment_search_court_action"
+        tools:layout="@layout/fragment_search_court_action">
+        <argument
+            android:name="city"
+            app:argType="string" />
+        <argument
+            android:name="comingFrom"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_searchCourtActionFragment_to_searchCourtResultsFragment"
+            app:destination="@id/searchCourtResultsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchCourtResultsFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtResultsFragment"
+        android:label="fragment_search_court_results"
+        tools:layout="@layout/fragment_search_court_results">
+        <argument
+            android:name="city"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_searchCourtResultsFragment_to_searchCourtActionFragment"
+            app:destination="@id/searchCourtActionFragment">
+            <argument
+                android:name="comingFrom"
+                android:defaultValue="1" />
+        </action>
+    </fragment>
 </navigation>

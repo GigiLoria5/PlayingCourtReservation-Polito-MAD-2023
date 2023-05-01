@@ -2,6 +2,11 @@ package it.polito.mad.g26.playingcourtreservation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import it.polito.mad.g26.playingcourtreservation.R
@@ -33,9 +38,27 @@ class MainActivity : AppCompatActivity() {
                 R.id.searchCourtFragment -> bottomNav.menu.findItem(R.id.home).isChecked = true
                 R.id.reservationsFragment -> bottomNav.menu.findItem(R.id.reservations).isChecked =
                     true
-                R.id.showProfileFragment , R.id.editProfileFragment-> bottomNav.menu.findItem(R.id.profile).isChecked = true
+                R.id.showProfileFragment, R.id.editProfileFragment -> bottomNav.menu.findItem(R.id.profile).isChecked =
+                    true
             }
         }
+        // Set Back Button Function
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            }
+
+            override fun onMenuItemSelected(item: MenuItem): Boolean {
+                // Handle the menu selection
+                return when (item.itemId) {
+                    // Back
+                    android.R.id.home -> {
+                        navController.popBackStack()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, this, Lifecycle.State.RESUMED)
     }
 
 }
