@@ -14,8 +14,6 @@
         android:minWidth="@dimen/courtBoxMinDim"
         android:minHeight="@dimen/courtBoxMinDim"
         app:cardBackgroundColor="@color/green_500"
-
-
         app:cardCornerRadius="@dimen/cornerRadius"
         app:cardElevation="@dimen/courtBoxElevation"
         app:cardPreventCornerOverlap="false"
@@ -25,34 +23,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/MarginsPaddingsCourtInfoBox"
-
-            >
+            android:padding="@dimen/MarginsPaddingsCourtInfoBox">
 
             <TextView
                 android:id="@+id/courtNameTV"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Court name"
-
                 android:textColor="@color/white"
                 android:textSize="@dimen/courtNameCourtBox"
                 app:layout_constraintBottom_toTopOf="@id/courtDataCL"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/courtDataCL"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintTop_toBottomOf="@id/courtNameTV"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/courtNameTV">
 
                 <TextView
                     android:id="@+id/courtTypeTV"

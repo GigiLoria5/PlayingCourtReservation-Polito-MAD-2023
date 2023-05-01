@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/structureTopMargin"
         android:layout_marginBottom="@dimen/structureBottomMargin"
+        app:cardBackgroundColor="@color/grey_light"
         app:cardCornerRadius="@dimen/cornerRadius"
         app:cardElevation="@dimen/standardElevation"
-        app:cardBackgroundColor="@color/grey_light"
 
         app:cardUseCompatPadding="true"
 
@@ -78,13 +78,13 @@
                     android:id="@+id/phoneMCV"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    app:layout_constraintBottom_toBottomOf="@id/structureHoursTV"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     android:clickable="true"
                     android:focusable="true"
                     app:cardBackgroundColor="@color/green_500"
                     app:cardCornerRadius="@dimen/cornerRadius"
+                    app:layout_constraintBottom_toBottomOf="@id/structureHoursTV"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@android:drawable/stat_sys_phone_call">
 
                     <ImageView
@@ -92,7 +92,8 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:padding="5dp"
-                        app:srcCompat="@android:drawable/stat_sys_phone_call" />
+                        app:srcCompat="@android:drawable/stat_sys_phone_call"
+                        android:contentDescription="call sport center" />
                 </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -125,12 +126,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/availableServicesTV"
-                    tools:listitem="@layout/service_item_no_touchable"></androidx.recyclerview.widget.RecyclerView>
+                    tools:listitem="@layout/service_item_no_touchable" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -166,7 +166,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/selectCourtTV"
-                    tools:listitem="@layout/court_item"></androidx.recyclerview.widget.RecyclerView>
+                    tools:listitem="@layout/court_item" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

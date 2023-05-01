@@ -4,21 +4,20 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-
     <com.google.android.material.chip.Chip
         android:id="@+id/chip"
         style="@style/CustomChipChoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Service name"
-        app:closeIconTint="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:elevation="3dp"
+        android:layout_marginStart="@dimen/pageExternalMargin"
         android:layout_marginEnd="3dp"
-        android:layout_marginStart="3dp"
-        app:closeIcon="@drawable/baseline_cancel_24" />
+        android:elevation="3dp"
+        android:text="Service name"
+        app:closeIcon="@drawable/baseline_cancel_24"
+        app:closeIconTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

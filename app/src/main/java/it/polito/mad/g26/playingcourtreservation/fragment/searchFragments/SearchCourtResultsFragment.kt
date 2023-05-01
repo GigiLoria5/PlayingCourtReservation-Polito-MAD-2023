@@ -1,40 +1,128 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
+import android.annotation.SuppressLint
+import android.icu.util.Calendar
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.ImageView
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
-
+import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsFragmentUtil
+import it.polito.mad.g26.playingcourtreservation.viewmodel.SearchCourtResultsVM
 
 class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_results) {
 
     private val args: SearchCourtResultsFragmentArgs by navArgs()
+    val vm by viewModels<SearchCourtResultsVM>()
 
+    /*   VISUAL COMPONENTS       */
+    private lateinit var dateButton: Button
+    private lateinit var hourButton: Button
+    private lateinit var courtTypeACTV: AutoCompleteTextView
+
+    /* LOGIC OBJECT OF THIS FRAGMENT */
+    private val searchResultUtils = SearchCourtResultsFragmentUtil
+
+    @SuppressLint("RestrictedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (vm.selectedDateTimeMillis.value == 0L) vm.changeSelectedDateTimeMillis(searchResultUtils.getMockInitialDateTime().timeInMillis)
 
-        //Update Title TODO CHANGE
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Search Court results"
-        // Set Back Button
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        println(savedInstanceState)
+        // Remove Default Status Bar
+        (activity as MainActivity).supportActionBar?.setShowHideAnimationEnabled(false)
+        (activity as MainActivity).supportActionBar?.hide()
 
-        val tv = view.findViewById<TextView>(R.id.textView)
-        tv.text = "Selected city: ${args.city}"
-
-        val b = view.findViewById<Button>(R.id.searchButton)
-        b.setOnClickListener {
+        //set search icon onclick
+        val customSearchIconIV = view.findViewById<ImageView>(R.id.customSearchIconIV)
+        customSearchIconIV.setOnClickListener {
             val direction =
                 SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToSearchCourtActionFragment(
-                    "Turin"
+                    args.city
                 )
             findNavController().navigate(direction)
         }
 
+        /* CUSTOM TOOLBAR MANAGEMENT*/
+        val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
+        customToolBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        //set title of custom toolbar onclick
+        customToolBar.setOnClickListener {
+            val direction =
+                SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToSearchCourtActionFragment(
+                    args.city
+                )
+            findNavController().navigate(direction)
+        }
+
+        //set title of custom toolbar
+        customToolBar.title = "Courts in ${args.city}"
+
+        /* POSITION DROPDOWN MANAGEMENT*/
+        courtTypeACTV = view.findViewById(R.id.courtTypeACTV)
+        courtTypeACTV.setText("Calcio a 11", false)
+        val courtsType =
+            listOf("Tutto", "Calcio a 5", "Calcio a 8", "Calcio a 11") //LI PRENDERAI DA LIVE DATA
+        val adapterCourt = ArrayAdapter(view.context, R.layout.list_item, courtsType)
+        courtTypeACTV.setAdapter(adapterCourt)
+
+        /* DATE BUTTON MANAGEMENT*/
+        dateButton = view.findViewById(R.id.dateButton)
+        dateButton.setOnClickListener {
+            searchResultUtils.showDatePickerDialog(
+                view.context,
+                vm
+            )
+        }
+
+        /* HOUR BUTTON MANAGEMENT*/
+        hourButton = view.findViewById(R.id.hourButton)
+        hourButton.setOnClickListener {
+            searchResultUtils.showNumberPickerDialog(
+                view.context,
+                vm
+            )
+        }
+
+        vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
+            val c = Calendar.getInstance()
+            c.timeInMillis = vm.selectedDateTimeMillis.value!!
+            searchResultUtils.setDateTimeButtonText(
+                c,
+                getString(R.string.dateFormat),
+                getString(R.string.hourFormat),
+                dateButton,
+                hourButton
+            )
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        //show again original toolbar out of this fragment
+        (activity as MainActivity).supportActionBar?.show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val courtsType =
+            listOf(
+                "Tutto",
+                "Calcio a 5",
+                "Calcio a 8",
+                "Calcio a 11"
+            ) // TODO LI PRENDERAI DA LIVE DATA
+        val adapterCourt = ArrayAdapter(requireContext(), R.layout.list_item, courtsType)
+        courtTypeACTV.setAdapter(adapterCourt)
     }
 }
