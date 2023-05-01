@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="pageExternalMargin">11dp</dimen>
+    <dimen name="dateTypeInternalMargin">4dp</dimen>
+    <dimen name="cornerRadius">14dp</dimen>
+    <dimen name="standardElevation">4dp</dimen>
+    <dimen name="dateTypeButtonsTextSize">15sp</dimen>
+    <dimen name="dividerWidth">1dp</dimen>
+    <dimen name="dividerMargin">6dp</dimen>
+    <dimen name="structureBottomMargin">24dp</dimen>
+    <dimen name="structureTopMargin">1dp</dimen>
+    <dimen name="structureVerticalPadding">5dp</dimen>
+    <dimen name="distanceStructureInfoCourtData">16dp</dimen>
+    <dimen name="courtBoxMinDim">150dp</dimen>
+    <dimen name="courtBoxElevation">7dp</dimen>
+    <dimen name="courtNameCourtBox">18sp</dimen>
+    <dimen name="MarginsPaddingsCourtInfoBox">8dp</dimen>
+    <dimen name="servicesExternalMargin">20dp</dimen>
+</resources>

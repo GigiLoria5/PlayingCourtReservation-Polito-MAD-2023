@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.searchFragments.SearchCourtResultsFragment">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_blank_fragment"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/searchButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/textView"
+        app:layout_constraintBottom_toTopOf="@id/dateTypeCL"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="go back to search action" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dateTypeCL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/servicesRV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchButton">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/dateTimeButtonsMCV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/pageExternalMargin"
+            android:layout_marginStart="@dimen/pageExternalMargin"
+            android:layout_marginEnd="@dimen/dateTypeInternalMargin"
+            app:cardCornerRadius="@dimen/cornerRadius"
+            app:cardElevation="@dimen/standardElevation"
+            app:cardMaxElevation="@dimen/standardElevation"
+            app:cardPreventCornerOverlap="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/courtTypeMCV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/dateButton"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="20 Apr"
+
+                    android:textAllCaps="false"
+                    android:textColor="@color/green_500"
+                    android:textSize="@dimen/dateTypeButtonsTextSize"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toStartOf="@id/dateTimeDivider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:ignore="TextContrastCheck,VisualLintButtonSize" />
+
+                <View
+                    android:id="@+id/dateTimeDivider"
+                    android:layout_width="@dimen/dividerWidth"
+                    android:layout_height="0dp"
+                    android:layout_marginVertical="@dimen/dividerMargin"
+                    android:background="?android:attr/dividerVertical"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <Button
+                    android:id="@+id/hourButton"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="19:00"
+                    android:textAllCaps="false"
+                    android:textColor="@color/green_500"
+                    android:textSize="@dimen/dateTypeButtonsTextSize"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/dateTimeDivider"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    tools:ignore="TextContrastCheck,VisualLintButtonSize" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/courtTypeMCV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/pageExternalMargin"
+            android:layout_marginStart="@dimen/dateTypeInternalMargin"
+            android:layout_marginEnd="@dimen/pageExternalMargin"
+            app:cardCornerRadius="@dimen/cornerRadius"
+            app:cardElevation="@dimen/standardElevation"
+            app:cardMaxElevation="@dimen/standardElevation"
+            app:cardPreventCornerOverlap="true"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/dateTimeButtonsMCV"
+            app:layout_constraintTop_toTopOf="parent"
+
+            >
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/courtTypeTIL"
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:boxBackgroundColor="@color/white"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:endIconTint="@color/green_500">
+
+                <AutoCompleteTextView
+                    android:id="@+id/courtTypeACTV"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:inputType="none"
+                    android:maxLines="1"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp"
+                    android:singleLine="true"
+                    android:textColor="@color/green_500"
+                    android:textSize="@dimen/dateTypeButtonsTextSize"
+                    android:textStyle="normal"
+                    tools:ignore="LabelFor,TextContrastCheck,VisualLintTextFieldSize"
+
+                    tools:text="Calcio a 5" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/servicesRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/servicesExternalMargin"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/searchResultsTextCL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateTypeCL"
+        tools:listitem="@layout/service_item" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/searchResultsTextCL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/structuresRV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="@dimen/pageExternalMargin"
+        app:layout_constraintTop_toBottomOf="@id/servicesRV">
+
+        <TextView
+            android:id="@+id/searchResultsTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search results"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/green_500"
+            app:layout_constraintBottom_toTopOf="@id/selectionTutorialTV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/selectionTutorialTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reserve a court with the desired services"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/green_500"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchResultsTV" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/structuresRV"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:padding="@dimen/pageExternalMargin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchResultsTextCL"
+
+        tools:listitem="@layout/structure_item"
+
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
