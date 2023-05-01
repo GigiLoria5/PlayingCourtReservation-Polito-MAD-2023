@@ -28,14 +28,14 @@ class SearchCourtFragment : Fragment(R.layout.fragment_search_court) {
         selectCityMCV.setOnClickListener {
             val direction =
                 SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtActionFragment(
-                    cityTV.text.toString()
+                    "home", cityTV.text.toString()
                 )
             findNavController().navigate(direction)
         }
         searchMCV.setOnClickListener {
             val direction =
                 SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtResultsFragment(
-                    cityTV.text.toString()
+                    "home", cityTV.text.toString()
                 )
             findNavController().navigate(direction)
         }

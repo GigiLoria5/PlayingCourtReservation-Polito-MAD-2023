@@ -28,20 +28,35 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
 
         val b = view.findViewById<Button>(R.id.searchButton)
         b.setOnClickListener {
-            val direction =
-                SearchCourtActionFragmentDirections.actionSearchCourtActionFragmentToSearchCourtResultsFragment(
-                    "Turin"
-                )
 
-            //se arrivi da searchresults fai 2 volte pop dallo stack per eliminare la ricerca vecchia e iniziarne una nuova con la nuova città
-            if (args.comingFrom == 1) {
-                findNavController().popBackStack()
-                findNavController().popBackStack()
-            }
 
-            findNavController().navigate(direction)
+            //comingFrom: actionSearch - arrivi da results page nato da action
+            //comingFrom: home - arrivi dalla home page nato da home
+            findNavController().navigate(
+                when (args.bornFrom) {
+                    "actionSearch" -> {
+                        findNavController().popBackStack()
+                        findNavController().popBackStack()
+                        SearchCourtActionFragmentDirections.actionSearchCourtActionFragmentToSearchCourtResultsFragment(
+                            "actionSearch", "Turin"
+                        )
+                    }
+                    "home" -> {
+
+                        SearchCourtActionFragmentDirections.actionSearchCourtActionFragmentToSearchCourtResultsFragment(
+//                            SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtResultsFragment(
+
+                            "actionSearch", "Turin"
+                        )
+                    }
+                    else -> {
+                        SearchCourtActionFragmentDirections.actionSearchCourtActionFragmentToSearchCourtResultsFragment(
+                            "actionSearch",
+                            "Turin"
+                        )
+                    }
+                }
+            )
         }
-
-
     }
 }

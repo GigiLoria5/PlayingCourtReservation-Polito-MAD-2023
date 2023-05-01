@@ -21,8 +21,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/textView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/searchInputTIL"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="go to search results" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchInputTIL"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/green_500"
+        app:boxStrokeColor="@color/green_500"
+        app:layout_constraintTop_toBottomOf="@id/searchButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:boxStrokeWidth="12dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:endIconTint="@color/green_500">
+
+        <AutoCompleteTextView
+            android:id="@+id/courtTypeACTV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/green_500"
+            android:gravity="center"
+            android:inputType="none"
+            android:maxLines="1"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:singleLine="true"
+            android:textColor="@color/green_500"
+            android:textSize="@dimen/dateTypeButtonsTextSize"
+            android:textStyle="normal"
+            tools:ignore="LabelFor,TextContrastCheck,VisualLintTextFieldSize"
+            tools:text="Calcio a 5" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

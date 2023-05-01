@@ -39,18 +39,18 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         super.onViewCreated(view, savedInstanceState)
         if (vm.selectedDateTimeMillis.value == 0L) vm.changeSelectedDateTimeMillis(searchResultUtils.getMockInitialDateTime().timeInMillis)
 
-        println(savedInstanceState)
         // Remove Default Status Bar
         (activity as MainActivity).supportActionBar?.setShowHideAnimationEnabled(false)
         (activity as MainActivity).supportActionBar?.hide()
 
+        val direction =
+            SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToSearchCourtActionFragment(
+                args.bornFrom, args.city
+            )
         //set search icon onclick
         val customSearchIconIV = view.findViewById<ImageView>(R.id.customSearchIconIV)
         customSearchIconIV.setOnClickListener {
-            val direction =
-                SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToSearchCourtActionFragment(
-                    args.city
-                )
+
             findNavController().navigate(direction)
         }
 
@@ -62,10 +62,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         //set title of custom toolbar onclick
         customToolBar.setOnClickListener {
-            val direction =
-                SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToSearchCourtActionFragment(
-                    args.city
-                )
+
             findNavController().navigate(direction)
         }
 

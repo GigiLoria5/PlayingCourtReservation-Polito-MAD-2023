@@ -27,13 +27,13 @@
         <action
             android:id="@+id/action_searchCourtFragment_to_searchCourtActionFragment"
             app:destination="@id/searchCourtActionFragment">
-            <argument
-                android:name="comingFrom"
-                android:defaultValue="0" />
+            <argument android:name="bornFrom" />
         </action>
         <action
             android:id="@+id/action_searchCourtFragment_to_searchCourtResultsFragment"
-            app:destination="@id/searchCourtResultsFragment" />
+            app:destination="@id/searchCourtResultsFragment">
+            <argument android:name="bornFrom" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/reservationsFragment"
@@ -49,11 +49,13 @@
             android:name="city"
             app:argType="string" />
         <argument
-            android:name="comingFrom"
-            app:argType="integer" />
+            android:name="bornFrom"
+            app:argType="string" />
         <action
             android:id="@+id/action_searchCourtActionFragment_to_searchCourtResultsFragment"
-            app:destination="@id/searchCourtResultsFragment" />
+            app:destination="@id/searchCourtResultsFragment">
+            <argument android:name="bornFrom" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/searchCourtResultsFragment"
@@ -63,12 +65,13 @@
         <argument
             android:name="city"
             app:argType="string" />
+        <argument
+            android:name="bornFrom"
+            app:argType="string" />
         <action
             android:id="@+id/action_searchCourtResultsFragment_to_searchCourtActionFragment"
             app:destination="@id/searchCourtActionFragment">
-            <argument
-                android:name="comingFrom"
-                android:defaultValue="1" />
+            <argument android:name="bornFrom" />
         </action>
     </fragment>
 </navigation>
