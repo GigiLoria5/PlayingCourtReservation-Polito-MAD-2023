@@ -2,4 +2,9 @@
 <resources>
     <string name="hourFormat">kk:mm</string>
     <string name="dateFormat">dd MMM</string>
+    <string name="searchBoxInfoText">Where do you want to play</string>
+    <string name="searchIcon">search icon</string>
+    <string name="searchResultsInfo">Reserve a court with the desired services</string>
+    <string name="selectCityIcon">select city icon</string>
+    <string name="searchBoxHint">Search your city</string>
 </resources>

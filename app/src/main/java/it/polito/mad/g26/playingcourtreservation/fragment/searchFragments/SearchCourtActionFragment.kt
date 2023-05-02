@@ -1,40 +1,54 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
-import android.widget.Button
 import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CityResultAdapter
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtActionVM
 
 class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action) {
 
     private val args: SearchCourtActionFragmentArgs by navArgs()
+    private val vm by viewModels<SearchCourtActionVM>()
+
+    private lateinit var searchInputET: EditText
+    private lateinit var citiesResultRV: RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //Update Title TODO CHANGE
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Search Your Court"
-        // Set Back Button
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        val searchInputET = view.findViewById<EditText>(R.id.searchInputET)
-        searchInputET.hint = "arg: ${args.city}"
+        /* CUSTOM TOOLBAR BACK MANAGEMENT*/
+        val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
+        customToolBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+        customToolBar.title = "Find your court"
+        searchInputET = view.findViewById(R.id.searchInputET)
         searchInputET.requestFocus()
-        val imgr: InputMethodManager =
+        val inputMethodManager: InputMethodManager =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imgr.showSoftInput(searchInputET, InputMethodManager.SHOW_IMPLICIT);
+        inputMethodManager.showSoftInput(searchInputET, InputMethodManager.SHOW_IMPLICIT);
 
-        //questa è la funzione per andare in search. Al posto di "Turin" ci sarà la città scelta
-        val b = view.findViewById<Button>(R.id.searchButton)
-        b.setOnClickListener {
+        searchInputET.doOnTextChanged { text, _, _, _ ->
+            vm.searchNameChanged(text.toString())
+        }
+
+        /* CITIES RESULTS RECYCLE VIEW INITIALIZER*/
+        citiesResultRV = view.findViewById(R.id.citiesResultRV)
+
+
+        val cityResultAdapter = CityResultAdapter(vm.cities.value ?: listOf<String>()) {
             //comingFrom: result - arrivi da results page
             //comingFrom: home - arrivi dalla home page
 
@@ -42,21 +56,40 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
                 "result" -> {
                     findNavController().popBackStack()
                     findNavController().popBackStack()
-
                 }
                 "home" -> {
                     findNavController().popBackStack()
                 }
                 else -> {}
-
             }
-
             findNavController().navigate(
                 SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtResultsFragment(
                     "actionSearch",
-                    searchInputET.text.toString() //al posto di questo searchInputET... ci sarà la città scelta
+                    it
                 )
             )
         }
+
+        citiesResultRV.adapter = cityResultAdapter
+
+        vm.cities.observe(viewLifecycleOwner) {
+            //AGGIORNA RECYCLE VIEW
+            cityResultAdapter.updateCollection(vm.cities.value ?: listOf<String>())
+        }
+        searchInputET.setText(args.city)
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun onResume() {
+        super.onResume()
+        // Remove Default Status Bar
+        (activity as MainActivity).supportActionBar?.setShowHideAnimationEnabled(false)
+        (activity as MainActivity).supportActionBar?.hide()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        //show again original toolbar out of this fragment
+        (activity as MainActivity).supportActionBar?.show()
     }
 }

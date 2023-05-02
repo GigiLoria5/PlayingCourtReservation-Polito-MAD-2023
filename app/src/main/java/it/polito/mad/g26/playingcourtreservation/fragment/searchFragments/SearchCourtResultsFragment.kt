@@ -35,15 +35,9 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
     /* LOGIC OBJECT OF THIS FRAGMENT */
     private val searchResultUtils = SearchCourtResultsFragmentUtil
 
-    @SuppressLint("RestrictedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (vm.selectedDateTimeMillis.value == 0L) vm.changeSelectedDateTimeMillis(searchResultUtils.getMockInitialDateTime().timeInMillis)
-
-        // Remove Default Status Bar
-        (activity as MainActivity).supportActionBar?.setShowHideAnimationEnabled(false)
-        (activity as MainActivity).supportActionBar?.hide()
-
 
         //set search icon onclick
         val customSearchIconIV = view.findViewById<ImageView>(R.id.customSearchIconIV)
@@ -116,9 +110,12 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         //show again original toolbar out of this fragment
         (activity as MainActivity).supportActionBar?.show()
     }
-
+    @SuppressLint("RestrictedApi")
     override fun onResume() {
         super.onResume()
+        // Remove Default Status Bar
+        (activity as MainActivity).supportActionBar?.setShowHideAnimationEnabled(false)
+        (activity as MainActivity).supportActionBar?.hide()
         val courtsType =
             listOf(
                 "Tutto",

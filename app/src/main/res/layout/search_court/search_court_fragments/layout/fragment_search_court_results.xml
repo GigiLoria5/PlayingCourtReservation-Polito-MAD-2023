@@ -35,14 +35,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:navigationIcon="@drawable/baseline_arrow_back_24"
-                    app:title="Prova titolo"
+                    app:title=""
                     app:titleTextColor="@color/white" />
 
                 <ImageView
                     android:id="@+id/customSearchIconIV"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:contentDescription="search"
+                    android:contentDescription="@string/searchIcon"
                     android:paddingHorizontal="@dimen/searchIconPadding"
                     android:src="@drawable/baseline_search_24"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -95,9 +95,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:text="20 Apr"
+                                android:text="@string/dateFormat"
                                 android:textAllCaps="false"
-                                android:textColor="@color/green_500"
+                                android:textColor="@color/grey"
                                 android:textSize="@dimen/dateTypeButtonsTextSize"
                                 android:textStyle="normal" />
                         </com.google.android.material.card.MaterialCardView>
@@ -130,9 +130,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:text="19:00"
+                                android:text="@string/hourFormat"
                                 android:textAllCaps="false"
-                                android:textColor="@color/green_500"
+                                android:textColor="@color/grey"
                                 android:textSize="@dimen/dateTypeButtonsTextSize"
                                 android:textStyle="normal" />
                         </com.google.android.material.card.MaterialCardView>
@@ -171,7 +171,7 @@
                         app:boxBackgroundColor="@color/white"
                         app:boxStrokeWidth="0dp"
                         app:boxStrokeWidthFocused="0dp"
-                        app:endIconTint="@color/green_500">
+                        app:endIconTint="@color/grey">
 
                         <AutoCompleteTextView
                             android:id="@+id/courtTypeACTV"
@@ -184,7 +184,7 @@
                             android:paddingTop="0dp"
                             android:paddingBottom="0dp"
                             android:singleLine="true"
-                            android:textColor="@color/green_500"
+                            android:textColor="@color/grey"
                             android:textSize="@dimen/dateTypeButtonsTextSize"
                             android:textStyle="normal"
                             tools:ignore="LabelFor,TextContrastCheck,VisualLintTextFieldSize"
@@ -219,7 +219,7 @@
                     android:id="@+id/selectionTutorialTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Reserve a court with the desired services"
+                    android:text="@string/searchResultsInfo"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/white"
                     android:textSize="@dimen/reserveACourtInfoTextSize"

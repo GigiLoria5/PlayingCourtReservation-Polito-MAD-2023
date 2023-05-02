@@ -9,5 +9,5 @@ import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepositor
 class SportCenterVM(application: Application): AndroidViewModel(application) {
     val repo = SportCenterRepository(application)
 
-    val sportCenterList: LiveData<List<SportCenter>> = repo.getAllSportCenters()
+    val sportCenterList: LiveData<List<SportCenter>> = repo.findAllSportCenters()
 }

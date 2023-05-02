@@ -11,4 +11,6 @@ interface SportCenterDao {
     @Query("SELECT * from sport_center")
     fun findAllSportCenters(): LiveData<List<SportCenter>>
 
+    @Query("SELECT DISTINCT city FROM sport_center WHERE city LIKE :cityNameStartingWith")
+    fun findCities(cityNameStartingWith: String): LiveData<List<String>>
 }
