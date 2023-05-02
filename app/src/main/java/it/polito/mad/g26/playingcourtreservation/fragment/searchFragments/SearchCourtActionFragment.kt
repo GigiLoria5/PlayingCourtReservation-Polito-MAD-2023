@@ -35,32 +35,27 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
         //questa è la funzione per andare in search. Al posto di "Turin" ci sarà la città scelta
         val b = view.findViewById<Button>(R.id.searchButton)
         b.setOnClickListener {
-            //comingFrom: actionSearch - arrivi da results page nato da action
-            //comingFrom: home - arrivi dalla home page nato da home
-            findNavController().navigate(
-                when (args.bornFrom) {
-                    "actionSearch" -> {
-                        findNavController().popBackStack()
-                        findNavController().popBackStack()
-                        SearchCourtActionFragmentDirections.actionSearchCourtActionFragmentToSearchCourtResultsFragment(
-                            "actionSearch", "Turin"
-                        )
-                    }
-                    "home" -> {
+            //comingFrom: result - arrivi da results page
+            //comingFrom: home - arrivi dalla home page
 
-                        SearchCourtActionFragmentDirections.actionSearchCourtActionFragmentToSearchCourtResultsFragment(
-//                            SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtResultsFragment(
+            when (args.bornFrom) {
+                "result" -> {
+                    findNavController().popBackStack()
+                    findNavController().popBackStack()
 
-                            "actionSearch", "Turin"
-                        )
-                    }
-                    else -> {
-                        SearchCourtActionFragmentDirections.actionSearchCourtActionFragmentToSearchCourtResultsFragment(
-                            "actionSearch",
-                            "Turin"
-                        )
-                    }
                 }
+                "home" -> {
+                    findNavController().popBackStack()
+                }
+                else -> {}
+
+            }
+
+            findNavController().navigate(
+                SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtResultsFragment(
+                    "actionSearch",
+                    searchInputET.text.toString() //al posto di questo searchInputET... ci sarà la città scelta
+                )
             )
         }
     }

@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -43,27 +44,27 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         (activity as MainActivity).supportActionBar?.setShowHideAnimationEnabled(false)
         (activity as MainActivity).supportActionBar?.hide()
 
-        val direction =
-            SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToSearchCourtActionFragment(
-                args.bornFrom, args.city
-            )
+
         //set search icon onclick
         val customSearchIconIV = view.findViewById<ImageView>(R.id.customSearchIconIV)
         customSearchIconIV.setOnClickListener {
-
-            findNavController().navigate(direction)
+            searchResultUtils.navigateToAction(findNavController(), args.city)
         }
 
-        /* CUSTOM TOOLBAR MANAGEMENT*/
+        /* CUSTOM TOOLBAR BACK MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
         customToolBar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            searchResultUtils.navigateBack(findNavController(), args.city, args.bornFrom)
+        }
+
+        /*BACK BUTTON MANAGEMENT*/
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            searchResultUtils.navigateBack(findNavController(), args.city, args.bornFrom)
         }
 
         //set title of custom toolbar onclick
         customToolBar.setOnClickListener {
-
-            findNavController().navigate(direction)
+            searchResultUtils.navigateToAction(findNavController(), args.city)
         }
 
         //set title of custom toolbar
