@@ -13,11 +13,13 @@ import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceAdapter
 import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsFragmentUtil
-import it.polito.mad.g26.playingcourtreservation.viewmodel.SearchCourtResultsVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
 class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_results) {
 
@@ -31,6 +33,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
     private lateinit var hourTV: TextView
 
     private lateinit var courtTypeACTV: AutoCompleteTextView
+    private lateinit var servicesRV: RecyclerView
 
     /* LOGIC OBJECT OF THIS FRAGMENT */
     private val searchResultUtils = SearchCourtResultsFragmentUtil
@@ -90,6 +93,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
                 view.context,
                 vm
             )
+
         }
 
         vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
@@ -103,6 +107,19 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
                 hourTV
             )
         }
+
+        /* SERVICES RECYCLE VIEW INITIALIZER*/ //TODO CAMBIA COLORE SERVICE SELEZIONATO
+        servicesRV = view.findViewById(R.id.servicesRV)
+        val servicesAdapter = ServiceAdapter(
+            vm.services.value ?: listOf(),
+            { vm.addService(it) },
+            { vm.removeService(it) })
+        servicesRV.adapter = servicesAdapter
+
+        vm.services.observe(viewLifecycleOwner) {
+            servicesAdapter.updateCollection(vm.services.value ?: listOf())
+        }
+
     }
 
     override fun onDestroyView() {
@@ -110,6 +127,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         //show again original toolbar out of this fragment
         (activity as MainActivity).supportActionBar?.show()
     }
+
     @SuppressLint("RestrictedApi")
     override fun onResume() {
         super.onResume()

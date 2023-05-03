@@ -9,8 +9,8 @@ import it.polito.mad.g26.playingcourtreservation.model.*
 interface SportCenterDao {
 
     @Query("SELECT * from sport_center")
-    fun findAllSportCenters(): LiveData<List<SportCenter>>
+    fun findAll(): LiveData<List<SportCenter>>
 
     @Query("SELECT DISTINCT city FROM sport_center WHERE city LIKE :cityNameStartingWith")
-    fun findCities(cityNameStartingWith: String): LiveData<List<String>>
+    fun findFilteredCities(cityNameStartingWith: String): LiveData<List<String>>
 }

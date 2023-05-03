@@ -7,7 +7,7 @@ import it.polito.mad.g26.playingcourtreservation.model.*
 import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
 
 class ServiceVM(application: Application): AndroidViewModel(application) {
-    val repo = ServiceRepository(application)
+    private val repo = ServiceRepository(application)
 
-    val serviceList: LiveData<List<Service>> = repo.getAllServices()
+    val serviceList: LiveData<List<Service>> = repo.services()
 }

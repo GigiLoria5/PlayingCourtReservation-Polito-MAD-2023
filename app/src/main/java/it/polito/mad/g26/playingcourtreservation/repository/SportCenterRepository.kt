@@ -8,10 +8,10 @@ import it.polito.mad.g26.playingcourtreservation.model.*
 class SportCenterRepository(application: Application) {
     private val sportCenterDao = CourtReservationDatabase.getDatabase(application).sportCenterDao()
 
-    fun findAllSportCenters(): LiveData<List<SportCenter>> = sportCenterDao.findAllSportCenters()
+    fun sportCenters(): LiveData<List<SportCenter>> = sportCenterDao.findAll()
 
-    fun findCities(cityNameStartingWith: String): LiveData<List<String>> {
+    fun filteredCities(cityNameStartingWith: String): LiveData<List<String>> {
         println(cityNameStartingWith)
-        return sportCenterDao.findCities(cityNameStartingWith)
+        return sportCenterDao.findFilteredCities(cityNameStartingWith)
     }
 }

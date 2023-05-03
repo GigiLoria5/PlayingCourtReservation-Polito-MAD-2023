@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtResultsFragmentDirections
-import it.polito.mad.g26.playingcourtreservation.viewmodel.SearchCourtResultsVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtFragmentDirections
 
 import java.util.*

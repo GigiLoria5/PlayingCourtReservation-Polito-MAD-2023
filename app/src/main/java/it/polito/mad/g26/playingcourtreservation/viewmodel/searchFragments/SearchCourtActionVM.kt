@@ -18,9 +18,9 @@ class SearchCourtActionVM(application: Application) : AndroidViewModel(applicati
     val cities: LiveData<List<String>> = searchStringLiveData.switchMap { string ->
         val adjustedString = string.trim().lowercase(Locale.ROOT)
         if (TextUtils.isEmpty(adjustedString)) {
-            sportCenterRepository.findCities("") //TODO TROVARE MODO DI NON FARE RICERCA IN DB IN QUESTO CASO
+            sportCenterRepository.filteredCities("") //TODO TROVARE MODO DI NON FARE RICERCA IN DB IN QUESTO CASO
         } else {
-            sportCenterRepository.findCities("${adjustedString}%")
+            sportCenterRepository.filteredCities("${adjustedString}%")
         }
     }
 

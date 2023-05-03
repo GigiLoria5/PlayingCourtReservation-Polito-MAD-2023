@@ -48,7 +48,7 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
         citiesResultRV = view.findViewById(R.id.citiesResultRV)
 
 
-        val cityResultAdapter = CityResultAdapter(vm.cities.value ?: listOf<String>()) {
+        val cityResultAdapter = CityResultAdapter(vm.cities.value ?: listOf()) {
             //comingFrom: result - arrivi da results page
             //comingFrom: home - arrivi dalla home page
 
@@ -74,7 +74,7 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
 
         vm.cities.observe(viewLifecycleOwner) {
             //AGGIORNA RECYCLE VIEW
-            cityResultAdapter.updateCollection(vm.cities.value ?: listOf<String>())
+            cityResultAdapter.updateCollection(vm.cities.value ?: listOf())
         }
         searchInputET.setText(args.city)
     }
