@@ -67,7 +67,13 @@
         <item>Female</item>
         <item>Other</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="services_array">
+        <item>Bathroom</item>
+        <item>Var Usage</item>
+        <item>First Aid Kit</item>
+        <item>Supporters</item>
+        <item>MiniBar</item>
+    </string-array>
 
 </resources>
