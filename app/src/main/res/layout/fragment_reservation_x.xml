@@ -25,16 +25,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/imageView1"
+            <TextView
+                android:id="@+id/Title"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="50dp"
+                android:text="PRENOTATION"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 app:layout_constraintBottom_toTopOf="@+id/SportCenter"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/PrenotationCancel"
@@ -45,20 +46,6 @@
                 android:text="Cancel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/PrenotationModify"
-                app:layout_constraintTop_toBottomOf="@+id/Price" />
-
-            <Button
-                android:id="@+id/PrenotationModify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="65dp"
-                android:layout_marginBottom="52dp"
-                android:text="Modify"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/PrenotationCancel"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Price" />
 
@@ -88,6 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sport Center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/left15Percent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -130,6 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Field"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/left15Percent1"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -172,6 +161,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Time"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/left15Percent2"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -183,6 +173,17 @@
                     android:text="14.30-16.30"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/left45Percent3"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/timeModify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Modify"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_min="48dp"
+                    app:layout_constraintStart_toEndOf="@+id/textView8"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -214,6 +215,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Address"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/left15Percent3"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -256,18 +258,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Services"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/left15Percent4"
                     app:layout_constraintTop_toTopOf="parent" />
 
                <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Bathroom"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/left45Percent5"
-                app:layout_constraintTop_toTopOf="parent" />
+                   android:id="@+id/spinner"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   app:layout_constraintHeight_min="48dp"
+                   android:text="Bathroom"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintStart_toStartOf="@id/left45Percent5"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/ReservationModify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Modify"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_min="48dp"
+                    app:layout_constraintStart_toEndOf="@+id/spinner"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -298,6 +313,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Price"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/left15Percent5"
                     app:layout_constraintTop_toTopOf="parent" />
