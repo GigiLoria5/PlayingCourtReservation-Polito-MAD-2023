@@ -10,8 +10,8 @@ class SportCenterRepository(application: Application) {
 
     fun sportCenters(): LiveData<List<SportCenter>> = sportCenterDao.findAll()
 
-    fun filteredCities(cityNameStartingWith: String): LiveData<List<String>> {
-        println(cityNameStartingWith)
-        return sportCenterDao.findFilteredCities(cityNameStartingWith)
-    }
+    fun filteredCities(cityNameStartingWith: String): LiveData<List<String>> = sportCenterDao.findFilteredCities(cityNameStartingWith)
+
+    //x le date
+    //select * from sport_center where STRFTIME('%H', open_time) < '10'
 }
