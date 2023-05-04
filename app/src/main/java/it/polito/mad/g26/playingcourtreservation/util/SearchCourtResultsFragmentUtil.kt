@@ -6,6 +6,8 @@ import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.text.format.DateUtils
 import android.view.LayoutInflater
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -14,6 +16,7 @@ import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtResultsFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtFragmentDirections
+import it.polito.mad.g26.playingcourtreservation.model.Sport
 
 import java.util.*
 
@@ -125,6 +128,22 @@ object SearchCourtResultsFragmentUtil {
         }
         val dialog = builder.create()
         dialog.show()
+    }
+
+    fun setAutoCompleteTextViewSport(
+        viewContext: Context,
+        sports: List<Sport>?,
+        courtTypeACTV: AutoCompleteTextView,
+        selectedSport: Int
+    ) {
+        val courtsType = mutableListOf("All")
+        sports?.sortedBy { it.name }?.forEach { courtsType.add(it.name) }
+        val adapterCourt =
+            ArrayAdapter(viewContext, R.layout.list_item, courtsType)
+        courtTypeACTV.setText(
+            sports?.find { it.id == selectedSport }?.name ?: "All"
+        )
+        courtTypeACTV.setAdapter(adapterCourt)
     }
 
     fun navigateToAction(navController: NavController, city: String) {

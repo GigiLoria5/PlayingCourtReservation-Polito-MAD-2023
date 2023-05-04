@@ -14,7 +14,7 @@ class SearchCourtActionVM(application: Application) : AndroidViewModel(applicati
 
     private val sportCenterRepository = SportCenterRepository(application)
 
-    private val searchStringLiveData = MutableLiveData<String>("")
+    private val searchStringLiveData = MutableLiveData("")
     val cities: LiveData<List<String>> = searchStringLiveData.switchMap { string ->
         val adjustedString = string.trim().lowercase(Locale.ROOT)
         if (TextUtils.isEmpty(adjustedString)) {

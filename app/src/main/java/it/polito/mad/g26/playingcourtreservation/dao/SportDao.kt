@@ -9,6 +9,6 @@ import it.polito.mad.g26.playingcourtreservation.model.*
 interface SportDao {
 
     @Query("SELECT * from sport")
-    fun findAllSports(): LiveData<List<Sport>>
+    fun findAll(): LiveData<List<Sport>>
 
 }

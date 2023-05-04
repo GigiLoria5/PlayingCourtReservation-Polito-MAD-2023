@@ -5,7 +5,6 @@ import android.icu.util.Calendar
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import android.widget.TextView
@@ -69,18 +68,28 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         /* POSITION DROPDOWN MANAGEMENT*/
         courtTypeACTV = view.findViewById(R.id.courtTypeACTV)
-        courtTypeACTV.setText("Calcio a 11", false)
-        val courtsType =
-            listOf("Tutto", "Calcio a 5", "Calcio a 8", "Calcio a 11") //LI PRENDERAI DA LIVE DATA
-        val adapterCourt = ArrayAdapter(view.context, R.layout.list_item, courtsType)
-        courtTypeACTV.setAdapter(adapterCourt)
+
+        vm.sports.observe(viewLifecycleOwner) {
+            searchResultUtils.setAutoCompleteTextViewSport(
+                requireContext(),
+                vm.sports.value,
+                courtTypeACTV,
+                vm.getSelectedSportId()
+            )
+        }
+        courtTypeACTV.setOnItemClickListener { _, _, _, _ ->
+            vm.selectedSportChanged(
+                vm.sports.value?.find { it.name == courtTypeACTV.text.toString() }?.id ?: 0
+            )
+        }
+
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
         dateMCV = view.findViewById(R.id.dateMCV)
         dateTV = view.findViewById(R.id.dateTV)
         dateMCV.setOnClickListener {
             searchResultUtils.showDatePickerDialog(
-                view.context,
+                requireContext(),
                 vm
             )
         }
@@ -90,7 +99,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         hourTV = view.findViewById(R.id.hourTV)
         hourMCV.setOnClickListener {
             searchResultUtils.showNumberPickerDialog(
-                view.context,
+                requireContext(),
                 vm
             )
 
@@ -113,7 +122,9 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         val servicesAdapter = ServiceAdapter(
             vm.services.value ?: listOf(),
             { vm.addService(it) },
-            { vm.removeService(it) })
+            { vm.removeService(it) },
+            { vm.isServiceInList(it) }
+        )
         servicesRV.adapter = servicesAdapter
 
         vm.services.observe(viewLifecycleOwner) {
@@ -134,14 +145,13 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         // Remove Default Status Bar
         (activity as MainActivity).supportActionBar?.setShowHideAnimationEnabled(false)
         (activity as MainActivity).supportActionBar?.hide()
-        val courtsType =
-            listOf(
-                "Tutto",
-                "Calcio a 5",
-                "Calcio a 8",
-                "Calcio a 11"
-            ) // TODO LI PRENDERAI DA LIVE DATA
-        val adapterCourt = ArrayAdapter(requireContext(), R.layout.list_item, courtsType)
-        courtTypeACTV.setAdapter(adapterCourt)
+
+        //Restore autocomplete textview
+        searchResultUtils.setAutoCompleteTextViewSport(
+            requireContext(),
+            vm.sports.value,
+            courtTypeACTV,
+            vm.getSelectedSportId()
+        )
     }
 }
