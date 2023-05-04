@@ -7,11 +7,11 @@
     android:background="@color/white">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/structureInfoMCV"
+        android:id="@+id/sportCenterInfoMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/structureTopMargin"
-        android:layout_marginBottom="@dimen/structureBottomMargin"
+        android:layout_marginTop="@dimen/sportCenterTopMargin"
+        android:layout_marginBottom="@dimen/sportCenterBottomMargin"
         app:cardBackgroundColor="@color/grey_light"
         app:cardCornerRadius="@dimen/cornerRadius"
         app:cardElevation="@dimen/standardElevation"
@@ -26,43 +26,43 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/structureVerticalPadding">
+            android:paddingVertical="@dimen/sportCenterVerticalPadding">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/structureInfoCL"
+                android:id="@+id/sportCenterInfoCL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/pageExternalSpace"
-                app:layout_constraintBottom_toTopOf="@id/structureServicesCL"
+                app:layout_constraintBottom_toTopOf="@id/sportCenterServicesCL"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/structureNameTV"
+                    android:id="@+id/sportCenterNameTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Title"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="@color/green_500"
-                    app:layout_constraintBottom_toTopOf="@id/structureAddressTV"
+                    app:layout_constraintBottom_toTopOf="@id/sportCenterAddressTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/structureAddressTV"
+                    android:id="@+id/sportCenterAddressTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Address"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/green_500"
-                    app:layout_constraintBottom_toTopOf="@id/structureHoursTV"
+                    app:layout_constraintBottom_toTopOf="@id/sportCenterHoursTV"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/structureNameTV" />
+                    app:layout_constraintTop_toBottomOf="@id/sportCenterNameTV" />
 
                 <TextView
-                    android:id="@+id/structureHoursTV"
+                    android:id="@+id/sportCenterHoursTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="00:00 - 15:00"
@@ -70,7 +70,7 @@
                     android:textColor="@color/green_500"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/structureAddressTV" />
+                    app:layout_constraintTop_toBottomOf="@id/sportCenterAddressTV" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/phoneMCV"
@@ -80,7 +80,7 @@
                     android:focusable="true"
                     app:cardBackgroundColor="@color/green_500"
                     app:cardCornerRadius="@dimen/cornerRadius"
-                    app:layout_constraintBottom_toBottomOf="@id/structureHoursTV"
+                    app:layout_constraintBottom_toBottomOf="@id/sportCenterHoursTV"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@android:drawable/stat_sys_phone_call">
@@ -97,14 +97,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/structureServicesCL"
+                android:id="@+id/sportCenterServicesCL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/distanceStructureInfoCourtData"
+                android:paddingTop="@dimen/distanceSportCenterInfoCourtData"
                 app:layout_constraintBottom_toTopOf="@id/courtsDataCL"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/structureInfoCL">
+                app:layout_constraintTop_toBottomOf="@id/sportCenterInfoCL">
 
                 <TextView
                     android:id="@+id/availableServicesTV"
@@ -114,12 +114,12 @@
                     android:text="Choose your services"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/green_500"
-                    app:layout_constraintBottom_toTopOf="@id/structureServicesRV"
+                    app:layout_constraintBottom_toTopOf="@id/sportCenterServicesRV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/structureServicesRV"
+                    android:id="@+id/sportCenterServicesRV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -135,11 +135,11 @@
                 android:id="@+id/courtsDataCL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/distanceStructureInfoCourtData"
+                android:paddingTop="@dimen/distanceSportCenterInfoCourtData"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/structureServicesCL">
+                app:layout_constraintTop_toBottomOf="@id/sportCenterServicesCL">
 
                 <TextView
                     android:id="@+id/selectCourtTV"

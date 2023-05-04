@@ -17,6 +17,7 @@ import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceAdapter
+import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.SportCenterAdapter
 import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsFragmentUtil
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
@@ -33,6 +34,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
     private lateinit var courtTypeACTV: AutoCompleteTextView
     private lateinit var servicesRV: RecyclerView
+    private lateinit var sportCentersRV: RecyclerView
 
     /* LOGIC OBJECT OF THIS FRAGMENT */
     private val searchResultUtils = SearchCourtResultsFragmentUtil
@@ -129,6 +131,17 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         vm.services.observe(viewLifecycleOwner) {
             servicesAdapter.updateCollection(vm.services.value ?: listOf())
+        }
+
+        /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/ //TODO CAMBIA COLORE SERVICE SELEZIONATO
+        sportCentersRV = view.findViewById(R.id.sportCentersRV)
+        val sportCentersAdapter = SportCenterAdapter(
+            vm.sportCenters.value ?: listOf(),
+        )
+        sportCentersRV.adapter = sportCentersAdapter
+
+        vm.sportCenters.observe(viewLifecycleOwner) {
+            sportCentersAdapter.updateCollection(vm.sportCenters.value ?: listOf())
         }
 
     }

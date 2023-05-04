@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.Sport
+import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportRepository
@@ -21,6 +22,9 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
 
     //qui ci metto tutti gli sport
     val sports: LiveData<List<Sport>> = sportRepository.sports()
+
+    //qui ci metto gli sport centers
+    val sportCenters: LiveData<List<SportCenter>> = sportCenterRepository.sportCenters()
 
     //sport selezionato
     private val selectedSport = MutableLiveData(0)

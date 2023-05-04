@@ -12,10 +12,10 @@
     <dimen name="reserveACourtInfoTextSize">16sp</dimen>
     <dimen name="dividerWidth">1dp</dimen>
     <dimen name="dividerMargin">6dp</dimen>
-    <dimen name="structureBottomMargin">24dp</dimen>
-    <dimen name="structureTopMargin">1dp</dimen>
-    <dimen name="structureVerticalPadding">5dp</dimen>
-    <dimen name="distanceStructureInfoCourtData">16dp</dimen>
+    <dimen name="sportCenterBottomMargin">24dp</dimen>
+    <dimen name="sportCenterTopMargin">1dp</dimen>
+    <dimen name="sportCenterVerticalPadding">5dp</dimen>
+    <dimen name="distanceSportCenterInfoCourtData">16dp</dimen>
     <dimen name="courtBoxMinDim">145dp</dimen>
     <dimen name="courtBoxElevation">7dp</dimen>
     <dimen name="courtNameCourtBox">18sp</dimen>
