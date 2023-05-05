@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.CheckBox
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,8 +24,12 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var time= listOf<String>("14-16","16-18","18-20","20-22")
+        var time= mutableListOf("16-18","18-20","20-22")
         var services= listOf("First Aid","Var Technology","Bathroom","MiniBar")
+        var servicesUsed=mutableListOf("First Aid","Bathroom")
+        var timeSelected="14-16"
+        time.add(0,timeSelected)
+
 
         //Set spinner and adapter
         spinnerSer = view.findViewById(R.id.spinner)
@@ -33,6 +39,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         spinnerSer.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 spinnerSer.setSelection(position)
+                timeSelected=time[position]
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Do nothing
@@ -41,8 +48,9 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
         //recyclerview
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.adapter=MyAdapterRecycle(services)
+        recyclerView.adapter=MyAdapterRecycle(services, servicesUsed)
         recyclerView.layoutManager=LinearLayoutManager(context)
+
 
     }
 
@@ -51,12 +59,20 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 //Class to contain the view of a single random item
 class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
 
-    val rButton=v.findViewById<TextView>(R.id.radioButton)
+    private val cBox=v.findViewById<CheckBox>(R.id.checkBox)
+
+    fun bind(s:String, l : MutableList<String> ){
+        cBox.text=s
+        cBox.isChecked = s in l
+        super.itemView.setOnClickListener{
+
+        }
+    }
 }
 
 
 //class that uses the viewHolder to show a specific item
-class MyAdapterRecycle( val l :List<String>) : RecyclerView.Adapter<MyViewHolder>(){
+class MyAdapterRecycle( val l :List<String>, var lUsed : MutableList<String>) : RecyclerView.Adapter<MyViewHolder>(){
 
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -71,7 +87,7 @@ class MyAdapterRecycle( val l :List<String>) : RecyclerView.Adapter<MyViewHolder
 
     //called after viewHolder are created, to put data into them
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.rButton.text=l[position]
+        holder.bind(l[position],lUsed)
     }
 }
 

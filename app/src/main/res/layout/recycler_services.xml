@@ -4,16 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RadioButton
-        android:id="@+id/radioButton"
+    <CheckBox
+        android:id="@+id/checkBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="RadioButton"
-        android:minWidth="48dp"
-        android:minHeight="48dp"/>
+        android:text="CheckBox"
+        android:minWidth="50dp"
+        android:minHeight="50dp"/>
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#737171" />
+
+
 </LinearLayout>
