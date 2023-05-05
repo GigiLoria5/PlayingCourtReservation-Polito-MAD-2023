@@ -29,7 +29,7 @@
                 android:id="@+id/Title"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:text="PRENOTATION"
+                android:text="RESERVATION"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 app:layout_constraintBottom_toTopOf="@+id/SportCenter"
@@ -44,7 +44,8 @@
                 android:text="Cancel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/buttonModify"
                 app:layout_constraintTop_toBottomOf="@+id/Price" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -175,17 +176,6 @@
                     app:layout_constraintStart_toStartOf="@id/left45Percent3"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
-                    android:id="@+id/timeModify"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Modify"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_min="48dp"
-                    app:layout_constraintStart_toEndOf="@+id/textView8"
-                    app:layout_constraintTop_toTopOf="parent" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -263,25 +253,14 @@
                     app:layout_constraintStart_toStartOf="@id/left15Percent4"
                     app:layout_constraintTop_toTopOf="parent" />
 
-               <Spinner
-                   android:id="@+id/spinner"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   app:layout_constraintHeight_min="48dp"
-                   android:text="Bathroom"
-                   app:layout_constraintBottom_toBottomOf="parent"
-                   app:layout_constraintStart_toStartOf="@id/left45Percent5"
-                   app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/ReservationModify"
+                <Spinner
+                    android:id="@+id/spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Modify"
+                    android:text="Bathroom"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHeight_min="48dp"
-                    app:layout_constraintStart_toEndOf="@+id/spinner"
+                    app:layout_constraintStart_toStartOf="@id/left45Percent5"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -328,6 +307,17 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/buttonModify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Modify"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/reservationCancel"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Price" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

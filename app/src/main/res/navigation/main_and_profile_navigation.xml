@@ -32,6 +32,11 @@
     <fragment
         android:id="@+id/reservationXFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ReservationXFragment"
-        android:label="fragment_reservationX"
+        android:label="fragment_reservation_x"
         tools:layout="@layout/fragment_reservation_x" />
+    <fragment
+        android:id="@+id/modifyReservationXFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.ModifyReservationXFragment"
+        android:label="fragment_modify_reservation_x"
+        tools:layout="@layout/fragment_modify_reservation_x" />
 </navigation>

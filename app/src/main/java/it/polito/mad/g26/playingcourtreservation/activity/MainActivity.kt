@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         // Handle Navigation between main fragments
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> navController.navigate(R.id.reservationXFragment)
+                R.id.home -> navController.navigate(R.id.modifyReservationXFragment)
                 R.id.reservations -> navController.navigate(R.id.reservationsFragment)
                 R.id.profile -> navController.navigate(R.id.showProfileFragment)
             }
