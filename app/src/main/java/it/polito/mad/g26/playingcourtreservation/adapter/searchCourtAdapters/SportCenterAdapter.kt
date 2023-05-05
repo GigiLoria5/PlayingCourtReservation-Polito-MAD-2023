@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 
 class SportCenterAdapter(private var collection: List<SportCenter>) :
@@ -40,7 +39,9 @@ class SportCenterAdapter(private var collection: List<SportCenter>) :
         private val sportCenterAddress = itemView.findViewById<TextView>(R.id.sportCenterAddressTV)
         private val sportCenterHours = itemView.findViewById<TextView>(R.id.sportCenterHoursTV)
 
-
+//TODO X SERVICE_ITEM
+// android:clickable="false"
+// android:focusable="false"
         //private val rvServices = itemView.findViewById<RecyclerView>(R.id.structureServicesRV)
 
         //private val rvCourtChild = itemView.findViewById<RecyclerView>(R.id.courtsDataRV)

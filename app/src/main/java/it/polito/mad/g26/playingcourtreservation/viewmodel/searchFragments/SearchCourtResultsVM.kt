@@ -1,15 +1,16 @@
 package it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
+import androidx.lifecycle.*
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.Sport
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportRepository
+import java.util.*
 
 class SearchCourtResultsVM(application: Application) : AndroidViewModel(application) {
 
@@ -17,25 +18,13 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
     private val serviceRepository = ServiceRepository(application)
     private val sportRepository = SportRepository(application)
 
-    //qui ci metto tutti i servizi
-    val services: LiveData<List<Service>> = serviceRepository.services()
-
-    //qui ci metto tutti gli sport
-    val sports: LiveData<List<Sport>> = sportRepository.sports()
-
-    //qui ci metto gli sport centers
-    val sportCenters: LiveData<List<SportCenter>> = sportCenterRepository.sportCenters()
-
-    //sport selezionato
-    private val selectedSport = MutableLiveData(0)
-
-
-    //qui ci metto gli id dei servizi selezionati. sempre come livedata perchè poi serve nello switch map dei courts
-    private var selectedServices = MutableLiveData<MutableSet<Int>>().also {
-        it.value = mutableSetOf()
+    /*CITY MANAGEMENT*/
+    private lateinit var selectedCity: String
+    fun setCity(city: String) {
+        selectedCity = city
     }
 
-
+    /*DATE TIME MANAGEMENT*/
     private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
         it.value = 0
     }
@@ -44,22 +33,89 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
         _selectedDateTimeMillis.value = newTimeInMillis
     }
 
-    fun addService(serviceId: Int) {
-        selectedServices.value?.add(serviceId)
+    private fun getHourFormat(): String {
+        val c = Calendar.getInstance()
+        c.timeInMillis = selectedDateTimeMillis.value!!
+        var hourFormatted = SimpleDateFormat("kk:mm", Locale.ITALY).format(c.time)
+        if (hourFormatted == "24:00") hourFormatted = "00:00"
+        return hourFormatted
     }
 
-    fun removeService(serviceId: Int) {
-        selectedServices.value?.remove(serviceId)
-    }
-
-    fun isServiceInList(serviceId: Int): Boolean {
-        return selectedServices.value?.contains(serviceId) ?: false
-    }
-
+    /*SPORT MANAGEMENT*/
+    val sports: LiveData<List<Sport>> = sportRepository.sports()
+    private val selectedSport = MutableLiveData(0)
     fun selectedSportChanged(sportId: Int) {
         selectedSport.value = sportId
     }
-    fun getSelectedSportId():Int=selectedSport.value?:0
 
-    //x la lista dei court e dei campi devi provare a fare un switchMap che prenda tutti i parametri di ricerca
+    fun getSelectedSportId(): Int = selectedSport.value ?: 0
+
+    /*SERVICES MANAGEMENT*/
+    val services: LiveData<List<Service>> = serviceRepository.services()
+    private var selectedServices = MutableLiveData<MutableSet<Int>>().also {
+        it.value = mutableSetOf()
+    }
+
+    fun addServiceId(serviceId: Int) {
+        val s = selectedServices.value
+        s?.add(serviceId)
+        selectedServices.value = s
+    }
+
+    fun removeServiceId(serviceId: Int) {
+        val s = selectedServices.value
+        s?.remove(serviceId)
+        selectedServices.value = s
+    }
+
+    fun isServiceIdInList(serviceId: Int): Boolean {
+        return selectedServices.value?.contains(serviceId) ?: false
+    }
+
+    /*SPORT CENTERS MANAGEMENT*/
+    private val sportCentersMediator = MediatorLiveData<Int>()
+    val sportCenters = sportCentersMediator.switchMap { _ ->
+        searchCombinations()
+    }
+
+    private fun searchCombinations(): LiveData<List<SportCenter>> {
+        return when {
+            (selectedSport.value != 0 && selectedServices.value?.isNotEmpty() == true) ->
+                sportCenterRepository.filteredSportCentersServicesAndSport(
+                    selectedCity,
+                    getHourFormat(),
+                    selectedServices.value?.toSet() ?: setOf(),
+                    selectedSport.value ?: 0
+                )
+            (selectedSport.value != 0) ->
+                sportCenterRepository.filteredSportCentersSportId(
+                    selectedCity,
+                    getHourFormat(),
+                    selectedSport.value ?: 0
+                )
+            (selectedServices.value?.isNotEmpty() == true) ->
+                sportCenterRepository.filteredSportCentersServices(
+                    selectedCity,
+                    getHourFormat(),
+                    selectedServices.value?.toSet() ?: setOf()
+                )
+            else -> sportCenterRepository.filteredSportCentersBase(selectedCity, getHourFormat())
+        }
+    }
+
+    /*CHANGES IN SEARCH PARAMETERS MANAGEMENT*/
+    init {
+        sportCentersMediator.addSource(selectedDateTimeMillis) {
+            sportCentersMediator.value = 1
+        }
+        sportCentersMediator.addSource(selectedSport) {
+            sportCentersMediator.value = 2
+        }
+        sportCentersMediator.addSource(selectedServices) {
+            sportCentersMediator.value = 3
+        }
+    }
+    //nell'adapter dello sportcenter, nella funzione che genera i figli, fai una chiamata a qualche dao, magari anche con una funzione da sto vm
+    //nb i campi che si vedono dipendono dallo sport selezionato.
+    // poi quando fa update dei dati dello sportcenter, aggiorna anche i campi che si vedono
 }

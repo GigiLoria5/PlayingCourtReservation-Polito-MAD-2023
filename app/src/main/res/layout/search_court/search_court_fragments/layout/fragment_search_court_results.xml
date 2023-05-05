@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey_light"
     tools:context=".fragment.searchFragments.SearchCourtResultsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -234,7 +235,6 @@
         android:id="@+id/sportCentersRV"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white"
         android:padding="@dimen/pageExternalSpace"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"

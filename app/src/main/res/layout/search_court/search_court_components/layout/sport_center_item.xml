@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    >
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/sportCenterInfoMCV"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/sportCenterTopMargin"
         android:layout_marginBottom="@dimen/sportCenterBottomMargin"
-        app:cardBackgroundColor="@color/grey_light"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/cornerRadius"
         app:cardElevation="@dimen/standardElevation"
 
@@ -128,7 +128,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/availableServicesTV"
-                    tools:listitem="@layout/service_item_no_touchable" />
+                    tools:listitem="@layout/service_item" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

@@ -41,7 +41,9 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (vm.selectedDateTimeMillis.value == 0L) vm.changeSelectedDateTimeMillis(searchResultUtils.getMockInitialDateTime().timeInMillis)
+        if (vm.selectedDateTimeMillis.value == 0L)
+            vm.changeSelectedDateTimeMillis(searchResultUtils.getMockInitialDateTime().timeInMillis)
+        vm.setCity(args.city)
 
         //set search icon onclick
         val customSearchIconIV = view.findViewById<ImageView>(R.id.customSearchIconIV)
@@ -119,13 +121,13 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
             )
         }
 
-        /* SERVICES RECYCLE VIEW INITIALIZER*/ //TODO CAMBIA COLORE SERVICE SELEZIONATO
+        /* SERVICES RECYCLE VIEW INITIALIZER*/
         servicesRV = view.findViewById(R.id.servicesRV)
         val servicesAdapter = ServiceAdapter(
             vm.services.value ?: listOf(),
-            { vm.addService(it) },
-            { vm.removeService(it) },
-            { vm.isServiceInList(it) }
+            { vm.addServiceId(it) },
+            { vm.removeServiceId(it) },
+            { vm.isServiceIdInList(it) }
         )
         servicesRV.adapter = servicesAdapter
 
@@ -133,10 +135,10 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
             servicesAdapter.updateCollection(vm.services.value ?: listOf())
         }
 
-        /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/ //TODO CAMBIA COLORE SERVICE SELEZIONATO
+        /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
         val sportCentersAdapter = SportCenterAdapter(
-            vm.sportCenters.value ?: listOf(),
+            vm.sportCenters.value ?: listOf()
         )
         sportCentersRV.adapter = sportCentersAdapter
 
