@@ -9,5 +9,4 @@ class ReservationRepository(application: Application) {
     private val reservationDao = CourtReservationDatabase.getDatabase(application).reservationDao()
 
     fun reservations(): LiveData<List<Reservation>> = reservationDao.findAll()
-
 }

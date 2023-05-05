@@ -38,8 +38,8 @@
 
     <ImageView
         android:id="@+id/dayHasReservationImage"
-        android:layout_width="4.5dp"
-        android:layout_height="4.5dp"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
         android:contentDescription="@string/has_reservation"
         android:src="@drawable/baseline_circle_24"
         app:layout_constraintBottom_toBottomOf="parent"

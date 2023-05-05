@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
@@ -15,15 +17,17 @@ import com.kizitonwose.calendar.view.WeekCalendarView
 import com.kizitonwose.calendar.view.WeekDayBinder
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
 import it.polito.mad.g26.playingcourtreservation.util.getWeekPageTitle
 import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
-import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
+import it.polito.mad.g26.playingcourtreservation.util.setVisibility
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationVM
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 
 class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
     private val reservationVM by viewModels<ReservationVM>()
@@ -31,6 +35,8 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
     private val today = LocalDate.now()
     private var selectedDate: LocalDate = today
     private var isInitialDateSet = false // Keep track of the initial selected date
+    private val reservations = mutableMapOf<LocalDate, LiveData<List<Reservation>>>()
+    private val reservationDatePattern = "dd-MM-yyyy"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -72,9 +78,17 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         }
 
         // Get All Reservations
-        val reservations = reservationVM.reservations
-        reservations.observe(viewLifecycleOwner) {
-            println(it)
+        reservationVM.reservations.observe(viewLifecycleOwner) {
+            it.forEach { reservation ->
+                val localDate = LocalDate.parse(
+                    reservation.date,
+                    DateTimeFormatter.ofPattern(reservationDatePattern)
+                )
+                val currentList = reservations[localDate]?.value ?: emptyList()
+                val updatedList = MutableLiveData(currentList + reservation)
+                reservations[localDate] = updatedList
+            }
+            println(reservations)
         }
         // TODO: Show Reservations
     }
@@ -126,13 +140,13 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                     today -> {
                         dateTextView.setTextColorRes(colorToday)
                         dateTextView.background = null
-                        dotView.makeVisible() // TODO: Show/Hide "hasReservation" icon
+                        dotView.setVisibility(reservations[data.date]?.value.orEmpty().isNotEmpty())
                     }
 
                     else -> {
                         dateTextView.setTextColorRes(colorUnselected)
                         dateTextView.background = null
-                        dotView.makeVisible() // TODO: Show/Hide "hasReservation" icon
+                        dotView.setVisibility(reservations[data.date]?.value.orEmpty().isNotEmpty())
                     }
                 }
             }

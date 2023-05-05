@@ -12,6 +12,10 @@ internal fun Context.getColorCompat(@ColorRes color: Int) =
 internal fun TextView.setTextColorRes(@ColorRes color: Int) =
     setTextColor(context.getColorCompat(color))
 
+fun View.setVisibility(isVisible: Boolean) {
+    if (isVisible) makeVisible() else makeInVisible()
+}
+
 fun View.makeVisible() {
     visibility = View.VISIBLE
 }
