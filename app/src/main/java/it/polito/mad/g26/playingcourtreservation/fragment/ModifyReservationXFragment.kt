@@ -65,7 +65,8 @@ class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
         cBox.text=s
         cBox.isChecked = s in l
         super.itemView.setOnClickListener{
-
+            if(cBox.isChecked) l.add(s)
+            else l.remove(s)
         }
     }
 }
