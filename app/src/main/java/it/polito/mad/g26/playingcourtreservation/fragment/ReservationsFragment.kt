@@ -18,6 +18,8 @@ import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
 import it.polito.mad.g26.playingcourtreservation.util.getWeekPageTitle
+import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
+import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationVM
 import java.time.LocalDate
@@ -56,7 +58,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
             val newDate =
                 if (weekDays.days.first().date.isBefore(selectedDate)) selectedDate.minusDays(7)
                 else selectedDate.plusDays(7)
-            updateSelectedDate(weekCalendarView, newDate)
+            selectedDate(weekCalendarView, newDate)
         }
 
         // Navigate Between Weeks
@@ -85,10 +87,11 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
             lateinit var day: WeekDay // Will be set when this container is bound
             val dateTextView: TextView = view.findViewById(R.id.reservationsCalendarDateText)
             val dayTextView: TextView = view.findViewById(R.id.reservationsCalendarDayText)
+            val dotView: ImageView = view.findViewById(R.id.dayHasReservationImage)
 
             init {
                 view.setOnClickListener {
-                    updateSelectedDate(weekCalendarView, day.date)
+                    selectedDate(weekCalendarView, day.date)
                 }
             }
 
@@ -103,9 +106,9 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                 container.day = data
                 val dayTextView = container.dayTextView
                 val dateTextView = container.dateTextView
+                val dotView = container.dotView
                 dayTextView.text = data.date.dayOfWeek.displayText()
                 dateTextView.text = data.date.displayDay()
-                // TODO: Show/Hide "hasReservation" icon
                 // Handle Date UI
                 val colorToday = R.color.green_500
                 val colorSelected = R.color.white
@@ -115,26 +118,28 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                         dateTextView.setTextColorRes(colorSelected)
                         dateTextView.setBackgroundResource(R.drawable.calendar_selected_bg)
                         if (today.isEqual(selectedDate)) {
-                            // TODO: change background color to colorToday
-                            // dateTextView.setBackgroundColor(Color.GREEN)
+                            dateTextView.setBackgroundResource(R.drawable.calendar_today_selected_bg)
                         }
+                        dotView.makeInVisible()
                     }
 
                     today -> {
                         dateTextView.setTextColorRes(colorToday)
                         dateTextView.background = null
+                        dotView.makeVisible() // TODO: Show/Hide "hasReservation" icon
                     }
 
                     else -> {
                         dateTextView.setTextColorRes(colorUnselected)
                         dateTextView.background = null
+                        dotView.makeVisible() // TODO: Show/Hide "hasReservation" icon
                     }
                 }
             }
         }
     }
 
-    private fun updateSelectedDate(weekCalendarView: WeekCalendarView, newDate: LocalDate) {
+    private fun selectedDate(weekCalendarView: WeekCalendarView, newDate: LocalDate) {
         if (selectedDate == newDate)
             return
         val oldDate = selectedDate
