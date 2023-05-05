@@ -38,11 +38,9 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/PrenotationCancel"
+                android:id="@+id/reservationCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="65dp"
-                android:layout_marginBottom="52dp"
                 android:text="Cancel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -54,7 +52,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/Field"
-                app:layout_constraintHeight_percent="0.1">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.12"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/left45Percent"
@@ -95,7 +95,7 @@
                 android:id="@+id/Field"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintHeight_percent="0.1"
+                app:layout_constraintHeight_percent="0.12"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/SportCenter">
 
@@ -138,7 +138,7 @@
                 android:id="@+id/Time"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintHeight_percent="0.1"
+                app:layout_constraintHeight_percent="0.12"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Field">
 
@@ -192,7 +192,7 @@
                 android:id="@+id/Address"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintHeight_percent="0.1"
+                app:layout_constraintHeight_percent="0.12"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Time">
 
@@ -235,7 +235,7 @@
                 android:id="@+id/Services"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintHeight_percent="0.1"
+                app:layout_constraintHeight_percent="0.12"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Address">
 
@@ -290,7 +290,7 @@
                 android:id="@+id/Price"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintHeight_percent="0.1"
+                app:layout_constraintHeight_percent="0.12"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/Services">
 
