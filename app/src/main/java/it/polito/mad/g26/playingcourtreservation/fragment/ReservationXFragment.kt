@@ -34,12 +34,17 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         popupWindow.setBackgroundDrawable(ColorDrawable(Color.GREEN))
 
 
-
-
         //Button for popup
-        val servicesButton=view.findViewById<Button>(R.id.delete_reservation)
-        servicesButton.setOnClickListener{
+        val deleteButton=view.findViewById<Button>(R.id.delete_reservation)
+        deleteButton.setOnClickListener{
             popupWindow.showAtLocation(view, Gravity.CENTER,0,0)
+        }
+
+        //Button of the popup
+        val deletePopButton=popupView.findViewById<MaterialButton>(R.id.deletePopButton)
+        deletePopButton.setOnClickListener{
+            popupWindow.dismiss()
+            //call the other fragment
         }
 
 
