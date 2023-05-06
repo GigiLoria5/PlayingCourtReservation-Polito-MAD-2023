@@ -41,8 +41,8 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (vm.selectedDateTimeMillis.value == 0L)
-            vm.changeSelectedDateTimeMillis(searchResultUtils.getMockInitialDateTime().timeInMillis)
+
+        /* VM INITIALIZATIONS */
         vm.setCity(args.city)
 
         //set search icon onclick
@@ -62,7 +62,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
             searchResultUtils.navigateBack(findNavController(), args.city, args.bornFrom)
         }
 
-        //set title of custom toolbar onclick
+        //set onclick for title of custom toolbar
         customToolBar.setOnClickListener {
             searchResultUtils.navigateToAction(findNavController(), args.city)
         }
@@ -70,7 +70,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         //set title of custom toolbar
         customToolBar.title = "Courts in ${args.city}"
 
-        /* POSITION DROPDOWN MANAGEMENT*/
+        /* COURT TYPE DROPDOWN MANAGEMENT*/
         courtTypeACTV = view.findViewById(R.id.courtTypeACTV)
 
         vm.sports.observe(viewLifecycleOwner) {
@@ -86,7 +86,6 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
                 vm.sports.value?.find { it.name == courtTypeACTV.text.toString() }?.id ?: 0
             )
         }
-
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
         dateMCV = view.findViewById(R.id.dateMCV)
@@ -106,7 +105,6 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
                 requireContext(),
                 vm
             )
-
         }
 
         vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
@@ -140,8 +138,8 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         val sportCentersAdapter = SportCenterAdapter(
             vm.sportCenters.value ?: listOf(),
             vm.services.value?: listOf(),
-            {vm.isCourtReserved(it)}, //TODO AGGIUNGI FUNZIONE X VEDERE SUBITO SE HAI UNA PRENOTAZIONE X QUELLA DATA/ORA
-        )
+        ) { vm.courtReservationState(it) } //TODO AGGIUNGI FUNZIONE X VEDERE SUBITO SE HAI UNA PRENOTAZIONE X QUELLA DATA/ORA
+
         sportCentersRV.adapter = sportCentersAdapter
 
         vm.sportCenters.observe(viewLifecycleOwner) {
@@ -150,9 +148,8 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         vm.services.observe(viewLifecycleOwner){
             sportCentersAdapter.updateAvailableServices(vm.services.value?: listOf())
         }
-
-        vm.reservations.observe(viewLifecycleOwner){ itt ->
-            itt.forEach { it->println(it.id) } //TODO CONVIENE AGGIORNARE I DATI QUANDO LE RESERVATIONS CAMBIANO
+        vm.reservations.observe(viewLifecycleOwner){
+            sportCentersAdapter.reservationsUpdate()
         }
     }
 

@@ -23,7 +23,7 @@ class SearchCourtFragment : Fragment(R.layout.fragment_search_court) {
         val cityNameTV = view.findViewById<TextView>(R.id.cityNameTV)
         val selectCityMCV = view.findViewById<MaterialCardView>(R.id.citySearchMCV)
         val searchMCV = view.findViewById<MaterialCardView>(R.id.searchMCV)
-        cityNameTV.text = "Torino" //TODO TAKE USER CITY
+        cityNameTV.text = "Torino" // TODO TAKE USER CITY
 
         selectCityMCV.setOnClickListener {
             val direction =

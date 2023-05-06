@@ -8,5 +8,20 @@
     <string name="selectCityIcon">select city icon</string>
     <string name="searchBoxHint">Search your city</string>
     <string name="choose_your_services">Choose the services you want to receive</string>
-
+    <string name="no_services_available">No available services for this sport center</string>
+    <string name="select_your_court">Select your court</string>
+    <string name="hour_charge_court">hour charge: €%1$s</string>
+    <string name="sport_center_hours">%1$s - %2$s</string>
+    <string name="court_available">Available</string>
+    <string name="court_not_available">Not available</string>
+    <string name="court_reserved_by_you">Reserved by you</string>
+    <string name="court_name">Court name</string>
+    <string name="court_type">Court type</string>
+    <string name="court_price">Court price</string>
+    <string name="court_availability">Court availability</string>
+    <string name="service_name">Service name</string>
+    <string name="sport_center_name">Sport center name</string>
+    <string name="sport_center_address">Sport center address</string>
+    <string name="sport_center_opening_hours">00:00 – 15:00</string>
+    <string name="call_sport_center">call sport center</string>
 </resources>

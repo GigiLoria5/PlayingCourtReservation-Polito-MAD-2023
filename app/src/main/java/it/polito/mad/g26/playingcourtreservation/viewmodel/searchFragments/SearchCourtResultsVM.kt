@@ -12,6 +12,7 @@ import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportRepository
 import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
+import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
 
 class SearchCourtResultsVM(application: Application) : AndroidViewModel(application) {
 
@@ -30,7 +31,8 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
 
     /*DATE TIME MANAGEMENT*/
     private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
-        it.value = 0
+        it.value = searchResultUtils.getMockInitialDateTime().timeInMillis
+
     }
     val selectedDateTimeMillis: LiveData<Long> = _selectedDateTimeMillis
     fun changeSelectedDateTimeMillis(newTimeInMillis: Long) {
@@ -111,19 +113,18 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
     /*RESERVATIONS MANAGEMENT*/
     val reservations: LiveData<List<Reservation>> = sportCenters.switchMap {
         val courtsIdList =
-            it.flatMap { sportCenterData -> sportCenterData.courts.map { court -> court.id } }
+            it.flatMap { sportCenterData -> sportCenterData.courts.map { court -> court.court.id } }
         val date = getDateTimeFormatted("dd-MM-YYYY")
         val hour = getDateTimeFormatted("kk:mm")
         reservationRepository.filteredReservations(selectedCity, date, hour, courtsIdList)
     }
 
-    //TODO CONVIENE USARE UNA ENUM CLASS
-    fun isCourtReserved(courtId: Int): Int { //0=no, 1=from others, 2=from you
+    fun courtReservationState(courtId: Int): CourtStatus {
         //X ORA ABBIAMO SOLO USER CON ID 1.
         return when (reservations.value?.find { it.idCourt == courtId }?.idUser) {
-            null -> 0
-            1 -> 2 //1 verrà sostituito con userId
-            else -> 1
+            null -> CourtStatus.AVAILABLE
+            1 -> CourtStatus.RESERVED_BY_YOU //1 verrà sostituito con userId
+            else -> CourtStatus.NOT_AVAILABLE
         }
     }
 

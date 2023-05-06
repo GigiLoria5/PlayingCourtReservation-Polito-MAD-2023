@@ -7,16 +7,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.Court
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
+import it.polito.mad.g26.playingcourtreservation.model.custom.CourtWithDetails
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
+import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
 
 class SportCenterAdapter(
     private var collection: List<SportCenterServicesCourts>,
     private var services: List<Service>,
-    private val isCourtReserved: (Int) -> Int //0=no, 1=from others, 2=from you
+    private val isCourtReserved: (Int) -> CourtStatus
 
 ) : //TODO RICEVI ANCHE LO SPORT ID PER FILTRARE I CAMPI
     RecyclerView.Adapter<SportCenterAdapter.SportCenterViewHolder>() {
@@ -37,7 +38,7 @@ class SportCenterAdapter(
             else
                 null
         }
-        holder.bind(sportCenter, servicesWithFee, courts) //TODO X I SERVIZI SELEZIONATI, INVENTATI
+        holder.bind(sportCenter, servicesWithFee, courts) //TODO X I SERVIZI SELEZIONATI, INVENTATI QUALCOSA
 
     }
 
@@ -53,6 +54,11 @@ class SportCenterAdapter(
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun reservationsUpdate() {
+        notifyDataSetChanged()
+    }
+
     override fun onViewRecycled(holder: SportCenterViewHolder) {
         holder.unbind()
     }
@@ -63,6 +69,8 @@ class SportCenterAdapter(
         private val sportCenterName = itemView.findViewById<TextView>(R.id.sportCenterNameTV)
         private val sportCenterAddress = itemView.findViewById<TextView>(R.id.sportCenterAddressTV)
         private val sportCenterHours = itemView.findViewById<TextView>(R.id.sportCenterHoursTV)
+        private val sportCenterChooseServiceInfo =
+            itemView.findViewById<TextView>(R.id.availableServicesTV)
 
         private val rvServices = itemView.findViewById<RecyclerView>(R.id.sportCenterServicesRV)
         private val rvCourt = itemView.findViewById<RecyclerView>(R.id.courtsDataRV)
@@ -70,12 +78,17 @@ class SportCenterAdapter(
         fun bind(
             sportCenter: SportCenter,
             servicesWithFee: List<ServiceWithFee>,
-            courts: List<Court>
+            courts: List<CourtWithDetails>
         ) {
             sportCenterName.text = sportCenter.name
             sportCenterAddress.text = sportCenter.address
-            sportCenterHours.text = "${sportCenter.openTime} - ${sportCenter.closeTime}"
-
+            sportCenterHours.text = itemView.context.getString(
+                R.string.sport_center_hours,
+                sportCenter.openTime,
+                sportCenter.closeTime
+            )
+            if (servicesWithFee.isEmpty()) sportCenterChooseServiceInfo.text =
+                itemView.context.getString(R.string.no_services_available)
             rvCourt.adapter = CourtAdapter(courts, isCourtReserved)
 
 
@@ -84,17 +97,12 @@ class SportCenterAdapter(
                 { println(it) },
                 { println(it) },
                 { false })
-
-
         }
 
         fun unbind() {
             sportCenterName.text = ""
             rvServices.adapter = null
-            //rvCourtChild.adapter=null
+            rvCourt.adapter = null
         }
-
     }
-
-
 }

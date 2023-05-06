@@ -8,11 +8,12 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.custom.CourtWithDetails
+import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
 
 class CourtAdapter(
-    private val collection: List<Court>,
-    private val isCourtReserved: (Int) -> Int //0=no, 1=from others, 2=from you
+    private val collection: List<CourtWithDetails>,
+    private val courtReservationState: (Int) -> CourtStatus
 
 ) :
     RecyclerView.Adapter<CourtAdapter.CourtViewHolder>() {
@@ -33,7 +34,6 @@ class CourtAdapter(
 
     override fun getItemCount() = collection.size
 
-
     inner class CourtViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val courtName = itemView.findViewById<TextView>(R.id.courtNameTV)
         private val courtType = itemView.findViewById<TextView>(R.id.courtTypeTV)
@@ -53,32 +53,34 @@ class CourtAdapter(
             courtAvailability.setTextColor(textColorContext)
         }
 
-//TODO MIGLIORALO
-        fun bind(court: Court) {
-            courtName.text = court.name
-            courtType.text = "${court.idSport}"
-            courtPrice.text = "hour charge: ${court.hourCharge}"
-            courtAvailability.text = "Disponibile"
-            val reservationStatus = isCourtReserved(court.id)
+        fun bind(courtWithDetails: CourtWithDetails) {
+            courtName.text = courtWithDetails.court.name
+            courtType.text = courtWithDetails.sport.name
+            courtPrice.text = itemView.context.getString(R.string.hour_charge_court,courtWithDetails.court.hourCharge.toString())
+            val reservationStatus = courtReservationState(courtWithDetails.court.id)
+
+            //TODO SE HAI RISERVATO UN CAMPO PER QUELLA DATA/ORA, AGLI ALTRI CAMPI MOSTRA "HAI GIà UNA PRENOTAZIONE"
             when (reservationStatus) {
-                0 -> { //court not reserved
+                CourtStatus.AVAILABLE -> {
                     setColors(R.color.green_500, R.color.white)
+                    courtAvailability.text=itemView.context.getString(R.string.court_available)
                 }
-                1 -> { //court reserved from others
+                CourtStatus.NOT_AVAILABLE -> {
                     setColors(R.color.grey, R.color.white)
+                    courtAvailability.text=itemView.context.getString(R.string.court_not_available)
+
                 }
-                else -> { //court reserved from you
-                    setColors(R.color.white, R.color.green_500)
+                CourtStatus.RESERVED_BY_YOU -> {
+                    setColors(R.color.green_700, R.color.white)
+                    courtAvailability.text=itemView.context.getString(R.string.court_reserved_by_you)
                 }
             }
-            val isReservedByYou = reservationStatus == 2
-            if (reservationStatus!=0) {
+            val isReservedByYou = reservationStatus == CourtStatus.RESERVED_BY_YOU
+            if (reservationStatus != CourtStatus.AVAILABLE) {
                 courtCardView.elevation = 0F
                 courtCardView.isClickable = isReservedByYou
-                courtAvailability.text = if (isReservedByYou) "riservato da te" else "riservato"
             }
         }
-
 
         fun unbind() {
             courtName.text = ""
