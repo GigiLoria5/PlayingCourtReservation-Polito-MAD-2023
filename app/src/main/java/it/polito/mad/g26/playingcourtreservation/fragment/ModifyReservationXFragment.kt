@@ -1,39 +1,43 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
+import it.polito.mad.g26.playingcourtreservation.viewmodel.SearchCourtResultsVM
+
 
 
 class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation_x) {
 
-    private lateinit var spinnerSer: Spinner
 
+    /*   VISUAL COMPONENTS       */
+    private lateinit var dateMCV: MaterialCardView
+    private lateinit var dateTV: TextView
+    private lateinit var hourMCV: MaterialCardView
+    private lateinit var hourTV: TextView
 
-
-
-
+    private val searchResultUtils = SearchCourtResultsUtil
+    private val vm by viewModels<SearchCourtResultsVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var time= mutableListOf("16-18","18-20","20-22")
-        var timeSelected="14-16"
-        time.add(0,timeSelected)
+
 
         //Customization Menu
         val menuHost: MenuHost = requireActivity()
@@ -68,31 +72,46 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         // Set Back Button
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        /* DATE MATERIAL CARD VIEW MANAGEMENT*/
+        dateMCV = view.findViewById(R.id.dateMCV)
+        dateTV = view.findViewById(R.id.dateTV)
+        dateMCV.setOnClickListener {
+            searchResultUtils.showDatePickerDialog(
+                requireContext(),
+                vm
+            )
+        }
+
+        /* HOUR MATERIAL CARD VIEW MANAGEMENT*/
+        hourMCV = view.findViewById(R.id.hourMCV)
+        hourTV = view.findViewById(R.id.hourTV)
+        hourMCV.setOnClickListener {
+            searchResultUtils.showNumberPickerDialog(
+                requireContext(),
+                vm
+            )
+
+        }
+
+        vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
+            val c = Calendar.getInstance()
+            c.timeInMillis = vm.selectedDateTimeMillis.value!!
+            searchResultUtils.setDateTimeTextViews(
+                c,
+                getString(R.string.dateFormat),
+                getString(R.string.hourFormat),
+                dateTV,
+                hourTV
+            )
+        }
 
 
-        //val to change
+        //val to take from viewModel
         var services= listOf(Service(1,"First Aid"),Service(2,"Bathroom"),Service(3,"Var Usage"),Service(4,"LockRoom"),Service(5,"MiniBar"))
         var servicesUsed=mutableListOf(Service(1,"First Aid"),Service(2,"Bathroom"))
 
 
-        //Set spinner and adapter
-        spinnerSer = view.findViewById(R.id.spinner)
-        val adapterSer= ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, time)
-        spinnerSer.adapter=adapterSer
-
-        spinnerSer.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                spinnerSer.setSelection(position)
-                timeSelected=time[position]
-            }
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Do nothing
-            }
-        }
-
-
-
-        //recyclerview
+        //Recyclerview
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView_chip)
         recyclerView.adapter=MyAdapterRecycle(services, servicesUsed)
         recyclerView.layoutManager=GridLayoutManager(context,3)
@@ -102,7 +121,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
 }
 
-//classe da eliminare
+//class to delete
 class Service( var id :Int, var name: String){
 
     fun addService(s:MutableList<Service>) {
