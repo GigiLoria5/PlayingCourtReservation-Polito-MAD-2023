@@ -7,4 +7,6 @@
     <string name="searchResultsInfo">Reserve a court with the desired services</string>
     <string name="selectCityIcon">select city icon</string>
     <string name="searchBoxHint">Search your city</string>
+    <string name="choose_your_services">Choose the services you want to receive</string>
+
 </resources>

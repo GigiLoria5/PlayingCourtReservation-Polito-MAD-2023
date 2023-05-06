@@ -6,7 +6,7 @@ import android.icu.util.Calendar
 import androidx.lifecycle.*
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.Sport
-import it.polito.mad.g26.playingcourtreservation.model.SportCenter
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
 import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportRepository
@@ -74,11 +74,11 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
 
     /*SPORT CENTERS MANAGEMENT*/
     private val sportCentersMediator = MediatorLiveData<Int>()
-    val sportCenters = sportCentersMediator.switchMap { _ ->
+    val sportCenters = sportCentersMediator.switchMap {
         searchCombinations()
     }
 
-    private fun searchCombinations(): LiveData<List<SportCenter>> {
+    private fun searchCombinations(): LiveData<List<SportCenterServicesCourts>> {
         return when {
             (selectedSport.value != 0 && selectedServices.value?.isNotEmpty() == true) ->
                 sportCenterRepository.filteredSportCentersServicesAndSport(

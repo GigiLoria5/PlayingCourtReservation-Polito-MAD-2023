@@ -111,7 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="@dimen/pageExternalSpace"
-                    android:text="Choose your services"
+                    android:text="@string/choose_your_services"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/green_500"
                     app:layout_constraintBottom_toTopOf="@id/sportCenterServicesRV"

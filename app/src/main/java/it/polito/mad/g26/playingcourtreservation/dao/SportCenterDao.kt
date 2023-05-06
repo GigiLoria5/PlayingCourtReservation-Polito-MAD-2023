@@ -3,7 +3,9 @@ package it.polito.mad.g26.playingcourtreservation.dao
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import it.polito.mad.g26.playingcourtreservation.model.*
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
 
 @Dao
 interface SportCenterDao {
@@ -14,6 +16,7 @@ interface SportCenterDao {
     @Query("SELECT DISTINCT city FROM sport_center WHERE city LIKE :cityNameStartingWith")
     fun findFilteredCities(cityNameStartingWith: String): LiveData<List<String>>
 
+    @Transaction
     @Query(
         "SELECT * " +
                 "from sport_center " +
@@ -23,8 +26,9 @@ interface SportCenterDao {
                 "city=:city " +
                 ""
     )
-    fun findFilteredBase(city: String, hour: String): LiveData<List<SportCenter>>
+    fun findFilteredBase(city: String, hour: String): LiveData<List<SportCenterServicesCourts>>
 
+    @Transaction
     @Query(
         "SELECT DISTINCT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.longitude, sport_center.latitude, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
                 "from sport_center, court " +
@@ -37,9 +41,14 @@ interface SportCenterDao {
                 "AND " +
                 "id_sport=:sportId "
     )
-    fun findFilteredSportId(city: String, hour: String, sportId: Int): LiveData<List<SportCenter>>
+    fun findFilteredSportId(
+        city: String,
+        hour: String,
+        sportId: Int
+    ): LiveData<List<SportCenterServicesCourts>>
 
 
+    @Transaction
     @Query(
         "SELECT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.longitude, sport_center.latitude, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
                 "from sport_center, sport_center_services " +
@@ -59,8 +68,9 @@ interface SportCenterDao {
         hour: String,
         services: Set<Int>,
         servicesSize: Int
-    ): LiveData<List<SportCenter>>
+    ): LiveData<List<SportCenterServicesCourts>>
 
+    @Transaction
     @Query(
         "SELECT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.longitude, sport_center.latitude, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
                 "from sport_center, sport_center_services, court " +
@@ -85,5 +95,5 @@ interface SportCenterDao {
         services: Set<Int>,
         servicesSize: Int,
         sportId: Int
-    ): LiveData<List<SportCenter>>
+    ): LiveData<List<SportCenterServicesCourts>>
 }
