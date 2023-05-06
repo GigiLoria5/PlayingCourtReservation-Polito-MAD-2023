@@ -18,7 +18,7 @@ import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.SportCenterAdapter
-import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsFragmentUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
 class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_results) {
@@ -37,7 +37,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
     private lateinit var sportCentersRV: RecyclerView
 
     /* LOGIC OBJECT OF THIS FRAGMENT */
-    private val searchResultUtils = SearchCourtResultsFragmentUtil
+    private val searchResultUtils = SearchCourtResultsUtil
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -138,14 +138,22 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
         val sportCentersAdapter = SportCenterAdapter(
-            vm.sportCenters.value ?: listOf()
+            vm.sportCenters.value ?: listOf(),
+            vm.services.value?: listOf(),
+            {vm.isCourtReserved(it)}, //TODO AGGIUNGI FUNZIONE X VEDERE SUBITO SE HAI UNA PRENOTAZIONE X QUELLA DATA/ORA
         )
         sportCentersRV.adapter = sportCentersAdapter
 
         vm.sportCenters.observe(viewLifecycleOwner) {
             sportCentersAdapter.updateCollection(vm.sportCenters.value ?: listOf())
         }
+        vm.services.observe(viewLifecycleOwner){
+            sportCentersAdapter.updateAvailableServices(vm.services.value?: listOf())
+        }
 
+        vm.reservations.observe(viewLifecycleOwner){ itt ->
+            itt.forEach { it->println(it.id) } //TODO CONVIENE AGGIORNARE I DATI QUANDO LE RESERVATIONS CAMBIANO
+        }
     }
 
     override fun onDestroyView() {

@@ -1,22 +1,26 @@
 package it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments
 
 import android.app.Application
-import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import androidx.lifecycle.*
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.Sport
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
+import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportRepository
-import java.util.*
+import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
 
 class SearchCourtResultsVM(application: Application) : AndroidViewModel(application) {
 
     private val sportCenterRepository = SportCenterRepository(application)
     private val serviceRepository = ServiceRepository(application)
     private val sportRepository = SportRepository(application)
+    private val reservationRepository = ReservationRepository(application)
+
+    private val searchResultUtils = SearchCourtResultsUtil
 
     /*CITY MANAGEMENT*/
     private lateinit var selectedCity: String
@@ -33,12 +37,10 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
         _selectedDateTimeMillis.value = newTimeInMillis
     }
 
-    private fun getHourFormat(): String {
+    private fun getDateTimeFormatted(format: String): String {
         val c = Calendar.getInstance()
         c.timeInMillis = selectedDateTimeMillis.value!!
-        var hourFormatted = SimpleDateFormat("kk:mm", Locale.ITALY).format(c.time)
-        if (hourFormatted == "24:00") hourFormatted = "00:00"
-        return hourFormatted
+        return searchResultUtils.getDateTimeFormatted(c, format)
     }
 
     /*SPORT MANAGEMENT*/
@@ -83,25 +85,48 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
             (selectedSport.value != 0 && selectedServices.value?.isNotEmpty() == true) ->
                 sportCenterRepository.filteredSportCentersServicesAndSport(
                     selectedCity,
-                    getHourFormat(),
+                    getDateTimeFormatted("kk:mm"),
                     selectedServices.value?.toSet() ?: setOf(),
                     selectedSport.value ?: 0
                 )
             (selectedSport.value != 0) ->
                 sportCenterRepository.filteredSportCentersSportId(
                     selectedCity,
-                    getHourFormat(),
+                    getDateTimeFormatted("kk:mm"),
                     selectedSport.value ?: 0
                 )
             (selectedServices.value?.isNotEmpty() == true) ->
                 sportCenterRepository.filteredSportCentersServices(
                     selectedCity,
-                    getHourFormat(),
+                    getDateTimeFormatted("kk:mm"),
                     selectedServices.value?.toSet() ?: setOf()
                 )
-            else -> sportCenterRepository.filteredSportCentersBase(selectedCity, getHourFormat())
+            else -> sportCenterRepository.filteredSportCentersBase(
+                selectedCity,
+                getDateTimeFormatted("kk:mm")
+            )
         }
     }
+
+    /*RESERVATIONS MANAGEMENT*/
+    val reservations: LiveData<List<Reservation>> = sportCenters.switchMap {
+        val courtsIdList =
+            it.flatMap { sportCenterData -> sportCenterData.courts.map { court -> court.id } }
+        val date = getDateTimeFormatted("dd-MM-YYYY")
+        val hour = getDateTimeFormatted("kk:mm")
+        reservationRepository.filteredReservations(selectedCity, date, hour, courtsIdList)
+    }
+
+    //TODO CONVIENE USARE UNA ENUM CLASS
+    fun isCourtReserved(courtId: Int): Int { //0=no, 1=from others, 2=from you
+        //X ORA ABBIAMO SOLO USER CON ID 1.
+        return when (reservations.value?.find { it.idCourt == courtId }?.idUser) {
+            null -> 0
+            1 -> 2 //1 verrà sostituito con userId
+            else -> 1
+        }
+    }
+
 
     /*CHANGES IN SEARCH PARAMETERS MANAGEMENT*/
     init {

@@ -20,7 +20,7 @@ import it.polito.mad.g26.playingcourtreservation.model.Sport
 
 import java.util.*
 
-object SearchCourtResultsFragmentUtil {
+object SearchCourtResultsUtil {
 
     fun getMockInitialDateTime(): Calendar {
         val c = getDelayedCalendar()
@@ -35,12 +35,17 @@ object SearchCourtResultsFragmentUtil {
         dateTextView: TextView,
         hourTextView: TextView
     ) {
-        val dateFormatted = SimpleDateFormat(dateFormat, Locale.ITALY).format(calendar.time)
-        dateTextView.text = dateFormatted
+        dateTextView.text = getDateTimeFormatted(calendar, dateFormat)
+        hourTextView.text = getDateTimeFormatted(calendar, hourFormat)
+    }
 
-        var hourFormatted = SimpleDateFormat(hourFormat, Locale.ITALY).format(calendar.time)
-        if (hourFormatted == "24:00") hourFormatted = "00:00"
-        hourTextView.text = hourFormatted
+    fun getDateTimeFormatted(
+        calendar: Calendar,
+        format: String,
+    ): String {
+        var formatted = SimpleDateFormat(format, Locale.ITALY).format(calendar.time)
+        if (formatted == "24:00") formatted = "00:00"
+        return formatted
     }
 
     private fun getDelayedCalendar(): Calendar {
