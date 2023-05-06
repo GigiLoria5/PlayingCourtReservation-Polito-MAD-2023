@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
@@ -17,6 +20,7 @@ import com.kizitonwose.calendar.view.WeekCalendarView
 import com.kizitonwose.calendar.view.WeekDayBinder
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.adapter.ReservationsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
@@ -30,12 +34,15 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
+
     private val reservationVM by viewModels<ReservationVM>()
+
+    private val reservationsAdapter = ReservationsAdapter()
+    private val reservations = mutableMapOf<LocalDate, LiveData<List<Reservation>>>()
 
     private val today = LocalDate.now()
     private var selectedDate: LocalDate = today
     private var isInitialDateSet = false // Keep track of the initial selected date
-    private val reservations = mutableMapOf<LocalDate, LiveData<List<Reservation>>>()
     private val reservationDatePattern = "dd-MM-yyyy"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -87,10 +94,24 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                 val currentList = reservations[localDate]?.value ?: emptyList()
                 val updatedList = MutableLiveData(currentList + reservation)
                 reservations[localDate] = updatedList
+                if (currentList.isNotEmpty()) weekCalendarView.notifyDateChanged(localDate) // To show dotView
             }
             println(reservations)
+            updateAdapterForDate(selectedDate)
         }
-        // TODO: Show Reservations
+
+        // Set Up Reservations RecyclerView
+        val reservationsRv = view.findViewById<RecyclerView>(R.id.reservationsRv)
+        reservationsRv.apply {
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            adapter = reservationsAdapter
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateAdapterForDate(date: LocalDate) {
+        reservationsAdapter.updateData(reservations[date]?.value ?: emptyList())
+        reservationsAdapter.notifyDataSetChanged()
     }
 
     private fun configureBinders(view: View) {
@@ -144,6 +165,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                     }
 
                     else -> {
+                        println("Else: $data.date")
                         dateTextView.setTextColorRes(colorUnselected)
                         dateTextView.background = null
                         dotView.setVisibility(reservations[data.date]?.value.orEmpty().isNotEmpty())
@@ -160,7 +182,9 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         selectedDate = newDate
         weekCalendarView.notifyDateChanged(oldDate)
         weekCalendarView.notifyDateChanged(newDate)
-        // TODO: update Reservations RV with new date
+        // update Reservations RV with new date
+        updateAdapterForDate(selectedDate)
+        println(selectedDate)
     }
 
 }

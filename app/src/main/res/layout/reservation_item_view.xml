@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:background="@color/grey_light">
+
+    <TextView
+        android:id="@+id/itemReservationTimeText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/sport8asidefootball"
+        android:gravity="center"
+        android:lineSpacingExtra="2.5dp"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.143"
+        tools:text="14:00" />
+
+    <LinearLayout
+        android:id="@+id/itemReservationLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:orientation="vertical"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/itemReservationTimeText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/itemReservationTimeText"
+        app:layout_constraintTop_toTopOf="@id/itemReservationTimeText">
+
+        <TextView
+            android:id="@+id/itemReservationSportCenterNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:gravity="start"
+            android:textColor="@color/custom_black"
+            android:textSize="16sp"
+            tools:text="Mondo calcio" />
+
+        <TextView
+            android:id="@+id/itemReservationSportCenterAddressText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:gravity="start"
+            android:textColor="@color/custom_black"
+            android:textSize="16sp"
+            tools:text="Via Roma, Torino" />
+
+        <TextView
+            android:id="@+id/itemReservationSportCenterFieldSportText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:gravity="start"
+            android:textColor="@color/custom_black"
+            android:textSize="16sp"
+            tools:text="Field1, 11-a-side football" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
