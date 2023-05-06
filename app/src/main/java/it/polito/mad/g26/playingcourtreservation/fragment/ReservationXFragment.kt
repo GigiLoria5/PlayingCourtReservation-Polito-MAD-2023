@@ -82,9 +82,6 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
 
 
 
-
-
-
     }
 
 

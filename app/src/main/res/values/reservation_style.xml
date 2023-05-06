@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
+    <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
+    <item name="android:textColor">@color/text_color_chip_state_list</item>
+    <item name="closeIconEnabled">true</item>
+</style>
+
+<style name="CustomNumberPicker" parent="">
+    <item name="colorControlNormal">@android:color/transparent</item>
+</style>
+</resources>

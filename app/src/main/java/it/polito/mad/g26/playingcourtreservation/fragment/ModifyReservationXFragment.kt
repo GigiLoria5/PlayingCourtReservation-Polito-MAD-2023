@@ -1,40 +1,37 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.CheckBox
 import android.widget.Spinner
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
-import org.json.JSONObject
-import java.io.ByteArrayOutputStream
-import java.util.*
 
 
 class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation_x) {
 
     private lateinit var spinnerSer: Spinner
 
+
+
+
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         var time= mutableListOf("16-18","18-20","20-22")
-        var services= listOf("First Aid","Var Technology","Bathroom","MiniBar")
-        var servicesUsed=mutableListOf("First Aid","Bathroom")
         var timeSelected="14-16"
         time.add(0,timeSelected)
 
@@ -73,6 +70,10 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
 
 
+        //val to change
+        var services= listOf(Service(1,"First Aid"),Service(2,"Bathroom"),Service(3,"Var Usage"),Service(4,"LockRoom"),Service(5,"MiniBar"))
+        var servicesUsed=mutableListOf(Service(1,"First Aid"),Service(2,"Bathroom"))
+
 
         //Set spinner and adapter
         spinnerSer = view.findViewById(R.id.spinner)
@@ -89,38 +90,67 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
             }
         }
 
+
+
         //recyclerview
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView_chip)
         recyclerView.adapter=MyAdapterRecycle(services, servicesUsed)
-        recyclerView.layoutManager=LinearLayoutManager(context)
+        recyclerView.layoutManager=GridLayoutManager(context,3)
 
 
     }
 
 }
+
+//classe da eliminare
+class Service( var id :Int, var name: String){
+
+    fun addService(s:MutableList<Service>) {
+        if(this in s) s.add(this)
+    }
+
+    fun removeService(s:MutableList<Service>){
+        if(this in s) s.remove(this)
+    }
+
+}
+
+
 
 //Class to contain the view of a single random item
 class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
 
-    private val cBox=v.findViewById<CheckBox>(R.id.checkBox)
+    private val chip=v.findViewById<Chip>(R.id.chip)
 
-    fun bind(s:String, l : MutableList<String> ){
-        cBox.text=s
-        cBox.isChecked = s in l
-        super.itemView.setOnClickListener{
-            if(cBox.isChecked) l.add(s)
-            else l.remove(s)
+    fun bind(s: Service, lUsed : MutableList<Service>, l : List<Service> ){
+        chip.text=s.name
+        chip.isChecked = s in lUsed
+        chip.isCloseIconVisible = chip.isChecked
+        chip.setOnClickListener {
+            chip.isCloseIconVisible = chip.isChecked
+            if (chip.isChecked)
+                s.addService(lUsed)
+            else
+                s.removeService(lUsed)
         }
+    }
+
+
+    fun unbind() {
+        chip.text = ""
+        chip.setOnClickListener(null)
     }
 }
 
 
+
+
 //class that uses the viewHolder to show a specific item
-class MyAdapterRecycle( val l :List<String>, var lUsed : MutableList<String>) : RecyclerView.Adapter<MyViewHolder>(){
+class MyAdapterRecycle( val l :List<Service>, var lUsed : MutableList<Service>) : RecyclerView.Adapter<MyViewHolder>(){
 
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val v=LayoutInflater.from(parent.context).inflate(R.layout.recycler_services,parent,false)
+        val v=LayoutInflater.from(parent.context).inflate(R.layout.reservation_chip,parent,false)
         return MyViewHolder(v)
     }
 
@@ -131,8 +161,7 @@ class MyAdapterRecycle( val l :List<String>, var lUsed : MutableList<String>) : 
 
     //called after viewHolder are created, to put data into them
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(l[position],lUsed)
+        holder.bind(l[position],lUsed,l)
     }
 }
-
 
