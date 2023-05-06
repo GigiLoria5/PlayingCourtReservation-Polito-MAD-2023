@@ -7,7 +7,7 @@ import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
 
 class ReservationWithDetailsRepository(application: Application) {
     private val reservationWithDetailsDaoDao =
-        CourtReservationDatabase.getDatabase(application).reservationWithDetails()
+        CourtReservationDatabase.getDatabase(application).reservationWithDetailsDao()
 
     fun reservationsWithDetails(): LiveData<List<ReservationWithDetails>> =
         reservationWithDetailsDaoDao.getReservationsWithDetails()

@@ -6,11 +6,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.Reservation
+import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
+import it.polito.mad.g26.playingcourtreservation.model.toSportColor
+import it.polito.mad.g26.playingcourtreservation.util.getColorCompat
 
 class ReservationsAdapter : RecyclerView.Adapter<ReservationsAdapter.ReservationsViewHolder>() {
 
-    private val reservations = mutableListOf<Reservation>()
+    private val reservations = mutableListOf<ReservationWithDetails>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReservationsViewHolder {
         val v = LayoutInflater.from(parent.context)
@@ -24,7 +26,7 @@ class ReservationsAdapter : RecyclerView.Adapter<ReservationsAdapter.Reservation
 
     override fun getItemCount(): Int = reservations.size
 
-    fun updateData(reservations: List<Reservation>) {
+    fun updateData(reservations: List<ReservationWithDetails>) {
         this.reservations.clear()
         this.reservations.addAll(reservations)
     }
@@ -37,12 +39,22 @@ class ReservationsAdapter : RecyclerView.Adapter<ReservationsAdapter.Reservation
             view.findViewById<TextView>(R.id.itemReservationSportCenterAddressText)
         private val sportCenterFieldSportView =
             view.findViewById<TextView>(R.id.itemReservationSportCenterFieldSportText)
+        private val reservationAmount = view.findViewById<TextView>(R.id.itemReservationAmountText)
 
-        fun bind(reservation: Reservation) {
-            timeView.text = reservation.time
-            sportCenterNameView.text = "Sport Center"
-            sportCenterAddressView.text = "Address, City"
-            sportCenterFieldSportView.text = "Field Name, Sport"
+        fun bind(reservationWithDetails: ReservationWithDetails) {
+            val reservation = reservationWithDetails.reservation
+            val sportCenter = reservationWithDetails.courtWithDetails.sportCenter
+            val court = reservationWithDetails.courtWithDetails.court
+            val sport = reservationWithDetails.courtWithDetails.sport
+            timeView.apply {
+                text = reservation.time
+                setBackgroundColor(itemView.context.getColorCompat(sport.toSportColor()))
+            }
+            sportCenterNameView.text = sportCenter.name
+            "${sportCenter.address}, ${sportCenter.city}".also { sportCenterAddressView.text = it }
+            "${court.name}, ${sport.name}".also { sportCenterFieldSportView.text = it }
+            "€${reservation.amount}".also { reservationAmount.text = it }
+
             super.itemView.setOnClickListener { println("Reservation ${reservation.id}") }
         }
     }

@@ -21,24 +21,24 @@ import com.kizitonwose.calendar.view.WeekDayBinder
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.adapter.ReservationsAdapter
-import it.polito.mad.g26.playingcourtreservation.model.Reservation
+import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
 import it.polito.mad.g26.playingcourtreservation.util.getWeekPageTitle
 import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
 import it.polito.mad.g26.playingcourtreservation.util.setVisibility
-import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
-    private val reservationVM by viewModels<ReservationVM>()
+    private val reservationWithDetails by viewModels<ReservationWithDetailsVM>()
 
     private val reservationsAdapter = ReservationsAdapter()
-    private val reservations = mutableMapOf<LocalDate, LiveData<List<Reservation>>>()
+    private val reservations = mutableMapOf<LocalDate, LiveData<List<ReservationWithDetails>>>()
 
     private val today = LocalDate.now()
     private var selectedDate: LocalDate = today
@@ -85,18 +85,17 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         }
 
         // Get All Reservations
-        reservationVM.reservations.observe(viewLifecycleOwner) {
-            it.forEach { reservation ->
+        reservationWithDetails.reservationWithDetails.observe(viewLifecycleOwner) {
+            it.forEach { reservationWithDetails ->
                 val localDate = LocalDate.parse(
-                    reservation.date,
+                    reservationWithDetails.reservation.date,
                     DateTimeFormatter.ofPattern(reservationDatePattern)
                 )
                 val currentList = reservations[localDate]?.value ?: emptyList()
-                val updatedList = MutableLiveData(currentList + reservation)
+                val updatedList = MutableLiveData(currentList + reservationWithDetails)
                 reservations[localDate] = updatedList
                 if (currentList.isNotEmpty()) weekCalendarView.notifyDateChanged(localDate) // To show dotView
             }
-            println(reservations)
             updateAdapterForDate(selectedDate)
         }
 
@@ -165,7 +164,6 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                     }
 
                     else -> {
-                        println("Else: $data.date")
                         dateTextView.setTextColorRes(colorUnselected)
                         dateTextView.background = null
                         dotView.setVisibility(reservations[data.date]?.value.orEmpty().isNotEmpty())
@@ -184,7 +182,6 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         weekCalendarView.notifyDateChanged(newDate)
         // update Reservations RV with new date
         updateAdapterForDate(selectedDate)
-        println(selectedDate)
     }
 
 }

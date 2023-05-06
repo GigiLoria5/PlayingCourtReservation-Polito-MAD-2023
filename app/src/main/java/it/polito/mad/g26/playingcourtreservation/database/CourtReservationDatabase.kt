@@ -21,7 +21,7 @@ abstract class CourtReservationDatabase : RoomDatabase() {
     abstract fun courtDao(): CourtDao
     abstract fun reservationDao(): ReservationDao
 
-    abstract fun reservationWithDetails(): ReservationWithDetailsDao
+    abstract fun reservationWithDetailsDao(): ReservationWithDetailsDao
     abstract fun reservationServiceDao(): ReservationServicesDao
     abstract fun serviceDao(): ServiceDao
     abstract fun sportCenterDao(): SportCenterDao

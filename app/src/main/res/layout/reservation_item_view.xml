@@ -16,7 +16,7 @@
         android:lineSpacingExtra="2.5dp"
         android:textAllCaps="true"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,11 +28,11 @@
         android:id="@+id/itemReservationLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:gravity="start"
         android:orientation="vertical"
-        android:layout_marginStart="4dp"
         app:layout_constraintBottom_toBottomOf="@id/itemReservationTimeText"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/itemReservationAmountText"
         app:layout_constraintStart_toEndOf="@id/itemReservationTimeText"
         app:layout_constraintTop_toTopOf="@id/itemReservationTimeText">
 
@@ -43,7 +43,7 @@
             android:fontFamily="sans-serif-black"
             android:gravity="start"
             android:textColor="@color/custom_black"
-            android:textSize="16sp"
+            android:textSize="18sp"
             tools:text="Mondo calcio" />
 
         <TextView
@@ -53,7 +53,7 @@
             android:fontFamily="sans-serif-light"
             android:gravity="start"
             android:textColor="@color/custom_black"
-            android:textSize="16sp"
+            android:textSize="18sp"
             tools:text="Via Roma, Torino" />
 
         <TextView
@@ -63,8 +63,24 @@
             android:fontFamily="sans-serif-light"
             android:gravity="start"
             android:textColor="@color/custom_black"
-            android:textSize="16sp"
+            android:textSize="18sp"
             tools:text="Field1, 11-a-side football" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/itemReservationAmountText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:lineSpacingExtra="2.5dp"
+        android:textAllCaps="true"
+        android:textColor="@color/custom_black"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.143"
+        tools:text="€46.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
