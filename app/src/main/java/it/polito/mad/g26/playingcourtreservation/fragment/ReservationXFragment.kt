@@ -1,10 +1,15 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,13 +26,20 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         super.onViewCreated(view, savedInstanceState)
 
         var serviceUsed=listOf("Bathroom", "Var Usage","First Aid Kit","Supporters","MiniBar", "CheatMode")
-        //getResources().getStringArray(R.array.services_array)
+
+
+        //Create popup window
+        val popupView = layoutInflater.inflate(R.layout.popup_window, null)
+        val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        popupWindow.setBackgroundDrawable(ColorDrawable(Color.GREEN))
+
+
 
 
         //Button for popup
         val servicesButton=view.findViewById<Button>(R.id.delete_reservation)
         servicesButton.setOnClickListener{
-            //move to another fragment
+            popupWindow.showAtLocation(view, Gravity.CENTER,0,0)
         }
 
 
