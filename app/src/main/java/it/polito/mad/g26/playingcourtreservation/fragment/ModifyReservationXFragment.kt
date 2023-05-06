@@ -1,20 +1,28 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
-
+import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.util.*
 
 
 class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation_x) {
@@ -29,6 +37,41 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         var servicesUsed=mutableListOf("First Aid","Bathroom")
         var timeSelected="14-16"
         time.add(0,timeSelected)
+
+        //Customization Menu
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.edit_profile_menu, menu)
+            }
+
+            override fun onMenuItemSelected(item: MenuItem): Boolean {
+                // Handle the menu selection
+                return when (item.itemId) {
+                    // Back
+                    android.R.id.home -> {
+                        findNavController().popBackStack()
+                        true
+                    }
+                    // Confirm Changes
+                    R.id.confirm_menu_item -> {
+
+                        //Save new profile
+                        findNavController().navigate(R.id.reservationXFragment)
+
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        // Change Title
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "Edit Reservation"
+        // Set Back Button
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+
 
 
         //Set spinner and adapter
