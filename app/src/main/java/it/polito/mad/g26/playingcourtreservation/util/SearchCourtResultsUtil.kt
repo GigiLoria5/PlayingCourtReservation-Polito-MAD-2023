@@ -124,7 +124,7 @@ object SearchCourtResultsUtil {
         builder.setTitle("Seleziona orario")
         builder.setMessage("Puoi prenotare un campo al massimo 30 minuti prima della partita")
         builder.setView(linearLayout)
-        builder.setPositiveButton("OK") { dialog, _ ->
+        builder.setPositiveButton("OK") { _, _ ->
             c.set(Calendar.HOUR_OF_DAY, numberPicker.value)
 
             //Una volta che aggiorno la data, devo controllare la coppia data-ora per annullare possibili errori

@@ -13,7 +13,7 @@ import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
 
 class CourtAdapter(
     private val collection: List<CourtWithDetails>,
-    private val courtReservationState: (Int) -> CourtStatus
+    private val courtReservationState: (Int) -> CourtStatus,
 
 ) :
     RecyclerView.Adapter<CourtAdapter.CourtViewHolder>() {

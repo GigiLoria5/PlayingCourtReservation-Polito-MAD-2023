@@ -21,7 +21,7 @@ data class SportCenterServicesCourts(
         parentColumn = "id", // sportCenter
         entityColumn = "id_sport_center" //court
     )
-    var courts: List<CourtWithDetails>
+    var courtsWithDetails: List<CourtWithDetails>
 )
 
 data class CourtWithDetails(

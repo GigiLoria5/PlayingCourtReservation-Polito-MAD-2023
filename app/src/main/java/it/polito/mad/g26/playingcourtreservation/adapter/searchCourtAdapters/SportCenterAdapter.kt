@@ -7,18 +7,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.model.custom.CourtWithDetails
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
 import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDataFormatted
 
 class SportCenterAdapter(
-    private var collection: List<SportCenterServicesCourts>,
-    private var services: List<Service>,
+    private var collection: List<SportCenterWithDataFormatted>,
     private val isCourtReserved: (Int) -> CourtStatus
-
 ) : //TODO RICEVI ANCHE LO SPORT ID PER FILTRARE I CAMPI
     RecyclerView.Adapter<SportCenterAdapter.SportCenterViewHolder>() {
 
@@ -30,27 +27,19 @@ class SportCenterAdapter(
 
     override fun onBindViewHolder(holder: SportCenterViewHolder, position: Int) {
         val sportCenter = collection[position].sportCenter
-        val courts = collection[position].courts
-        val servicesWithFee = collection[position].sportCenterServices.mapNotNull {
-            val service = services.find { service -> service.id == it.idService }
-            if (service != null)
-                ServiceWithFee(service, it.fee)
-            else
-                null
-        }
-        holder.bind(sportCenter, servicesWithFee, courts) //TODO X I SERVIZI SELEZIONATI, INVENTATI QUALCOSA
+        val courtsWithDetails = collection[position].courtsWithDetails
+        val servicesWithFee = collection[position].servicesWithFee
+        holder.bind(
+            sportCenter,
+            servicesWithFee,
+            courtsWithDetails
+        ) //TODO X I SERVIZI SELEZIONATI, INVENTATI QUALCOSA
 
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateCollection(updatedCollection: List<SportCenterServicesCourts>) {
+    fun updateCollection(updatedCollection: List<SportCenterWithDataFormatted>) {
         this.collection = updatedCollection
-        notifyDataSetChanged()
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateAvailableServices(updatedCollection: List<Service>) {
-        this.services = updatedCollection
         notifyDataSetChanged()
     }
 

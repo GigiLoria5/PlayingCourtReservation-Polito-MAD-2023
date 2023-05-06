@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="default_city">Torino</string>
     <string name="hourFormat">kk:mm</string>
     <string name="dateFormat">dd MMM</string>
     <string name="searchBoxInfoText">Where do you want to play</string>

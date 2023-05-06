@@ -41,6 +41,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //TODO ELIMINARE NAVBAR
 
         /* VM INITIALIZATIONS */
         vm.setCity(args.city)
@@ -136,19 +137,18 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
         val sportCentersAdapter = SportCenterAdapter(
-            vm.sportCenters.value ?: listOf(),
-            vm.services.value?: listOf(),
-        ) { vm.courtReservationState(it) } //TODO AGGIUNGI FUNZIONE X VEDERE SUBITO SE HAI UNA PRENOTAZIONE X QUELLA DATA/ORA
+            vm.getSportCentersWithDataFormatted(),
+            { vm.courtReservationState(it) })  //TODO AGGIUNGI FUNZIONE X VEDERE SUBITO SE HAI UNA PRENOTAZIONE X QUELLA DATA/ORA
 
         sportCentersRV.adapter = sportCentersAdapter
 
         vm.sportCenters.observe(viewLifecycleOwner) {
-            sportCentersAdapter.updateCollection(vm.sportCenters.value ?: listOf())
+            sportCentersAdapter.updateCollection(vm.getSportCentersWithDataFormatted())
         }
-        vm.services.observe(viewLifecycleOwner){
-            sportCentersAdapter.updateAvailableServices(vm.services.value?: listOf())
+        vm.services.observe(viewLifecycleOwner) {
+            sportCentersAdapter.updateCollection(vm.getSportCentersWithDataFormatted())
         }
-        vm.reservations.observe(viewLifecycleOwner){
+        vm.reservations.observe(viewLifecycleOwner) {
             sportCentersAdapter.reservationsUpdate()
         }
     }

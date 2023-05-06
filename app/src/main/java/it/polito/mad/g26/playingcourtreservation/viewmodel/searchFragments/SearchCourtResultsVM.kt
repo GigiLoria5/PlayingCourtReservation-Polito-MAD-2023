@@ -13,6 +13,8 @@ import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepositor
 import it.polito.mad.g26.playingcourtreservation.repository.SportRepository
 import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
 import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
+import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDataFormatted
 
 class SearchCourtResultsVM(application: Application) : AndroidViewModel(application) {
 
@@ -110,10 +112,31 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun getSportCentersWithDataFormatted(): List<SportCenterWithDataFormatted> {
+        return sportCenters.value?.map {
+            val sportCenter = it.sportCenter
+            val courtsWithDetails = it.courtsWithDetails.filter {courtWithDetails->
+                if (getSelectedSportId() != 0)
+                    courtWithDetails.sport.id == getSelectedSportId()
+                else
+                    true
+            }
+            val servicesWithFee = it.sportCenterServices.mapNotNull { serviceWithFee ->
+                val service =
+                    services.value?.find { service -> service.id == serviceWithFee.idService }
+                if (service != null)
+                    ServiceWithFee(service, serviceWithFee.fee)
+                else
+                    null
+            }
+            SportCenterWithDataFormatted(sportCenter, courtsWithDetails, servicesWithFee)
+        } ?: listOf()
+    }
+
     /*RESERVATIONS MANAGEMENT*/
     val reservations: LiveData<List<Reservation>> = sportCenters.switchMap {
         val courtsIdList =
-            it.flatMap { sportCenterData -> sportCenterData.courts.map { court -> court.court.id } }
+            it.flatMap { sportCenterData -> sportCenterData.courtsWithDetails.map { court -> court.court.id } }
         val date = getDateTimeFormatted("dd-MM-YYYY")
         val hour = getDateTimeFormatted("kk:mm")
         reservationRepository.filteredReservations(selectedCity, date, hour, courtsIdList)

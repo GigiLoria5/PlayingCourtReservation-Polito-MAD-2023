@@ -61,7 +61,7 @@ interface SportCenterDao {
                 "AND " +
                 "sport_center_services.id_service IN (:services) " +
                 "GROUP BY sport_center.id " +
-                "HAVING count(*)== :servicesSize"
+                "HAVING COUNT(DISTINCT id_service)== :servicesSize"
     )
     fun findFilteredServices(
         city: String,
@@ -87,7 +87,7 @@ interface SportCenterDao {
                 "AND " +
                 "id_sport=:sportId " +
                 "GROUP BY sport_center.id " +
-                "HAVING count(*)== :servicesSize"
+                "HAVING COUNT(DISTINCT id_service)== :servicesSize"
     )
     fun findFilteredServicesAndSport(
         city: String,
