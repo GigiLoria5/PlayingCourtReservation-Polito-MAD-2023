@@ -28,5 +28,17 @@
         android:id="@+id/reservationsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ReservationsFragment"
         android:label="fragment_reservations"
-        tools:layout="@layout/fragment_reservations" />
+        tools:layout="@layout/reservations_fragment">
+        <action
+            android:id="@+id/openReservationDetails"
+            app:destination="@id/reservationDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reservationDetailsFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.ReservationDetailsFragment"
+        android:label="ReservationDetailsFragment">
+        <argument
+            android:name="reservationId"
+            app:argType="integer" />
+    </fragment>
 </navigation>
