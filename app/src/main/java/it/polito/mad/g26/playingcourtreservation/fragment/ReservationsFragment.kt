@@ -51,7 +51,6 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
         // Setup WeekCalendarView
         var isInitialDateSet = false // Keep track of the initial selected date
-        println("selectedDate: $selectedDate")
         val weekCalendarView = view.findViewById<WeekCalendarView>(R.id.reservationsCalendarView)
         val currentMonth = YearMonth.now()
         val startDate = currentMonth.minusMonths(200).atStartOfMonth()

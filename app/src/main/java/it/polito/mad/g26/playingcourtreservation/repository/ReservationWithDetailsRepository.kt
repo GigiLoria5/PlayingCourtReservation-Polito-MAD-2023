@@ -11,4 +11,7 @@ class ReservationWithDetailsRepository(application: Application) {
 
     fun reservationsWithDetails(): LiveData<List<ReservationWithDetails>> =
         reservationWithDetailsDaoDao.getReservationsWithDetails()
+
+    fun reservationWithDetails(id: Int): LiveData<ReservationWithDetails> =
+        reservationWithDetailsDaoDao.getReservationWithDetailsById(id)
 }

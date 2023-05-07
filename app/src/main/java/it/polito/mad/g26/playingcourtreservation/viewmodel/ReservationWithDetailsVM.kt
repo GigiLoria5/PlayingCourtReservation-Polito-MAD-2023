@@ -12,4 +12,7 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
     val reservationWithDetails: LiveData<List<ReservationWithDetails>> =
         repo.reservationsWithDetails()
 
+    fun getReservationWithDetailsById(id: Int): LiveData<ReservationWithDetails> =
+        repo.reservationWithDetails(id)
+
 }

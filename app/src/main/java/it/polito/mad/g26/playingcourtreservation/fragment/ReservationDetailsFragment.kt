@@ -9,15 +9,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 
 class ReservationDetailsFragment : Fragment(R.layout.reservation_details) {
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
+    private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,7 +30,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details) {
 
         // Retrieve Reservation Details
         val reservationId = args.reservationId
-        println(reservationId)
+        reservationWithDetailsVM
+            .getReservationWithDetailsById(reservationId)
+            .observe(viewLifecycleOwner) { reservation ->
+                println(reservation)
+            }
 
         // Handle Menu Items
         val menuHost: MenuHost = requireActivity()

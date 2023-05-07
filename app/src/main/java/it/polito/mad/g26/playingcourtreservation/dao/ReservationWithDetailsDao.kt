@@ -7,10 +7,14 @@ import androidx.room.Transaction
 import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
 
 @Dao
-fun interface ReservationWithDetailsDao {
+interface ReservationWithDetailsDao {
 
     @Transaction
     @Query("SELECT * FROM reservation")
     fun getReservationsWithDetails(): LiveData<List<ReservationWithDetails>>
+
+    @Transaction
+    @Query("SELECT * FROM reservation WHERE id = :reservationId")
+    fun getReservationWithDetailsById(reservationId: Int): LiveData<ReservationWithDetails>
 
 }
