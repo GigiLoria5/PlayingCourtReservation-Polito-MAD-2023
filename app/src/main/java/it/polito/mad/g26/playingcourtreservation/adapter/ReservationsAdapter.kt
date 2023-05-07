@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.fragment.ReservationsFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
 import it.polito.mad.g26.playingcourtreservation.model.toSportColor
 import it.polito.mad.g26.playingcourtreservation.util.getColorCompat
@@ -51,11 +53,26 @@ class ReservationsAdapter : RecyclerView.Adapter<ReservationsAdapter.Reservation
                 setBackgroundColor(itemView.context.getColorCompat(sport.toSportColor()))
             }
             sportCenterNameView.text = sportCenter.name
-            "${sportCenter.address}, ${sportCenter.city}".also { sportCenterAddressView.text = it }
-            "${court.name}, ${sport.name}".also { sportCenterFieldSportView.text = it }
-            "€${reservation.amount}".also { reservationAmount.text = it }
+            sportCenterAddressView.text = super.itemView.context.getString(
+                R.string.reservation_info_concatenation,
+                sportCenter.address,
+                sportCenter.city
+            )
+            sportCenterFieldSportView.text = super.itemView.context.getString(
+                R.string.reservation_info_concatenation,
+                court.name,
+                sport.name
+            )
+            reservationAmount.text = super.itemView.context.getString(
+                R.string.reservation_info_amount,
+                String.format("%.1f", reservation.amount)
+            )
 
-            super.itemView.setOnClickListener { println("Reservation ${reservation.id}") }
+            super.itemView.setOnClickListener {
+                val action = ReservationsFragmentDirections
+                    .openReservationDetails(reservationWithDetails.reservation.id)
+                super.itemView.findNavController().navigate(action)
+            }
         }
     }
 }

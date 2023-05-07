@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.reservationsFragment -> bottomNav.setCheckedMenuItem(R.id.reservations)
                     R.id.showProfileFragment -> bottomNav.setCheckedMenuItem(R.id.profile)
                     // Sub Views: the bottom navigation should not be visible
+                    R.id.reservationDetailsFragment -> bottomNav.makeGone()
                     R.id.editProfileFragment -> bottomNav.makeGone()
                 }
             }

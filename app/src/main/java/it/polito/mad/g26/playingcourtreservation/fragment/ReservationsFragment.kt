@@ -42,7 +42,6 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
     private val today = LocalDate.now()
     private var selectedDate: LocalDate = today
-    private var isInitialDateSet = false // Keep track of the initial selected date
     private val reservationDatePattern = "dd-MM-yyyy"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,13 +50,15 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false) // Hide Back Button
 
         // Setup WeekCalendarView
+        var isInitialDateSet = false // Keep track of the initial selected date
+        println("selectedDate: $selectedDate")
         val weekCalendarView = view.findViewById<WeekCalendarView>(R.id.reservationsCalendarView)
         val currentMonth = YearMonth.now()
         val startDate = currentMonth.minusMonths(200).atStartOfMonth()
         val endDate = currentMonth.plusMonths(200).atEndOfMonth()
         configureBinders(view)
         weekCalendarView.setup(startDate, endDate, firstDayOfWeekFromLocale())
-        weekCalendarView.scrollToDate(today)
+        weekCalendarView.scrollToDate(selectedDate)
 
         // Current Month Selected Text
         val currentMonthView = view.findViewById<TextView>(R.id.calendarMonthYearText)
@@ -85,6 +86,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         }
 
         // Get All Reservations
+        reservations.clear()
         reservationWithDetails.reservationWithDetails.observe(viewLifecycleOwner) {
             it.forEach { reservationWithDetails ->
                 val localDate = LocalDate.parse(

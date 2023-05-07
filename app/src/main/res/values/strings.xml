@@ -72,6 +72,8 @@
     <string name="calendarPrevious">Go Previous</string>
     <string name="calendarNext">Go Next</string>
     <string name="has_reservation">Has Reservation</string>
+    <string name="reservation_info_concatenation">%1$s, %2$s</string>
+    <string name="reservation_info_amount">€%1$s</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
