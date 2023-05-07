@@ -85,5 +85,8 @@
             app:destination="@id/searchCourtActionFragment">
             <argument android:name="bornFrom" />
         </action>
+        <action
+            android:id="@+id/action_searchCourtResultsFragment_to_reservationDetailsFragment"
+            app:destination="@id/reservationDetailsFragment" />
     </fragment>
 </navigation>

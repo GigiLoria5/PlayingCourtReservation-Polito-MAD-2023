@@ -215,7 +215,6 @@ object SearchCourtResultsUtil {
                         total,
                         selectedServicesIds
                     )
-                    /*TODO NAVIGA A RESERVATION*/
                 }.setNegativeButton("Don't reserve") { _, _ -> }
                 .setOnCancelListener { }
         val dialog = builder.create()

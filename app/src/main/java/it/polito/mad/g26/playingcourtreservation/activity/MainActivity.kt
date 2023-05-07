@@ -1,14 +1,8 @@
 package it.polito.mad.g26.playingcourtreservation.activity
 
 import android.content.pm.ActivityInfo
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import androidx.core.view.MenuProvider
-import androidx.lifecycle.Lifecycle
 import android.os.Handler
 import android.os.Looper
 import androidx.navigation.NavController
@@ -75,9 +69,15 @@ class MainActivity : AppCompatActivity() {
                         bottomNav.setCheckedMenuItem(R.id.profile)
                     }
                     // Sub Views: the bottom navigation should not be visible
+                    R.id.searchCourtActionFragment -> {
+                        lockOrientationAndBottomNavMakeGone()
+                    }
+                    R.id.searchCourtResultsFragment -> {
+                        lockOrientationAndBottomNavMakeGone()
+                    }
+
                     R.id.reservationDetailsFragment -> {
-                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-                        bottomNav.makeGone()
+                        lockOrientationAndBottomNavMakeGone()
                     }
 
                     R.id.editProfileFragment -> {
@@ -88,23 +88,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Set Back Button Function TODO FORSE PUOI ELIMINARLO. CAPISCI COSA HA FATTO LUIGI CON IL BACK
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-            }
+        //android navigation bar color (! not app navigation bar !)
+        getColor(R.color.grey_light).also { window.navigationBarColor = it };
+    }
 
-            override fun onMenuItemSelected(item: MenuItem): Boolean {
-                // Handle the menu selection
-                return when (item.itemId) {
-                    // Back
-                    android.R.id.home -> {
-                        navController.popBackStack()
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }, this, Lifecycle.State.RESUMED)
+    private fun lockOrientationAndBottomNavMakeGone() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+        bottomNav.makeGone()
     }
 
     private fun navigateToFragment(navController: NavController, itemId: Int, destinationId: Int) {

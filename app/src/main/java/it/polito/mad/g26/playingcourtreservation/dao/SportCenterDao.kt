@@ -18,13 +18,14 @@ interface SportCenterDao {
 
     @Transaction
     @Query(
-        "SELECT * " +
-                "from sport_center " +
+        "SELECT DISTINCT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.longitude, sport_center.latitude, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
+                "from sport_center,court " +
                 "WHERE " +
                 "STRFTIME('%H:%M', open_time) <= :hour AND STRFTIME('%H:%M', close_time)> :hour " +
                 "AND " +
                 "city=:city " +
-                ""
+                "AND " +
+                "sport_center.id=court.id_sport_center"
     )
     fun findFilteredBase(city: String, hour: String): LiveData<List<SportCenterServicesCourts>>
 

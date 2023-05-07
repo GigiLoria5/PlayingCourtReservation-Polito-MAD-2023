@@ -27,7 +27,6 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //TODO ELIMINARE NAVBAR
 
         /* CUSTOM TOOLBAR BACK MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)

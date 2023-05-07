@@ -19,6 +19,9 @@ import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.SportCenterAdapter
 import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
+import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
+import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
 class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_results) {
@@ -45,7 +48,6 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //TODO ELIMINARE NAVBAR
 
         /* VM INITIALIZATIONS */
         vm.setCity(args.city)
@@ -173,12 +175,12 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         vm.sportCentersCount.observe(viewLifecycleOwner) {
             if (it > 0) {
-                if (vm.myReservation.value == null) sportCentersRV.visibility = View.VISIBLE
-                noCourtFoundMCV.visibility = View.GONE
+                if (vm.myReservation.value == null) sportCentersRV.makeVisible()
+                noCourtFoundMCV.makeGone()
 
             } else {
-                sportCentersRV.visibility = View.INVISIBLE
-                noCourtFoundMCV.visibility = View.VISIBLE
+                sportCentersRV.makeInVisible()
+                noCourtFoundMCV.makeVisible()
             }
         }
 
@@ -200,34 +202,46 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         vm.myReservation.observe(viewLifecycleOwner) { //X GESTIRE RESERVATIONS GIà PRESENTI
             if (it != null) {
                 if (vm.newReservationId.value == -1) { //se sono qui senza sapere di avere una reservation
-                    sportCentersRV.visibility = View.INVISIBLE
-                    servicesRV.visibility = View.GONE
-                    courtTypeACTV.visibility = View.INVISIBLE
-                    courtTypeMCV.visibility = View.INVISIBLE
-                    selectionTutorialTV.visibility = View.GONE
-                    reservationMCV.visibility = View.VISIBLE
+                    sportCentersRV.makeInVisible()
+                    servicesRV.makeGone()
+                    courtTypeACTV.makeInVisible()
+                    courtTypeMCV.makeInVisible()
+                    selectionTutorialTV.makeGone()
+                    reservationMCV.makeVisible()
+                    noCourtFoundMCV.makeGone()
+
                     val reservationBTN = view.findViewById<Button>(R.id.reservationBTN)
-                    reservationBTN.setOnClickListener { /* TODO NAVIGATION TO RESERVATION WITH "it" */ }
+                    reservationBTN.setOnClickListener { _ ->
+                        findNavController().navigate(
+                            SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToReservationDetailsFragment(
+                                it
+                            )
+                        )
+                    }
                 } else { //se sono qui perchè devi darmi il mio reservation id
                     vm.setNewReservationId(it)
                 }
             } else {
-                sportCentersRV.visibility = View.VISIBLE
-                servicesRV.visibility = View.VISIBLE
-                courtTypeACTV.visibility = View.VISIBLE
-                courtTypeMCV.visibility = View.VISIBLE
-                selectionTutorialTV.visibility = View.VISIBLE
-                reservationMCV.visibility = View.GONE
+                sportCentersRV.makeVisible()
+                servicesRV.makeVisible()
+                courtTypeACTV.makeVisible()
+                courtTypeMCV.makeVisible()
+                selectionTutorialTV.makeVisible()
+                reservationMCV.makeGone()
 
             }
         }
 
         /*WHEN YOU RESERVE, YOU CAN NAVIGATE TO RESERVATION*/
         vm.newReservationId.observe(viewLifecycleOwner) {
-            if (it > 0) { //TODO NAVIGATE
-                //val reservationId = it
+            if (it > 0) {
+                val reservationId = it
                 vm.setNewReservationId(-1)
-                //navigate
+                findNavController().navigate(
+                    SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToReservationDetailsFragment(
+                        reservationId
+                    )
+                )
             }
         }
     }
