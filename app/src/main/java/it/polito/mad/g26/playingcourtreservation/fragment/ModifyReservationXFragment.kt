@@ -19,6 +19,7 @@ import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.model.Service
+import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import it.polito.mad.g26.playingcourtreservation.viewmodel.SearchCourtResultsVM
@@ -47,6 +48,25 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         super.onViewCreated(view, savedInstanceState)
 
 
+        //List of text
+        val center=view.findViewById<CustomTextView>(R.id.center_name)
+            .findViewById<TextView>(R.id.value)
+        val field=view.findViewById<CustomTextView>(R.id.court_name)
+            .findViewById<TextView>(R.id.value)
+        val sport=view.findViewById<CustomTextView>(R.id.sport)
+            .findViewById<TextView>(R.id.value)
+        val city=view.findViewById<CustomTextView>(R.id.city)
+            .findViewById<TextView>(R.id.value)
+        val address=view.findViewById<CustomTextView>(R.id.address)
+            .findViewById<TextView>(R.id.value)
+        val price=view.findViewById<CustomTextView>(R.id.price)
+            .findViewById<TextView>(R.id.value)
+        val date=view.findViewById<CustomTextView>(R.id.date)
+            .findViewById<TextView>(R.id.value)
+        val time=view.findViewById<CustomTextView>(R.id.time)
+            .findViewById<TextView>(R.id.value)
+        dateTV = view.findViewById(R.id.dateTV)
+        hourTV = view.findViewById(R.id.hourTV)
 
         // Retrieve Reservation Details
         val reservationId = args.reservationId
@@ -54,6 +74,20 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
                 println(reservation)
+
+                //Compile unavailable data
+                center.text=reservation.courtWithDetails.sportCenter.name
+                field.text=reservation.courtWithDetails.court.name
+                sport.text=reservation.courtWithDetails.sport.name
+                city.text=reservation.courtWithDetails.sportCenter.city
+                address.text=reservation.courtWithDetails.sportCenter.address
+                date.text=reservation.reservation.date
+                time.text=reservation.reservation.time
+                price.text=reservation.reservation.amount.toString()
+                dateTV.text=reservation.reservation.date
+                hourTV.text=reservation.reservation.time
+
+                //Data of services
                 serviceUsed=reservation.services
 
                 servicesUsed=serviceUsed.toMutableList()
@@ -108,7 +142,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
         dateMCV = view.findViewById(R.id.dateMCV)
-        dateTV = view.findViewById(R.id.dateTV)
+        //dateTV = view.findViewById(R.id.dateTV)
         dateMCV.setOnClickListener {
             searchResultUtils.showDatePickerDialog(
                 requireContext(),
@@ -118,7 +152,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
         /* HOUR MATERIAL CARD VIEW MANAGEMENT*/
         hourMCV = view.findViewById(R.id.hourMCV)
-        hourTV = view.findViewById(R.id.hourTV)
+        //hourTV = view.findViewById(R.id.hourTV)
         hourMCV.setOnClickListener {
             searchResultUtils.showNumberPickerDialog(
                 requireContext(),
@@ -143,8 +177,8 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
 
     }
-
 }
+
 
 
 
