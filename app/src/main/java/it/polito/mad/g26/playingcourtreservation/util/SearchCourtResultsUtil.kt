@@ -121,8 +121,10 @@ object SearchCourtResultsUtil {
             .slice(numberPicker.minValue..23).toTypedArray()
 
         val builder = AlertDialog.Builder(viewContext)
-        builder.setTitle("Seleziona orario")
-        builder.setMessage("Puoi prenotare un campo al massimo 30 minuti prima della partita")
+        builder.setTitle(viewContext.getString(
+            R.string.select_hour))
+        builder.setMessage(viewContext.getString(
+            R.string.select_hour_description))
         builder.setView(linearLayout)
         builder.setPositiveButton("OK") { _, _ ->
             c.set(Calendar.HOUR_OF_DAY, numberPicker.value)
@@ -207,15 +209,18 @@ object SearchCourtResultsUtil {
 
         val builder: AlertDialog.Builder =
             AlertDialog.Builder(viewContext)
-                .setTitle("Reserve this court")
+                .setTitle(viewContext.getString(
+                    R.string.reserve_this_court))
                 .setMessage(reservationConfirmationText)
-                .setPositiveButton("Reserve") { _, _ ->
+                .setPositiveButton(viewContext.getString(
+                    R.string.reserve_button)) { _, _ ->
                     vm.reserveCourt(
                         courtWithDetails.court.id,
                         total,
                         selectedServicesIds
                     )
-                }.setNegativeButton("Don't reserve") { _, _ -> }
+                }.setNegativeButton(viewContext.getString(
+                    R.string.do_not_reserve_button)) { _, _ -> }
                 .setOnCancelListener { }
         val dialog = builder.create()
         dialog.show()

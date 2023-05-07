@@ -10,7 +10,7 @@ import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
 interface ReservationWithDetailsDao {
 
     @Transaction
-    @Query("SELECT * FROM reservation")
+    @Query("SELECT * FROM reservation ORDER BY time ASC")
     fun getReservationsWithDetails(): LiveData<List<ReservationWithDetails>>
 
     @Transaction
