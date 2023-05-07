@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -14,7 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 
 class ReservationDetailsFragment : Fragment(R.layout.reservation_details) {
@@ -24,9 +23,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as? AppCompatActivity)?.supportActionBar?.title =
-            "Reservation Details"  // Update Title
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true) // Show Back Button
+        setupActionBar(activity, "Reservation Details", true)
 
         // Retrieve Reservation Details
         val reservationId = args.reservationId

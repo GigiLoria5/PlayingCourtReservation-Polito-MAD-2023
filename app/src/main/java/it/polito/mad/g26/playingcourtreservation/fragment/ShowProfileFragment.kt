@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -17,14 +16,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import org.json.JSONObject
 
 class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupActionBar(activity, "Profile", false)
+
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -45,10 +46,6 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        // Change Title
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Profile"
-        // Set Back Button
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         // Add Tooltips
         val warningIcon = view.findViewById<ImageView>(R.id.warning_icon)

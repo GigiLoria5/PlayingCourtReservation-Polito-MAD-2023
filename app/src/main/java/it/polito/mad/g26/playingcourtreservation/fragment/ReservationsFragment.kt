@@ -1,7 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -19,7 +18,6 @@ import com.kizitonwose.calendar.view.ViewContainer
 import com.kizitonwose.calendar.view.WeekCalendarView
 import com.kizitonwose.calendar.view.WeekDayBinder
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.adapter.ReservationsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
@@ -28,6 +26,7 @@ import it.polito.mad.g26.playingcourtreservation.util.getWeekPageTitle
 import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
 import it.polito.mad.g26.playingcourtreservation.util.setVisibility
+import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import java.time.LocalDate
 import java.time.YearMonth
@@ -46,8 +45,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Reservations"  // Update Title
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false) // Hide Back Button
+        setupActionBar(activity, "Reservations", false)
 
         // Setup WeekCalendarView
         var isInitialDateSet = false // Keep track of the initial selected date
