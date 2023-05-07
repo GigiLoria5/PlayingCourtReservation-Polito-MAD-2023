@@ -21,9 +21,20 @@
         tools:layout="@layout/activity_edit_profile" />
     <fragment
         android:id="@+id/searchCourtFragment"
-        android:name="it.polito.mad.g26.playingcourtreservation.fragment.SearchCourtFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtFragment"
         android:label="fragment_search_court"
-        tools:layout="@layout/fragment_search_court" />
+        tools:layout="@layout/fragment_search_court">
+        <action
+            android:id="@+id/action_searchCourtFragment_to_searchCourtActionFragment"
+            app:destination="@id/searchCourtActionFragment">
+            <argument android:name="bornFrom" />
+        </action>
+        <action
+            android:id="@+id/action_searchCourtFragment_to_searchCourtResultsFragment"
+            app:destination="@id/searchCourtResultsFragment">
+            <argument android:name="bornFrom" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/reservationsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ReservationsFragment"
@@ -40,5 +51,42 @@
         <argument
             android:name="reservationId"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchCourtActionFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtActionFragment"
+        android:label="fragment_search_court_action"
+        tools:layout="@layout/fragment_search_court_action">
+        <argument
+            android:name="city"
+            app:argType="string" />
+        <argument
+            android:name="bornFrom"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_searchCourtActionFragment_to_searchCourtResultsFragment"
+            app:destination="@id/searchCourtResultsFragment">
+            <argument android:name="bornFrom" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/searchCourtResultsFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtResultsFragment"
+        android:label="fragment_search_court_results"
+        tools:layout="@layout/fragment_search_court_results">
+        <argument
+            android:name="city"
+            app:argType="string" />
+        <argument
+            android:name="bornFrom"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_searchCourtResultsFragment_to_searchCourtActionFragment"
+            app:destination="@id/searchCourtActionFragment">
+            <argument android:name="bornFrom" />
+        </action>
+        <action
+            android:id="@+id/action_searchCourtResultsFragment_to_reservationDetailsFragment"
+            app:destination="@id/reservationDetailsFragment" />
     </fragment>
 </navigation>

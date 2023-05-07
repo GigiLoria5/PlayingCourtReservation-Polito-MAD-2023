@@ -69,9 +69,15 @@ class MainActivity : AppCompatActivity() {
                         bottomNav.setCheckedMenuItem(R.id.profile)
                     }
                     // Sub Views: the bottom navigation should not be visible
+                    R.id.searchCourtActionFragment -> {
+                        lockOrientationAndBottomNavMakeGone()
+                    }
+                    R.id.searchCourtResultsFragment -> {
+                        lockOrientationAndBottomNavMakeGone()
+                    }
+
                     R.id.reservationDetailsFragment -> {
-                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-                        bottomNav.makeGone()
+                        lockOrientationAndBottomNavMakeGone()
                     }
 
                     R.id.editProfileFragment -> {
@@ -81,6 +87,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        //android navigation bar color (! not app navigation bar !)
+        getColor(R.color.grey_light).also { window.navigationBarColor = it };
+    }
+
+    private fun lockOrientationAndBottomNavMakeGone() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+        bottomNav.makeGone()
     }
 
     private fun navigateToFragment(navController: NavController, itemId: Int, destinationId: Int) {
