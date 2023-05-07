@@ -4,19 +4,143 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="16dp"
     tools:context=".fragment.ModifyReservationXFragment">
 
-
-    <TextView
-        android:id="@+id/titleModify"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit Date/time"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintBottom_toTopOf="@id/Time"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:fillViewport="true"
+        android:paddingBottom="16dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingBottom="16dp">
+
+            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                android:id="@+id/center_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="Sport Center"
+                app:value="@string/default_fullname" />
+
+            <LinearLayout
+                android:id="@+id/sport_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/center_name">
+
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                    android:id="@+id/sport"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="Sport"
+                    app:value="@integer/default_age" />
+
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                    android:id="@+id/court_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="Court Name"
+                    app:value="@string/default_gender" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/location_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sport_info">
+
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                    android:id="@+id/city"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="City"
+                    app:value="@integer/default_age" />
+
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                    android:id="@+id/address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="Address"
+                    app:value="@string/default_gender" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/time_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location_info">
+
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                    android:id="@+id/date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="Date"
+                    app:value="@integer/default_age" />
+
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                    android:id="@+id/time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="Time"
+                    app:value="@string/default_gender" />
+
+            </LinearLayout>
+
+
+            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/time_info"
+                app:title="Price"
+                app:value="@string/default_fullname"/>
+
+            <TextView
+                android:id="@+id/titleModify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Date/time"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toTopOf="@id/Time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/price" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/Time"
@@ -48,11 +172,13 @@
                 app:cardPreventCornerOverlap="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    >
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/dateMCV"
@@ -120,7 +246,7 @@
         android:id="@+id/chooseServices"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/Time">
@@ -145,5 +271,7 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
