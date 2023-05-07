@@ -10,6 +10,9 @@ class ReservationRepository(application: Application) {
 
     fun getAllReservation(): LiveData<List<Reservation>> = reservationDao.findAllReservation()
 
-    fun filteredReservations(city: String, date: String, hour: String, courtsIdList: List<Int>): LiveData<List<Reservation>> =
-        reservationDao.findFiltered(city, date, hour,courtsIdList)
+    fun filteredReservations(date: String, hour: String, courtsIdList: List<Int>): LiveData<List<Reservation>> =
+        reservationDao.findFiltered( date, hour,courtsIdList)
+
+    fun myReservationId(myUserId: Int,date: String, hour: String): LiveData<Int?> =
+        reservationDao.findMyReservationId( myUserId,date, hour)
 }

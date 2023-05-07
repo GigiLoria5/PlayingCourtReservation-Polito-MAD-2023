@@ -39,6 +39,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
     private lateinit var sportCentersRV: RecyclerView
     private lateinit var reservationMCV: MaterialCardView
     private lateinit var selectionTutorialTV: TextView
+
     /* LOGIC OBJECT OF THIS FRAGMENT */
     private val searchResultUtils = SearchCourtResultsUtil
 
@@ -76,7 +77,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         /* COURT TYPE DROPDOWN MANAGEMENT*/
         courtTypeACTV = view.findViewById(R.id.courtTypeACTV)
-        courtTypeMCV=view.findViewById(R.id.courtTypeMCV)
+        courtTypeMCV = view.findViewById(R.id.courtTypeMCV)
         vm.sports.observe(viewLifecycleOwner) {
             searchResultUtils.setAutoCompleteTextViewSport(
                 requireContext(),
@@ -138,7 +139,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         }
 
         /*RESERVE A COURT TV */
-        selectionTutorialTV=view.findViewById(R.id.selectionTutorialTV)
+        selectionTutorialTV = view.findViewById(R.id.selectionTutorialTV)
 
         /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
@@ -157,31 +158,34 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         }
 
         /* RESERVATION OPTIONALITY INITIALIZER*/
-        reservationMCV=view.findViewById(R.id.reservationMCV)
-        vm.reservations.observe(viewLifecycleOwner) {
-            val reservationId = vm.getReservation()
-            if (reservationId != null) {
+        reservationMCV = view.findViewById(R.id.reservationMCV)
+        vm.reservations.observe(viewLifecycleOwner) { //PRIMO METODO X GESTIRE RESERVATIONS GIà PRESENTI
+
+            //BUG NON RIESCE A GESTIRE MIE PRENOTAZIONI GIà PRESENTI FUORI DA CITTà DI RICERCA
+            sportCentersAdapter.reservationsUpdate(vm.doIHaveAReservation())
+        }
+
+        vm.myReservation.observe(viewLifecycleOwner) { //SECONDO METODO X GESTIRE RESERVATIONS GIà PRESENTI
+            if (it != null) {
                 sportCentersRV.visibility = View.INVISIBLE
                 servicesRV.visibility = View.GONE
                 courtTypeACTV.visibility = View.INVISIBLE
-                courtTypeMCV.visibility=View.INVISIBLE
-                selectionTutorialTV.visibility=View.GONE
+                courtTypeMCV.visibility = View.INVISIBLE
+                selectionTutorialTV.visibility = View.GONE
 
-                reservationMCV.visibility=View.VISIBLE
+                reservationMCV.visibility = View.VISIBLE
 
-                val reservationBTN=view.findViewById<Button>(R.id.reservationBTN)
-                reservationBTN.setOnClickListener { /* NAVIGATION TO RESERVATION WITH reservationId */ }
+                val reservationBTN = view.findViewById<Button>(R.id.reservationBTN)
+                reservationBTN.setOnClickListener { /* NAVIGATION TO RESERVATION WITH "it" */ }
 
             } else {
                 sportCentersRV.visibility = View.VISIBLE
                 servicesRV.visibility = View.VISIBLE
                 courtTypeACTV.visibility = View.VISIBLE
-                courtTypeMCV.visibility=View.VISIBLE
-                selectionTutorialTV.visibility=View.VISIBLE
+                courtTypeMCV.visibility = View.VISIBLE
+                selectionTutorialTV.visibility = View.VISIBLE
 
-                reservationMCV.visibility=View.GONE
-
-                sportCentersAdapter.reservationsUpdate(vm.doIHaveAReservation())
+                reservationMCV.visibility = View.GONE
             }
         }
     }

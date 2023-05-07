@@ -115,7 +115,7 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
     fun getSportCentersWithDataFormatted(): List<SportCenterWithDataFormatted> {
         return sportCenters.value?.map {
             val sportCenter = it.sportCenter
-            val courtsWithDetails = it.courtsWithDetails.filter {courtWithDetails->
+            val courtsWithDetails = it.courtsWithDetails.filter { courtWithDetails ->
                 if (getSelectedSportId() != 0)
                     courtWithDetails.sport.id == getSelectedSportId()
                 else
@@ -139,8 +139,17 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
             it.flatMap { sportCenterData -> sportCenterData.courtsWithDetails.map { court -> court.court.id } }
         val date = getDateTimeFormatted("dd-MM-YYYY")
         val hour = getDateTimeFormatted("kk:mm")
-        reservationRepository.filteredReservations(selectedCity, date, hour, courtsIdList)
+        reservationRepository.filteredReservations(date, hour, courtsIdList)
     }
+
+    val myReservation: LiveData<Int?> = selectedDateTimeMillis.switchMap {
+        reservationRepository.myReservationId( //IMPORTANTE CHE SE HO UNA RESERVATION ESSA SIA INDIPENDENTE DALLA CITTà DOVE CERCO
+            1, //andrà sostituito con userId
+            getDateTimeFormatted("dd-MM-YYYY"),
+            getDateTimeFormatted("kk:mm")
+        )
+    }
+
 
     fun courtReservationState(courtId: Int): CourtStatus {
         //X ORA ABBIAMO SOLO USER CON ID 1.
@@ -151,12 +160,8 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun doIHaveAReservation():Boolean{
-        return reservations.value?.any { it.idUser==1 }?:false //1 verrà sostituito con userId
-    }
-
-    fun getReservation():Int?{
-        return reservations.value?.find { it.idUser==1 }?.idCourt
+    fun doIHaveAReservation(): Boolean {
+        return reservations.value?.any { it.idUser == 1 } ?: false //1 verrà sostituito con userId
     }
 
 
@@ -172,7 +177,4 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
             sportCentersMediator.value = 3
         }
     }
-    //nell'adapter dello sportcenter, nella funzione che genera i figli, fai una chiamata a qualche dao, magari anche con una funzione da sto vm
-    //nb i campi che si vedono dipendono dallo sport selezionato.
-    // poi quando fa update dei dati dello sportcenter, aggiorna anche i campi che si vedono
 }
