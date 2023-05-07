@@ -1,6 +1,5 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,8 +9,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
-import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-import org.json.JSONObject
 
 class SearchCourtFragment : Fragment(R.layout.fragment_search_court) {
 
@@ -44,7 +41,7 @@ class SearchCourtFragment : Fragment(R.layout.fragment_search_court) {
         }
     }
 
-    private fun getUserCity():String?{
+   /* private fun getUserCity():String?{
         val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
         if(sharedPref.contains("profile")) {
             val json= sharedPref.getString("profile","Default")?.let { JSONObject(it) }
@@ -55,4 +52,5 @@ class SearchCourtFragment : Fragment(R.layout.fragment_search_court) {
         }
         return null
     }
+    */
 }

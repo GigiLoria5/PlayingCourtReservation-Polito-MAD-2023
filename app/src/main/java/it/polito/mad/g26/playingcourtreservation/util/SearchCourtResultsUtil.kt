@@ -63,10 +63,10 @@ object SearchCourtResultsUtil {
         val c = getDelayedCalendar()
         if (mySelectionCalendar.timeInMillis < c.timeInMillis) {
             mySelectionCalendar.set(
-                c.get(Calendar.YEAR),
-                c.get(Calendar.MONTH),
-                c.get(Calendar.DAY_OF_MONTH),
-                c.get(Calendar.HOUR_OF_DAY),
+                c[Calendar.YEAR],
+                c[Calendar.MONTH],
+                c[Calendar.DAY_OF_MONTH],
+                c[Calendar.HOUR_OF_DAY],
                 0
             )
         }
@@ -88,9 +88,9 @@ object SearchCourtResultsUtil {
         val datePickerDialog = DatePickerDialog(
             viewContext,
             datePicker,
-            c.get(Calendar.YEAR),
-            c.get(Calendar.MONTH),
-            c.get(Calendar.DAY_OF_MONTH),
+            c[Calendar.YEAR],
+            c[Calendar.MONTH],
+            c[Calendar.DAY_OF_MONTH],
         )
 
         val minDate = getDelayedCalendar()
@@ -111,11 +111,11 @@ object SearchCourtResultsUtil {
         //se la data è oggi ed orario=x, min value sarà un orario_futuro>x
         numberPicker.minValue =
             if (DateUtils.isToday(c.timeInMillis)) {
-                getDelayedCalendar().get(Calendar.HOUR_OF_DAY)
+                getDelayedCalendar()[Calendar.HOUR_OF_DAY]
             } else
                 0
         numberPicker.maxValue = 23
-        numberPicker.value = c.get(Calendar.HOUR_OF_DAY)
+        numberPicker.value = c[Calendar.HOUR_OF_DAY]
 
         numberPicker.displayedValues = (0..23).toList().map { if (it < 10) "0$it:00" else "$it:00" }
             .slice(numberPicker.minValue..23).toTypedArray()
@@ -217,7 +217,7 @@ object SearchCourtResultsUtil {
                     )
                     /*TODO NAVIGA A RESERVATION*/
                 }.setNegativeButton("Don't reserve") { _, _ -> }
-                .setOnCancelListener() { }
+                .setOnCancelListener { }
         val dialog = builder.create()
         dialog.show()
     }

@@ -1,7 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
 import android.annotation.SuppressLint
-import android.icu.util.Calendar
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -226,7 +225,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         /*WHEN YOU RESERVE, YOU CAN NAVIGATE TO RESERVATION*/
         vm.newReservationId.observe(viewLifecycleOwner) {
             if (it > 0) { //TODO NAVIGATE
-                val reservationId = it
+                //val reservationId = it
                 vm.setNewReservationId(-1)
                 //navigate
             }

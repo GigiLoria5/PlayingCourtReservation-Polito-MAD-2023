@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="pageExternalSpace">11dp</dimen>
-    <dimen name="searchImageSize">40dp</dimen>
     <dimen name="searchInfoTextSize">15sp</dimen>
     <dimen name="searchCityTextSize">18sp</dimen>
     <dimen name="dateTypeInternalMargin">4dp</dimen>
@@ -20,5 +19,4 @@
     <dimen name="courtBoxElevation">7dp</dimen>
     <dimen name="courtNameCourtBox">18sp</dimen>
     <dimen name="MarginsPaddingsCourtInfoBox">8dp</dimen>
-    <dimen name="servicesExternalMargin">20dp</dimen>
 </resources>

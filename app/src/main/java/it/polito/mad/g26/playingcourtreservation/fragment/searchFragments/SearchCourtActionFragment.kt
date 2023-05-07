@@ -39,8 +39,7 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
         searchInputET.requestFocus()
         val inputMethodManager: InputMethodManager =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(searchInputET, InputMethodManager.SHOW_IMPLICIT);
-
+        inputMethodManager.showSoftInput(searchInputET, InputMethodManager.SHOW_IMPLICIT)
         searchInputET.doOnTextChanged { text, _, _, _ ->
             vm.searchNameChanged(text.toString())
         }
@@ -61,7 +60,6 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
                 "home" -> {
                     findNavController().popBackStack()
                 }
-                else -> {}
             }
             findNavController().navigate(
                 SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtResultsFragment(

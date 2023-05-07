@@ -48,7 +48,7 @@
     <string name="camera">Camera</string>
     <string name="galley">Gallery</string>
     <string name="default_profile">Default profile</string>
-    <string name="default_date">14-04-2002</string>
+    <string name="default_date">14–04–2002</string>
     <string name="username_min_length">Username min length is 8 characters</string>
     <string name="username_max_length">Username max length is 30 characters</string>
     <string name="home">Home</string>
