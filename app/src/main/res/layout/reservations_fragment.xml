@@ -88,33 +88,32 @@
             android:id="@+id/reservationsCalendarSelectedDateText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="8dp"
-            android:background="@color/grey_light"
+            android:layout_marginBottom="@dimen/item_space_vertical"
+            android:background="@drawable/bottom_border"
             android:fontFamily="sans-serif-medium"
             android:paddingStart="20dp"
-            android:paddingTop="12dp"
+            android:paddingTop="6dp"
             android:paddingEnd="20dp"
-            android:paddingBottom="12dp"
-            android:textAllCaps="true"
+            android:paddingBottom="6dp"
             android:textColor="@color/custom_black"
             android:gravity="center"
-            android:textSize="16sp"
-            tools:text="7 May, 2023" />
+            android:textSize="18sp"
+            tools:text="Sunday, 7 May 2023" />
 
         <TextView
             android:id="@+id/reservationsNoReservationsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:paddingStart="20dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="12dp"
-            android:textColor="@color/custom_black"
             android:gravity="center"
+            android:paddingStart="20dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="6dp"
             android:text="@string/no_reservations"
-            android:visibility="visible"
-            android:textSize="16sp" />
+            android:textColor="@color/custom_black"
+            android:textSize="18sp"
+            android:visibility="visible" />
 
         <!-- Reservations -->
         <androidx.recyclerview.widget.RecyclerView
@@ -122,7 +121,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false" />
-
     </LinearLayout>
 
 </LinearLayout>

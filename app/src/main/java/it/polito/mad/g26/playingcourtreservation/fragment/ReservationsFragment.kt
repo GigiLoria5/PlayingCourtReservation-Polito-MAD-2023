@@ -20,10 +20,13 @@ import com.kizitonwose.calendar.view.WeekDayBinder
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReservationsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
+import it.polito.mad.g26.playingcourtreservation.util.VerticalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
 import it.polito.mad.g26.playingcourtreservation.util.getWeekPageTitle
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
+import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
 import it.polito.mad.g26.playingcourtreservation.util.setVisibility
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
@@ -110,6 +113,10 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = reservationsAdapter
         }
+        val itemDecoration =
+            VerticalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.item_space_vertical))
+        reservationsRv.addItemDecoration(itemDecoration)
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -120,8 +127,10 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
     private fun configureBinders(view: View) {
         val weekCalendarView = view.findViewById<WeekCalendarView>(R.id.reservationsCalendarView)
-        val selectedDateView =
+        val selectedDateTextView =
             view.findViewById<TextView>(R.id.reservationsCalendarSelectedDateText)
+        val noReservationsTextView: TextView =
+            view.findViewById(R.id.reservationsNoReservationsText)
 
         // Setup Day Container
         class DayViewContainer(view: View) : ViewContainer(view) {
@@ -132,7 +141,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
             init {
                 view.setOnClickListener {
-                    selectedDate(selectedDateView, weekCalendarView, day.date)
+                    selectedDate(selectedDateTextView, weekCalendarView, day.date)
                 }
             }
         }
@@ -161,6 +170,11 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                             dateTextView.setBackgroundResource(R.drawable.calendar_today_selected_bg)
                         }
                         dotImageView.makeInVisible()
+                        if (reservations[selectedDate]?.value != null) {
+                            noReservationsTextView.makeGone()
+                        } else {
+                            noReservationsTextView.makeVisible()
+                        }
                     }
 
                     today -> {
@@ -184,7 +198,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
     }
 
     private fun selectedDate(
-        selectedDateView: TextView,
+        selectedDateTextView: TextView,
         weekCalendarView: WeekCalendarView,
         newDate: LocalDate
     ) {
@@ -195,7 +209,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         weekCalendarView.notifyDateChanged(oldDate)
         weekCalendarView.notifyDateChanged(newDate)
         // update Reservations RV with new date
-        selectedDateView.text = selectionFormatter.format(newDate)
+        selectedDateTextView.text = selectionFormatter.format(newDate)
         updateAdapterForDate(selectedDate)
     }
 
