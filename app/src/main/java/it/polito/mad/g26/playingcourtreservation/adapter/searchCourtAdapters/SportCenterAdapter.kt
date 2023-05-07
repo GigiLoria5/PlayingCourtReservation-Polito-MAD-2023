@@ -16,9 +16,11 @@ import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDat
 class SportCenterAdapter(
     private var collection: List<SportCenterWithDataFormatted>,
     private val isCourtReserved: (Int) -> CourtStatus,
-    private var iHaveAReservation: Boolean // TODO SE VA BENE IL POPUP, QUESTO PARAMETRO NON SERVE PIù
+    private val isServiceIdInList: (Int) -> Boolean
 ) :
     RecyclerView.Adapter<SportCenterAdapter.SportCenterViewHolder>() {
+
+    private val selectedServicesPerSportCenter: MutableMap<Int, MutableSet<Int>> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportCenterViewHolder {
         val view =
@@ -26,15 +28,31 @@ class SportCenterAdapter(
         return SportCenterViewHolder(view)
     }
 
+    fun addService(sportCenterId: Int, serviceId: Int) {
+        if (selectedServicesPerSportCenter[sportCenterId] != null)
+            selectedServicesPerSportCenter[sportCenterId]?.add(serviceId)
+        selectedServicesPerSportCenter.forEach { (t, u) -> println("$t = $u") }
+    }
+
+    fun removeService(sportCenterId: Int, serviceId: Int) {
+        if (selectedServicesPerSportCenter[sportCenterId] != null)
+            selectedServicesPerSportCenter[sportCenterId]?.remove(serviceId)
+        selectedServicesPerSportCenter.forEach { (t, u) -> println("$t = $u") }
+    }
+
+
     override fun onBindViewHolder(holder: SportCenterViewHolder, position: Int) {
+
         val sportCenter = collection[position].sportCenter
         val courtsWithDetails = collection[position].courtsWithDetails
         val servicesWithFee = collection[position].servicesWithFee
+        selectedServicesPerSportCenter[sportCenter.id] = mutableSetOf()
+
         holder.bind(
             sportCenter,
             servicesWithFee,
             courtsWithDetails
-        ) //TODO X I SERVIZI SELEZIONATI, INVENTATI QUALCOSA
+        )
 
     }
 
@@ -45,9 +63,7 @@ class SportCenterAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun reservationsUpdate(doIHaveAReservationOrNot: Boolean) {
-        iHaveAReservation = doIHaveAReservationOrNot // TODO SE VA BENE IL POPUP, QUESTO PARAMETRO NON SERVE PIù
-
+    fun reservationsUpdate() {
         notifyDataSetChanged()
     }
 
@@ -81,20 +97,15 @@ class SportCenterAdapter(
             )
             if (servicesWithFee.isEmpty()) sportCenterChooseServiceInfo.text =
                 itemView.context.getString(R.string.no_services_available)
-            rvCourt.adapter = CourtAdapter(courts, isCourtReserved, iHaveAReservation)
 
+            rvServices.adapter = ServiceWithFeeAdapter(
+                servicesWithFee,
+                { addService(sportCenter.id, it) },
+                { removeService(sportCenter.id, it) },
+                isServiceIdInList
+            )
 
-            if (iHaveAReservation) {
-                sportCenterChooseServiceInfo.visibility=View.GONE
-            }else{
-                sportCenterChooseServiceInfo.visibility=View.VISIBLE
-                //TODO CAPIRE COME GESTIRE I SERVIZI SCELTI
-                rvServices.adapter = ServiceAdapter(servicesWithFee.map { it.service },
-                    { println(it) },
-                    { println(it) },
-                    { false })
-
-            }
+            rvCourt.adapter = CourtAdapter(courts, isCourtReserved)
         }
 
         fun unbind() {

@@ -83,6 +83,10 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
     val sportCenters = sportCentersMediator.switchMap {
         searchCombinations()
     }
+    private var _sportCentersCount = sportCenters.switchMap {
+        MutableLiveData(sportCenters.value?.size ?: 0)
+    }
+    val sportCentersCount: LiveData<Int> = _sportCentersCount
 
     private fun searchCombinations(): LiveData<List<SportCenterServicesCourts>> {
         return when {
@@ -155,7 +159,6 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
         //X ORA ABBIAMO SOLO USER CON ID 1.
         return when (reservations.value?.find { it.idCourt == courtId }?.idUser) {
             null -> CourtStatus.AVAILABLE
-            1 -> CourtStatus.RESERVED_BY_YOU //1 verrà sostituito con userId
             else -> CourtStatus.NOT_AVAILABLE
         }
     }

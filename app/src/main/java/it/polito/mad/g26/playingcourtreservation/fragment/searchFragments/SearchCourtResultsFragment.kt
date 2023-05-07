@@ -37,6 +37,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
     private lateinit var courtTypeMCV: MaterialCardView
     private lateinit var servicesRV: RecyclerView
     private lateinit var sportCentersRV: RecyclerView
+    private lateinit var noCourtFoundMCV: MaterialCardView
     private lateinit var reservationMCV: MaterialCardView
     private lateinit var selectionTutorialTV: TextView
 
@@ -143,13 +144,25 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
+        noCourtFoundMCV = view.findViewById(R.id.noCourtFoundMCV)
         val sportCentersAdapter = SportCenterAdapter(
             vm.getSportCentersWithDataFormatted(),
-            { vm.courtReservationState(it) }, vm.doIHaveAReservation()
+            { vm.courtReservationState(it) },
+            { vm.isServiceIdInList(it) } //TODO AGGIUNGI FUNZIONE X MOSTRARE POPUP CON CONFERMA RESERVATION
         )
 
-        sportCentersRV.adapter = sportCentersAdapter
+        vm.sportCentersCount.observe(viewLifecycleOwner) {
+            if (it > 0) {
+                if (vm.myReservation.value == null) sportCentersRV.visibility = View.VISIBLE
+                noCourtFoundMCV.visibility = View.GONE
 
+            } else {
+                sportCentersRV.visibility = View.INVISIBLE
+                noCourtFoundMCV.visibility = View.VISIBLE
+            }
+        }
+
+        sportCentersRV.adapter = sportCentersAdapter
         vm.sportCenters.observe(viewLifecycleOwner) {
             sportCentersAdapter.updateCollection(vm.getSportCentersWithDataFormatted())
         }
@@ -159,32 +172,26 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         /* RESERVATION OPTIONALITY INITIALIZER*/
         reservationMCV = view.findViewById(R.id.reservationMCV)
-        vm.reservations.observe(viewLifecycleOwner) { //PRIMO METODO X GESTIRE RESERVATIONS GIà PRESENTI
-
-            //BUG NON RIESCE A GESTIRE MIE PRENOTAZIONI GIà PRESENTI FUORI DA CITTà DI RICERCA
-            sportCentersAdapter.reservationsUpdate(vm.doIHaveAReservation())
+        vm.reservations.observe(viewLifecycleOwner) {
+            sportCentersAdapter.reservationsUpdate()
         }
 
-        vm.myReservation.observe(viewLifecycleOwner) { //SECONDO METODO X GESTIRE RESERVATIONS GIà PRESENTI
+        vm.myReservation.observe(viewLifecycleOwner) { //X GESTIRE RESERVATIONS GIà PRESENTI
             if (it != null) {
                 sportCentersRV.visibility = View.INVISIBLE
                 servicesRV.visibility = View.GONE
                 courtTypeACTV.visibility = View.INVISIBLE
                 courtTypeMCV.visibility = View.INVISIBLE
                 selectionTutorialTV.visibility = View.GONE
-
                 reservationMCV.visibility = View.VISIBLE
-
                 val reservationBTN = view.findViewById<Button>(R.id.reservationBTN)
                 reservationBTN.setOnClickListener { /* NAVIGATION TO RESERVATION WITH "it" */ }
-
             } else {
                 sportCentersRV.visibility = View.VISIBLE
                 servicesRV.visibility = View.VISIBLE
                 courtTypeACTV.visibility = View.VISIBLE
                 courtTypeMCV.visibility = View.VISIBLE
                 selectionTutorialTV.visibility = View.VISIBLE
-
                 reservationMCV.visibility = View.GONE
             }
         }

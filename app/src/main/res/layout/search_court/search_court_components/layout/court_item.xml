@@ -48,15 +48,32 @@
                 app:layout_constraintTop_toBottomOf="@id/courtNameTV">
 
                 <TextView
-                    android:id="@+id/courtTypeTV"
+                    android:id="@+id/courtAvailabilityTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/MarginsPaddingsCourtInfoBox"
+                    android:layout_marginBottom="@dimen/MarginsPaddingsCourtInfoBox"
+                    android:text="@string/court_availability"
+                    android:textColor="@color/white"
+
+                    app:layout_constraintBottom_toTopOf="@id/courtTypeTV"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
+
+
+                <TextView
+                    android:id="@+id/courtTypeTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/court_type"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toTopOf="@id/courtPriceTV"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/courtAvailabilityTV"
+
+                    />
 
                 <TextView
                     android:id="@+id/courtPriceTV"
@@ -64,19 +81,11 @@
                     android:layout_height="wrap_content"
                     android:text="@string/court_price"
                     android:textColor="@color/white"
-                    app:layout_constraintBottom_toTopOf="@id/courtAvailabilityTV"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/courtTypeTV" />
 
-                <TextView
-                    android:id="@+id/courtAvailabilityTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/court_availability"
-                    android:textColor="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/courtPriceTV" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
