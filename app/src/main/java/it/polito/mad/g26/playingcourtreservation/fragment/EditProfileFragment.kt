@@ -212,7 +212,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         //image management
         val editBtn = view.findViewById<ImageButton>(R.id.imageButton)
 
-        profilePictureAlertDialog = BottomSheetDialog(requireContext())
+        profilePictureAlertDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         profilePictureAlertDialog.setContentView(R.layout.custom_dialog_photo)
         profilePictureAlertDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         val galleryBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.gallery)
