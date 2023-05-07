@@ -19,6 +19,7 @@ class SportCenterAdapter(
     private val isServiceIdInSelectionList: (Int, Int) -> Boolean,
     private val addServiceToSelectionList: (Int, Int) -> Unit,
     private val removeServiceFromSelectionList: (Int, Int) -> Unit,
+    private val confirmReservation: (CourtWithDetails)->Unit
 ) :
     RecyclerView.Adapter<SportCenterAdapter.SportCenterViewHolder>() {
 
@@ -32,8 +33,8 @@ class SportCenterAdapter(
     override fun onBindViewHolder(holder: SportCenterViewHolder, position: Int) {
 
         val sportCenter = collection[position].sportCenter
-        val courtsWithDetails = collection[position].courtsWithDetails
         val servicesWithFee = collection[position].servicesWithFee
+        val courtsWithDetails = collection[position].courtsWithDetails
 
         holder.bind(
             sportCenter,
@@ -96,8 +97,7 @@ class SportCenterAdapter(
                     )
                 }
             )
-
-            rvCourt.adapter = CourtAdapter(courts, isCourtReserved)
+            rvCourt.adapter = CourtAdapter(courts, isCourtReserved, confirmReservation)
         }
 
         fun unbind() {

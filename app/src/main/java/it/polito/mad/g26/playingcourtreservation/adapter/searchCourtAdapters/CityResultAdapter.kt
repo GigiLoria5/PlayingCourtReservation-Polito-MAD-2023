@@ -21,7 +21,7 @@ class CityResultAdapter(
     }
 
     override fun onBindViewHolder(holder: CityResultViewHolder, position: Int) {
-        holder.bind(collection[position], goToResult)
+        holder.bind(collection[position])
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -42,7 +42,7 @@ class CityResultAdapter(
         private val cityResultMCV = itemView.findViewById<MaterialCardView>(R.id.cityResultMCV)
 
         fun bind(
-            city: String, goToResult: (String) -> Unit
+            city: String
         ) {
             cityName.text = city
             cityResultMCV.setOnClickListener { goToResult(city) }

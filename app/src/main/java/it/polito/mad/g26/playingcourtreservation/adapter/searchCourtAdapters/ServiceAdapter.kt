@@ -28,10 +28,7 @@ class ServiceAdapter(
 
 
         holder.bind(
-            collection[position],
-            addServiceIdToFilters,
-            removeServiceIdFromFilters,
-            isServiceIdInList
+            collection[position]
         )
     }
 
@@ -52,10 +49,7 @@ class ServiceAdapter(
         private val chip = itemView.findViewById<Chip>(R.id.chip)
 
         fun bind(
-            collection: Service,
-            addServiceIdToFilters: (Int) -> Unit,
-            removeServiceIdFromFilters: (Int) -> Unit,
-            isServiceIdInList: (Int) -> Boolean
+            collection: Service
         ) {
             chip.text = collection.name
             chip.isChecked = isServiceIdInList(collection.id)

@@ -14,6 +14,7 @@ import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
 class CourtAdapter(
     private val collection: List<CourtWithDetails>,
     private val courtReservationState: (Int) -> CourtStatus,
+    private val confirmReservation: (CourtWithDetails)->Unit
 
     ) :
     RecyclerView.Adapter<CourtAdapter.CourtViewHolder>() {
@@ -60,13 +61,15 @@ class CourtAdapter(
                 R.string.hour_charge_court,
                 String.format("%.2f", courtWithDetails.court.hourCharge)
             )
-            val reservationStatus = courtReservationState(courtWithDetails.court.id)
 
-            when (reservationStatus) {
+            when (courtReservationState(courtWithDetails.court.id)) {
                 CourtStatus.AVAILABLE -> {
                     setColors(R.color.green_500, R.color.white)
                     courtAvailability.text =
                         itemView.context.getString(R.string.court_available)
+                    courtCardView.setOnClickListener {
+                        confirmReservation(courtWithDetails)
+                    }
                 }
                 CourtStatus.NOT_AVAILABLE -> {
                     setColors(R.color.grey, R.color.white)
@@ -83,6 +86,7 @@ class CourtAdapter(
             courtType.text = ""
             courtPrice.text = ""
             courtAvailability.text = ""
+            courtCardView.setOnClickListener(null)
             setColors(R.color.white, R.color.white)
         }
     }

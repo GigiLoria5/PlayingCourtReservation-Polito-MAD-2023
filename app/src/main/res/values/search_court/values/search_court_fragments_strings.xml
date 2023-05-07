@@ -2,7 +2,8 @@
 <resources>
     <string name="default_city">Torino</string>
     <string name="hourFormat">kk:mm</string>
-    <string name="dateFormat">dd MMM</string>
+    <string name="dateFormat">MMM dd</string>
+    <string name="dateExtendedFormat">EEEE, MMMM dd, yyyy</string>
     <string name="searchBoxInfoText">Where do you want to play</string>
     <string name="searchIcon">search icon</string>
     <string name="searchResultsInfo">Reserve a court with the desired services</string>
@@ -30,4 +31,14 @@
     <string name="sport_center_address">Sport center address</string>
     <string name="sport_center_opening_hours">00:00 – 15:00</string>
     <string name="call_sport_center">call sport center</string>
+    <string name="confirm_reservation_message">
+        You are reserving court:\n%1$s (%2$s)\n\nOf sport center:\n%3$s (%4$s)\n\nAt:\n%5$s on %6$s.\n\n
+        Selected services:\n
+        %7$s\n
+        Hour charge of court: €%8$s\n\n
+        Total reservation fee: €%9$s\n\n
+    </string>
+    <string name="confirm_reservation_message_service_field">-%1$s: €%2$s\n</string>
+    <string name="confirm_reservation_text"> Confirm</string>
+    <string name="dont_confirm_reservation_text"> Do not confirm</string>
 </resources>

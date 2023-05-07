@@ -17,6 +17,7 @@ import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.Search
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.model.Sport
+import it.polito.mad.g26.playingcourtreservation.model.custom.CourtWithDetails
 
 import java.util.*
 
@@ -29,21 +30,24 @@ object SearchCourtResultsUtil {
     }
 
     fun setDateTimeTextViews(
-        calendar: Calendar,
+        timeInMillis: Long,
         dateFormat: String,
         hourFormat: String,
         dateTextView: TextView,
         hourTextView: TextView
     ) {
-        dateTextView.text = getDateTimeFormatted(calendar, dateFormat)
-        hourTextView.text = getDateTimeFormatted(calendar, hourFormat)
+
+        dateTextView.text = getDateTimeFormatted(timeInMillis, dateFormat)
+        hourTextView.text = getDateTimeFormatted(timeInMillis, hourFormat)
     }
 
     fun getDateTimeFormatted(
-        calendar: Calendar,
+        timeInMillis: Long,
         format: String,
     ): String {
-        var formatted = SimpleDateFormat(format, Locale.ITALY).format(calendar.time)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timeInMillis
+        var formatted = SimpleDateFormat(format, Locale.ENGLISH).format(calendar.time)
         if (formatted == "24:00") formatted = "00:00"
         return formatted
     }
@@ -52,8 +56,6 @@ object SearchCourtResultsUtil {
         val c = Calendar.getInstance()
         c.add(Calendar.HOUR_OF_DAY, 1)
         c.add(Calendar.MINUTE, 30)
-
-
         return c
     }
 
@@ -79,8 +81,6 @@ object SearchCourtResultsUtil {
         val datePicker = DatePickerDialog.OnDateSetListener { _, year, month, day ->
             c.set(year, month, day)
 
-            //Una volta che aggiorno la data, devo controllare la coppia data-ora per annullare possibili errori
-            //X es sono le 15, ho data domani con orario 12. Se torno a data oggi devo controllare che l'orario sia legittimo
             adjustDateDateCombination(c)
             vm.changeSelectedDateTimeMillis(c.timeInMillis)
         }
@@ -171,5 +171,54 @@ object SearchCourtResultsUtil {
                 )
             navController.navigate(direction)
         }
+    }
+
+    fun showConfirmReservationDialog(
+        viewContext: Context,
+        courtWithDetails: CourtWithDetails,
+        vm: SearchCourtResultsVM
+    ) {
+        val timeInMillis = vm.selectedDateTimeMillis.value ?: 0
+        var total: Float = courtWithDetails.court.hourCharge
+        var selectedServicesString = ""
+        val selectedServicesIds: MutableList<Int> = mutableListOf()
+        vm.getSelectedServicesAndFees(courtWithDetails.sportCenter.id).forEach {
+            total += it.fee
+            selectedServicesIds.add(it.service.id)
+            selectedServicesString += viewContext.getString(
+                R.string.confirm_reservation_message_service_field,
+                it.service.name,
+                String.format("%.2f", it.fee)
+            )
+        }
+        val reservationConfirmationText = viewContext.getString(
+            R.string.confirm_reservation_message,
+            courtWithDetails.court.name,
+            courtWithDetails.sport.name,
+            courtWithDetails.sportCenter.name,
+            courtWithDetails.sportCenter.city,
+            getDateTimeFormatted(timeInMillis, viewContext.getString(R.string.hourFormat)),
+            getDateTimeFormatted(timeInMillis, viewContext.getString(R.string.dateExtendedFormat)),
+            selectedServicesString,
+            String.format("%.2f", courtWithDetails.court.hourCharge),
+            String.format("%.2f", total),
+        )
+
+
+        val builder: AlertDialog.Builder =
+            AlertDialog.Builder(viewContext)
+                .setTitle("Reserve this court")
+                .setMessage(reservationConfirmationText)
+                .setPositiveButton("Reserve") { _, _ ->
+                    vm.reserveCourt(
+                        courtWithDetails.court.id,
+                        total,
+                        selectedServicesIds
+                    )
+                    /*TODO NAVIGA A RESERVATION*/
+                }.setNegativeButton("Don't reserve") { _, _ -> }
+                .setOnCancelListener() { }
+        val dialog = builder.create()
+        dialog.show()
     }
 }

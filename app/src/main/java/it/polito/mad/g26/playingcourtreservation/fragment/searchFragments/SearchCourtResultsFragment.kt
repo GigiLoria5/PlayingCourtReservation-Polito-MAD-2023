@@ -114,10 +114,8 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         }
 
         vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
-            val c = Calendar.getInstance()
-            c.timeInMillis = vm.selectedDateTimeMillis.value!!
             searchResultUtils.setDateTimeTextViews(
-                c,
+                vm.selectedDateTimeMillis.value ?: 0,
                 getString(R.string.dateFormat),
                 getString(R.string.hourFormat),
                 dateTV,
@@ -148,10 +146,31 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         val sportCentersAdapter = SportCenterAdapter(
             vm.getSportCentersWithDataFormatted(),
             { vm.courtReservationState(it) },
-            { sportCenterId, serviceId -> vm.isServiceIdInSelectionList(sportCenterId, serviceId) }, //TODO AGGIUNGI FUNZIONE X MOSTRARE POPUP CON CONFERMA RESERVATION
-            {sportCenterId, serviceId -> vm.addServiceSelectionToSportCenter(sportCenterId, serviceId )},
-            {sportCenterId, serviceId -> vm.removeServiceSelectionFromSportCenter(sportCenterId, serviceId )},
-        )
+            { sportCenterId, serviceId ->
+                vm.isServiceIdInSelectionList(
+                    sportCenterId,
+                    serviceId
+                )
+            },
+            { sportCenterId, serviceId ->
+                vm.addServiceSelectionToSportCenter(
+                    sportCenterId,
+                    serviceId
+                )
+            },
+            { sportCenterId, serviceId ->
+                vm.removeServiceSelectionFromSportCenter(
+                    sportCenterId,
+                    serviceId
+                )
+            }
+        ) { courtWithDetails ->
+            searchResultUtils.showConfirmReservationDialog(
+                requireContext(),
+                courtWithDetails,
+                vm
+            )
+        }
 
         vm.sportCentersCount.observe(viewLifecycleOwner) {
             if (it > 0) {
@@ -181,14 +200,18 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         vm.myReservation.observe(viewLifecycleOwner) { //X GESTIRE RESERVATIONS GIà PRESENTI
             if (it != null) {
-                sportCentersRV.visibility = View.INVISIBLE
-                servicesRV.visibility = View.GONE
-                courtTypeACTV.visibility = View.INVISIBLE
-                courtTypeMCV.visibility = View.INVISIBLE
-                selectionTutorialTV.visibility = View.GONE
-                reservationMCV.visibility = View.VISIBLE
-                val reservationBTN = view.findViewById<Button>(R.id.reservationBTN)
-                reservationBTN.setOnClickListener { /* NAVIGATION TO RESERVATION WITH "it" */ }
+                if (vm.newReservationId.value == -1) { //se sono qui senza sapere di avere una reservation
+                    sportCentersRV.visibility = View.INVISIBLE
+                    servicesRV.visibility = View.GONE
+                    courtTypeACTV.visibility = View.INVISIBLE
+                    courtTypeMCV.visibility = View.INVISIBLE
+                    selectionTutorialTV.visibility = View.GONE
+                    reservationMCV.visibility = View.VISIBLE
+                    val reservationBTN = view.findViewById<Button>(R.id.reservationBTN)
+                    reservationBTN.setOnClickListener { /* TODO NAVIGATION TO RESERVATION WITH "it" */ }
+                } else { //se sono qui perchè devi darmi il mio reservation id
+                    vm.setNewReservationId(it)
+                }
             } else {
                 sportCentersRV.visibility = View.VISIBLE
                 servicesRV.visibility = View.VISIBLE
@@ -196,6 +219,16 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
                 courtTypeMCV.visibility = View.VISIBLE
                 selectionTutorialTV.visibility = View.VISIBLE
                 reservationMCV.visibility = View.GONE
+
+            }
+        }
+
+        /*WHEN YOU RESERVE, YOU CAN NAVIGATE TO RESERVATION*/
+        vm.newReservationId.observe(viewLifecycleOwner) {
+            if (it > 0) { //TODO NAVIGATE
+                val reservationId = it
+                vm.setNewReservationId(-1)
+                //navigate
             }
         }
     }

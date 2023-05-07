@@ -27,10 +27,7 @@ class ServiceWithFeeAdapter(
 
 
         holder.bind(
-            collection[position],
-            addServiceIdToSelectionList,
-            removeServiceIdFromSelectionList,
-            isServiceIdInSelectionList
+            collection[position]
         )
     }
 
@@ -45,10 +42,7 @@ class ServiceWithFeeAdapter(
         private val chip = itemView.findViewById<Chip>(R.id.chip)
 
         fun bind(
-            collection: ServiceWithFee,
-            addServiceIdToSelectionList: (Int) -> Unit,
-            removeServiceIdFromSelectionList: (Int) -> Unit,
-            isServiceIdInSelectionList: (Int) -> Boolean
+            collection: ServiceWithFee
 
         ) {
             val service = collection.service
