@@ -1,11 +1,14 @@
 package it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.model.custom.CourtWithDetails
@@ -67,7 +70,7 @@ class SportCenterAdapter(
         private val sportCenterHours = itemView.findViewById<TextView>(R.id.sportCenterHoursTV)
         private val sportCenterChooseServiceInfo =
             itemView.findViewById<TextView>(R.id.availableServicesTV)
-
+        private val phoneMCV= itemView.findViewById<MaterialCardView>(R.id.phoneMCV)
         private val rvServices = itemView.findViewById<RecyclerView>(R.id.sportCenterServicesRV)
         private val rvCourt = itemView.findViewById<RecyclerView>(R.id.courtsDataRV)
 
@@ -97,6 +100,11 @@ class SportCenterAdapter(
                     )
                 }
             )
+            phoneMCV.setOnClickListener {
+                val intent = Intent(Intent.ACTION_DIAL);
+                intent.data = Uri.parse("tel:${sportCenter.phoneNumber}")
+                itemView.context.startActivity(intent)
+            }
             rvCourt.adapter = CourtAdapter(courts, isCourtReserved, confirmReservation)
         }
 
