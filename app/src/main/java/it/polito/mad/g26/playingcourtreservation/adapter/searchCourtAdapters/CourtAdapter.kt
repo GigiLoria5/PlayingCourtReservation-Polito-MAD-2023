@@ -14,6 +14,7 @@ import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
 class CourtAdapter(
     private val collection: List<CourtWithDetails>,
     private val courtReservationState: (Int) -> CourtStatus,
+    private val iHaveAReservation: Boolean // TODO SE VA BENE IL POPUP, QUESTO PARAMETRO NON SERVE PIù
 
 ) :
     RecyclerView.Adapter<CourtAdapter.CourtViewHolder>() {
@@ -56,29 +57,39 @@ class CourtAdapter(
         fun bind(courtWithDetails: CourtWithDetails) {
             courtName.text = courtWithDetails.court.name
             courtType.text = courtWithDetails.sport.name
-            courtPrice.text = itemView.context.getString(R.string.hour_charge_court,courtWithDetails.court.hourCharge.toString())
+            courtPrice.text = itemView.context.getString(
+                R.string.hour_charge_court,
+                courtWithDetails.court.hourCharge.toString()
+            )
             val reservationStatus = courtReservationState(courtWithDetails.court.id)
 
             //TODO SE HAI RISERVATO UN CAMPO PER QUELLA DATA/ORA, AGLI ALTRI CAMPI MOSTRA "HAI GIà UNA PRENOTAZIONE"
             when (reservationStatus) {
                 CourtStatus.AVAILABLE -> {
-                    setColors(R.color.green_500, R.color.white)
-                    courtAvailability.text=itemView.context.getString(R.string.court_available)
+                    if (iHaveAReservation) {
+                        setColors(R.color.grey, R.color.white)
+                        courtAvailability.text =
+                            itemView.context.getString(R.string.you_have_reservation_already)
+                    } else {
+                        setColors(R.color.green_500, R.color.white)
+                        courtAvailability.text =
+                            itemView.context.getString(R.string.court_available)
+                    }
                 }
                 CourtStatus.NOT_AVAILABLE -> {
                     setColors(R.color.grey, R.color.white)
-                    courtAvailability.text=itemView.context.getString(R.string.court_not_available)
-
+                    courtAvailability.text =
+                        itemView.context.getString(R.string.court_not_available)
                 }
                 CourtStatus.RESERVED_BY_YOU -> {
-                    setColors(R.color.green_700, R.color.white)
-                    courtAvailability.text=itemView.context.getString(R.string.court_reserved_by_you)
+                    setColors(R.color.green_500, R.color.white)
+                    courtAvailability.text =
+                        itemView.context.getString(R.string.court_reserved_by_you)
                 }
             }
-            val isReservedByYou = reservationStatus == CourtStatus.RESERVED_BY_YOU
-            if (reservationStatus != CourtStatus.AVAILABLE) {
+            if (reservationStatus != CourtStatus.AVAILABLE || iHaveAReservation) {
                 courtCardView.elevation = 0F
-                courtCardView.isClickable = isReservedByYou
+                courtCardView.isClickable = reservationStatus == CourtStatus.RESERVED_BY_YOU
             }
         }
 

@@ -15,8 +15,9 @@ import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDat
 
 class SportCenterAdapter(
     private var collection: List<SportCenterWithDataFormatted>,
-    private val isCourtReserved: (Int) -> CourtStatus
-) : //TODO RICEVI ANCHE LO SPORT ID PER FILTRARE I CAMPI
+    private val isCourtReserved: (Int) -> CourtStatus,
+    private var iHaveAReservation: Boolean // TODO SE VA BENE IL POPUP, QUESTO PARAMETRO NON SERVE PIù
+) :
     RecyclerView.Adapter<SportCenterAdapter.SportCenterViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportCenterViewHolder {
@@ -44,7 +45,9 @@ class SportCenterAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun reservationsUpdate() {
+    fun reservationsUpdate(doIHaveAReservationOrNot: Boolean) {
+        iHaveAReservation = doIHaveAReservationOrNot // TODO SE VA BENE IL POPUP, QUESTO PARAMETRO NON SERVE PIù
+
         notifyDataSetChanged()
     }
 
@@ -78,14 +81,20 @@ class SportCenterAdapter(
             )
             if (servicesWithFee.isEmpty()) sportCenterChooseServiceInfo.text =
                 itemView.context.getString(R.string.no_services_available)
-            rvCourt.adapter = CourtAdapter(courts, isCourtReserved)
+            rvCourt.adapter = CourtAdapter(courts, isCourtReserved, iHaveAReservation)
 
 
-            //TODO CAPIRE COME GESTIRE I SERVIZI SCELTI
-            rvServices.adapter = ServiceAdapter(servicesWithFee.map { it.service },
-                { println(it) },
-                { println(it) },
-                { false })
+            if (iHaveAReservation) {
+                sportCenterChooseServiceInfo.visibility=View.GONE
+            }else{
+                sportCenterChooseServiceInfo.visibility=View.VISIBLE
+                //TODO CAPIRE COME GESTIRE I SERVIZI SCELTI
+                rvServices.adapter = ServiceAdapter(servicesWithFee.map { it.service },
+                    { println(it) },
+                    { println(it) },
+                    { false })
+
+            }
         }
 
         fun unbind() {

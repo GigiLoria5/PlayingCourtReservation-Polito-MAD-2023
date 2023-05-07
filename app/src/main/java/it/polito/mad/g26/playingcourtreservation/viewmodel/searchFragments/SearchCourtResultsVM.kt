@@ -151,6 +151,14 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun doIHaveAReservation():Boolean{
+        return reservations.value?.any { it.idUser==1 }?:false //1 verrà sostituito con userId
+    }
+
+    fun getReservation():Int?{
+        return reservations.value?.find { it.idUser==1 }?.idCourt
+    }
+
 
     /*CHANGES IN SEARCH PARAMETERS MANAGEMENT*/
     init {

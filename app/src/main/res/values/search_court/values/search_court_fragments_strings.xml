@@ -14,7 +14,10 @@
     <string name="hour_charge_court">hour charge: €%1$s</string>
     <string name="sport_center_hours">%1$s - %2$s</string>
     <string name="court_available">Available</string>
-    <string name="court_not_available">Not available</string>
+    <string name="court_not_available">Reserved by someone else</string>
+    <string name="you_have_reservation_already">You already have a reservation</string>
+    <string name="you_already_have_a_reservation">You already have a reservation for this date/time</string>
+    <string name="go_to_reservation">Go to reservation</string>
     <string name="court_reserved_by_you">Reserved by you</string>
     <string name="court_name">Court name</string>
     <string name="court_type">Court type</string>

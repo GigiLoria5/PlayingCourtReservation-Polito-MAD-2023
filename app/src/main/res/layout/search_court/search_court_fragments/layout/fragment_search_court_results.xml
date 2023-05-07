@@ -242,4 +242,61 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchABL"
         tools:listitem="@layout/sport_center_item" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/reservationMCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/pageExternalSpace"
+        app:cardBackgroundColor="@color/grey_light"
+        app:cardCornerRadius="@dimen/cornerRadius"
+        app:cardElevation="@dimen/standardElevation"
+        app:cardMaxElevation="@dimen/standardElevation"
+        app:cardPreventCornerOverlap="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchABL">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/pageExternalSpace"
+            >
+                <TextView
+                    android:id="@+id/reservationTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/you_already_have_a_reservation"
+                    android:ellipsize="end"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/grey"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/reservationBTN"
+                    android:textStyle="normal" />
+
+                <Button
+                    android:id="@+id/reservationBTN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:text="@string/go_to_reservation"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/dateTypeButtonsTextSize"
+                    android:textStyle="normal"
+                    app:layout_constraintTop_toBottomOf="@id/reservationTV"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

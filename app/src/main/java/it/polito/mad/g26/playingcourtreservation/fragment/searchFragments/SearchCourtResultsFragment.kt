@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.AutoCompleteTextView
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.addCallback
@@ -33,9 +34,11 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
     private lateinit var hourTV: TextView
 
     private lateinit var courtTypeACTV: AutoCompleteTextView
+    private lateinit var courtTypeMCV: MaterialCardView
     private lateinit var servicesRV: RecyclerView
     private lateinit var sportCentersRV: RecyclerView
-
+    private lateinit var reservationMCV: MaterialCardView
+    private lateinit var selectionTutorialTV: TextView
     /* LOGIC OBJECT OF THIS FRAGMENT */
     private val searchResultUtils = SearchCourtResultsUtil
 
@@ -73,7 +76,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         /* COURT TYPE DROPDOWN MANAGEMENT*/
         courtTypeACTV = view.findViewById(R.id.courtTypeACTV)
-
+        courtTypeMCV=view.findViewById(R.id.courtTypeMCV)
         vm.sports.observe(viewLifecycleOwner) {
             searchResultUtils.setAutoCompleteTextViewSport(
                 requireContext(),
@@ -134,11 +137,15 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
             servicesAdapter.updateCollection(vm.services.value ?: listOf())
         }
 
+        /*RESERVE A COURT TV */
+        selectionTutorialTV=view.findViewById(R.id.selectionTutorialTV)
+
         /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
         val sportCentersAdapter = SportCenterAdapter(
             vm.getSportCentersWithDataFormatted(),
-            { vm.courtReservationState(it) })  //TODO AGGIUNGI FUNZIONE X VEDERE SUBITO SE HAI UNA PRENOTAZIONE X QUELLA DATA/ORA
+            { vm.courtReservationState(it) }, vm.doIHaveAReservation()
+        )
 
         sportCentersRV.adapter = sportCentersAdapter
 
@@ -148,8 +155,34 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         vm.services.observe(viewLifecycleOwner) {
             sportCentersAdapter.updateCollection(vm.getSportCentersWithDataFormatted())
         }
+
+        /* RESERVATION OPTIONALITY INITIALIZER*/
+        reservationMCV=view.findViewById(R.id.reservationMCV)
         vm.reservations.observe(viewLifecycleOwner) {
-            sportCentersAdapter.reservationsUpdate()
+            val reservationId = vm.getReservation()
+            if (reservationId != null) {
+                sportCentersRV.visibility = View.INVISIBLE
+                servicesRV.visibility = View.GONE
+                courtTypeACTV.visibility = View.INVISIBLE
+                courtTypeMCV.visibility=View.INVISIBLE
+                selectionTutorialTV.visibility=View.GONE
+
+                reservationMCV.visibility=View.VISIBLE
+
+                val reservationBTN=view.findViewById<Button>(R.id.reservationBTN)
+                reservationBTN.setOnClickListener { /* NAVIGATION TO RESERVATION WITH reservationId */ }
+
+            } else {
+                sportCentersRV.visibility = View.VISIBLE
+                servicesRV.visibility = View.VISIBLE
+                courtTypeACTV.visibility = View.VISIBLE
+                courtTypeMCV.visibility=View.VISIBLE
+                selectionTutorialTV.visibility=View.VISIBLE
+
+                reservationMCV.visibility=View.GONE
+
+                sportCentersAdapter.reservationsUpdate(vm.doIHaveAReservation())
+            }
         }
     }
 
