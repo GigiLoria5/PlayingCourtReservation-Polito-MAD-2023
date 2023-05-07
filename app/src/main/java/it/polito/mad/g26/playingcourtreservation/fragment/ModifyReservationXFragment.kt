@@ -40,10 +40,31 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
     private val args: ReservationXFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
-    private lateinit var serviceUsed1 : List<Service>
+    private lateinit var serviceUsed : List<Service>
+    lateinit var servicesUsed: MutableList<Service>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+        // Retrieve Reservation Details
+        val reservationId = args.reservationId
+        reservationWithDetailsVM
+            .getReservationWithDetailsById(reservationId)
+            .observe(viewLifecycleOwner) { reservation ->
+                println(reservation)
+                serviceUsed=reservation.services
+
+                servicesUsed=serviceUsed.toMutableList()
+
+                //Recyclerview
+                val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView_chip)
+                recyclerView.adapter=MyAdapterRecycle(serviceUsed, servicesUsed)
+                recyclerView.layoutManager=GridLayoutManager(context,2)
+            }
+
+
 
 
 
@@ -67,6 +88,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                     R.id.confirm_menu_item -> {
 
                         //Save new profile
+                        var action=ModifyReservationXFragmentDirections.openReservationEdited(reservationId)
                         findNavController().navigate(R.id.reservationXFragment)
 
                         true
@@ -79,21 +101,6 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Edit Reservation"
         // Set Back Button
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-
-        // Retrieve Reservation Details
-        val reservationId = args.reservationId
-        reservationWithDetailsVM
-            .getReservationWithDetailsById(reservationId)
-            .observe(viewLifecycleOwner) { reservation ->
-                println(reservation)
-                serviceUsed1=reservation.services
-            }
-
-
-
-
-
 
 
 
@@ -133,30 +140,8 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         }
 
 
-        //val to take from viewModel
-        var services= listOf(Service1(1,"First Aid"),Service1(2,"Bathroom"),Service1(3,"Var Usage"),Service1(4,"LockRoom"),Service1(5,"MiniBar"))
-        var servicesUsed=mutableListOf(Service1(1,"First Aid"),Service1(2,"Bathroom"))
 
 
-        //Recyclerview
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView_chip)
-        recyclerView.adapter=MyAdapterRecycle(services, servicesUsed)
-        recyclerView.layoutManager=GridLayoutManager(context,3)
-
-
-    }
-
-}
-
-//class to delete
-class Service1( var id :Int, var name: String){
-
-    fun addService(s:MutableList<Service1>) {
-        if(this in s) s.add(this)
-    }
-
-    fun removeService(s:MutableList<Service1>){
-        if(this in s) s.remove(this)
     }
 
 }
@@ -168,16 +153,16 @@ class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
 
     private val chip=v.findViewById<Chip>(R.id.chip)
 
-    fun bind(s: Service1, lUsed : MutableList<Service1>, l : List<Service1> ){
+    fun bind(s: Service, lUsed : MutableList<Service> ){
         chip.text=s.name
         chip.isChecked = s in lUsed
         chip.isCloseIconVisible = chip.isChecked
         chip.setOnClickListener {
             chip.isCloseIconVisible = chip.isChecked
             if (chip.isChecked)
-                s.addService(lUsed)
+                lUsed.add(s)
             else
-                s.removeService(lUsed)
+                lUsed.remove(s)
         }
     }
 
@@ -192,7 +177,7 @@ class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
 
 
 //class that uses the viewHolder to show a specific item
-class MyAdapterRecycle( val l :List<Service1>, var lUsed : MutableList<Service1>) : RecyclerView.Adapter<MyViewHolder>(){
+class MyAdapterRecycle( val l :List<Service>, var lUsed : MutableList<Service>) : RecyclerView.Adapter<MyViewHolder>(){
 
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -207,7 +192,7 @@ class MyAdapterRecycle( val l :List<Service1>, var lUsed : MutableList<Service1>
 
     //called after viewHolder are created, to put data into them
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(l[position],lUsed,l)
+        holder.bind(l[position],lUsed)
     }
 }
 

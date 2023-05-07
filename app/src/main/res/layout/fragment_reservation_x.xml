@@ -156,14 +156,13 @@
                 android:id="@+id/delete_reservation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:backgroundTint="@color/red"
-                android:textColor="@color/black"
+                android:backgroundTint="@color/green_700"
+                android:textColor="@color/white"
                 android:text="Delete Reservation"
                 app:cornerRadius="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/price"/>
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

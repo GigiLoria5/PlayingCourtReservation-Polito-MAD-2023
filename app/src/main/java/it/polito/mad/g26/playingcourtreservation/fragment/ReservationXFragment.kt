@@ -5,6 +5,7 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
@@ -21,6 +22,7 @@ import com.google.android.material.button.MaterialButton
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.model.Service
+import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 
 
@@ -34,6 +36,23 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         super.onViewCreated(view, savedInstanceState)
 
 
+        //List of text
+        val center=view.findViewById<CustomTextView>(R.id.center_name)
+            .findViewById<TextView>(R.id.value)
+        val field=view.findViewById<CustomTextView>(R.id.court_name)
+            .findViewById<TextView>(R.id.value)
+        val sport=view.findViewById<CustomTextView>(R.id.sport)
+            .findViewById<TextView>(R.id.value)
+        val city=view.findViewById<CustomTextView>(R.id.city)
+            .findViewById<TextView>(R.id.value)
+        val address=view.findViewById<CustomTextView>(R.id.address)
+            .findViewById<TextView>(R.id.value)
+        val price=view.findViewById<CustomTextView>(R.id.price)
+            .findViewById<TextView>(R.id.value)
+        val date=view.findViewById<CustomTextView>(R.id.date)
+            .findViewById<TextView>(R.id.value)
+        val time=view.findViewById<CustomTextView>(R.id.time)
+            .findViewById<TextView>(R.id.value)
 
         // Retrieve Reservation Details
         var reservationId = args.reservationId
@@ -42,6 +61,14 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
             .observe(viewLifecycleOwner) { reservation ->
                 println(reservation)
                 serviceUsed=reservation.services
+                center.text=reservation.courtWithDetails.sportCenter.name
+                field.text=reservation.courtWithDetails.court.name
+                sport.text=reservation.courtWithDetails.sport.name
+                city.text=reservation.courtWithDetails.sportCenter.city
+                address.text=reservation.courtWithDetails.sportCenter.address
+                date.text=reservation.reservation.date
+                time.text=reservation.reservation.time
+                price.text=reservation.reservation.amount.toString()
 
                 //Recycler view of services
                 val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
@@ -102,6 +129,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         deleteButton.setOnClickListener{
             builder.show()
         }
+
 
 
     }

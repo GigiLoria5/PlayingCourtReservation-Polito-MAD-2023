@@ -53,5 +53,8 @@
         <argument
             android:name="reservationId"
             app:argType="integer" />
+        <action
+            android:id="@+id/openReservationEdited"
+            app:destination="@id/reservationXFragment" />
     </fragment>
 </navigation>
