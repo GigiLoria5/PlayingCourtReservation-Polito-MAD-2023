@@ -18,7 +18,7 @@ import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetail
 
 class ReservationDetailsFragment : Fragment(R.layout.reservation_details) {
 
-    private val args: ReservationDetailsFragmentArgs by navArgs()
+    /*private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,7 +53,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details) {
             }
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
+    }*/
 
 
 }

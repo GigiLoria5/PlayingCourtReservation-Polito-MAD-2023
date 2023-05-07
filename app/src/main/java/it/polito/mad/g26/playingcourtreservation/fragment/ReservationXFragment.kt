@@ -41,7 +41,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
                 return when (item.itemId) {
                     // Edit
                     R.id.edit_menu_item -> {
-                        findNavController().navigate(R.id.action_reservationXFragment_to_modifyReservationXFragment)
+                        findNavController().navigate(R.id.openReservationEdit)
                         true
                     }
                     else -> false

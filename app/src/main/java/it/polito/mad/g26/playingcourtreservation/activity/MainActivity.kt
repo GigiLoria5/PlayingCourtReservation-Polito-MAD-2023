@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                         bottomNav.setCheckedMenuItem(R.id.profile)
                     }
                     // Sub Views: the bottom navigation should not be visible
-                    R.id.reservationDetailsFragment -> {
+                    R.id.reservationXFragment -> {
                         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
                         bottomNav.makeGone()
                     }
