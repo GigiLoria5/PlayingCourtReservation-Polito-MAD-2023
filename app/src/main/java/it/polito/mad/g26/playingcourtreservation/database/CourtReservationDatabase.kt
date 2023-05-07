@@ -18,15 +18,8 @@ import it.polito.mad.g26.playingcourtreservation.model.*
         Sport::class], version = 1
 )
 abstract class CourtReservationDatabase : RoomDatabase() {
-    abstract fun courtDao(): CourtDao
     abstract fun reservationDao(): ReservationDao
-
     abstract fun reservationWithDetailsDao(): ReservationWithDetailsDao
-    abstract fun reservationServiceDao(): ReservationServicesDao
-    abstract fun serviceDao(): ServiceDao
-    abstract fun sportCenterDao(): SportCenterDao
-    abstract fun sportCenterServiceDao(): SportCenterServicesDao
-    abstract fun sportDao(): SportDao
 
     companion object {
         @Volatile
