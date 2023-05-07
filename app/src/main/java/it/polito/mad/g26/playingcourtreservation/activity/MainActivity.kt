@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.activity
 
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -48,17 +49,35 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        // Handle Active Menu Item in the Navbar
+        // Handle Views Behaviors
         navController.addOnDestinationChangedListener { _, destination, _ ->
             Handler(Looper.getMainLooper()).post {
                 when (destination.id) {
                     // Main Views: the bottom navigation must be visible
-                    R.id.searchCourtFragment -> bottomNav.setCheckedMenuItem(R.id.home)
-                    R.id.reservationsFragment -> bottomNav.setCheckedMenuItem(R.id.reservations)
-                    R.id.showProfileFragment -> bottomNav.setCheckedMenuItem(R.id.profile)
+                    R.id.searchCourtFragment -> {
+                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+                        bottomNav.setCheckedMenuItem(R.id.home)
+                    }
+
+                    R.id.reservationsFragment -> {
+                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+                        bottomNav.setCheckedMenuItem(R.id.reservations)
+                    }
+
+                    R.id.showProfileFragment -> {
+                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                        bottomNav.setCheckedMenuItem(R.id.profile)
+                    }
                     // Sub Views: the bottom navigation should not be visible
-                    R.id.reservationDetailsFragment -> bottomNav.makeGone()
-                    R.id.editProfileFragment -> bottomNav.makeGone()
+                    R.id.reservationDetailsFragment -> {
+                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+                        bottomNav.makeGone()
+                    }
+
+                    R.id.editProfileFragment -> {
+                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                        bottomNav.makeGone()
+                    }
                 }
             }
         }
