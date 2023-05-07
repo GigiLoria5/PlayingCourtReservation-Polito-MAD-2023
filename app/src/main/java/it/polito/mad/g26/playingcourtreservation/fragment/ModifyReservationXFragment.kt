@@ -11,13 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
+import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import it.polito.mad.g26.playingcourtreservation.viewmodel.SearchCourtResultsVM
 
 
@@ -33,6 +36,11 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
     private val searchResultUtils = SearchCourtResultsUtil
     private val vm by viewModels<SearchCourtResultsVM>()
+
+
+    private val args: ReservationXFragmentArgs by navArgs()
+    private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
+    private lateinit var serviceUsed1 : List<Service>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,6 +79,25 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Edit Reservation"
         // Set Back Button
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+
+        // Retrieve Reservation Details
+        val reservationId = args.reservationId
+        reservationWithDetailsVM
+            .getReservationWithDetailsById(reservationId)
+            .observe(viewLifecycleOwner) { reservation ->
+                println(reservation)
+                serviceUsed1=reservation.services
+            }
+
+
+
+
+
+
+
+
+
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
         dateMCV = view.findViewById(R.id.dateMCV)

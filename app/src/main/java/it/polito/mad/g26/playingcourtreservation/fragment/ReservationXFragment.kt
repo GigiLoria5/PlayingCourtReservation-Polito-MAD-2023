@@ -12,6 +12,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -32,7 +33,23 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //var serviceUsed=listOf("Bathroom", "Var Usage","First Aid Kit","Supporters","MiniBar", "CheatMode")
+
+
+        // Retrieve Reservation Details
+        var reservationId = args.reservationId
+        reservationWithDetailsVM
+            .getReservationWithDetailsById(reservationId)
+            .observe(viewLifecycleOwner) { reservation ->
+                println(reservation)
+                serviceUsed=reservation.services
+
+                //Recycler view of services
+                val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
+                recyclerView.adapter=MyAdapterRecycle1(serviceUsed)
+                recyclerView.layoutManager= GridLayoutManager(context,3)
+            }
+
+
 
         //Menu customization
         val menuHost: MenuHost = requireActivity()
@@ -46,9 +63,15 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
             override fun onMenuItemSelected(item: MenuItem): Boolean {
                 // Handle the menu selection
                 return when (item.itemId) {
+                    // Back
+                    android.R.id.home -> {
+                        findNavController().popBackStack()
+                        true
+                    }
                     // Edit
                     R.id.edit_menu_item -> {
-                        findNavController().navigate(R.id.openReservationEdit)
+                        var action=ReservationXFragmentDirections.openReservationEdit(reservationId)
+                        findNavController().navigate(action)
                         true
                     }
                     else -> false
@@ -58,24 +81,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         // Change Title
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Reservation"
         // Set Back Button
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-
-
-
-        // Retrieve Reservation Details
-        val reservationId = args.reservationId
-        reservationWithDetailsVM
-            .getReservationWithDetailsById(reservationId)
-            .observe(viewLifecycleOwner) { reservation ->
-                println(reservation)
-                serviceUsed=reservation.services
-
-                //Recycler view of services
-                val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
-                recyclerView.adapter=MyAdapterRecycle1(serviceUsed)
-                recyclerView.layoutManager= GridLayoutManager(context,3)
-            }
-
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
 
