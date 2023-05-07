@@ -107,8 +107,8 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
 
         //val to take from viewModel
-        var services= listOf(Service(1,"First Aid"),Service(2,"Bathroom"),Service(3,"Var Usage"),Service(4,"LockRoom"),Service(5,"MiniBar"))
-        var servicesUsed=mutableListOf(Service(1,"First Aid"),Service(2,"Bathroom"))
+        var services= listOf(Service1(1,"First Aid"),Service1(2,"Bathroom"),Service1(3,"Var Usage"),Service1(4,"LockRoom"),Service1(5,"MiniBar"))
+        var servicesUsed=mutableListOf(Service1(1,"First Aid"),Service1(2,"Bathroom"))
 
 
         //Recyclerview
@@ -122,13 +122,13 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 }
 
 //class to delete
-class Service( var id :Int, var name: String){
+class Service1( var id :Int, var name: String){
 
-    fun addService(s:MutableList<Service>) {
+    fun addService(s:MutableList<Service1>) {
         if(this in s) s.add(this)
     }
 
-    fun removeService(s:MutableList<Service>){
+    fun removeService(s:MutableList<Service1>){
         if(this in s) s.remove(this)
     }
 
@@ -141,7 +141,7 @@ class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
 
     private val chip=v.findViewById<Chip>(R.id.chip)
 
-    fun bind(s: Service, lUsed : MutableList<Service>, l : List<Service> ){
+    fun bind(s: Service1, lUsed : MutableList<Service1>, l : List<Service1> ){
         chip.text=s.name
         chip.isChecked = s in lUsed
         chip.isCloseIconVisible = chip.isChecked
@@ -165,7 +165,7 @@ class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
 
 
 //class that uses the viewHolder to show a specific item
-class MyAdapterRecycle( val l :List<Service>, var lUsed : MutableList<Service>) : RecyclerView.Adapter<MyViewHolder>(){
+class MyAdapterRecycle( val l :List<Service1>, var lUsed : MutableList<Service1>) : RecyclerView.Adapter<MyViewHolder>(){
 
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

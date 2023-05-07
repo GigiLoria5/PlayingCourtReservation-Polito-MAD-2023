@@ -18,12 +18,12 @@ import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetail
 
 class ReservationDetailsFragment : Fragment(R.layout.reservation_details) {
 
-    /*private val args: ReservationDetailsFragmentArgs by navArgs()
+   /* private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupActionBar(activity, "Reservation Details", true)
+        //setupActionBar(activity, "Reservation Details", true)
 
         // Retrieve Reservation Details
         val reservationId = args.reservationId
@@ -34,7 +34,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details) {
             }
 
         // Handle Menu Items
-        val menuHost: MenuHost = requireActivity()
+        /*val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.reservation_details, menu)
@@ -52,7 +52,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details) {
                 }
             }
 
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)*/
     }*/
 
 
