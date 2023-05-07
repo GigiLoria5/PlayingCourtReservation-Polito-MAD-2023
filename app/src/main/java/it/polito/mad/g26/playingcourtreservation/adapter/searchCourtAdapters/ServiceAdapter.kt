@@ -11,8 +11,8 @@ import it.polito.mad.g26.playingcourtreservation.model.Service
 
 class ServiceAdapter(
     private var collection: List<Service>,
-    private val addServiceId: (Int) -> Unit,
-    private val removeServiceId: (Int) -> Unit,
+    private val addServiceIdToFilters: (Int) -> Unit,
+    private val removeServiceIdFromFilters: (Int) -> Unit,
     private val isServiceIdInList: (Int) -> Boolean
 ) :
     RecyclerView.Adapter<ServiceAdapter.ServiceViewHolder>() {
@@ -27,7 +27,12 @@ class ServiceAdapter(
     override fun onBindViewHolder(holder: ServiceViewHolder, position: Int) {
 
 
-        holder.bind(collection[position], addServiceId, removeServiceId,isServiceIdInList)
+        holder.bind(
+            collection[position],
+            addServiceIdToFilters,
+            removeServiceIdFromFilters,
+            isServiceIdInList
+        )
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -48,8 +53,8 @@ class ServiceAdapter(
 
         fun bind(
             collection: Service,
-            addServiceId: (Int) -> Unit,
-            removeServiceId: (Int) -> Unit,
+            addServiceIdToFilters: (Int) -> Unit,
+            removeServiceIdFromFilters: (Int) -> Unit,
             isServiceIdInList: (Int) -> Boolean
         ) {
             chip.text = collection.name
@@ -59,9 +64,9 @@ class ServiceAdapter(
             chip.setOnClickListener {
                 chip.isCloseIconVisible = chip.isChecked
                 if (chip.isChecked)
-                    addServiceId(collection.id)
+                    addServiceIdToFilters(collection.id)
                 else
-                    removeServiceId(collection.id)
+                    removeServiceIdFromFilters(collection.id)
             }
         }
 

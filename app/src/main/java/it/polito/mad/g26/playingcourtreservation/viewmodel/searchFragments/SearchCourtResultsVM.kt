@@ -62,17 +62,21 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
         it.value = mutableSetOf()
     }
 
-    fun addServiceId(serviceId: Int) {
+    fun addServiceIdToFilters(serviceId: Int) {
         val s = selectedServices.value
         s?.add(serviceId)
         selectedServices.value = s
     }
 
-    fun removeServiceId(serviceId: Int) {
+    fun removeServiceIdFromFilters(serviceId: Int) {
         val s = selectedServices.value
         s?.remove(serviceId)
         selectedServices.value = s
+        selectedServicesPerSportCenter.forEach { (t, _) ->
+            removeServiceSelectionFromSportCenter(t, serviceId)
+        }
     }
+
 
     fun isServiceIdInList(serviceId: Int): Boolean {
         return selectedServices.value?.contains(serviceId) ?: false
@@ -137,6 +141,41 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
         } ?: listOf()
     }
 
+    /* SPORT CENTER SERVICES MANAGEMENT */
+    private val selectedServicesPerSportCenter: MutableMap<Int, MutableSet<Int>> = mutableMapOf()
+
+    fun addServiceSelectionToSportCenter(sportCenterId: Int, serviceId: Int) {
+        if (selectedServicesPerSportCenter[sportCenterId] != null)
+            selectedServicesPerSportCenter[sportCenterId]?.add(serviceId)
+        else {
+            selectedServicesPerSportCenter[sportCenterId] = mutableSetOf(serviceId)
+        }
+        selectedServicesPerSportCenter.forEach { (t, u) -> println("${sportCenters.value?.find { it.sportCenter.id == t }?.sportCenter?.name} = $u") }
+    }
+
+    fun removeServiceSelectionFromSportCenter(sportCenterId: Int, serviceId: Int) {
+        if (selectedServicesPerSportCenter[sportCenterId] != null)
+            selectedServicesPerSportCenter[sportCenterId]?.remove(serviceId)
+        selectedServicesPerSportCenter.forEach { (t, u) -> println("${sportCenters.value?.find { it.sportCenter.id == t }?.sportCenter?.name} = $u") }
+    }
+
+    fun isServiceIdInSelectionList(sportCenterId: Int, serviceId: Int): Boolean {
+        return selectedServicesPerSportCenter[sportCenterId]?.contains(serviceId) ?: false
+    }
+
+    fun updateSelectedServicesPerSportCenter() {
+        //INIT selectedServicesPerSportCenter WITH FILTER CHOICES
+        sportCenters.value?.forEach {
+            selectedServicesPerSportCenter[it.sportCenter.id] = mutableSetOf()
+        }
+        selectedServicesPerSportCenter.forEach { (t, _) ->
+            selectedServices.value?.forEach { selectedServiceId ->
+                if (sportCenters.value?.find { it.sportCenter.id == t }?.sportCenterServices?.any { it.idService == selectedServiceId } == true)
+                    addServiceSelectionToSportCenter(t, selectedServiceId)
+            }
+        }
+    }
+
     /*RESERVATIONS MANAGEMENT*/
     val reservations: LiveData<List<Reservation>> = sportCenters.switchMap {
         val courtsIdList =
@@ -162,11 +201,6 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
             else -> CourtStatus.NOT_AVAILABLE
         }
     }
-
-    fun doIHaveAReservation(): Boolean {
-        return reservations.value?.any { it.idUser == 1 } ?: false //1 verrà sostituito con userId
-    }
-
 
     /*CHANGES IN SEARCH PARAMETERS MANAGEMENT*/
     init {

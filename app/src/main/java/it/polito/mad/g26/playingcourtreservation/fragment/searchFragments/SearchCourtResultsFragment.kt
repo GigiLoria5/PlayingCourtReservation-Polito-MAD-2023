@@ -129,8 +129,8 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         servicesRV = view.findViewById(R.id.servicesRV)
         val servicesAdapter = ServiceAdapter(
             vm.services.value ?: listOf(),
-            { vm.addServiceId(it) },
-            { vm.removeServiceId(it) },
+            { vm.addServiceIdToFilters(it) },
+            { vm.removeServiceIdFromFilters(it) },
             { vm.isServiceIdInList(it) }
         )
         servicesRV.adapter = servicesAdapter
@@ -148,7 +148,9 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
         val sportCentersAdapter = SportCenterAdapter(
             vm.getSportCentersWithDataFormatted(),
             { vm.courtReservationState(it) },
-            { vm.isServiceIdInList(it) } //TODO AGGIUNGI FUNZIONE X MOSTRARE POPUP CON CONFERMA RESERVATION
+            { sportCenterId, serviceId -> vm.isServiceIdInSelectionList(sportCenterId, serviceId) }, //TODO AGGIUNGI FUNZIONE X MOSTRARE POPUP CON CONFERMA RESERVATION
+            {sportCenterId, serviceId -> vm.addServiceSelectionToSportCenter(sportCenterId, serviceId )},
+            {sportCenterId, serviceId -> vm.removeServiceSelectionFromSportCenter(sportCenterId, serviceId )},
         )
 
         vm.sportCentersCount.observe(viewLifecycleOwner) {
@@ -164,6 +166,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         sportCentersRV.adapter = sportCentersAdapter
         vm.sportCenters.observe(viewLifecycleOwner) {
+            vm.updateSelectedServicesPerSportCenter()
             sportCentersAdapter.updateCollection(vm.getSportCentersWithDataFormatted())
         }
         vm.services.observe(viewLifecycleOwner) {

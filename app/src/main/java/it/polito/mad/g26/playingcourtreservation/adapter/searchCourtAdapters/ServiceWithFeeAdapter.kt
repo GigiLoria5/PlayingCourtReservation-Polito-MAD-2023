@@ -10,9 +10,9 @@ import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 
 class ServiceWithFeeAdapter(
     private var collection: List<ServiceWithFee>,
-    private val addServiceId: (Int) -> Unit,
-    private val removeServiceId: (Int) -> Unit,
-    private val isServiceIdInList: (Int) -> Boolean
+    private val addServiceIdToSelectionList: (Int) -> Unit,
+    private val removeServiceIdFromSelectionList: (Int) -> Unit,
+    private val isServiceIdInSelectionList: (Int) -> Boolean
 ) :
     RecyclerView.Adapter<ServiceWithFeeAdapter.ServiceWithFeeViewHolder>() {
 
@@ -26,7 +26,12 @@ class ServiceWithFeeAdapter(
     override fun onBindViewHolder(holder: ServiceWithFeeViewHolder, position: Int) {
 
 
-        holder.bind(collection[position], addServiceId, removeServiceId,isServiceIdInList)
+        holder.bind(
+            collection[position],
+            addServiceIdToSelectionList,
+            removeServiceIdFromSelectionList,
+            isServiceIdInSelectionList
+        )
     }
 
     override fun onViewRecycled(holder: ServiceWithFeeViewHolder) {
@@ -41,31 +46,29 @@ class ServiceWithFeeAdapter(
 
         fun bind(
             collection: ServiceWithFee,
-            addServiceId: (Int) -> Unit,
-            removeServiceId: (Int) -> Unit,
-            isServiceIdInList: (Int) -> Boolean
+            addServiceIdToSelectionList: (Int) -> Unit,
+            removeServiceIdFromSelectionList: (Int) -> Unit,
+            isServiceIdInSelectionList: (Int) -> Boolean
+
         ) {
-            val service=collection.service
-            val fee=collection.fee
+            val service = collection.service
+            val fee = collection.fee
             chip.text = itemView.context.getString(
                 R.string.service_with_fee,
                 service.name,
-                String.format("%.2f",fee)
-
+                String.format("%.2f", fee)
             )
-            val isInList=isServiceIdInList(service.id)
-            chip.isChecked = isInList
-            if(isInList)
-                addServiceId(service.id)
+
+            chip.isChecked = isServiceIdInSelectionList(service.id)
 
             chip.isCloseIconVisible = chip.isChecked
 
             chip.setOnClickListener {
                 chip.isCloseIconVisible = chip.isChecked
                 if (chip.isChecked)
-                    addServiceId(service.id)
+                    addServiceIdToSelectionList(service.id)
                 else
-                    removeServiceId(service.id)
+                    removeServiceIdFromSelectionList(service.id)
             }
         }
 

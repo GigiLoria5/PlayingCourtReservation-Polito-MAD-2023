@@ -16,11 +16,12 @@ import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDat
 class SportCenterAdapter(
     private var collection: List<SportCenterWithDataFormatted>,
     private val isCourtReserved: (Int) -> CourtStatus,
-    private val isServiceIdInList: (Int) -> Boolean
+    private val isServiceIdInSelectionList: (Int, Int) -> Boolean,
+    private val addServiceToSelectionList: (Int, Int) -> Unit,
+    private val removeServiceFromSelectionList: (Int, Int) -> Unit,
 ) :
     RecyclerView.Adapter<SportCenterAdapter.SportCenterViewHolder>() {
 
-    private val selectedServicesPerSportCenter: MutableMap<Int, MutableSet<Int>> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportCenterViewHolder {
         val view =
@@ -28,25 +29,11 @@ class SportCenterAdapter(
         return SportCenterViewHolder(view)
     }
 
-    fun addService(sportCenterId: Int, serviceId: Int) {
-        if (selectedServicesPerSportCenter[sportCenterId] != null)
-            selectedServicesPerSportCenter[sportCenterId]?.add(serviceId)
-        selectedServicesPerSportCenter.forEach { (t, u) -> println("$t = $u") }
-    }
-
-    fun removeService(sportCenterId: Int, serviceId: Int) {
-        if (selectedServicesPerSportCenter[sportCenterId] != null)
-            selectedServicesPerSportCenter[sportCenterId]?.remove(serviceId)
-        selectedServicesPerSportCenter.forEach { (t, u) -> println("$t = $u") }
-    }
-
-
     override fun onBindViewHolder(holder: SportCenterViewHolder, position: Int) {
 
         val sportCenter = collection[position].sportCenter
         val courtsWithDetails = collection[position].courtsWithDetails
         val servicesWithFee = collection[position].servicesWithFee
-        selectedServicesPerSportCenter[sportCenter.id] = mutableSetOf()
 
         holder.bind(
             sportCenter,
@@ -100,9 +87,14 @@ class SportCenterAdapter(
 
             rvServices.adapter = ServiceWithFeeAdapter(
                 servicesWithFee,
-                { addService(sportCenter.id, it) },
-                { removeService(sportCenter.id, it) },
-                isServiceIdInList
+                { addServiceToSelectionList(sportCenter.id, it) },
+                { removeServiceFromSelectionList(sportCenter.id, it) },
+                {
+                    isServiceIdInSelectionList(
+                        sportCenter.id,
+                        it
+                    )
+                }
             )
 
             rvCourt.adapter = CourtAdapter(courts, isCourtReserved)
