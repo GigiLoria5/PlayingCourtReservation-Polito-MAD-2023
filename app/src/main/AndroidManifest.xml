@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -15,9 +19,6 @@
         android:theme="@style/Theme.PlayingCourtReservation"
         tools:targetApi="31">
         <activity
-            android:name=".fragment.searchFragments.SearchCourtFragment"
-            android:exported="false" />
-        <activity
             android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
@@ -26,13 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".fragment.ShowProfileFragment"
-            android:exported="true"/>
-        <activity
-            android:name=".fragment.EditProfileFragment"
-            android:exported="false"
-            android:label="@string/edit_show_profile_title" />
     </application>
 
 </manifest>

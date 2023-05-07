@@ -24,7 +24,6 @@ import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -34,9 +33,11 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
@@ -66,7 +67,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
     private lateinit var avatarImage: ImageView
     private var imageUri: Uri? = null
     private lateinit var bitMapImage: Bitmap
-    private lateinit var profilePictureAlertDialog: AlertDialog
+    private lateinit var profilePictureAlertDialog: BottomSheetDialog
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -136,11 +137,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Change Title
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Edit Profile"
-        // Set Back Button
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setupActionBar(activity, "Edit Profile", true)
 
         usernameEditText = view.findViewById(R.id.username_et)
         autoCompletePosition = view.findViewById(R.id.position_autocomplete)
@@ -210,14 +207,12 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         //image management
         val editBtn = view.findViewById<ImageButton>(R.id.imageButton)
 
-        val alertCustomDialog =
-            LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_photo, null)
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setView(alertCustomDialog)
-        val galleryBtn = alertCustomDialog.findViewById<ImageButton>(R.id.gallery)
-        val cameraBtn = alertCustomDialog.findViewById<ImageButton>(R.id.camera)
+        profilePictureAlertDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
+        profilePictureAlertDialog.setContentView(R.layout.custom_dialog_photo)
+        profilePictureAlertDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        val galleryBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.gallery)
+        val cameraBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.camera)
         // Create the AlertDialog
-        profilePictureAlertDialog = builder.create()
         // Set other dialog properties
         profilePictureAlertDialog.setCancelable(true)
 
@@ -310,7 +305,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             locationContainer.helperText = validLocation()
         }
 
-        galleryBtn.setOnClickListener {
+        galleryBtn?.setOnClickListener {
             val galleryIntent =
                 Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 
@@ -318,7 +313,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             profilePictureAlertDialog.dismiss()
         }
 
-        cameraBtn.setOnClickListener {
+        cameraBtn?.setOnClickListener {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA
@@ -405,6 +400,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
                         true
                     }
+
                     else -> false
                 }
             }
@@ -430,12 +426,16 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         return when {
             usernameText.isEmpty()
             -> getString(R.string.required_helper)
+
             usernameText.length < 8
             -> getString(R.string.username_min_length)
+
             usernameText.length > 30
             -> getString(R.string.username_max_length)
+
             !usernameText.matches(regex)
             -> getString(R.string.invalid_field_helper)
+
             else -> null
         }
     }
@@ -447,8 +447,10 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         return when {
             fullNameText.isEmpty()
             -> getString(R.string.required_helper)
+
             !fullNameText.matches(regex)
             -> getString(R.string.invalid_field_helper)
+
             else -> null
         }
     }
@@ -460,8 +462,10 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         return when {
             locationText.isEmpty()
             -> getString(R.string.required_helper)
+
             !locationText.matches(regex)
             -> getString(R.string.invalid_field_helper)
+
             else -> null
         }
     }

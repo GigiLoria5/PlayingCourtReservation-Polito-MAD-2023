@@ -12,8 +12,7 @@ interface ReservationDao {
     @Insert
     fun addReservation(reservation:Reservation):Long
     @Query("SELECT * from reservation")
-    fun findAllReservation(): LiveData<List<Reservation>>
-
+    fun findAll(): LiveData<List<Reservation>>
     @Query(
         "SELECT reservation.id , reservation.id_user , reservation.id_court , reservation.date , reservation.time , reservation.amount " +
                 "FROM reservation,court,sport_center " +
