@@ -34,6 +34,8 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
@@ -66,7 +68,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
     private lateinit var avatarImage: ImageView
     private var imageUri: Uri? = null
     private lateinit var bitMapImage: Bitmap
-    private lateinit var profilePictureAlertDialog: AlertDialog
+    private lateinit var profilePictureAlertDialog: BottomSheetDialog
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -210,14 +212,12 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         //image management
         val editBtn = view.findViewById<ImageButton>(R.id.imageButton)
 
-        val alertCustomDialog =
-            LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_photo, null)
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setView(alertCustomDialog)
-        val galleryBtn = alertCustomDialog.findViewById<ImageButton>(R.id.gallery)
-        val cameraBtn = alertCustomDialog.findViewById<ImageButton>(R.id.camera)
+        profilePictureAlertDialog = BottomSheetDialog(requireContext())
+        profilePictureAlertDialog.setContentView(R.layout.custom_dialog_photo)
+        profilePictureAlertDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        val galleryBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.gallery)
+        val cameraBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.camera)
         // Create the AlertDialog
-        profilePictureAlertDialog = builder.create()
         // Set other dialog properties
         profilePictureAlertDialog.setCancelable(true)
 
@@ -310,7 +310,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             locationContainer.helperText = validLocation()
         }
 
-        galleryBtn.setOnClickListener {
+        galleryBtn?.setOnClickListener {
             val galleryIntent =
                 Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 
@@ -318,7 +318,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             profilePictureAlertDialog.dismiss()
         }
 
-        cameraBtn.setOnClickListener {
+        cameraBtn?.setOnClickListener {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA
