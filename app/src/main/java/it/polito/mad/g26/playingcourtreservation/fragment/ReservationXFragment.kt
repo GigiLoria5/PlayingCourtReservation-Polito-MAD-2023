@@ -1,12 +1,11 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+
+
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.PopupWindow
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -14,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import it.polito.mad.g26.playingcourtreservation.R
@@ -55,30 +53,29 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         // Set Back Button
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        //Create popup window
-        val popupView = layoutInflater.inflate(R.layout.popup_window, null)
-        val popupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        popupWindow.setBackgroundDrawable(ColorDrawable(Color.GREEN))
-
-
-        //Button for popup
-        val deleteButton=view.findViewById<Button>(R.id.delete_reservation)
-        deleteButton.setOnClickListener{
-            popupWindow.showAtLocation(view, Gravity.CENTER,0,0)
-        }
-
-        //Button of the popup
-        val deletePopButton=popupView.findViewById<MaterialButton>(R.id.deletePopButton)
-        deletePopButton.setOnClickListener{
-            popupWindow.dismiss()
-            //call the other fragment
-        }
-
 
         //recyclerview
         val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
         recyclerView.adapter=MyAdapterRecycle1(serviceUsed)
         recyclerView.layoutManager= GridLayoutManager(context,3)
+
+
+        //no popup ma dialog
+        val builder = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
+        builder.setMessage("Are you sure to delete the reservation?")
+        builder.setPositiveButton("OK", { dialog, id ->
+            // User clicked OK button
+        })
+        builder.setNegativeButton("cancel", { dialog, id ->
+                // User cancelled the dialog
+            })
+
+        //Button for popup
+        val deleteButton=view.findViewById<Button>(R.id.delete_reservation)
+        deleteButton.setOnClickListener{
+            builder.show()
+        }
+
 
 
 
