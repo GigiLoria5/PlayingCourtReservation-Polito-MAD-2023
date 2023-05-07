@@ -123,7 +123,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
                         //Save new profile
                         var action=ModifyReservationXFragmentDirections.openReservationEdited(reservationId)
-                        findNavController().navigate(R.id.reservationXFragment)
+                        findNavController().navigate(action)
 
                         true
                     }

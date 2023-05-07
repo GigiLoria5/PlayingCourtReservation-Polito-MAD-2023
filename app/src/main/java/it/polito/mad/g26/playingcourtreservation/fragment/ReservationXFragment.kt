@@ -92,7 +92,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
                 return when (item.itemId) {
                     // Back
                     android.R.id.home -> {
-                        findNavController().popBackStack()
+                        findNavController().navigate(R.id.reservationsFragment)
                         true
                     }
                     // Edit
