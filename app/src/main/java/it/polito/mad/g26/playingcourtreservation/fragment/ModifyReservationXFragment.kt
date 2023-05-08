@@ -19,6 +19,7 @@ import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.model.Service
+import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
@@ -40,8 +41,9 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
     private val args: ReservationXFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
-    private lateinit var serviceUsed : List<Service>
-    lateinit var servicesUsed: MutableList<Service>
+    private lateinit var servicesUsed : List<Service>
+    private lateinit var servicesAll : List<ServiceWithFee>
+    private lateinit var servicesChoosen : MutableList<ServiceWithFee>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -87,14 +89,32 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 hourTV.text=reservation.reservation.time
 
                 //Data of services
-                serviceUsed=reservation.services
+                servicesUsed=reservation.services
 
-                servicesUsed=serviceUsed.toMutableList()
+                reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
+                    .observe(viewLifecycleOwner){listOfServicesWithSportCenter->
+                        //List of services with fee of the sport center
+                        val c=listOfServicesWithSportCenter
 
-                //Recyclerview
-                val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView_chip)
-                recyclerView.adapter=MyAdapterRecycle(serviceUsed, servicesUsed)
-                recyclerView.layoutManager=GridLayoutManager(context,2)
+                        reservationWithDetailsVM.getAllServices().observe(viewLifecycleOwner){listService->
+                            //List of all services
+                            val d=listService
+
+                            //List of ServiceWithFee of that Sportcenter
+                            servicesAll=reservationWithDetailsVM.allServiceWithoutSport(c,d)
+
+                            //List of service chosen
+                            servicesChoosen=reservationWithDetailsVM.filterServicesWithFee(servicesAll,servicesUsed).toMutableList()
+
+                            //Recycler view of services
+                            val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView_chip)
+                            recyclerView.adapter=MyAdapterRecycle(servicesAll,servicesChoosen)
+                            recyclerView.layoutManager= GridLayoutManager(context,2)
+
+                        }
+
+                    }
+
             }
 
 
@@ -186,8 +206,8 @@ class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
 
     private val chip=v.findViewById<Chip>(R.id.chip)
 
-    fun bind(s: Service, lUsed : MutableList<Service> ){
-        chip.text=s.name
+    fun bind(s: ServiceWithFee, lUsed : MutableList<ServiceWithFee> ){
+        chip.text=s.service.name+" " + s.fee +"€"
         chip.isChecked = s in lUsed
         chip.isCloseIconVisible = chip.isChecked
         chip.setOnClickListener {
@@ -210,7 +230,7 @@ class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
 
 
 //class that uses the viewHolder to show a specific item
-class MyAdapterRecycle( val l :List<Service>, var lUsed : MutableList<Service>) : RecyclerView.Adapter<MyViewHolder>(){
+class MyAdapterRecycle( val l :List<ServiceWithFee>, var lUsed : MutableList<ServiceWithFee>) : RecyclerView.Adapter<MyViewHolder>(){
 
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {

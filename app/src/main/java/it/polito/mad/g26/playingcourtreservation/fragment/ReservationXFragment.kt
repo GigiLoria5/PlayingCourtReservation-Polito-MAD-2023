@@ -33,6 +33,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
     private lateinit var servicesAll : List<ServiceWithFee>
     private lateinit var servicesUsed : List<Service>
+    private lateinit var servicesChosen : List<ServiceWithFee>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +62,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
-                println("cio che mi passano")
+                println("Passed")
                 println(reservation)
                 servicesUsed=reservation.services
                 center.text=reservation.courtWithDetails.sportCenter.name
@@ -75,20 +76,25 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
 
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
                     .observe(viewLifecycleOwner){listOfServicesWithSportCenter->
-                        //ho la lista di oggetti
+                        //List of services with fee of the sport center
                         val c=listOfServicesWithSportCenter
-                        println("variabile c")
-                        println(c)
+
                         reservationWithDetailsVM.getAllServices().observe(viewLifecycleOwner){listService->
+                            //List of all services
                             val d=listService
-                            println("variabile d")
-                            println(d)
+
+                            //List of ServiceWithFee of that Sportcenter
                             servicesAll=reservationWithDetailsVM.allServiceWithoutSport(c,d)
-                            println("risultato")
-                            println(servicesAll)
+
+                            //Filter service to take only chosen
+                            servicesChosen=reservationWithDetailsVM.filterServicesWithFee(servicesAll,servicesUsed)
+
+
+
+
                             //Recycler view of services
                             val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
-                            recyclerView.adapter=MyAdapterRecycle1(servicesAll)
+                            recyclerView.adapter=MyAdapterRecycle1(servicesChosen)
                             recyclerView.layoutManager= GridLayoutManager(context,3)
                         }
 
@@ -164,7 +170,7 @@ class MyViewHolder1 (v:View) : RecyclerView.ViewHolder(v){
     private val cBox=v.findViewById<MaterialButton>(R.id.material_button)
 
     fun bind(s: ServiceWithFee){
-        cBox.text=s.service.name+s.fee.toString()
+        cBox.text=s.service.name+ "\n" +s.fee.toString()+"€"
     }
 }
 

@@ -25,6 +25,8 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
 
     fun getAllServices() : LiveData<List<Service>> =
         repo.getAllServices()
+
+    //Create a list of all the ServiceWithFee of the center
     fun allServiceWithoutSport(listFee: List<SportCenterServices>, listServ: List<Service> ): List<ServiceWithFee>{
 
         val servicesList = listFee.mapNotNull { sportCenterService ->
@@ -37,23 +39,11 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
 
     }
 
-        /*val services=repo.getAllServicesWithFee(id).value
-        println("print retunr of the database")
-        println(services)
-        var servicesList=services?.mapNotNull { sportCenterService ->
-            //I need the second calling because there isn't the name inside SportCenterServices
-            val service = repo.getServiceById(sportCenterService.idService).value
-            println("print retunr of the database of services")
-            println(service)
-            if(service!=null)
-                ServiceWithFee(service, sportCenterService.fee)
-            else
-                null
-        }?: emptyList()
-        return servicesList*/
-
-
-
+    //Filter to chosen services
+    fun filterServicesWithFee(servicesWithFee: List<ServiceWithFee>, services: List<Service>): List<ServiceWithFee> {
+        val serviceIds = services.map { it.id }.toSet() // create a set of service IDs for faster lookups
+        return servicesWithFee.filter { it.service.id in serviceIds }
+    }
 
 
 
