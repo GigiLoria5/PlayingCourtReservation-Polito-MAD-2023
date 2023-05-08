@@ -78,7 +78,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
             val newDate =
                 if (weekDays.days.first().date.isBefore(selectedDate)) selectedDate.minusDays(7)
                 else selectedDate.plusDays(7)
-            selectedDate(selectedDateView, weekCalendarView, newDate)
+            updateSelectedDate(selectedDateView, weekCalendarView, newDate)
         }
 
         // Navigate Between Weeks
@@ -92,8 +92,8 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         }
 
         // Get All Reservations
-        reservations.clear()
         reservationWithDetails.reservationWithDetails.observe(viewLifecycleOwner) {
+            reservations.clear()
             it.forEach { reservationWithDetails ->
                 val localDate = LocalDate.parse(
                     reservationWithDetails.reservation.date,
@@ -104,6 +104,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                 reservations[localDate] = updatedList
                 if (currentList.isNotEmpty()) weekCalendarView.notifyDateChanged(localDate) // To show dotView
             }
+            updateSelectedDate(selectedDateView, weekCalendarView, selectedDate) // Force update
             updateAdapterForDate(selectedDate)
         }
 
@@ -141,7 +142,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
             init {
                 view.setOnClickListener {
-                    selectedDate(selectedDateTextView, weekCalendarView, day.date)
+                    updateSelectedDate(selectedDateTextView, weekCalendarView, day.date)
                 }
             }
         }
@@ -197,13 +198,11 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         }
     }
 
-    private fun selectedDate(
+    private fun updateSelectedDate(
         selectedDateTextView: TextView,
         weekCalendarView: WeekCalendarView,
         newDate: LocalDate
     ) {
-        if (selectedDate == newDate)
-            return
         val oldDate = selectedDate
         selectedDate = newDate
         weekCalendarView.notifyDateChanged(oldDate)
