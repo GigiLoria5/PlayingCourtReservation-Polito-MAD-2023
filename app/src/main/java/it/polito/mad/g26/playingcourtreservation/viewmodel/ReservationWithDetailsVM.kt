@@ -9,6 +9,7 @@ import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.SportCenterServices
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationWithDetailsRepository
+import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
 class ReservationWithDetailsVM(application: Application) : AndroidViewModel(application) {
@@ -78,34 +79,43 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
     }
 
     /*UPDATE MANAGEMENT*/
-    /*
+
         fun changeDate(date:String):String{
             val sublist=date.split(" ")
-            val month=listOf("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
-            val day=listOf(1,2,3,4,5,6,7,8,9)
 
-            if(sublist[0])
+            val month=listOf("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+            val allMonth=listOf("-01","-02","-03","-04","-05","-06","-07","-08","-09","-10","-11","-12")
+            val index = month.indexOfFirst { it == sublist[0] }
+            val result=sublist[1]+allMonth[index]+"-2023"
+            return result
+
         }
 
         @Transaction
-        fun updateReservation(date:String, hour:String): Boolean {
+        fun updateReservation(date:String, hour:String,id :Int): Boolean {
 
             var isUpdateSuccessful = false
-            val result = repo.findDataAndHour(date, hour)
+            //val result = repo.findDataAndHour(date, hour)
 
-            result.observeForever { reservationId ->
-                if (reservationId == null) {
+            //result.observeForever { reservationId ->
+                //if (reservationId == null) {
+            val latch = CountDownLatch(1)
                     thread {
                         // Perform the update operation
-                        repo.updateDateAndHour(date, hour, 1)
+                        repo.updateDateAndHour(date, hour, id)
                         isUpdateSuccessful = true
+                        latch.countDown()
                     }
-                } else {
-                    isUpdateSuccessful = false
-                }
-            }
-
+               // } else {
+                  //  isUpdateSuccessful = false
+               // }
+           // }
+            latch.await()
             return isUpdateSuccessful
         }
-    */
+
+    fun findExisting(date:String, hour:String):LiveData<Int?>{
+        return repo.findDataAndHour(date, hour)
+    }
+
 }

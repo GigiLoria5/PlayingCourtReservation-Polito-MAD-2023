@@ -142,17 +142,27 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                         //Save new profile
                         println("questi sono i nuovi services")
                         println(servicesChoosen)
-                        //call from view model the modification
-                        println("questa è la nuova ora")
-                        println(dateTV.text) //May 9 to transfor in "a string"
-                        println("questa è la nuova data")
-                        println(hourTV.text) //perfect
-                        //var date=reservationWithDetailsVM.changeDate(dateTV.text.toString())
-                        //  var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString())
 
-                        var action=ModifyReservationXFragmentDirections.openReservationEdited(reservationId)
-                        findNavController().navigate(action)
+                        //Date changes
+                        var date=reservationWithDetailsVM.changeDate(dateTV.text.toString())
 
+                        //Call if found something
+
+                        reservationWithDetailsVM.findExisting(date,hourTV.text.toString())
+                            .observe(viewLifecycleOwner){result->
+                                if(result==null){
+                                    var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString(),reservationId)
+                                    println("success value")
+                                    println(success)
+                                    if (success){
+                                        //navigate back because id will be the same
+                                        findNavController().popBackStack()
+                                     }
+                                }else{
+                                    println("Data Trovata!")
+                                    println(result)
+                                }
+                            }
                         true
                     }
                     else -> false
@@ -205,6 +215,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
 
     }
+
 }
 
 

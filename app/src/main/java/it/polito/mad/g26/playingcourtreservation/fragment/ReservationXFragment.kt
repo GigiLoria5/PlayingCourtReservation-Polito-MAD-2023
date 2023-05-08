@@ -59,6 +59,8 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
 
         // Retrieve Reservation Details
         val reservationId = args.reservationId
+        println("questo è il reservation id")
+        println(reservationId)
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
