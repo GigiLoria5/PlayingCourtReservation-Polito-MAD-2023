@@ -84,9 +84,11 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 date.text=reservation.reservation.date
                 time.text=reservation.reservation.time
                 price.text=reservation.reservation.amount.toString()
-                dateTV.text=reservation.reservation.date
+                var date=reservation.reservation.date
                 hourTV.text=reservation.reservation.time
 
+                //Change date
+                dateTV.text=reservationWithDetailsVM.changeDateToSplit(date)
                 //Data of services
                 servicesUsed=reservation.services
 
@@ -143,15 +145,20 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                         println("questi sono i nuovi services")
                         println(servicesChoosen)
 
+                        //Take Ids of services
+                        var idsServices=reservationWithDetailsVM.getListOfIdService(servicesChoosen)
+                        println("Questi sono gli Id di prima")
+                        println(idsServices)
+
                         //Date changes
-                        var date=reservationWithDetailsVM.changeDate(dateTV.text.toString())
+                        var date=reservationWithDetailsVM.changeDateToFull(dateTV.text.toString())
 
                         //Call if found something
 
                         reservationWithDetailsVM.findExisting(date,hourTV.text.toString())
                             .observe(viewLifecycleOwner){result->
-                                if(result==null){
-                                    var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString(),reservationId)
+                                if(result==null || result==reservationId){
+                                    var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString(),reservationId,idsServices)
                                     println("success value")
                                     println(success)
                                     if (success){

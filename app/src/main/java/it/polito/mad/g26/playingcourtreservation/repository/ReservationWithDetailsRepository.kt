@@ -12,6 +12,7 @@ class ReservationWithDetailsRepository(application: Application) {
     private val repoSportCenterServices= CourtReservationDatabase.getDatabase(application).sportCenterServiceDao()
     private val repoService= CourtReservationDatabase.getDatabase(application).serviceDao()
     private val reservationDao=CourtReservationDatabase.getDatabase(application).reservationDao()
+    private val reservationServicesDao=CourtReservationDatabase.getDatabase(application).reservationServiceDao()
 
     fun reservationsWithDetails(): LiveData<List<ReservationWithDetails>> =
         reservationWithDetailsDaoDao.getReservationsWithDetails()
@@ -38,7 +39,9 @@ class ReservationWithDetailsRepository(application: Application) {
     fun findDataAndHour(date:String, hour:String):LiveData<Int?> =
         reservationDao.findDataAndHour(date,hour)
 
-    fun updateServices(services: List<Service>): Unit{
+    fun deleteServices(id: Int): Unit{
+        reservationWithDetailsDaoDao.deleteServices(id)
     }
+
 
 }

@@ -8,6 +8,7 @@ import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.SportCenterServices
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
+import it.polito.mad.g26.playingcourtreservation.repository.ReservationServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationWithDetailsRepository
 import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
@@ -15,6 +16,7 @@ import kotlin.concurrent.thread
 class ReservationWithDetailsVM(application: Application) : AndroidViewModel(application) {
 
     private val repo = ReservationWithDetailsRepository(application)
+    private val repoSer= ReservationServiceRepository(application)
 
     val reservationWithDetails: LiveData<List<ReservationWithDetails>> =
         repo.reservationsWithDetails()
@@ -69,6 +71,19 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
         return result
     }
 
+    fun changeDateToSplit(date:String):String{
+        val sublist=date.split("-")
+        println("vediamo come lo divide")
+        println(sublist)
+
+        val month=listOf("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+        val allMonth=listOf("01","02","03","04","05","06","07","08","09","10","11","12")
+        val index = allMonth.indexOfFirst { it == sublist[1] }
+        val result=month[index] + " " + sublist[0]
+        return result
+
+    }
+
     /*DELETE MANAGEMENT*/
 
     @Transaction
@@ -80,7 +95,7 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
 
     /*UPDATE MANAGEMENT*/
 
-        fun changeDate(date:String):String{
+        fun changeDateToFull(date:String):String{
             val sublist=date.split(" ")
 
             val month=listOf("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
@@ -91,25 +106,25 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
 
         }
 
+        fun getListOfIdService(list: List<ServiceWithFee>): List<Int>{
+            return list.map{it.service.id}
+        }
+
         @Transaction
-        fun updateReservation(date:String, hour:String,id :Int): Boolean {
+        fun updateReservation(date:String, hour:String,id :Int,ids:List<Int>): Boolean {
 
             var isUpdateSuccessful = false
-            //val result = repo.findDataAndHour(date, hour)
 
-            //result.observeForever { reservationId ->
-                //if (reservationId == null) {
             val latch = CountDownLatch(1)
                     thread {
                         // Perform the update operation
                         repo.updateDateAndHour(date, hour, id)
+                        repo.deleteServices(id)
+                        repoSer.add(id,ids)
+
                         isUpdateSuccessful = true
                         latch.countDown()
                     }
-               // } else {
-                  //  isUpdateSuccessful = false
-               // }
-           // }
             latch.await()
             return isUpdateSuccessful
         }
