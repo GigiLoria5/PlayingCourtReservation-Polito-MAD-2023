@@ -22,6 +22,6 @@ class ReservationWithDetailsRepository(application: Application) {
     fun getAllServicesWithFee(id:Int) : LiveData<List<SportCenterServices>> =
     repoSportCenterServices.getAllServicesWithFee(id)
 
-    fun getServiceById(id:Int) : LiveData<Service> =
-        repoService.getServiceById(id)
+    fun getAllServices() : LiveData<List<Service>> =
+    repoService.findAll()
 }

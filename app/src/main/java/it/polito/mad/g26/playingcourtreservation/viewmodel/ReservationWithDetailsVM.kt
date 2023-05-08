@@ -20,10 +20,24 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
         repo.reservationWithDetails(id)
 
     //Take all services with fee from the database
-    fun getAllServicesWithFee(id:Int): List<ServiceWithFee> {
+    fun getAllServicesWithFee(id:Int): LiveData<List<SportCenterServices>> =
+        repo.getAllServicesWithFee(id)
 
+    fun getAllServices() : LiveData<List<Service>> =
+        repo.getAllServices()
+    fun allServiceWithoutSport(listFee: List<SportCenterServices>, listServ: List<Service> ): List<ServiceWithFee>{
 
-        val services=repo.getAllServicesWithFee(id).value
+        val servicesList = listFee.mapNotNull { sportCenterService ->
+            val service = listServ.find { it.id == sportCenterService.idService }
+            service?.let {
+                ServiceWithFee(it, sportCenterService.fee)
+            }
+        }
+        return servicesList
+
+    }
+
+        /*val services=repo.getAllServicesWithFee(id).value
         println("print retunr of the database")
         println(services)
         var servicesList=services?.mapNotNull { sportCenterService ->
@@ -36,8 +50,8 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
             else
                 null
         }?: emptyList()
-        return servicesList
-    }
+        return servicesList*/
+
 
 
 

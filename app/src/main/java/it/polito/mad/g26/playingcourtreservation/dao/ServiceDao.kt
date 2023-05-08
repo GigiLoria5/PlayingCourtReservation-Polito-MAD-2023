@@ -11,8 +11,5 @@ interface ServiceDao {
     @Query("SELECT * FROM service")
     fun findAll(): LiveData<List<Service>>
 
-    @Transaction
-    @Query("SELECT * FROM service WHERE id = :id")
-    fun getServiceById(id:Int) : LiveData<Service>
 
 }

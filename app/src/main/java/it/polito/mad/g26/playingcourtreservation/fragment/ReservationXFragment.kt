@@ -31,7 +31,8 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
 
     private val args: ReservationXFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
-    private lateinit var servicesUsed : List<ServiceWithFee>
+    private lateinit var servicesAll : List<ServiceWithFee>
+    private lateinit var servicesUsed : List<Service>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,7 +61,9 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
+                println("cio che mi passano")
                 println(reservation)
+                servicesUsed=reservation.services
                 center.text=reservation.courtWithDetails.sportCenter.name
                 field.text=reservation.courtWithDetails.court.name
                 sport.text=reservation.courtWithDetails.sport.name
@@ -70,16 +73,27 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
                 time.text=reservation.reservation.time
                 price.text=reservation.reservation.amount.toString()
 
-                var servicesAll=reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
-                println("ora liste service with used")
-                println(servicesAll)
+                reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
+                    .observe(viewLifecycleOwner){listOfServicesWithSportCenter->
+                        //ho la lista di oggetti
+                        val c=listOfServicesWithSportCenter
+                        println("variabile c")
+                        println(c)
+                        reservationWithDetailsVM.getAllServices().observe(viewLifecycleOwner){listService->
+                            val d=listService
+                            println("variabile d")
+                            println(d)
+                            servicesAll=reservationWithDetailsVM.allServiceWithoutSport(c,d)
+                            println("risultato")
+                            println(servicesAll)
+                            //Recycler view of services
+                            val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
+                            recyclerView.adapter=MyAdapterRecycle1(servicesAll)
+                            recyclerView.layoutManager= GridLayoutManager(context,3)
+                        }
 
-                servicesUsed=reservationWithDetailsVM.servicesUsedFee(servicesAll,reservation.services)
+                    }
 
-                //Recycler view of services
-                val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
-                recyclerView.adapter=MyAdapterRecycle1(servicesUsed)
-                recyclerView.layoutManager= GridLayoutManager(context,3)
             }
 
 
