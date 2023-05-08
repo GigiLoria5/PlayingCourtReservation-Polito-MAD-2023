@@ -3,7 +3,9 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -122,6 +124,12 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
 
 
+        //Alert Dialog if data alreayd occupied
+        val builder = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
+        builder.setMessage("Data has already a reservation!")
+        builder.setPositiveButton("Understood") { _, _ ->
+            // User clicked OK button
+        }
 
 
         //Customization Menu
@@ -156,18 +164,23 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                         var date=reservationWithDetailsVM.changeDateToFull(dateTV.text.toString())
 
 
+                       // var previousValue:Int?=0
                         //Call if found something
                         reservationWithDetailsVM.findExisting(date,hourTV.text.toString())
                             .observe(viewLifecycleOwner){result->
                                 if(result==null || result==reservationId){
+
                                     var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString(),reservationId,idsServices,amount[0])
                                     println("success value")
                                     println(success)
+                                    //previousValue=result
                                     if (success){
                                         //navigate back because id will be the same
                                         findNavController().popBackStack()
                                      }
                                 }else{
+                                    //if(previousValue!==null)
+                                        builder.show()
                                     println("Data Trovata!")
                                     println(result)
                                 }
@@ -219,6 +232,9 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 hourTV
             )
         }
+
+
+
 
 
 
