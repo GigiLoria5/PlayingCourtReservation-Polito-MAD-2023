@@ -156,7 +156,7 @@
                 android:id="@+id/delete_reservation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/green_700"
+                android:backgroundTint="@color/red"
                 android:textColor="@color/white"
                 android:text="Delete Reservation"
                 app:cornerRadius="16dp"

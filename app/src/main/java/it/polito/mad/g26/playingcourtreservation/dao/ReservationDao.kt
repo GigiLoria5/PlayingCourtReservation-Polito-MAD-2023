@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import it.polito.mad.g26.playingcourtreservation.model.*
 
 @Dao
@@ -36,6 +37,18 @@ interface ReservationDao {
                 "AND reservation.time=:hour "
     )
     fun findMyReservationId(myUserId: Int, date: String, hour: String): LiveData<Int?>
+
+    @Transaction
+    @Query("DELETE FROM reservation WHERE id= :id")
+    fun deleteReservationById (id :Int)
+
+
+    @Query("UPDATE Reservation SET date=:date, time= :hour WHERE id= :id")
+    fun updateReservationDateAndHour(date:String, hour:String, id:Int)
+
+
+    @Query("SELECT id FROM reservation WHERE time=:hour AND date=:date ")
+    fun findDataAndHour(date :String, hour:String) : LiveData<Int?>
 
 
 }

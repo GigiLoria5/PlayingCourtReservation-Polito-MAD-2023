@@ -62,8 +62,6 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
-                println("Passed")
-                println(reservation)
                 servicesUsed=reservation.services
                 center.text=reservation.courtWithDetails.sportCenter.name
                 field.text=reservation.courtWithDetails.court.name
@@ -144,10 +142,13 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         //Alert Dialog
         val builder = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
         builder.setMessage("Are you sure to delete the reservation?")
-        builder.setPositiveButton("OK") { dialog, id ->
+        builder.setPositiveButton("Yes") { dialog, id ->
             // User clicked OK button
+            reservationWithDetailsVM.deleteReservationById(reservationId)
+            findNavController().popBackStack()
         }
-        builder.setNegativeButton("cancel") { _, _ ->
+
+        builder.setNegativeButton("No") { _, _ ->
             // User cancelled the dialog
         }
 

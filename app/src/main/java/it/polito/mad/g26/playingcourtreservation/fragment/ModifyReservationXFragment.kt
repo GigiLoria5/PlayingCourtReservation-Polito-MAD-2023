@@ -74,7 +74,6 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
-                println(reservation)
 
                 //Compile unavailable data
                 center.text=reservation.courtWithDetails.sportCenter.name
@@ -141,6 +140,16 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                     R.id.confirm_menu_item -> {
 
                         //Save new profile
+                        println("questi sono i nuovi services")
+                        println(servicesChoosen)
+                        //call from view model the modification
+                        println("questa è la nuova ora")
+                        println(dateTV.text) //May 9 to transfor in "a string"
+                        println("questa è la nuova data")
+                        println(hourTV.text) //perfect
+                        //var date=reservationWithDetailsVM.changeDate(dateTV.text.toString())
+                        //  var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString())
+
                         var action=ModifyReservationXFragmentDirections.openReservationEdited(reservationId)
                         findNavController().navigate(action)
 

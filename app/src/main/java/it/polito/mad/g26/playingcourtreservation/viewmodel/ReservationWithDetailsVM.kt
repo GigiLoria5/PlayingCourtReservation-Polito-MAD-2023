@@ -3,11 +3,13 @@ package it.polito.mad.g26.playingcourtreservation.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.room.Transaction
 import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.SportCenterServices
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationWithDetailsRepository
+import kotlin.concurrent.thread
 
 class ReservationWithDetailsVM(application: Application) : AndroidViewModel(application) {
 
@@ -19,10 +21,14 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
     fun getReservationWithDetailsById(id: Int): LiveData<ReservationWithDetails> =
         repo.reservationWithDetails(id)
 
+
+    /*SERVICE MANAGEMENT*/
+
     //Take all services with fee from the database
     fun getAllServicesWithFee(id:Int): LiveData<List<SportCenterServices>> =
         repo.getAllServicesWithFee(id)
 
+    //Get all services
     fun getAllServices() : LiveData<List<Service>> =
         repo.getAllServices()
 
@@ -36,7 +42,6 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
             }
         }
         return servicesList
-
     }
 
     //Filter to chosen services
@@ -44,9 +49,6 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
         val serviceIds = services.map { it.id }.toSet() // create a set of service IDs for faster lookups
         return servicesWithFee.filter { it.service.id in serviceIds }
     }
-
-
-
 
 
     //return only services with feed that are used
@@ -57,6 +59,46 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
             }
         }
         return result
+    }
+
+    /*DELETE MANAGEMENT*/
+
+    @Transaction
+    fun deleteReservationById(id :Int) : Unit {
+        thread {
+            repo.deleteReservationById(id)
+        }
+    }
+
+    /*UPDATE MANAGEMENT*/
+
+    fun changeDate(date:String):String{
+        val sublist=date.split(" ")
+        val month=listOf("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+        val day=listOf(1,2,3,4,5,6,7,8,9)
+        
+        if(sublist[0])
+    }
+
+    @Transaction
+    fun updateReservation(date:String, hour:String): Boolean {
+
+        var isUpdateSuccessful = false
+        val result = repo.findDataAndHour(date, hour)
+
+        result.observeForever { reservationId ->
+            if (reservationId == null) {
+                thread {
+                    // Perform the update operation
+                    repo.updateDateAndHour(date, hour, 1)
+                    isUpdateSuccessful = true
+                }
+            } else {
+                isUpdateSuccessful = false
+            }
+        }
+
+        return isUpdateSuccessful
     }
 
 }
