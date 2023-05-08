@@ -48,6 +48,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var amount=mutableListOf(0.0f)
 
         //List of text
         val center=view.findViewById<CustomTextView>(R.id.center_name)
@@ -84,6 +85,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 date.text=reservation.reservation.date
                 time.text=reservation.reservation.time
                 price.text=reservation.reservation.amount.toString()
+                amount=mutableListOf(reservation.reservation.amount)
                 var date=reservation.reservation.date
                 hourTV.text=reservation.reservation.time
 
@@ -109,7 +111,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
                             //Recycler view of services
                             val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView_chip)
-                            recyclerView.adapter=MyAdapterRecycle(servicesAll,servicesChoosen)
+                            recyclerView.adapter=MyAdapterRecycle(servicesAll,servicesChoosen,price,amount)
                             recyclerView.layoutManager= GridLayoutManager(context,2)
 
                         }
@@ -153,12 +155,12 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                         //Date changes
                         var date=reservationWithDetailsVM.changeDateToFull(dateTV.text.toString())
 
-                        //Call if found something
 
+                        //Call if found something
                         reservationWithDetailsVM.findExisting(date,hourTV.text.toString())
                             .observe(viewLifecycleOwner){result->
                                 if(result==null || result==reservationId){
-                                    var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString(),reservationId,idsServices)
+                                    var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString(),reservationId,idsServices,amount[0])
                                     println("success value")
                                     println(success)
                                     if (success){
@@ -233,16 +235,24 @@ class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
 
     private val chip=v.findViewById<Chip>(R.id.chip)
 
-    fun bind(s: ServiceWithFee, lUsed : MutableList<ServiceWithFee> ){
+    fun bind(s: ServiceWithFee, lUsed : MutableList<ServiceWithFee>, price: TextView, amount:MutableList<Float> ){
+
+
         chip.text=s.service.name+" " + s.fee +"€"
         chip.isChecked = s in lUsed
         chip.isCloseIconVisible = chip.isChecked
         chip.setOnClickListener {
             chip.isCloseIconVisible = chip.isChecked
-            if (chip.isChecked)
+            if (chip.isChecked) {
                 lUsed.add(s)
-            else
+                amount[0]+=s.fee
+                price.text = amount[0].toString()
+
+            }else {
                 lUsed.remove(s)
+                amount[0] -= s.fee
+                price.text = amount[0].toString()
+            }
         }
     }
 
@@ -257,7 +267,7 @@ class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
 
 
 //class that uses the viewHolder to show a specific item
-class MyAdapterRecycle( val l :List<ServiceWithFee>, var lUsed : MutableList<ServiceWithFee>) : RecyclerView.Adapter<MyViewHolder>(){
+class MyAdapterRecycle( val l :List<ServiceWithFee>, var lUsed : MutableList<ServiceWithFee>, var price :TextView, var amount:MutableList<Float>) : RecyclerView.Adapter<MyViewHolder>(){
 
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -272,7 +282,7 @@ class MyAdapterRecycle( val l :List<ServiceWithFee>, var lUsed : MutableList<Ser
 
     //called after viewHolder are created, to put data into them
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(l[position],lUsed)
+        holder.bind(l[position],lUsed,price,amount)
     }
 }
 

@@ -31,8 +31,8 @@ class ReservationWithDetailsRepository(application: Application) {
         reservationDao.deleteReservationById(id)
 
     //change management
-    fun updateDateAndHour(date:String, hour:String,id :Int):Boolean{
-        reservationDao.updateReservationDateAndHour(date,hour,id)
+    fun updateDateAndHourAndAmount(date:String, hour:String,id :Int,amount:Float):Boolean{
+        reservationDao.updateReservationDateAndHourAndAmount(date,hour,id,amount)
         return true
     }
 

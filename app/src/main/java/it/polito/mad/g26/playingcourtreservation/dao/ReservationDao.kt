@@ -43,8 +43,8 @@ interface ReservationDao {
     fun deleteReservationById (id :Int)
 
 
-    @Query("UPDATE Reservation SET date=:date, time= :hour WHERE id= :id")
-    fun updateReservationDateAndHour(date:String, hour:String, id:Int)
+    @Query("UPDATE Reservation SET date=:date, time= :hour, amount= :amount WHERE id= :id")
+    fun updateReservationDateAndHourAndAmount(date:String, hour:String, id:Int, amount:Float)
 
 
     @Query("SELECT id FROM reservation WHERE time=:hour AND date=:date ")

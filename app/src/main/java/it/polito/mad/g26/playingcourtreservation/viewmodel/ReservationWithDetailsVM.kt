@@ -111,14 +111,14 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
         }
 
         @Transaction
-        fun updateReservation(date:String, hour:String,id :Int,ids:List<Int>): Boolean {
+        fun updateReservation(date:String, hour:String,id :Int,ids:List<Int>, amount: Float): Boolean {
 
             var isUpdateSuccessful = false
 
             val latch = CountDownLatch(1)
                     thread {
                         // Perform the update operation
-                        repo.updateDateAndHour(date, hour, id)
+                        repo.updateDateAndHourAndAmount(date, hour, id, amount)
                         repo.deleteServices(id)
                         repoSer.add(id,ids)
 

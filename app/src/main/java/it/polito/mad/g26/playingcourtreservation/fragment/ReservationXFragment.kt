@@ -64,6 +64,8 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
+                println("questa è intera prenotazione")
+                println(reservation)
                 servicesUsed=reservation.services
                 center.text=reservation.courtWithDetails.sportCenter.name
                 field.text=reservation.courtWithDetails.court.name
