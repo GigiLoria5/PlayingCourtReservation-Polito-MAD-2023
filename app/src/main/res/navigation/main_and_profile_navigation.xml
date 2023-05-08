@@ -103,6 +103,6 @@
         </action>
         <action
             android:id="@+id/action_searchCourtResultsFragment_to_reservationDetailsFragment"
-            app:destination="@id/reservationDetailsFragment" />
+            app:destination="@id/reservationXFragment" />
     </fragment>
 </navigation>

@@ -79,7 +79,4 @@
         <item>Supporters</item>
         <item>MiniBar</item>
     </string-array>
-
-    <string name="hourFormat">kk:mm</string>
-    <string name="dateFormat">dd MMM</string>
 </resources>

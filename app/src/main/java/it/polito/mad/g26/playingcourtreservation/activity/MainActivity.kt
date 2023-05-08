@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                         lockOrientationAndBottomNavMakeGone()
                     }
 
-                    R.id.reservationDetailsFragment -> {
+                    R.id.reservationXFragment -> {
                         lockOrientationAndBottomNavMakeGone()
                     }
 
