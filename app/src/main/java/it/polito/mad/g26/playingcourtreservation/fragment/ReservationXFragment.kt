@@ -13,7 +13,6 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,15 +21,17 @@ import com.google.android.material.button.MaterialButton
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.model.Service
+import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
 
 class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
 
     private val args: ReservationXFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
-    private lateinit var serviceUsed : List<Service>
+    private lateinit var servicesUsed : List<ServiceWithFee>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,12 +56,11 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
             .findViewById<TextView>(R.id.value)
 
         // Retrieve Reservation Details
-        var reservationId = args.reservationId
+        val reservationId = args.reservationId
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
                 println(reservation)
-                serviceUsed=reservation.services
                 center.text=reservation.courtWithDetails.sportCenter.name
                 field.text=reservation.courtWithDetails.court.name
                 sport.text=reservation.courtWithDetails.sport.name
@@ -70,9 +70,15 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
                 time.text=reservation.reservation.time
                 price.text=reservation.reservation.amount.toString()
 
+                var servicesAll=reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
+                println("ora liste service with used")
+                println(servicesAll)
+
+                servicesUsed=reservationWithDetailsVM.servicesUsedFee(servicesAll,reservation.services)
+
                 //Recycler view of services
                 val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
-                recyclerView.adapter=MyAdapterRecycle1(serviceUsed)
+                recyclerView.adapter=MyAdapterRecycle1(servicesUsed)
                 recyclerView.layoutManager= GridLayoutManager(context,3)
             }
 
@@ -92,12 +98,13 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
                 return when (item.itemId) {
                     // Back
                     android.R.id.home -> {
+                        //cambia in pop backstack
                         findNavController().navigate(R.id.reservationsFragment)
                         true
                     }
                     // Edit
                     R.id.edit_menu_item -> {
-                        var action=ReservationXFragmentDirections.openReservationEdit(reservationId)
+                        val action=ReservationXFragmentDirections.openReservationEdit(reservationId)
                         findNavController().navigate(action)
                         true
                     }
@@ -117,9 +124,9 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
         //Alert Dialog
         val builder = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
         builder.setMessage("Are you sure to delete the reservation?")
-        builder.setPositiveButton("OK", { dialog, id ->
+        builder.setPositiveButton("OK") { dialog, id ->
             // User clicked OK button
-        })
+        }
         builder.setNegativeButton("cancel") { _, _ ->
             // User cancelled the dialog
         }
@@ -142,13 +149,13 @@ class MyViewHolder1 (v:View) : RecyclerView.ViewHolder(v){
 
     private val cBox=v.findViewById<MaterialButton>(R.id.material_button)
 
-    fun bind(s: Service){
-        cBox.text=s.name
+    fun bind(s: ServiceWithFee){
+        cBox.text=s.service.name+s.fee.toString()
     }
 }
 
 
-class MyAdapterRecycle1( val l :List<Service>) : RecyclerView.Adapter<MyViewHolder1>(){
+class MyAdapterRecycle1( private val l :List<ServiceWithFee>) : RecyclerView.Adapter<MyViewHolder1>(){
 
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder1 {
