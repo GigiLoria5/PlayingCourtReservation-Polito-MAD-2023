@@ -14,7 +14,7 @@ import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationWithDetailsRepository
 import it.polito.mad.g26.playingcourtreservation.util.ReservationWithDetailsUtil
-import java.util.Locale
+import java.util.*
 import kotlin.concurrent.thread
 
 class ReservationWithDetailsVM(application: Application) : AndroidViewModel(application) {
@@ -76,7 +76,6 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
     /*UPDATE MANAGEMENT*/
 
     fun changeDateToFull(date: String): String {
-        println(date)
         val sublist = date.split(" ")
         val month = listOf(
             "Jan",
@@ -108,7 +107,6 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
         )
         val index = month.indexOfFirst { it == sublist[0] }
         val result = sublist[1] + allMonth[index] + "-2023"
-        println(result)
         return result
     }
 
