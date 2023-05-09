@@ -167,12 +167,10 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
                         //Date changes
                         var date=reservationWithDetailsVM.changeDateToFull(dateTV.text.toString())
-                        var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString(),reservationId,idsServices,amount[0])
-                        if (success){
-                            builderUpdated.show()
-                            //navigate back because id will be the same
-                            findNavController().popBackStack()
-                        }
+                        reservationWithDetailsVM.updateReservation(date,hourTV.text.toString(),reservationId,idsServices,amount[0])
+                        builderUpdated.show()
+                        //navigate back because id will be the same
+                        findNavController().popBackStack()
                         true
                     }
                     else -> false

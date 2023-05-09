@@ -116,22 +116,13 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
         }
 
         @Transaction
-        fun updateReservation(date:String, hour:String,id :Int,ids:List<Int>, amount: Float): Boolean {
-
-            var isUpdateSuccessful = false
-
-            val latch = CountDownLatch(1)
+        fun updateReservation(date:String, hour:String,id :Int,ids:List<Int>, amount: Float){
                     thread {
                         // Perform the update operation
                         repo.updateDateAndHourAndAmount(date, hour, id, amount)
                         repo.deleteServices(id)
                         repoSer.add(id,ids)
-
-                        isUpdateSuccessful = true
-                        latch.countDown()
                     }
-            latch.await()
-            return isUpdateSuccessful
         }
 
     fun findExistingReservation(date:String, hour:String):LiveData<Int?>{
