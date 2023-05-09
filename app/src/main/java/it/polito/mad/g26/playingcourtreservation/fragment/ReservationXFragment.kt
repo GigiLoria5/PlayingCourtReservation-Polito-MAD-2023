@@ -2,6 +2,8 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 
 
 
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
@@ -26,6 +28,7 @@ import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
+import java.util.*
 
 
 class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
@@ -38,11 +41,13 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
     private val dummyService=Service()
     private val dummyServiceWithFee=ServiceWithFee(dummyService,0.0f)
     private val dummyListServiceWithFee=listOf(dummyServiceWithFee)
+    private val today=Calendar.getInstance()
+    private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+    private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBar(activity, "Reservation Details", true)
-
 
         //List of text
         val center=view.findViewById<CustomTextView>(R.id.center_name)
@@ -81,6 +86,56 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
                 time.text=reservation.reservation.time
                 price.text=reservation.reservation.amount.toString()
 
+                //List of variable
+                val dateList=reservation.reservation.date.split("-")
+                println("questi sono i valori date reservation")
+                println(dateList)
+                val yearRes=dateList[2].toInt()
+                val monthRes=dateList[1].toInt()
+                val dayRes=dateList[0].toInt()
+                val timeList=reservation.reservation.time.split(":")
+                val hourRes=timeList[0].toInt()
+                val calendarRes=Calendar.getInstance()
+                calendarRes.set(yearRes,monthRes-1,dayRes,hourRes,0)
+
+                //Alert Dialog
+                val builder = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
+                builder.setMessage("Are you sure you want to delete the reservation?")
+                builder.setPositiveButton("Yes") { dialog, id ->
+                    // User clicked OK button
+                    reservationWithDetailsVM.deleteReservationById(reservationId)
+                    findNavController().popBackStack()
+                }
+                builder.setNegativeButton("No") { _, _ ->
+                    // User cancelled the dialog
+                }
+
+                //Button for modify and delete
+                val modifyButton=view.findViewById<MaterialButton>(R.id.modify_reservation_button)
+                val deleteButton=view.findViewById<Button>(R.id.delete_reservation_button)
+                if(today <= calendarRes){
+                    deleteButton.setOnClickListener{
+                        builder.show()
+                    }
+                    modifyButton.setOnClickListener{
+                        val action=ReservationXFragmentDirections.openReservationEdit(reservationId)
+                        findNavController().navigate(action)
+                    }
+
+                }else{
+                    deleteButton.isEnabled=false
+                    modifyButton.isEnabled=false
+                    deleteButton.setBackgroundColor(resources.getColor(R.color.grey))
+                    modifyButton.setBackgroundColor(resources.getColor(R.color.grey))
+                }
+
+
+
+
+
+
+
+
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
                     .observe(viewLifecycleOwner){listOfServicesWithSportCenter->
                         //List of services with fee of the sport center
@@ -107,6 +162,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
                     }
             }
 
+
         /*MENU ITEM*/
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
@@ -127,31 +183,6 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
             }
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        //Alert Dialog
-        val builder = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
-        builder.setMessage("Are you sure you want to delete the reservation?")
-        builder.setPositiveButton("Yes") { dialog, id ->
-            // User clicked OK button
-            reservationWithDetailsVM.deleteReservationById(reservationId)
-            findNavController().popBackStack()
-        }
-        builder.setNegativeButton("No") { _, _ ->
-            // User cancelled the dialog
-        }
-
-        //Button for delete
-        val deleteButton=view.findViewById<Button>(R.id.delete_reservation_button)
-        deleteButton.setOnClickListener{
-            builder.show()
-        }
-        //Button for modify
-        val modifyButton=view.findViewById<MaterialButton>(R.id.modify_reservation_button)
-        modifyButton.setOnClickListener{
-            val action=ReservationXFragmentDirections.openReservationEdit(reservationId)
-            findNavController().navigate(action)
-        }
-
 
     }
 
