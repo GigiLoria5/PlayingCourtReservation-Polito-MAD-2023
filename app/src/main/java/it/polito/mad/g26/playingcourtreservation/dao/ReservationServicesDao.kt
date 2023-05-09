@@ -8,6 +8,7 @@ import it.polito.mad.g26.playingcourtreservation.model.*
 
 @Dao
 interface ReservationServicesDao {
+
     @Insert
     fun addReservationService(reservationService: ReservationServices)
 

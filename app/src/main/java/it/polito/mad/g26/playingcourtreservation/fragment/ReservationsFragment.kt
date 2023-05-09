@@ -45,6 +45,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
     private val today = LocalDate.now()
     private var selectedDate: LocalDate = today
     private val reservationDatePattern = "dd-MM-yyyy"
+    var isSetupFinished = false
     private val selectionFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy")
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,6 +66,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         val selectedDateView =
             view.findViewById<TextView>(R.id.reservationsCalendarSelectedDateText)
         selectedDateView.text = selectionFormatter.format(selectedDate)
+        updateSelectedDate(selectedDateView, weekCalendarView, selectedDate)
 
         // Current Month Selected Text
         val currentMonthView = view.findViewById<TextView>(R.id.calendarMonthYearText)
@@ -104,6 +106,8 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                 reservations[localDate] = updatedList
                 if (currentList.isNotEmpty()) weekCalendarView.notifyDateChanged(localDate) // To show dotView
             }
+            isSetupFinished = true
+            configureBinders(view)
             updateSelectedDate(selectedDateView, weekCalendarView, selectedDate) // Force update
             updateAdapterForDate(selectedDate)
         }
@@ -171,7 +175,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                             dateTextView.setBackgroundResource(R.drawable.calendar_today_selected_bg)
                         }
                         dotImageView.makeInVisible()
-                        if (reservations[selectedDate]?.value != null) {
+                        if (!isSetupFinished || reservations[selectedDate]?.value != null) {
                             noReservationsTextView.makeGone()
                         } else {
                             noReservationsTextView.makeVisible()

@@ -2,7 +2,6 @@ package it.polito.mad.g26.playingcourtreservation.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
 import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
@@ -19,7 +18,6 @@ interface ReservationWithDetailsDao {
     fun getReservationWithDetailsById(reservationId: Int): LiveData<ReservationWithDetails>
 
     @Query("DELETE FROM reservation_services WHERE id_reservation = :id")
-    fun deleteServices(id:Int)
-
+    fun deleteServices(id: Int)
 
 }

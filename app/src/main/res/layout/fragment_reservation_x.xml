@@ -34,8 +34,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:title="Sport Center"
-                app:value="@string/default_fullname" />
+                app:title="Sport Center" />
 
             <LinearLayout
                 android:id="@+id/sport_info"
@@ -51,16 +50,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:title="Sport"
-                    app:value="@integer/default_age" />
+                    app:title="Sport" />
 
                 <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                     android:id="@+id/court_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:title="Court Name"
-                    app:value="@string/default_gender" />
+                    app:title="Court Name" />
 
             </LinearLayout>
 
@@ -78,16 +75,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:title="City"
-                    app:value="@integer/default_age" />
+                    app:title="City" />
 
                 <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                     android:id="@+id/address"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:title="Address"
-                    app:value="@string/default_gender" />
+                    app:title="Address" />
 
             </LinearLayout>
 
@@ -105,16 +100,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:title="Date"
-                    app:value="@integer/default_age" />
+                    app:title="Date" />
 
                 <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                     android:id="@+id/time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:title="Time"
-                    app:value="@string/default_gender" />
+                    app:title="Time" />
 
             </LinearLayout>
 
@@ -146,8 +139,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/time_info"
-                app:title="Price"
-                app:value="@string/default_fullname" />
+                app:title="Price" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/delete_reservation_button"

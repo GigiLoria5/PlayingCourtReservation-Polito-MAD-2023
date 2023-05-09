@@ -1,10 +1,10 @@
 package it.polito.mad.g26.playingcourtreservation.activity
 
 import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.searchCourtActionFragment -> {
                         lockOrientationAndBottomNavMakeGone()
                     }
+
                     R.id.searchCourtResultsFragment -> {
                         lockOrientationAndBottomNavMakeGone()
                     }
@@ -88,8 +89,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //android navigation bar color (! not app navigation bar !)
-        getColor(R.color.grey_light).also { window.navigationBarColor = it };
+        // android navigation bar color (! not app navigation bar !)
+        getColor(R.color.grey_light).also { window.navigationBarColor = it }
     }
 
     private fun lockOrientationAndBottomNavMakeGone() {
