@@ -6,20 +6,13 @@ import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.text.format.DateUtils
 import android.view.LayoutInflater
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.navigation.NavController
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtResultsFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
-import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtFragmentDirections
-import it.polito.mad.g26.playingcourtreservation.model.Sport
-import it.polito.mad.g26.playingcourtreservation.model.custom.CourtWithDetails
-
 import java.util.*
+import kotlin.math.max
 
 object ReservationWithDetailsUtil {
 
@@ -98,7 +91,7 @@ object ReservationWithDetailsUtil {
         datePickerDialog.show()
     }
 
-    fun showNumberPickerDialog(viewContext: Context, vm: SearchCourtResultsVM) {
+    fun showNumberPickerDialog(viewContext: Context, vm: SearchCourtResultsVM, centerMinHour: Int, centerMaxHour:Int) {
 
         val c = Calendar.getInstance()
         c.timeInMillis = vm.selectedDateTimeMillis.value!!
@@ -108,13 +101,17 @@ object ReservationWithDetailsUtil {
         val numberPicker = linearLayout.findViewById<NumberPicker>(R.id.hourPicker)
         numberPicker.wrapSelectorWheel = false
 
-        //se la data è oggi ed orario=x, min value sarà un orario_futuro>x
+
+        //max between the next hour of today and the open hour of the center
+        //otherwise the open hour
         numberPicker.minValue =
             if (DateUtils.isToday(c.timeInMillis)) {
-                getDelayedCalendar()[Calendar.HOUR_OF_DAY]
-            } else
-                0
-        numberPicker.maxValue = 23
+                max( getDelayedCalendar()[Calendar.HOUR_OF_DAY],centerMinHour)
+            } else{
+                centerMinHour
+            }
+
+        numberPicker.maxValue = centerMaxHour
         numberPicker.value = c[Calendar.HOUR_OF_DAY]
 
         numberPicker.displayedValues = (0..23).toList().map { if (it < 10) "0$it:00" else "$it:00" }
@@ -137,7 +134,7 @@ object ReservationWithDetailsUtil {
         dialog.show()
     }
 
-    fun setAutoCompleteTextViewSport(
+    /*fun setAutoCompleteTextViewSport(
         viewContext: Context,
         sports: List<Sport>?,
         courtTypeACTV: AutoCompleteTextView,
@@ -224,5 +221,5 @@ object ReservationWithDetailsUtil {
                 .setOnCancelListener { }
         val dialog = builder.create()
         dialog.show()
-    }
+    }*/
 }

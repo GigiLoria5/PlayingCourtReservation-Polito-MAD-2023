@@ -3,6 +3,7 @@ package it.polito.mad.g26.playingcourtreservation.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Transaction
 import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
 import it.polito.mad.g26.playingcourtreservation.model.Service
@@ -10,6 +11,7 @@ import it.polito.mad.g26.playingcourtreservation.model.SportCenterServices
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationWithDetailsRepository
+import it.polito.mad.g26.playingcourtreservation.util.ReservationWithDetailsUtil
 import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
@@ -132,5 +134,27 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
     fun findExisting(date:String, hour:String):LiveData<Int?>{
         return repo.findDataAndHour(date, hour)
     }
+
+    /*DATE TIME MANAGEMENT*/
+    private val dateFormat = "dd-MM-YYYY"
+    private val timeFormat = "kk:mm"
+    private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
+        it.value = ReservationWithDetailsUtil.getMockInitialDateTime().timeInMillis
+
+    }
+    val selectedDateTimeMillis: LiveData<Long> = _selectedDateTimeMillis
+    fun changeSelectedDateTimeMillis(newTimeInMillis: Long) {
+        _selectedDateTimeMillis.value = newTimeInMillis
+    }
+
+    private fun getDateTimeFormatted(format: String): String {
+        return ReservationWithDetailsUtil.getDateTimeFormatted(selectedDateTimeMillis.value ?: 0, format)
+    }
+
+    fun takeIntCenterTime(centerTime: String):Int{
+        val sublist=centerTime.split(":")
+        return sublist[0].toInt()
+    }
+
 
 }
