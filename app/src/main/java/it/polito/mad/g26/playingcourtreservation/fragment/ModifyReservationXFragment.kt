@@ -130,25 +130,14 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
             }
 
-
-
-        //Alert Dialog if data alreayd occupied
-        val builderFound = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
-        builderFound.setMessage("The chosen Date and Time are already reserved")
-        builderFound.setPositiveButton("Back") { _, _ ->
-            // User clicked OK button
-        }
-
-
-        //Alert Dialog if data alreayd occupied
+        /*ALERT DIALOG FOR SUCCESSFUL UPDATE*/
         val builderUpdated = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
         builderUpdated.setMessage("The reservation has been update successfully")
         builderUpdated.setPositiveButton("Ok") { _, _ ->
             // User clicked OK button
         }
 
-
-        //Customization Menu
+        /*MENU CUSTOMIZATION*/
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -178,30 +167,12 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
                         //Date changes
                         var date=reservationWithDetailsVM.changeDateToFull(dateTV.text.toString())
-
-
-                       // var previousValue:Int?=0
-                        //Call if found something
-                        reservationWithDetailsVM.findExisting(date,hourTV.text.toString())
-                            .observe(viewLifecycleOwner){result->
-                                if(result==null || result==reservationId){
-
-                                    var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString(),reservationId,idsServices,amount[0])
-                                    println("success value")
-                                    println(success)
-                                    //previousValue=result
-                                    if (success){
-                                        builderUpdated.show()
-                                        //navigate back because id will be the same
-                                        findNavController().popBackStack()
-                                     }
-                                }else{
-                                    //if(previousValue!==null)
-                                    builderFound.show()
-                                    println("Data Trovata!")
-                                    println(result)
-                                }
-                            }
+                        var success=reservationWithDetailsVM.updateReservation(date,hourTV.text.toString(),reservationId,idsServices,amount[0])
+                        if (success){
+                            builderUpdated.show()
+                            //navigate back because id will be the same
+                            findNavController().popBackStack()
+                        }
                         true
                     }
                     else -> false
@@ -219,23 +190,27 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
         dateMCV = view.findViewById(R.id.dateMCV)
-        //dateTV = view.findViewById(R.id.dateTV)
         dateMCV.setOnClickListener {
             reservationDetailsUtil.showDatePickerDialog(
                 requireContext(),
-                reservationWithDetailsVM
+                reservationWithDetailsVM,
+                reservationId,
+                hourTV,
+                viewLifecycleOwner
             )
         }
 
         /* HOUR MATERIAL CARD VIEW MANAGEMENT*/
         hourMCV = view.findViewById(R.id.hourMCV)
-        //hourTV = view.findViewById(R.id.hourTV)
         hourMCV.setOnClickListener {
             reservationDetailsUtil.showNumberPickerDialog(
                 requireContext(),
                 reservationWithDetailsVM,
                 centerOpenTime,
-                centerCloseTime
+                centerCloseTime,
+                reservationId,
+                dateTV,
+                viewLifecycleOwner
             )
 
         }

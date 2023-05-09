@@ -134,13 +134,25 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
             return isUpdateSuccessful
         }
 
-    fun findExisting(date:String, hour:String):LiveData<Int?>{
+    fun findExistingReservation(date:String, hour:String):LiveData<Int?>{
         return repo.findDataAndHour(date, hour)
     }
 
     /*DATE TIME MANAGEMENT*/
-    private val dateFormat = "dd-MM-YYYY"
-    private val timeFormat = "kk:mm"
+
+    fun changeNumberToHour(number:Int):String{
+        return "$number:00"
+    }
+
+    fun createDateFromInt(day:Int,month:Int,year:Int): String{
+        return if(month<10)
+            "$day-0$month-$year"
+        else
+            "$day-$month-$year"
+    }
+
+
+    private val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
         it.value = ReservationWithDetailsUtil.getMockInitialDateTime().timeInMillis
 
@@ -162,7 +174,7 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
 
     fun createCalendarObject(date:String, time:String):Calendar{
 
-        val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
         val calendar = Calendar.getInstance()
         calendar.time = dateFormatter.parse(date)
         val timeParts = time.split(":")

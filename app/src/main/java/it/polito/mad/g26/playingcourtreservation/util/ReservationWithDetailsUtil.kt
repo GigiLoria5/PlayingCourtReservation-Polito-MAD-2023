@@ -9,12 +9,18 @@ import android.view.LayoutInflater
 import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.LifecycleOwner
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import java.util.*
 import kotlin.math.max
 
 object ReservationWithDetailsUtil {
+
+    /*DATE MANAGEMENT*/
+    private val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+    private val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+
 
     fun getMockInitialDateTime(): Calendar {
         val c = getDelayedCalendar()
@@ -65,17 +71,37 @@ object ReservationWithDetailsUtil {
         }
     }
 
-    fun showDatePickerDialog(viewContext: Context, vm: ReservationWithDetailsVM) {
+    fun showDatePickerDialog(viewContext: Context, vm: ReservationWithDetailsVM,  ownReservationId:Int, timeChosen : TextView, life : LifecycleOwner) {
 
         val c = Calendar.getInstance()
         c.timeInMillis = vm.selectedDateTimeMillis.value!!
 
+        //Alert dialog design
+        val builderFound = AlertDialog.Builder(viewContext,R.style.MyAlertDialogStyle)
+        builderFound.setMessage("There is already a reservation for this date and time")
+        builderFound.setPositiveButton("Back") { _, _ ->
+            // User clicked Back button
+        }
+
 
         val datePicker = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-            c.set(year, month, day)
 
-            adjustDateDateCombination(c)
-            vm.changeSelectedDateTimeMillis(c.timeInMillis)
+            //+1 because start from zero to count months
+            val date=vm.createDateFromInt(day,month+1,year)
+            val hour=timeChosen.text.toString()
+            val id=vm.findExistingReservation(date,hour)
+            id.observe(life){idReturned->
+
+                if(idReturned==null || idReturned == ownReservationId){
+                    //Set and adjust if time is outside
+                    c.set(year, month, day)
+                    adjustDateDateCombination(c)
+                    vm.changeSelectedDateTimeMillis(c.timeInMillis)
+                }else{
+                    builderFound.show()
+                }
+            }
+
         }
 
         val datePickerDialog = DatePickerDialog(
@@ -91,10 +117,17 @@ object ReservationWithDetailsUtil {
         datePickerDialog.show()
     }
 
-    fun showNumberPickerDialog(viewContext: Context, vm: ReservationWithDetailsVM, centerMinHour: Int, centerMaxHour:Int) {
+    fun showNumberPickerDialog(viewContext: Context, vm: ReservationWithDetailsVM, centerMinHour: Int, centerMaxHour:Int,
+                               ownReservationId:Int, dateChosen : TextView, life : LifecycleOwner) {
 
         val c = Calendar.getInstance()
         c.timeInMillis = vm.selectedDateTimeMillis.value!!
+        //Alert dialog design
+        val builderFound = AlertDialog.Builder(viewContext,R.style.MyAlertDialogStyle)
+        builderFound.setMessage("There is already a reservation for this date and time")
+        builderFound.setPositiveButton("Back") { _, _ ->
+            // User clicked Back button
+        }
 
 
         val linearLayout = LayoutInflater.from(viewContext).inflate(R.layout.hour_picker, null)
@@ -124,102 +157,24 @@ object ReservationWithDetailsUtil {
             R.string.select_hour_description))
         builder.setView(linearLayout)
         builder.setPositiveButton("OK") { _, _ ->
-            c.set(Calendar.HOUR_OF_DAY, numberPicker.value)
 
-            //Una volta che aggiorno la data, devo controllare la coppia data-ora per annullare possibili errori
-            adjustDateDateCombination(c)
-            vm.changeSelectedDateTimeMillis(c.timeInMillis)
+            val date=vm.changeDateToFull(dateChosen.text.toString())
+            val hour=vm.changeNumberToHour(numberPicker.value)
+            val id=vm.findExistingReservation(date,hour)
+            id.observe(life){idReturned->
+
+                if(idReturned==null || idReturned == ownReservationId){
+                    c.set(Calendar.HOUR_OF_DAY, numberPicker.value)
+                    //Una volta che aggiorno la data, devo controllare la coppia data-ora per annullare possibili errori
+                    adjustDateDateCombination(c)
+                    vm.changeSelectedDateTimeMillis(c.timeInMillis)
+                }else{
+                    builderFound.show()
+                }
+            }
+
         }
         val dialog = builder.create()
         dialog.show()
     }
-
-    /*fun setAutoCompleteTextViewSport(
-        viewContext: Context,
-        sports: List<Sport>?,
-        courtTypeACTV: AutoCompleteTextView,
-        selectedSport: Int
-    ) {
-        val courtsType = mutableListOf("All")
-        sports?.sortedBy { it.name }?.forEach { courtsType.add(it.name) }
-        val adapterCourt =
-            ArrayAdapter(viewContext, R.layout.list_item, courtsType)
-        courtTypeACTV.setText(
-            sports?.find { it.id == selectedSport }?.name ?: "All"
-        )
-        courtTypeACTV.setAdapter(adapterCourt)
-    }
-
-    fun navigateToAction(navController: NavController, city: String) {
-        val direction =
-            SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToSearchCourtActionFragment(
-                "result", city
-            )
-        navController.navigate(direction)
-
-    }
-
-    fun navigateBack(navController: NavController, city: String, bornFrom: String) {
-        if (bornFrom == "home")
-            navController.popBackStack()
-        else {
-            navController.popBackStack()
-            val direction =
-                SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtActionFragment(
-                    "home", city
-                )
-            navController.navigate(direction)
-        }
-    }
-
-    fun showConfirmReservationDialog(
-        viewContext: Context,
-        courtWithDetails: CourtWithDetails,
-        vm: SearchCourtResultsVM
-    ) {
-        val timeInMillis = vm.selectedDateTimeMillis.value ?: 0
-        var total: Float = courtWithDetails.court.hourCharge
-        var selectedServicesString = ""
-        val selectedServicesIds: MutableList<Int> = mutableListOf()
-        vm.getSelectedServicesAndFees(courtWithDetails.sportCenter.id).forEach {
-            total += it.fee
-            selectedServicesIds.add(it.service.id)
-            selectedServicesString += viewContext.getString(
-                R.string.confirm_reservation_message_service_field,
-                it.service.name,
-                String.format("%.2f", it.fee)
-            )
-        }
-        val reservationConfirmationText = viewContext.getString(
-            R.string.confirm_reservation_message,
-            courtWithDetails.court.name,
-            courtWithDetails.sport.name,
-            courtWithDetails.sportCenter.name,
-            courtWithDetails.sportCenter.city,
-            getDateTimeFormatted(timeInMillis, viewContext.getString(R.string.hourFormat)),
-            getDateTimeFormatted(timeInMillis, viewContext.getString(R.string.dateExtendedFormat)),
-            selectedServicesString,
-            String.format("%.2f", courtWithDetails.court.hourCharge),
-            String.format("%.2f", total),
-        )
-
-
-        val builder: AlertDialog.Builder =
-            AlertDialog.Builder(viewContext)
-                .setTitle(viewContext.getString(
-                    R.string.reserve_this_court))
-                .setMessage(reservationConfirmationText)
-                .setPositiveButton(viewContext.getString(
-                    R.string.reserve_button)) { _, _ ->
-                    vm.reserveCourt(
-                        courtWithDetails.court.id,
-                        total,
-                        selectedServicesIds
-                    )
-                }.setNegativeButton(viewContext.getString(
-                    R.string.do_not_reserve_button)) { _, _ -> }
-                .setOnCancelListener { }
-        val dialog = builder.create()
-        dialog.show()
-    }*/
 }
