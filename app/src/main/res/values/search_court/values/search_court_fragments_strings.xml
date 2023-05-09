@@ -18,8 +18,8 @@
     <string name="sport_center_hours">%1$s - %2$s</string>
     <string name="court_available">Available</string>
     <string name="court_not_available">Unavailable</string>
-    <string name="you_already_have_a_reservation">You already have a reservation for this date/time</string>
-    <string name="no_court_found">we were unable to find a sports center with the desired characteristics</string>
+    <string name="you_already_have_a_reservation">You already have a reservation in this date/time</string>
+    <string name="no_court_found">There are no fields available with these search criteria</string>
     <string name="service_with_fee">%1$s €%2$s</string>
     <string name="go_to_reservation">Go to reservation</string>
     <string name="court_name">Court name</string>

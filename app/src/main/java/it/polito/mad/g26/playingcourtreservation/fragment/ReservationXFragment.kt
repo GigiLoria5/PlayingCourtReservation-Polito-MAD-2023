@@ -135,7 +135,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
         // Change Title
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Reservation"
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "Reservation Details"
         // Set Back Button
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -145,7 +145,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
 
         //Alert Dialog
         val builder = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
-        builder.setMessage("Are you sure to delete the reservation?")
+        builder.setMessage("Are you sure you want to delete the reservation?")
         builder.setPositiveButton("Yes") { dialog, id ->
             // User clicked OK button
             reservationWithDetailsVM.deleteReservationById(reservationId)
