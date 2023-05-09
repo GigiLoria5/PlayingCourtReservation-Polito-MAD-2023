@@ -3,7 +3,6 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -24,7 +23,6 @@ import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.ReservationWithDetailsUtil
-import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
@@ -42,7 +40,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
     private val vm by viewModels<SearchCourtResultsVM>()
 
 
-    private val args: ReservationXFragmentArgs by navArgs()
+    private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
     private lateinit var servicesUsed : List<Service>
     private lateinit var servicesAll : List<ServiceWithFee>
@@ -75,6 +73,12 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
             .findViewById<TextView>(R.id.value)
         dateTV = view.findViewById(R.id.dateTV)
         hourTV = view.findViewById(R.id.hourTV)
+        val priceNew=view.findViewById<CustomTextView>(R.id.price_new)
+            .findViewById<TextView>(R.id.value)
+        val dateNew=view.findViewById<CustomTextView>(R.id.date_new)
+            .findViewById<TextView>(R.id.value)
+        val timeNew=view.findViewById<CustomTextView>(R.id.time_new)
+            .findViewById<TextView>(R.id.value)
 
         // Retrieve Reservation Details
         val reservationId = args.reservationId
@@ -92,6 +96,9 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 time.text=reservation.reservation.time
                 price.text=reservation.reservation.amount.toString()
                 amount=mutableListOf(reservation.reservation.amount)
+                dateNew.text=reservation.reservation.date
+                timeNew.text=reservation.reservation.time
+                priceNew.text=reservation.reservation.amount.toString()
 
                 //Variables
                 dateDayReservation=reservationWithDetailsVM.createCalendarObject(reservation.reservation.date,reservation.reservation.time)
@@ -121,7 +128,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
                             //Recycler view of services
                             val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView_chip)
-                            recyclerView.adapter=MyAdapterRecycle(servicesAll,servicesChoosen,price,amount)
+                            recyclerView.adapter=MyAdapterRecycle(servicesAll,servicesChoosen,priceNew,amount)
                             recyclerView.layoutManager= GridLayoutManager(context,2)
 
                         }
@@ -194,7 +201,8 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 reservationWithDetailsVM,
                 reservationId,
                 hourTV,
-                viewLifecycleOwner
+                viewLifecycleOwner,
+                dateNew
             )
         }
 
@@ -208,7 +216,8 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 centerCloseTime,
                 reservationId,
                 dateTV,
-                viewLifecycleOwner
+                viewLifecycleOwner,
+                timeNew
             )
 
         }
@@ -256,6 +265,8 @@ class MyViewHolder (v:View) : RecyclerView.ViewHolder(v){
                 lUsed.add(s)
                 amount[0]+=s.fee
                 price.text = amount[0].toString()
+
+
 
             }else {
                 lUsed.remove(s)

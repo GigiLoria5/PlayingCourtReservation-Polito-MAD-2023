@@ -71,7 +71,8 @@ object ReservationWithDetailsUtil {
         }
     }
 
-    fun showDatePickerDialog(viewContext: Context, vm: ReservationWithDetailsVM,  ownReservationId:Int, timeChosen : TextView, life : LifecycleOwner) {
+    fun showDatePickerDialog(viewContext: Context, vm: ReservationWithDetailsVM,  ownReservationId:Int,
+                             timeChosen : TextView, life : LifecycleOwner,dateNew : TextView) {
 
         val c = Calendar.getInstance()
         c.timeInMillis = vm.selectedDateTimeMillis.value!!
@@ -91,8 +92,8 @@ object ReservationWithDetailsUtil {
             val hour=timeChosen.text.toString()
             val id=vm.findExistingReservation(date,hour)
             id.observe(life){idReturned->
-
                 if(idReturned==null || idReturned == ownReservationId){
+                    dateNew.text=date
                     //Set and adjust if time is outside
                     c.set(year, month, day)
                     adjustDateDateCombination(c)
@@ -118,7 +119,7 @@ object ReservationWithDetailsUtil {
     }
 
     fun showNumberPickerDialog(viewContext: Context, vm: ReservationWithDetailsVM, centerMinHour: Int, centerMaxHour:Int,
-                               ownReservationId:Int, dateChosen : TextView, life : LifecycleOwner) {
+                               ownReservationId:Int, dateChosen : TextView, life : LifecycleOwner, timeNew : TextView) {
 
         val c = Calendar.getInstance()
         c.timeInMillis = vm.selectedDateTimeMillis.value!!
@@ -162,8 +163,8 @@ object ReservationWithDetailsUtil {
             val hour=vm.changeNumberToHour(numberPicker.value)
             val id=vm.findExistingReservation(date,hour)
             id.observe(life){idReturned->
-
                 if(idReturned==null || idReturned == ownReservationId){
+                    timeNew.text=hour
                     c.set(Calendar.HOUR_OF_DAY, numberPicker.value)
                     //Una volta che aggiorno la data, devo controllare la coppia data-ora per annullare possibili errori
                     adjustDateDateCombination(c)

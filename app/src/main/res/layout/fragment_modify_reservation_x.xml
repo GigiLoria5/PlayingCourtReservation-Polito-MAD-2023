@@ -155,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:title="New Date"
-                    app:value="@integer/default_age" />
+                    app:value="" />
 
                 <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                     android:id="@+id/time_new"
@@ -163,7 +163,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     app:title="New Time"
-                    app:value="@string/default_gender" />
+                    app:value="" />
 
             </LinearLayout>
 
@@ -176,7 +176,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/time_info_new"
                 app:title="New Price"
-                app:value="@string/default_fullname"/>
+                app:value=""/>
 
             <TextView
                 android:id="@+id/titleModify"
