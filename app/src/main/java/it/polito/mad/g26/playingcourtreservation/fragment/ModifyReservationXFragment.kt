@@ -125,9 +125,17 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
 
         //Alert Dialog if data alreayd occupied
-        val builder = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
-        builder.setMessage("Data has already a reservation!")
-        builder.setPositiveButton("Understood") { _, _ ->
+        val builderFound = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
+        builderFound.setMessage("The chosen Date and Time are already reserved")
+        builderFound.setPositiveButton("Back") { _, _ ->
+            // User clicked OK button
+        }
+
+
+        //Alert Dialog if data alreayd occupied
+        val builderUpdated = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
+        builderUpdated.setMessage("The reservation has been update successfully")
+        builderUpdated.setPositiveButton("Ok") { _, _ ->
             // User clicked OK button
         }
 
@@ -175,12 +183,13 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                                     println(success)
                                     //previousValue=result
                                     if (success){
+                                        builderUpdated.show()
                                         //navigate back because id will be the same
                                         findNavController().popBackStack()
                                      }
                                 }else{
                                     //if(previousValue!==null)
-                                        builder.show()
+                                    builderFound.show()
                                     println("Data Trovata!")
                                     println(result)
                                 }
