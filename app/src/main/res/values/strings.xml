@@ -71,4 +71,12 @@
         <item>Female</item>
         <item>Other</item>
     </string-array>
+
+    <string-array name="services_array">
+        <item>Bathroom</item>
+        <item>Var Usage</item>
+        <item>First Aid Kit</item>
+        <item>Supporters</item>
+        <item>MiniBar</item>
+    </string-array>
 </resources>

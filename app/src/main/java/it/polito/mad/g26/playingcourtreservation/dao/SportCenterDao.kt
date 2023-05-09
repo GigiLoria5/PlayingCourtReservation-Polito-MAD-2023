@@ -48,7 +48,6 @@ interface SportCenterDao {
         sportId: Int
     ): LiveData<List<SportCenterServicesCourts>>
 
-
     @Transaction
     @Query(
         "SELECT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.longitude, sport_center.latitude, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
@@ -97,4 +96,5 @@ interface SportCenterDao {
         servicesSize: Int,
         sportId: Int
     ): LiveData<List<SportCenterServicesCourts>>
+
 }

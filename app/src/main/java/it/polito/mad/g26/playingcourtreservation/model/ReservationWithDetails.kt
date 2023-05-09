@@ -5,6 +5,7 @@ import androidx.room.Junction
 import androidx.room.Relation
 
 data class ReservationWithDetails(
+    //Consider field of reservation as field of the view reservationWithDetails, so i can change directly the reservation
     @Embedded val reservation: Reservation,
     @Relation(
         entity = Court::class,

@@ -6,7 +6,9 @@ import androidx.room.Query
 import it.polito.mad.g26.playingcourtreservation.model.*
 
 @Dao
-interface ServiceDao {
+fun interface ServiceDao {
+
     @Query("SELECT * FROM service")
     fun findAll(): LiveData<List<Service>>
+
 }

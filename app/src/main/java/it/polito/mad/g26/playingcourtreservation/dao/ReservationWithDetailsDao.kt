@@ -17,4 +17,7 @@ interface ReservationWithDetailsDao {
     @Query("SELECT * FROM reservation WHERE id = :reservationId")
     fun getReservationWithDetailsById(reservationId: Int): LiveData<ReservationWithDetails>
 
+    @Query("DELETE FROM reservation_services WHERE id_reservation = :id")
+    fun deleteServices(id: Int)
+
 }
