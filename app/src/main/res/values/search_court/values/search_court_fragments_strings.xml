@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_city">Torino</string>
+    <string name="hourFormat">kk:mm</string>
+    <string name="dateFormat">MMM dd</string>
+    <string name="dateExtendedFormat">EEEE, MMMM dd, yyyy</string>
+    <string name="searchBoxInfoText">Where do you want to play</string>
+    <string name="searchIcon">search icon</string>
+    <string name="searchResultsInfo">Reserve a court with the desired services</string>
+    <string name="selectCityIcon">select city icon</string>
+    <string name="searchBoxHint">Search your city</string>
+    <string name="select_hour">Search hour</string>
+    <string name="select_hour_description">You can reserve a court no later than 30 minutes before the match</string>
+    <string name="choose_your_services">Choose the services you want to receive</string>
+    <string name="no_services_available">No available services for this sport center</string>
+    <string name="select_your_court">Select your court</string>
+    <string name="hour_charge_court">hour charge: €%1$s</string>
+    <string name="sport_center_hours">%1$s - %2$s</string>
+    <string name="court_available">Available</string>
+    <string name="court_not_available">Unavailable</string>
+    <string name="you_already_have_a_reservation">You already have a reservation in this date and time</string>
+    <string name="no_court_found">There are no fields available with these search criteria</string>
+    <string name="service_with_fee">%1$s €%2$s</string>
+    <string name="go_to_reservation">Go to reservation</string>
+    <string name="court_name">Court name</string>
+    <string name="court_type">Court type</string>
+    <string name="court_price">Court price</string>
+    <string name="court_availability">Court availability</string>
+    <string name="service_name">Service name</string>
+    <string name="sport_center_name">Sport center name</string>
+    <string name="sport_center_address">Sport center address</string>
+    <string name="sport_center_opening_hours">00:00 – 15:00</string>
+    <string name="call_sport_center">call sport center</string>
+    <string name="reserve_this_court">Reserve this court</string>
+    <string name="confirm_reservation_message">
+        You are reserving court:\n%1$s (%2$s)\n\nOf sport center:\n%3$s (%4$s)\n\nAt:\n%5$s on %6$s.\n\n
+        Selected services:\n
+        %7$s\n
+        Hour charge of court: €%8$s\n\n
+        Total reservation fee: €%9$s\n\n
+    </string>
+    <string name="confirm_reservation_message_service_field">-%1$s: €%2$s\n</string>
+    <string name="reserve_button">Reserve</string>
+    <string name="do_not_reserve_button">Do not reserve</string>
+</resources>

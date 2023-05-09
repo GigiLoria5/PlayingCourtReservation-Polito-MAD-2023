@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="profile_image">120dp</dimen>
+    <dimen name="item_space_vertical">6dp</dimen>
+    <dimen name="margin_top_Rdetails">8dp</dimen>
 </resources>
