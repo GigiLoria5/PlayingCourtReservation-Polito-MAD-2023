@@ -97,7 +97,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
                             //Recycler view of services
                             val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
                             recyclerView.adapter=MyAdapterRecycle1(servicesChosen)
-                            recyclerView.layoutManager= GridLayoutManager(context,3)
+                            recyclerView.layoutManager= GridLayoutManager(context,2)
                         }
 
                     }
@@ -175,7 +175,7 @@ class MyViewHolder1 (v:View) : RecyclerView.ViewHolder(v){
     private val cBox=v.findViewById<MaterialButton>(R.id.material_button)
 
     fun bind(s: ServiceWithFee){
-        cBox.text=s.service.name+ "\n" +s.fee.toString()+"€"
+        cBox.text="€"+s.service.name+ "\n" +s.fee.toString()
     }
 }
 
