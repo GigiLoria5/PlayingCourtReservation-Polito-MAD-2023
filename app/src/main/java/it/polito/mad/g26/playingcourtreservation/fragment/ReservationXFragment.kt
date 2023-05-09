@@ -34,6 +34,9 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
     private lateinit var servicesAll : List<ServiceWithFee>
     private lateinit var servicesUsed : List<Service>
     private lateinit var servicesChosen : List<ServiceWithFee>
+    private val dummyService=Service()
+    private val dummyServiceWithFee=ServiceWithFee(dummyService,0.0f)
+    private val dummyListServiceWithFee=listOf(dummyServiceWithFee)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -95,8 +98,12 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
 
 
                             //Recycler view of services
+
                             val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
-                            recyclerView.adapter=MyAdapterRecycle1(servicesChosen)
+                            if (servicesChosen.isEmpty())
+                                recyclerView.adapter=MyAdapterRecycle1(dummyListServiceWithFee,true)
+                            else
+                                recyclerView.adapter=MyAdapterRecycle1(servicesChosen,false)
                             recyclerView.layoutManager= GridLayoutManager(context,2)
                         }
 
@@ -174,13 +181,16 @@ class MyViewHolder1 (v:View) : RecyclerView.ViewHolder(v){
 
     private val cBox=v.findViewById<MaterialButton>(R.id.material_button)
 
-    fun bind(s: ServiceWithFee){
-        cBox.text="€"+s.service.name+ "\n" +s.fee.toString()
+    fun bind(s: ServiceWithFee, empty : Boolean){
+        if(empty)
+            cBox.text="No service chosen"
+        else
+            cBox.text="€"+s.service.name+ "\n" +s.fee.toString()
     }
 }
 
 
-class MyAdapterRecycle1( private val l :List<ServiceWithFee>) : RecyclerView.Adapter<MyViewHolder1>(){
+class MyAdapterRecycle1( private val l :List<ServiceWithFee>, private val empty:Boolean) : RecyclerView.Adapter<MyViewHolder1>(){
 
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder1 {
@@ -195,6 +205,6 @@ class MyAdapterRecycle1( private val l :List<ServiceWithFee>) : RecyclerView.Ada
 
     //called after viewHolder are created, to put data into them
     override fun onBindViewHolder(holder: MyViewHolder1, position: Int) {
-        holder.bind(l[position])
+        holder.bind(l[position],empty)
     }
 }
