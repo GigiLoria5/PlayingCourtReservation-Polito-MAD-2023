@@ -153,7 +153,7 @@
                 app:value="@string/default_fullname" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/delete_reservation"
+                android:id="@+id/delete_reservation_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/red"
@@ -163,10 +163,10 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/modify_reservation" />
+                app:layout_constraintStart_toEndOf="@+id/modify_reservation_button" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/modify_reservation"
+                android:id="@+id/modify_reservation_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/green_700"
@@ -174,7 +174,7 @@
                 android:textColor="@color/white"
                 app:cornerRadius="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/delete_reservation"
+                app:layout_constraintEnd_toStartOf="@+id/delete_reservation_button"
                 app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

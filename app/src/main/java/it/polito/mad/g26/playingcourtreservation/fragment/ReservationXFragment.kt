@@ -23,6 +23,7 @@ import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
@@ -40,6 +41,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupActionBar(activity, "Reservation Details", true)
 
 
         //List of text
@@ -94,11 +96,7 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
                             //Filter service to take only chosen
                             servicesChosen=reservationWithDetailsVM.filterServicesWithFee(servicesAll,servicesUsed)
 
-
-
-
                             //Recycler view of services
-
                             val recyclerView = view.findViewById<RecyclerView>(R.id.service_list)
                             if (servicesChosen.isEmpty())
                                 recyclerView.adapter=MyAdapterRecycle1(dummyListServiceWithFee,true)
@@ -106,49 +104,29 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
                                 recyclerView.adapter=MyAdapterRecycle1(servicesChosen,false)
                             recyclerView.layoutManager= GridLayoutManager(context,2)
                         }
-
                     }
-
             }
 
-
-
-        //Menu customization
+        /*MENU ITEM*/
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
-                //Note, same menu of show profile!
-                menuInflater.inflate(R.menu.show_profile_menu, menu)
+                menuInflater.inflate(R.menu.reservation_details, menu)
             }
 
-            override fun onMenuItemSelected(item: MenuItem): Boolean {
-                // Handle the menu selection
-                return when (item.itemId) {
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
                     // Back
                     android.R.id.home -> {
-                        //cambia in pop backstack
                         findNavController().popBackStack()
                         true
                     }
-                    // Edit
-                    R.id.edit_menu_item -> {
-                        val action=ReservationXFragmentDirections.openReservationEdit(reservationId)
-                        findNavController().navigate(action)
-                        true
-                    }
+
                     else -> false
                 }
             }
+
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        // Change Title
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Reservation Details"
-        // Set Back Button
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-
-
-
 
         //Alert Dialog
         val builder = AlertDialog.Builder(requireContext(),R.style.MyAlertDialogStyle)
@@ -158,17 +136,21 @@ class ReservationXFragment : Fragment(R.layout.fragment_reservation_x) {
             reservationWithDetailsVM.deleteReservationById(reservationId)
             findNavController().popBackStack()
         }
-
         builder.setNegativeButton("No") { _, _ ->
             // User cancelled the dialog
         }
 
-        //Button for show dialog
-        val deleteButton=view.findViewById<Button>(R.id.delete_reservation)
+        //Button for delete
+        val deleteButton=view.findViewById<Button>(R.id.delete_reservation_button)
         deleteButton.setOnClickListener{
             builder.show()
         }
-
+        //Button for modify
+        val modifyButton=view.findViewById<MaterialButton>(R.id.modify_reservation_button)
+        modifyButton.setOnClickListener{
+            val action=ReservationXFragmentDirections.openReservationEdit(reservationId)
+            findNavController().navigate(action)
+        }
 
 
     }

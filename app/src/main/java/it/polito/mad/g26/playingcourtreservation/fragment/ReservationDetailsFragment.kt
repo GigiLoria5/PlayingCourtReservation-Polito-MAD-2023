@@ -23,7 +23,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //setupActionBar(activity, "Reservation Details", true)
+        setupActionBar(activity, "Reservation Details", true)
 
         // Retrieve Reservation Details
         val reservationId = args.reservationId
