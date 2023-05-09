@@ -1,6 +1,8 @@
 package it.polito.mad.g26.playingcourtreservation.viewmodel
 
 import android.app.Application
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +14,7 @@ import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationWithDetailsRepository
 import it.polito.mad.g26.playingcourtreservation.util.ReservationWithDetailsUtil
+import java.util.*
 import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
@@ -156,5 +159,16 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
         return sublist[0].toInt()
     }
 
+
+    fun createCalendarObject(date:String, time:String):Calendar{
+
+        val dateFormatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        val calendar = Calendar.getInstance()
+        calendar.time = dateFormatter.parse(date)
+        val timeParts = time.split(":")
+        calendar.set(Calendar.HOUR_OF_DAY, timeParts[0].toInt())
+        calendar.set(Calendar.MINUTE, timeParts[1].toInt())
+        return calendar
+    }
 
 }

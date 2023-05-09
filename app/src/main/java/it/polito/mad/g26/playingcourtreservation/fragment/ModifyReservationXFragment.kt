@@ -54,6 +54,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         var amount=mutableListOf(0.0f)
         var centerOpenTime :Int =16
         var centerCloseTime: Int=20
+        var dateDayReservation = Calendar.getInstance()
 
         //List of text
         val center=view.findViewById<CustomTextView>(R.id.center_name)
@@ -91,16 +92,16 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 time.text=reservation.reservation.time
                 price.text=reservation.reservation.amount.toString()
                 amount=mutableListOf(reservation.reservation.amount)
-                hourTV.text=reservation.reservation.time
 
                 //Variables
-                var date=reservation.reservation.date
+                dateDayReservation=reservationWithDetailsVM.createCalendarObject(reservation.reservation.date,reservation.reservation.time)
                 centerOpenTime=reservationWithDetailsVM.takeIntCenterTime(reservation.courtWithDetails.sportCenter.openTime)
                 centerCloseTime=reservationWithDetailsVM.takeIntCenterTime(reservation.courtWithDetails.sportCenter.closeTime)
 
-                //Change date
-                dateTV.text=reservationWithDetailsVM.changeDateToSplit(date)
-                //Data of services
+                //Select date of reservation as initial date
+                reservationWithDetailsVM.changeSelectedDateTimeMillis(dateDayReservation.timeInMillis)
+
+                //List of service used
                 servicesUsed=reservation.services
 
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
@@ -112,7 +113,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                             //List of all services
                             val d=listService
 
-                            //List of ServiceWithFee of that Sportcenter
+                            //List of ServiceWithFee of that SportCenter
                             servicesAll=reservationWithDetailsVM.allServiceWithoutSport(c,d)
 
                             //List of service chosen
@@ -222,7 +223,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         dateMCV.setOnClickListener {
             reservationDetailsUtil.showDatePickerDialog(
                 requireContext(),
-                vm
+                reservationWithDetailsVM
             )
         }
 
@@ -232,18 +233,19 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         hourMCV.setOnClickListener {
             reservationDetailsUtil.showNumberPickerDialog(
                 requireContext(),
-                vm,
+                reservationWithDetailsVM,
                 centerOpenTime,
                 centerCloseTime
             )
 
         }
 
-        vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
+        reservationWithDetailsVM.selectedDateTimeMillis.observe(viewLifecycleOwner) {
+            //never used c?
             val c = Calendar.getInstance()
             c.timeInMillis = vm.selectedDateTimeMillis.value!!
             reservationDetailsUtil.setDateTimeTextViews(
-                vm.selectedDateTimeMillis.value ?: 0,
+                reservationWithDetailsVM.selectedDateTimeMillis.value ?:0,
                 getString(R.string.dateFormat),
                 getString(R.string.hourFormat),
                 dateTV,

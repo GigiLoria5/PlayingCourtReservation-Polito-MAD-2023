@@ -10,7 +10,7 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import java.util.*
 import kotlin.math.max
 
@@ -65,7 +65,7 @@ object ReservationWithDetailsUtil {
         }
     }
 
-    fun showDatePickerDialog(viewContext: Context, vm: SearchCourtResultsVM) {
+    fun showDatePickerDialog(viewContext: Context, vm: ReservationWithDetailsVM) {
 
         val c = Calendar.getInstance()
         c.timeInMillis = vm.selectedDateTimeMillis.value!!
@@ -91,7 +91,7 @@ object ReservationWithDetailsUtil {
         datePickerDialog.show()
     }
 
-    fun showNumberPickerDialog(viewContext: Context, vm: SearchCourtResultsVM, centerMinHour: Int, centerMaxHour:Int) {
+    fun showNumberPickerDialog(viewContext: Context, vm: ReservationWithDetailsVM, centerMinHour: Int, centerMaxHour:Int) {
 
         val c = Calendar.getInstance()
         c.timeInMillis = vm.selectedDateTimeMillis.value!!
