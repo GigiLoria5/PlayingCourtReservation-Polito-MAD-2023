@@ -6,12 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import it.polito.mad.g26.playingcourtreservation.dao.*
 import it.polito.mad.g26.playingcourtreservation.model.*
-import java.io.File
 
 @Database(entities = [
     Court::class,
     Reservation::class,
     ReservationServices::class,
+    Review::class,
     Service::class,
     SportCenter::class,
     SportCenterServices::class,
@@ -20,12 +20,12 @@ abstract class CourtReservationDatabase: RoomDatabase() {
     abstract fun courtDao(): CourtDao
     abstract fun reservationDao(): ReservationDao
     abstract fun reservationWithDetailsDao(): ReservationWithDetailsDao
-
     abstract fun reservationServiceDao(): ReservationServicesDao
     abstract fun serviceDao(): ServiceDao
     abstract fun sportCenterDao(): SportCenterDao
     abstract fun sportCenterServiceDao(): SportCenterServicesDao
     abstract fun sportDao(): SportDao
+    abstract fun reviewDao(): ReviewDao
 
     companion object{
         @Volatile
