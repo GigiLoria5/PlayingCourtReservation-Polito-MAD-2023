@@ -245,7 +245,11 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
             if (it > 0) {
                 val reservationId = it
                 vm.setNewReservationId(-1)
-                println("RESERVATION MADE, THE ID IS $reservationId") // TODO: add confirmation alert
+                findNavController().navigate(
+                    SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
+                        reservationId
+                    )
+                )
             }
         }
     }
