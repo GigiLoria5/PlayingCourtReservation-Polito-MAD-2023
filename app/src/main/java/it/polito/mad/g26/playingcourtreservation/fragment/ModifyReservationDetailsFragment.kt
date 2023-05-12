@@ -2,12 +2,10 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,9 +19,9 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import it.polito.mad.g26.playingcourtreservation.adapter.ModifyReservationDetailsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
@@ -34,7 +32,6 @@ import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.Searc
 
 class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation_details) {
 
-
     /*   VISUAL COMPONENTS       */
     private lateinit var dateMCV: MaterialCardView
     private lateinit var dateTV: TextView
@@ -44,12 +41,11 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
     private val reservationDetailsUtil = ReservationWithDetailsUtil
     private val vm by viewModels<SearchCourtResultsVM>()
 
-
     private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
     private lateinit var servicesUsed: List<Service>
     private lateinit var servicesAll: List<ServiceWithFee>
-    private lateinit var servicesChoosen: MutableList<ServiceWithFee>
+    private lateinit var servicesChosen: MutableList<ServiceWithFee>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,7 +53,6 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         var amount = mutableListOf(0.0f)
         var centerOpenTime = 16
         var centerCloseTime = 20
-        var dateDayReservation = Calendar.getInstance()
 
         //List of text
         val center = view.findViewById<CustomTextView>(R.id.center_name)
@@ -90,7 +85,6 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
-
                 //Compile TextView
                 center.text = reservation.courtWithDetails.sportCenter.name
                 field.text = reservation.courtWithDetails.court.name
@@ -106,7 +100,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 priceNew.text = reservation.reservation.amount.toString()
 
                 //Variables
-                dateDayReservation = reservationWithDetailsVM.createCalendarObject(
+                val dateDayReservation = reservationWithDetailsVM.createCalendarObject(
                     reservation.reservation.date,
                     reservation.reservation.time
                 )
@@ -124,18 +118,18 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
                     .observe(viewLifecycleOwner) { listOfServicesWithSportCenter ->
                         //List of services with fee of the sport center
-                        val c = listOfServicesWithSportCenter
 
                         reservationWithDetailsVM.getAllServices()
                             .observe(viewLifecycleOwner) { listService ->
-                                //List of all services
-                                val d = listService
 
                                 //List of ServiceWithFee of that SportCenter
-                                servicesAll = reservationWithDetailsVM.allServiceWithoutSport(c, d)
+                                servicesAll = reservationWithDetailsVM.allServiceWithoutSport(
+                                    listOfServicesWithSportCenter,
+                                    listService
+                                )
 
                                 //List of service chosen
-                                servicesChoosen = reservationWithDetailsVM.filterServicesWithFee(
+                                servicesChosen = reservationWithDetailsVM.filterServicesWithFee(
                                     servicesAll,
                                     servicesUsed
                                 ).toMutableList()
@@ -144,13 +138,15 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                                 val recyclerView =
                                     view.findViewById<RecyclerView>(R.id.recyclerView_chip)
                                 recyclerView.adapter =
-                                    MyAdapterRecycle(servicesAll, servicesChoosen, priceNew, amount)
+                                    ModifyReservationDetailsAdapter(
+                                        servicesAll,
+                                        servicesChosen,
+                                        priceNew,
+                                        amount
+                                    )
                                 recyclerView.layoutManager = GridLayoutManager(context, 2)
-
                             }
-
                     }
-
             }
 
         /*ALERT DIALOG FOR SUCCESSFUL UPDATE*/
@@ -180,7 +176,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                     R.id.confirm_menu_item -> {
                         //Take Ids of services
                         val idsServices =
-                            reservationWithDetailsVM.getListOfIdService(servicesChoosen)
+                            reservationWithDetailsVM.getListOfIdService(servicesChosen)
                         //Date changes
                         val newDate = dateNew.text.toString()
                         reservationWithDetailsVM.updateReservation(
@@ -204,7 +200,6 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         (activity as? AppCompatActivity)?.supportActionBar?.title = "Edit Reservation"
         // Set Back Button
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
         dateMCV = view.findViewById(R.id.dateMCV)
@@ -247,76 +242,5 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 hourTV
             )
         }
-
-
-    }
-
-}
-
-
-//Class to contain the view of a single random item
-class MyViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-
-    private val chip = v.findViewById<Chip>(R.id.chip)
-
-    fun bind(
-        s: ServiceWithFee,
-        lUsed: MutableList<ServiceWithFee>,
-        price: TextView,
-        amount: MutableList<Float>
-    ) {
-
-
-        chip.text = s.service.name + " " + s.fee + "€"
-        chip.isChecked = s in lUsed
-        chip.isCloseIconVisible = chip.isChecked
-        chip.setOnClickListener {
-            chip.isCloseIconVisible = chip.isChecked
-            if (chip.isChecked) {
-                lUsed.add(s)
-                amount[0] += s.fee
-                price.text = amount[0].toString()
-
-
-            } else {
-                lUsed.remove(s)
-                amount[0] -= s.fee
-                price.text = amount[0].toString()
-            }
-        }
-    }
-
-
-    fun unbind() {
-        chip.text = ""
-        chip.setOnClickListener(null)
     }
 }
-
-
-//class that uses the viewHolder to show a specific item
-class MyAdapterRecycle(
-    val l: List<ServiceWithFee>,
-    var lUsed: MutableList<ServiceWithFee>,
-    var price: TextView,
-    var amount: MutableList<Float>
-) : RecyclerView.Adapter<MyViewHolder>() {
-
-    //Inflater of the parent transform the xml of a row of the recyclerView into a view
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.reservation_chip, parent, false)
-        return MyViewHolder(v)
-    }
-
-    //Need to know the max value of position
-    override fun getItemCount(): Int {
-        return l.size
-    }
-
-    //called after viewHolder are created, to put data into them
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(l[position], lUsed, price, amount)
-    }
-}
-

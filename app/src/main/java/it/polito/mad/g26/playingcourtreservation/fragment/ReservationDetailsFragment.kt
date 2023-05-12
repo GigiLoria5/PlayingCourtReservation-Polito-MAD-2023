@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -86,13 +87,18 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                 val dayRes = dateList[0].toInt()
                 val timeList = reservation.reservation.time.split(":")
                 val hourRes = timeList[0].toInt()
-                val calendarRes = Calendar.getInstance()
-                calendarRes.set(yearRes, monthRes - 1, dayRes, hourRes, 0)
+                val calendarRes = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, yearRes)
+                    set(Calendar.MONTH, monthRes - 1)
+                    set(Calendar.DAY_OF_MONTH, dayRes)
+                    set(Calendar.HOUR_OF_DAY, hourRes)
+                    set(Calendar.MINUTE, 0)
+                }
 
                 //Alert Dialog
                 val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
                 builder.setMessage("Are you sure you want to delete the reservation?")
-                builder.setPositiveButton("Yes") { dialog, id ->
+                builder.setPositiveButton("Yes") { _, _ ->
                     // User clicked OK button
                     reservationWithDetailsVM.deleteReservationById(reservationId)
                     findNavController().popBackStack()
@@ -117,22 +123,33 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                 } else {
                     deleteButton.isEnabled = false
                     modifyButton.isEnabled = false
-                    deleteButton.setBackgroundColor(resources.getColor(R.color.grey))
-                    modifyButton.setBackgroundColor(resources.getColor(R.color.grey))
+                    deleteButton.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey
+                        )
+                    )
+                    modifyButton.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey
+                        )
+                    )
                 }
 
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
                     .observe(viewLifecycleOwner) { listOfServicesWithSportCenter ->
                         //List of services with fee of the sport center
-                        val c = listOfServicesWithSportCenter
 
                         reservationWithDetailsVM.getAllServices()
                             .observe(viewLifecycleOwner) { listService ->
                                 //List of all services
-                                val d = listService
 
-                                //List of ServiceWithFee of that Sportcenter
-                                servicesAll = reservationWithDetailsVM.allServiceWithoutSport(c, d)
+                                //List of ServiceWithFee of that Sport center
+                                servicesAll = reservationWithDetailsVM.allServiceWithoutSport(
+                                    listOfServicesWithSportCenter,
+                                    listService
+                                )
 
                                 //Filter service to take only chosen
                                 servicesChosen = reservationWithDetailsVM.filterServicesWithFee(
@@ -174,10 +191,7 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
             }
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
     }
-
-
 }
 
 //Class to contain the view of a single random item
@@ -187,12 +201,15 @@ class MyViewHolder1(v: View) : RecyclerView.ViewHolder(v) {
 
     fun bind(s: ServiceWithFee, empty: Boolean) {
         if (empty)
-            cBox.text = "No service chosen"
+            cBox.text = super.itemView.context.getString(R.string.no_services_chosen)
         else
-            cBox.text = "${s.service.name}\n€${s.fee}"
+            cBox.text = super.itemView.context.getString(
+                R.string.reservation_info_concatenation,
+                s.service.name,
+                s.fee.toString()
+            )
     }
 }
-
 
 class MyAdapterRecycle1(private val l: List<ServiceWithFee>, private val empty: Boolean) :
     RecyclerView.Adapter<MyViewHolder1>() {

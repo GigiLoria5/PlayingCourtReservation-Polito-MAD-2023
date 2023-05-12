@@ -7,6 +7,7 @@
     <string name="no_reservations">No reservations for this day</string>
     <string name="reservation_info_concatenation">%1$s, %2$s</string>
     <string name="reservation_info_amount">€%1$s</string>
+    <string name="no_services_chosen">No service chosen</string>
     <!-- Show Profile -->
     <string name="fullname_title">Fullname</string>
     <string name="username_title">Username</string>

@@ -97,9 +97,9 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         super.onSaveInstanceState(outState)
 
         // save current calendar selection
-        outState.putInt("YEAR", myCalendar.get(Calendar.YEAR))
-        outState.putInt("MONTH", myCalendar.get(Calendar.MONTH))
-        outState.putInt("DAY_OF_MONTH", myCalendar.get(Calendar.DAY_OF_MONTH))
+        outState.putInt("YEAR", myCalendar[Calendar.YEAR])
+        outState.putInt("MONTH", myCalendar[Calendar.MONTH])
+        outState.putInt("DAY_OF_MONTH", myCalendar[Calendar.DAY_OF_MONTH])
         //save datePickerDialog
         if (::datePickerDialog.isInitialized && datePickerDialog.isShowing) {
             outState.putBoolean("datePickerDialogShowing", true)
@@ -162,9 +162,9 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             dateOfBirthEditText.setText(json?.getString("date"))
             autoCompleteGender.setText(json?.getString("gender"), false)
             locationEditText.setText(json?.getString("location"))
-            json?.getInt("year")?.let { myCalendar.set(Calendar.YEAR, it) }
-            json?.getInt("month")?.let { myCalendar.set(Calendar.MONTH, it) }
-            json?.getInt("day")?.let { myCalendar.set(Calendar.DAY_OF_MONTH, it) }
+            json?.getInt("year")?.let { myCalendar[Calendar.YEAR] = it }
+            json?.getInt("month")?.let { myCalendar[Calendar.MONTH] = it }
+            json?.getInt("day")?.let { myCalendar[Calendar.DAY_OF_MONTH] = it }
         } else {//put the default value
             usernameEditText.setText(getString(R.string.default_username))
             autoCompletePosition.setText(getString(R.string.default_position), false)
@@ -187,9 +187,9 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         //Date of birth management
         //updateDateOfBirthEditText(myCalendar)
         val datePicker = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-            myCalendar.set(Calendar.YEAR, year)
-            myCalendar.set(Calendar.MONTH, month)
-            myCalendar.set(Calendar.DAY_OF_MONTH, day)
+            myCalendar[Calendar.YEAR] = year
+            myCalendar[Calendar.MONTH] = month
+            myCalendar[Calendar.DAY_OF_MONTH] = day
             updateDateOfBirthEditText(myCalendar)
         }
 
@@ -198,9 +198,9 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         datePickerDialog = DatePickerDialog(
             requireContext(),
             datePicker,
-            myCalendar.get(Calendar.YEAR),
-            myCalendar.get(Calendar.MONTH),
-            myCalendar.get(Calendar.DAY_OF_MONTH)
+            myCalendar[Calendar.YEAR],
+            myCalendar[Calendar.MONTH],
+            myCalendar[Calendar.DAY_OF_MONTH]
         )
         datePickerDialog.datePicker.maxDate = maxDate.timeInMillis
 
@@ -219,9 +219,9 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         //Restore status
         if (savedInstanceState !== null) {
             //take calendar
-            myCalendar.set(Calendar.YEAR, savedInstanceState.getInt("YEAR"))
-            myCalendar.set(Calendar.MONTH, savedInstanceState.getInt("MONTH"))
-            myCalendar.set(Calendar.DAY_OF_MONTH, savedInstanceState.getInt("DAY_OF_MONTH"))
+            myCalendar[Calendar.YEAR] = savedInstanceState.getInt("YEAR")
+            myCalendar[Calendar.MONTH] = savedInstanceState.getInt("MONTH")
+            myCalendar[Calendar.DAY_OF_MONTH] = savedInstanceState.getInt("DAY_OF_MONTH")
 
             //restore datePickerDialog
             val datePickerDialogOn =
@@ -367,17 +367,17 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                         json.put("gender", autoCompleteGender.text.toString())
                         json.put("position", autoCompletePosition.text.toString())
                         json.put("date", dateOfBirthEditText.text.toString())
-                        json.put("year", myCalendar.get(Calendar.YEAR))
-                        json.put("month", myCalendar.get(Calendar.MONTH))
-                        json.put("day", myCalendar.get(Calendar.DAY_OF_MONTH))
+                        json.put("year", myCalendar[Calendar.YEAR])
+                        json.put("month", myCalendar[Calendar.MONTH])
+                        json.put("day", myCalendar[Calendar.DAY_OF_MONTH])
 
                         //Calculate and save age
-                        val year = myCalendar.get(Calendar.YEAR)
-                        val day = myCalendar.get(Calendar.DAY_OF_YEAR)
+                        val year = myCalendar[Calendar.YEAR]
+                        val day = myCalendar[Calendar.DAY_OF_YEAR]
                         val todayCalendar = Calendar.getInstance(TimeZone.getDefault())
-                        val currentYear = todayCalendar.get(Calendar.YEAR)
+                        val currentYear = todayCalendar[Calendar.YEAR]
                         var age = currentYear - year
-                        val currentDay = todayCalendar.get(Calendar.DAY_OF_YEAR)
+                        val currentDay = todayCalendar[Calendar.DAY_OF_YEAR]
                         if (day > currentDay) {
                             age--
                         }
