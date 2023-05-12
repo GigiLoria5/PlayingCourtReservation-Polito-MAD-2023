@@ -32,7 +32,7 @@ import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetail
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
 
-class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation_x) {
+class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation_details) {
 
 
     /*   VISUAL COMPONENTS       */

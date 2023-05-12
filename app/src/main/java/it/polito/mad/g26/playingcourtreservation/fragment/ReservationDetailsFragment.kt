@@ -30,7 +30,7 @@ import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 
 
-class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
+class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_details) {
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()

@@ -47,20 +47,20 @@
     <fragment
         android:id="@+id/reservationDetailsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ReservationDetailsFragment"
-        android:label="reservationXFragment"
-        tools:layout="@layout/fragment_reservation_x">
+        android:label="reservationDetailsFragment"
+        tools:layout="@layout/fragment_reservation_details">
         <argument
             android:name="reservationId"
             app:argType="integer" />
         <action
             android:id="@+id/openReservationEdit"
-            app:destination="@id/modifyReservationXFragment" />
+            app:destination="@id/modifyReservationDetailsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/modifyReservationXFragment"
+        android:id="@+id/modifyReservationDetailsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ModifyReservationXFragment"
-        android:label="modifyReservationXFragment"
-        tools:layout="@layout/fragment_modify_reservation_x">
+        android:label="modifyReservationDetailsFragment"
+        tools:layout="@layout/fragment_modify_reservation_details">
         <argument
             android:name="reservationId"
             app:argType="integer" />
@@ -109,6 +109,17 @@
         android:label="SearchCourtsFragment">
         <argument
             android:name="sportCenterId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_searchCourts_to_courtReviews"
+            app:destination="@id/courtReviewsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/courtReviewsFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.CourtReviewsFragment"
+        android:label="CourtReviewsFragment">
+        <argument
+            android:name="courtId"
             app:argType="integer" />
     </fragment>
 </navigation>

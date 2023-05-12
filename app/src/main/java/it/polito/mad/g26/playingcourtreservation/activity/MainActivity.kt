@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity() {
 
                     R.id.searchCourtsFragment -> lockOrientationAndShowNav()
 
+                    R.id.courtReviewsFragment -> lockOrientationAndShowNav()
+
                     // Reservations
                     R.id.reservationsFragment -> {
                         requestedOrientation = SCREEN_ORIENTATION_LOCKED
@@ -74,6 +76,8 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     R.id.reservationDetailsFragment -> lockOrientationAndShowNav()
+
+                    R.id.modifyReservationDetailsFragment -> lockOrientationAndHideNav()
 
                     // Profile
                     R.id.showProfileFragment -> {
@@ -101,10 +105,12 @@ class MainActivity : AppCompatActivity() {
         setOrientationAndVisibility(SCREEN_ORIENTATION_LOCKED, false)
     }
 
+    // This method is thought to be called by subViews
     private fun setOrientationAndVisibility(orientation: Int, isBottomNavVisible: Boolean) {
         requestedOrientation = orientation
         if (isBottomNavVisible) {
             bottomNav.makeVisible()
+            uncheckAllMenuItems()
             return
         }
         bottomNav.makeGone()
@@ -116,6 +122,12 @@ class MainActivity : AppCompatActivity() {
             return
         }
         navController.navigate(destinationId)
+    }
+
+    private fun uncheckAllMenuItems() {
+        for (i in 0 until bottomNav.menu.size()) {
+            bottomNav.menu.getItem(i).isChecked = false
+        }
     }
 
 }
