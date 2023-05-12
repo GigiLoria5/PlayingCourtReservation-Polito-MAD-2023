@@ -125,9 +125,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun uncheckAllMenuItems() {
+        bottomNav.menu.setGroupCheckable(0, true, false)
         for (i in 0 until bottomNav.menu.size()) {
             bottomNav.menu.getItem(i).isChecked = false
         }
+        bottomNav.menu.setGroupCheckable(0, true, true)
     }
 
 }
