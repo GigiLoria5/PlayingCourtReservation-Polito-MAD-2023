@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -20,12 +19,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.adapter.ModifyReservationDetailsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.ReservationWithDetailsUtil
+import it.polito.mad.g26.playingcourtreservation.util.createCalendarObject
+import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.util.takeIntCenterTime
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
@@ -49,6 +50,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupActionBar(activity, "Edit Reservation Details", true)
 
         var amount = mutableListOf(0.0f)
         var centerOpenTime = 16
@@ -100,14 +102,14 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 priceNew.text = reservation.reservation.amount.toString()
 
                 //Variables
-                val dateDayReservation = reservationWithDetailsVM.createCalendarObject(
+                val dateDayReservation = createCalendarObject(
                     reservation.reservation.date,
                     reservation.reservation.time
                 )
                 centerOpenTime =
-                    reservationWithDetailsVM.takeIntCenterTime(reservation.courtWithDetails.sportCenter.openTime)
+                    takeIntCenterTime(reservation.courtWithDetails.sportCenter.openTime)
                 centerCloseTime =
-                    reservationWithDetailsVM.takeIntCenterTime(reservation.courtWithDetails.sportCenter.closeTime)
+                    takeIntCenterTime(reservation.courtWithDetails.sportCenter.closeTime)
 
                 //Select date of reservation as initial date
                 reservationWithDetailsVM.changeSelectedDateTimeMillis(dateDayReservation.timeInMillis)
@@ -196,10 +198,6 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        // Change Title
-        (activity as? AppCompatActivity)?.supportActionBar?.title = "Edit Reservation"
-        // Set Back Button
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
         dateMCV = view.findViewById(R.id.dateMCV)

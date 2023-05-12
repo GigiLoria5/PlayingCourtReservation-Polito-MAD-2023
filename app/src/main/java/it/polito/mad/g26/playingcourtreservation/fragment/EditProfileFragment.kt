@@ -37,6 +37,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -472,7 +473,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
     //update Date Of Birth Edit Text
     private fun updateDateOfBirthEditText(myCalendar: Calendar) {
-        val myFormat = "dd-MM-yyyy"
+        val myFormat = Reservation.getReservationDatePattern()
         val sdf = SimpleDateFormat(myFormat, Locale.ITALY)
         dateOfBirthEditText.setText(sdf.format(myCalendar.time))
     }

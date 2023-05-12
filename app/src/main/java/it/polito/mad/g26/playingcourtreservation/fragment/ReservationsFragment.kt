@@ -19,6 +19,7 @@ import com.kizitonwose.calendar.view.WeekCalendarView
 import com.kizitonwose.calendar.view.WeekDayBinder
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReservationsAdapter
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
 import it.polito.mad.g26.playingcourtreservation.util.VerticalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
@@ -44,7 +45,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
     private val today = LocalDate.now()
     private var selectedDate: LocalDate = today
-    private val reservationDatePattern = "dd-MM-yyyy"
+    private val reservationDatePattern = Reservation.getReservationDatePattern()
     var isSetupFinished = false
     private val selectionFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy")
 
