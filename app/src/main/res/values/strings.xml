@@ -79,4 +79,10 @@
         <item>Supporters</item>
         <item>MiniBar</item>
     </string-array>
+
+    <string name="tv_rating">Rating</string>
+    <string name="tv_review">Write a text review</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="submit_button">Submit</string>
+    <string name="edit_text_review">Write a text review \n(min 10 characters)</string>
 </resources>
