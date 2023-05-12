@@ -2,13 +2,13 @@ package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -24,9 +24,9 @@ import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
-class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_results) {
+class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_centers) {
 
-    private val args: SearchCourtResultsFragmentArgs by navArgs()
+    private val args: SearchSportCentersFragmentArgs by navArgs()
     private val vm by viewModels<SearchCourtResultsVM>()
 
     /*   VISUAL COMPONENTS       */
@@ -48,34 +48,36 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val city = args.city
+        val bornFrom = args.bornFrom
 
         /* VM INITIALIZATIONS */
-        vm.setCity(args.city)
+        vm.setCity(city)
 
         //set search icon onclick
         val customSearchIconIV = view.findViewById<ImageView>(R.id.customSearchIconIV)
         customSearchIconIV.setOnClickListener {
-            searchResultUtils.navigateToAction(findNavController(), args.city)
+            searchResultUtils.navigateToAction(findNavController(), city)
         }
 
         /* CUSTOM TOOLBAR BACK MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
         customToolBar.setNavigationOnClickListener {
-            searchResultUtils.navigateBack(findNavController(), args.city, args.bornFrom)
+            searchResultUtils.navigateBack(findNavController(), city, bornFrom)
         }
 
         /*BACK BUTTON MANAGEMENT*/
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            searchResultUtils.navigateBack(findNavController(), args.city, args.bornFrom)
+            searchResultUtils.navigateBack(findNavController(), city, bornFrom)
         }
 
         //set onclick for title of custom toolbar
         customToolBar.setOnClickListener {
-            searchResultUtils.navigateToAction(findNavController(), args.city)
+            searchResultUtils.navigateToAction(findNavController(), city)
         }
 
         //set title of custom toolbar
-        customToolBar.title = "Courts in ${args.city}"
+        customToolBar.title = "Sport Centers in $city"
 
         /* COURT TYPE DROPDOWN MANAGEMENT*/
         courtTypeACTV = view.findViewById(R.id.courtTypeACTV)
@@ -140,6 +142,12 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
 
         /*RESERVE A COURT TV */
         selectionTutorialTV = view.findViewById(R.id.selectionTutorialTV)
+        // TODO: remove this click listener later
+        selectionTutorialTV.setOnClickListener {
+            val direction =
+                SearchSportCentersFragmentDirections.actionSearchSportCentersToSearchCourts(1)
+            findNavController().navigate(direction)
+        }
 
         /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
@@ -213,7 +221,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
                     val reservationBTN = view.findViewById<Button>(R.id.reservationBTN)
                     reservationBTN.setOnClickListener { _ ->
                         findNavController().navigate(
-                            SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToReservationDetailsFragment(
+                            SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
                                 it
                             )
                         )
@@ -237,11 +245,7 @@ class SearchCourtResultsFragment : Fragment(R.layout.fragment_search_court_resul
             if (it > 0) {
                 val reservationId = it
                 vm.setNewReservationId(-1)
-                findNavController().navigate(
-                    SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToReservationDetailsFragment(
-                        reservationId
-                    )
-                )
+                println("RESERVATION MADE, THE ID IS $reservationId") // TODO: add confirmation alert
             }
         }
     }

@@ -28,7 +28,7 @@
     <string name="default_fullname">Giacinto Milanesi</string>
     <integer name="default_age">21</integer>
     <string name="default_gender">Male</string>
-    <string name="default_location">Turin</string>
+    <string name="default_location">Torino</string>
     <integer name="default_organized">0</integer>
     <integer name="default_played">0</integer>
     <string name="default_wdl">0/0/0</string>

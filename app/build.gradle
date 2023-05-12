@@ -14,7 +14,7 @@ android {
         minSdk 24
         targetSdk 33
         versionCode 1
-        versionName "0.2"
+        versionName "0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -61,7 +61,7 @@ dependencies {
     // Desugaring Library needed to support Calendar view for sdk below 25
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
     // AndroidX Libraries
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

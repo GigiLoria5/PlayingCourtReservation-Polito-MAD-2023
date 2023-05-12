@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/grey_light"
     android:paddingBottom="@dimen/pageExternalSpace"
-    tools:context=".fragment.searchFragments.SearchCourtFragment">
+    tools:context=".fragment.searchFragments.SearchSportCentersHomeFragment">
 
     <TextView
         android:id="@+id/searchInfoTV"
@@ -15,11 +15,9 @@
         android:layout_margin="@dimen/pageExternalSpace"
         android:gravity="center"
         android:text="@string/searchBoxInfoText"
-
-        android:textColor="@color/grey"
+        android:textColor="@color/custom_black"
         android:textSize="@dimen/searchInfoTextSize"
         app:layout_constraintBottom_toTopOf="@id/cityNameMCV"
-
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
@@ -40,7 +38,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingVertical="2dp">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/citySearchMCV"

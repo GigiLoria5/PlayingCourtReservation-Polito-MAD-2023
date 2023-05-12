@@ -13,19 +13,18 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtResultsFragmentDirections
-import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
-import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtFragmentDirections
+import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersFragmentDirections
+import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersHomeFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.model.Sport
 import it.polito.mad.g26.playingcourtreservation.model.custom.CourtWithDetails
-
-import java.util.*
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
+import java.util.Locale
 
 object SearchCourtResultsUtil {
 
     fun getMockInitialDateTime(): Calendar {
         val c = getDelayedCalendar()
-        c.set(Calendar.MINUTE, 0)
+        c[Calendar.MINUTE] = 0
         return c
     }
 
@@ -62,13 +61,13 @@ object SearchCourtResultsUtil {
     private fun adjustDateDateCombination(mySelectionCalendar: Calendar) {
         val c = getDelayedCalendar()
         if (mySelectionCalendar.timeInMillis < c.timeInMillis) {
-            mySelectionCalendar.set(
-                c[Calendar.YEAR],
-                c[Calendar.MONTH],
-                c[Calendar.DAY_OF_MONTH],
-                c[Calendar.HOUR_OF_DAY],
-                0
-            )
+            mySelectionCalendar.apply {
+                set(Calendar.YEAR, c[Calendar.YEAR])
+                set(Calendar.MONTH, c[Calendar.MONTH])
+                set(Calendar.DAY_OF_MONTH, c[Calendar.DAY_OF_MONTH])
+                set(Calendar.HOUR_OF_DAY, c[Calendar.HOUR_OF_DAY])
+                set(Calendar.MINUTE, 0)
+            }
         }
     }
 
@@ -79,8 +78,11 @@ object SearchCourtResultsUtil {
 
 
         val datePicker = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-            c.set(year, month, day)
-
+            c.apply {
+                set(Calendar.YEAR, year)
+                set(Calendar.MONTH, month)
+                set(Calendar.DAY_OF_MONTH, day)
+            }
             adjustDateDateCombination(c)
             vm.changeSelectedDateTimeMillis(c.timeInMillis)
         }
@@ -121,14 +123,20 @@ object SearchCourtResultsUtil {
             .slice(numberPicker.minValue..23).toTypedArray()
 
         val builder = AlertDialog.Builder(viewContext)
-        builder.setTitle(viewContext.getString(
-            R.string.select_hour))
-        builder.setMessage(viewContext.getString(
-            R.string.select_hour_description))
+        builder.setTitle(
+            viewContext.getString(
+                R.string.select_hour
+            )
+        )
+        builder.setMessage(
+            viewContext.getString(
+                R.string.select_hour_description
+            )
+        )
         builder.setView(linearLayout)
         builder.setPositiveButton("OK") { _, _ ->
-            c.set(Calendar.HOUR_OF_DAY, numberPicker.value)
-
+            c[Calendar.HOUR_OF_DAY] = numberPicker.value
+            c[Calendar.MINUTE] = 0
             //Una volta che aggiorno la data, devo controllare la coppia data-ora per annullare possibili errori
             adjustDateDateCombination(c)
             vm.changeSelectedDateTimeMillis(c.timeInMillis)
@@ -155,11 +163,10 @@ object SearchCourtResultsUtil {
 
     fun navigateToAction(navController: NavController, city: String) {
         val direction =
-            SearchCourtResultsFragmentDirections.actionSearchCourtResultsFragmentToSearchCourtActionFragment(
-                "result", city
+            SearchSportCentersFragmentDirections.actionSearchSportCentersToSportCentersAction(
+                city, "result"
             )
         navController.navigate(direction)
-
     }
 
     fun navigateBack(navController: NavController, city: String, bornFrom: String) {
@@ -168,7 +175,7 @@ object SearchCourtResultsUtil {
         else {
             navController.popBackStack()
             val direction =
-                SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtActionFragment(
+                SearchSportCentersHomeFragmentDirections.actionHomeToSportCentersAction(
                     "home", city
                 )
             navController.navigate(direction)
@@ -209,18 +216,27 @@ object SearchCourtResultsUtil {
 
         val builder: AlertDialog.Builder =
             AlertDialog.Builder(viewContext)
-                .setTitle(viewContext.getString(
-                    R.string.reserve_this_court))
+                .setTitle(
+                    viewContext.getString(
+                        R.string.reserve_this_court
+                    )
+                )
                 .setMessage(reservationConfirmationText)
-                .setPositiveButton(viewContext.getString(
-                    R.string.reserve_button)) { _, _ ->
+                .setPositiveButton(
+                    viewContext.getString(
+                        R.string.reserve_button
+                    )
+                ) { _, _ ->
                     vm.reserveCourt(
                         courtWithDetails.court.id,
                         total,
                         selectedServicesIds
                     )
-                }.setNegativeButton(viewContext.getString(
-                    R.string.do_not_reserve_button)) { _, _ -> }
+                }.setNegativeButton(
+                    viewContext.getString(
+                        R.string.do_not_reserve_button
+                    )
+                ) { _, _ -> }
                 .setOnCancelListener { }
         val dialog = builder.create()
         dialog.show()
