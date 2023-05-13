@@ -13,6 +13,6 @@ interface ReviewDao {
     fun findAll(): LiveData<List<Review>>
 
     @Insert
-    fun addReview(reservation: Review): Long
+    fun addReview(reservation: Review)
 
 }
