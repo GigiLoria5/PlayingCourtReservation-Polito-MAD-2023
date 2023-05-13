@@ -29,10 +29,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/rating_description"
-            android:isIndicator="true"
+            android:isIndicator="false"
             android:numStars="5"
             android:rating="@fraction/default_rating"
             android:theme="@style/ratingBar"
+            android:stepSize="0.5"
             tools:layout_editor_absoluteX="101dp"
             tools:layout_editor_absoluteY="136dp" />
     </LinearLayout>

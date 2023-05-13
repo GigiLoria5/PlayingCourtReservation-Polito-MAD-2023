@@ -25,6 +25,7 @@ import com.google.android.material.button.MaterialButton
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
+import it.polito.mad.g26.playingcourtreservation.ui.CustomDialogAlertAddReview
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
@@ -41,6 +42,8 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
     private val dummyServiceWithFee = ServiceWithFee(dummyService, 0.0f)
     private val dummyListServiceWithFee = listOf(dummyServiceWithFee)
     private val today = Calendar.getInstance()
+
+    private lateinit var addReview: CustomDialogAlertAddReview
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,6 +69,9 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
 
         // Retrieve Reservation Details
         val reservationId = args.reservationId
+
+        val addReview = CustomDialogAlertAddReview(requireContext(), reservationId, 1)
+
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
@@ -109,9 +115,12 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
                         builder.show()
                     }
                     modifyButton.setOnClickListener {
+                        /*
                         val action =
                             ReservationDetailsFragmentDirections.openReservationEdit(reservationId)
                         findNavController().navigate(action)
+                         */
+                        addReview.show()
                     }
 
                 } else {
