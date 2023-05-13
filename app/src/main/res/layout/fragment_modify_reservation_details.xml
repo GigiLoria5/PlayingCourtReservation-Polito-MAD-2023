@@ -4,33 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="16dp"
+    android:padding="16dp"
     tools:context=".fragment.ModifyReservationXFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:fillViewport="true"
-        android:paddingBottom="16dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:paddingBottom="16dp"
-            android:layout_marginTop="@dimen/margin_top_Rdetails"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
             <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                 android:id="@+id/center_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/sport_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -40,8 +34,10 @@
                 android:id="@+id/sport_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top_Rdetails"
+                android:layout_marginTop="@dimen/margins_reservation_details"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/location_info"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/center_name">
 
@@ -65,8 +61,10 @@
                 android:id="@+id/location_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top_Rdetails"
+                android:layout_marginTop="@dimen/margins_reservation_details"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/time_info"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sport_info">
 
@@ -90,8 +88,10 @@
                 android:id="@+id/time_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top_Rdetails"
+                android:layout_marginTop="@dimen/margins_reservation_details"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/price"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/location_info">
 
@@ -116,7 +116,8 @@
                 android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top_Rdetails"
+                android:layout_marginTop="@dimen/margins_reservation_details"
+                app:layout_constraintBottom_toTopOf="@id/line_before_detail_new"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/time_info"
@@ -126,18 +127,21 @@
                 android:id="@+id/line_before_detail_new"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margins_reservation_details"
                 android:background="@color/custom_black"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/time_info_new"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/margin_top_Rdetails"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/price" />
 
             <LinearLayout
                 android:id="@+id/time_info_new"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top_Rdetails"
+                android:layout_marginTop="@dimen/margins_reservation_details"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/price_new"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/line_before_detail_new">
 
@@ -162,7 +166,8 @@
                 android:id="@+id/price_new"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top_Rdetails"
+                android:layout_marginTop="@dimen/margins_reservation_details"
+                app:layout_constraintBottom_toTopOf="@id/titleModify"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/time_info_new"
@@ -173,9 +178,9 @@
                 android:id="@+id/titleModify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit Date/time"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:layout_marginTop="16dp"
+                android:text="@string/edit_date_time"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:layout_constraintBottom_toTopOf="@id/Time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -185,6 +190,7 @@
                 android:id="@+id/Time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/chooseServices"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_percent="0.12"
                 app:layout_constraintStart_toStartOf="parent"
@@ -194,9 +200,9 @@
                     android:id="@+id/dateTypeCL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/dateTimeButtonsMCV"
@@ -210,9 +216,9 @@
                         app:cardMaxElevation="4dp"
                         app:cardPreventCornerOverlap="true"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent">
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="wrap_content"
@@ -221,7 +227,7 @@
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/dateMCV"
                                 android:layout_width="100dp"
-                                android:layout_height="50dp"
+                                android:layout_height="0dp"
                                 app:cardElevation="0dp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toStartOf="@id/dateTimeDivider"
@@ -233,7 +239,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:gravity="center"
-                                    android:text="date"
+                                    android:text="@string/dateFormat"
                                     android:textAllCaps="false"
                                     android:textColor="@color/grey"
                                     android:textSize="15sp"
@@ -254,7 +260,7 @@
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/hourMCV"
                                 android:layout_width="100dp"
-                                android:layout_height="50dp"
+                                android:layout_height="0dp"
                                 app:cardElevation="0dp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toEndOf="@id/dateTimeDivider"
@@ -266,7 +272,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:gravity="center"
-                                    android:text="Hour"
+                                    android:text="@string/hourFormat"
                                     android:textAllCaps="false"
                                     android:textColor="@color/grey"
                                     android:textSize="15sp"
@@ -284,6 +290,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/Time">
@@ -292,7 +299,7 @@
                     android:id="@+id/chooseTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Choose services"
+                    android:text="@string/choose_services"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
