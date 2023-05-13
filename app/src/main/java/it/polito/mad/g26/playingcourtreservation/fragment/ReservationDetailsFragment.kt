@@ -3,12 +3,10 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -20,10 +18,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.adapter.ReservationDetailsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
@@ -162,10 +160,9 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                                     view.findViewById<RecyclerView>(R.id.service_list)
                                 if (servicesChosen.isEmpty())
                                     recyclerView.adapter =
-                                        MyAdapterRecycle1(dummyListServiceWithFee, true)
+                                        ReservationDetailsAdapter(dummyListServiceWithFee, true)
                                 else
-                                    recyclerView.adapter = MyAdapterRecycle1(servicesChosen, false)
-                                recyclerView.layoutManager = GridLayoutManager(context, 2)
+                                    recyclerView.adapter = ReservationDetailsAdapter(servicesChosen, false)
                             }
                     }
             }
@@ -191,43 +188,5 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
             }
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-}
-
-//Class to contain the view of a single random item
-class MyViewHolder1(v: View) : RecyclerView.ViewHolder(v) {
-
-    private val cBox = v.findViewById<MaterialButton>(R.id.material_button)
-
-    fun bind(s: ServiceWithFee, empty: Boolean) {
-        if (empty)
-            cBox.text = super.itemView.context.getString(R.string.no_services_chosen)
-        else
-            cBox.text = super.itemView.context.getString(
-                R.string.reservation_info_concatenation,
-                s.service.name,
-                s.fee.toString()
-            )
-    }
-}
-
-class MyAdapterRecycle1(private val l: List<ServiceWithFee>, private val empty: Boolean) :
-    RecyclerView.Adapter<MyViewHolder1>() {
-
-    //Inflater of the parent transform the xml of a row of the recyclerView into a view
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder1 {
-        val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.service_recycler, parent, false)
-        return MyViewHolder1(v)
-    }
-
-    //Need to know the max value of position
-    override fun getItemCount(): Int {
-        return l.size
-    }
-
-    //called after viewHolder are created, to put data into them
-    override fun onBindViewHolder(holder: MyViewHolder1, position: Int) {
-        holder.bind(l[position], empty)
     }
 }
