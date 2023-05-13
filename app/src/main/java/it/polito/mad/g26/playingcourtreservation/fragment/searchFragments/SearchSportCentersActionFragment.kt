@@ -5,9 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import androidx.fragment.app.Fragment
 import android.widget.EditText
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,9 +17,9 @@ import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CityResultAdapter
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtActionVM
 
-class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action) {
+class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport_centers_action) {
 
-    private val args: SearchCourtActionFragmentArgs by navArgs()
+    private val args: SearchSportCentersActionFragmentArgs by navArgs()
     private val vm by viewModels<SearchCourtActionVM>()
 
     private lateinit var searchInputET: EditText
@@ -33,7 +33,7 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
         customToolBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-        customToolBar.title = "Find your court"
+        customToolBar.title = "Find your Sport Center"
         searchInputET = view.findViewById(R.id.searchInputET)
         searchInputET.requestFocus()
         val inputMethodManager: InputMethodManager =
@@ -46,7 +46,6 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
         /* CITIES RESULTS RECYCLE VIEW INITIALIZER*/
         citiesResultRV = view.findViewById(R.id.citiesResultRV)
 
-
         val cityResultAdapter = CityResultAdapter(vm.cities.value ?: listOf()) {
             //comingFrom: result - arrivi da results page
             //comingFrom: home - arrivi dalla home page
@@ -56,12 +55,13 @@ class SearchCourtActionFragment : Fragment(R.layout.fragment_search_court_action
                     findNavController().popBackStack()
                     findNavController().popBackStack()
                 }
+
                 "home" -> {
                     findNavController().popBackStack()
                 }
             }
             findNavController().navigate(
-                SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtResultsFragment(
+                SearchSportCentersHomeFragmentDirections.actionHomeToSearchSportCenters(
                     "actionSearch",
                     it
                 )

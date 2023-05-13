@@ -1,17 +1,27 @@
 package it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.switchMap
 import androidx.room.Transaction
+import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
+import it.polito.mad.g26.playingcourtreservation.model.Reservation.Companion.getReservationDatePattern
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.Sport
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
-import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
-import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDataFormatted
-import it.polito.mad.g26.playingcourtreservation.repository.*
+import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
+import it.polito.mad.g26.playingcourtreservation.repository.ReservationServiceRepository
+import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
+import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
+import it.polito.mad.g26.playingcourtreservation.repository.SportRepository
+import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
+import kotlin.collections.set
 import kotlin.concurrent.thread
 
 class SearchCourtResultsVM(application: Application) : AndroidViewModel(application) {
@@ -32,7 +42,7 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
 
 
     /*DATE TIME MANAGEMENT*/
-    private val dateFormat = "dd-MM-YYYY"
+    private val dateFormat = getReservationDatePattern()
     private val timeFormat = "kk:mm"
     private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
         it.value = searchResultUtils.getMockInitialDateTime().timeInMillis
@@ -100,18 +110,21 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
                     selectedServices.value?.toSet() ?: setOf(),
                     selectedSport.value ?: 0
                 )
+
             (selectedSport.value != 0) ->
                 sportCenterRepository.filteredSportCentersSportId(
                     selectedCity,
                     getDateTimeFormatted(timeFormat),
                     selectedSport.value ?: 0
                 )
+
             (selectedServices.value?.isNotEmpty() == true) ->
                 sportCenterRepository.filteredSportCentersServices(
                     selectedCity,
                     getDateTimeFormatted(timeFormat),
                     selectedServices.value?.toSet() ?: setOf()
                 )
+
             else -> sportCenterRepository.filteredSportCentersBase(
                 selectedCity,
                 getDateTimeFormatted(timeFormat)
@@ -123,10 +136,7 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
         return sportCenters.value?.map {
             val sportCenter = it.sportCenter
             val courtsWithDetails = it.courtsWithDetails.filter { courtWithDetails ->
-                if (getSelectedSportId() != 0)
-                    courtWithDetails.sport.id == getSelectedSportId()
-                else
-                    true
+                getSelectedSportId() == 0 || courtWithDetails.sport.id == getSelectedSportId()
             }
             val servicesWithFee = it.sportCenterServices.mapNotNull { serviceWithFee ->
                 val service =
