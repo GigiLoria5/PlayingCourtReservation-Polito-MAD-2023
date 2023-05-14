@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.searchFragments.SearchCourtResultsFragment">
+    tools:context=".fragment.searchFragments.SearchSportCentersFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/searchABL"
@@ -227,7 +227,8 @@
                     android:textSize="@dimen/reserveACourtInfoTextSize"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TextContrastCheck" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>

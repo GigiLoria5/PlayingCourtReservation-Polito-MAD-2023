@@ -17,6 +17,7 @@ import it.polito.mad.g26.playingcourtreservation.model.*
     SportCenterServices::class,
     Sport::class], version = 1)
 abstract class CourtReservationDatabase: RoomDatabase() {
+
     abstract fun courtDao(): CourtDao
     abstract fun reservationDao(): ReservationDao
     abstract fun reservationWithDetailsDao(): ReservationWithDetailsDao
@@ -27,14 +28,13 @@ abstract class CourtReservationDatabase: RoomDatabase() {
     abstract fun sportDao(): SportDao
     abstract fun reviewDao(): ReviewDao
 
-    companion object{
+    companion object {
         @Volatile
         private var INSTANCE: CourtReservationDatabase? = null
 
-        fun getDatabase(context:Context): CourtReservationDatabase =
+        fun getDatabase(context: Context): CourtReservationDatabase =
             (
-                    INSTANCE?:
-                    synchronized(this){
+                    INSTANCE ?: synchronized(this) {
                         val i = INSTANCE ?: Room.databaseBuilder(
                             context.applicationContext,
                             CourtReservationDatabase::class.java,

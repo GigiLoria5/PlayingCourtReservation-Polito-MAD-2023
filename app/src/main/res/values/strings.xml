@@ -7,6 +7,7 @@
     <string name="no_reservations">No reservations for this day</string>
     <string name="reservation_info_concatenation">%1$s, %2$s</string>
     <string name="reservation_info_amount">€%1$s</string>
+    <string name="no_services_chosen">No service chosen</string>
     <!-- Show Profile -->
     <string name="fullname_title">Fullname</string>
     <string name="username_title">Username</string>
@@ -28,7 +29,7 @@
     <string name="default_fullname">Giacinto Milanesi</string>
     <integer name="default_age">21</integer>
     <string name="default_gender">Male</string>
-    <string name="default_location">Turin</string>
+    <string name="default_location">Torino</string>
     <integer name="default_organized">0</integer>
     <integer name="default_played">0</integer>
     <string name="default_wdl">0/0/0</string>
@@ -58,6 +59,13 @@
     <string name="home">Home</string>
     <string name="reservations">Reservations</string>
     <string name="profile">Profile</string>
+    <!-- Reservations details-->
+    <string name="delete_reservation_button">Delete</string>
+    <string name="edit_reservation_button">Edit</string>
+    <!-- Edit reservations details-->
+    <string name="edit_date_time">Edit Date/time</string>
+    <string name="choose_services">Choose services</string>
+    <string name="chosen_services">Chosen services</string>
 
     <string-array name="position_array">
         <item>Attacker</item>

@@ -13,7 +13,7 @@ interface SportCenterServicesDao {
     fun findAllSportCenterServices(): LiveData<List<SportCenterServices>>
 
     @Transaction
-    @Query("SELECT * FROM sport_center_services WHERE id_sport_center = :id_sport_center")
-    fun getAllServicesWithFee(id_sport_center: Int): LiveData<List<SportCenterServices>>
+    @Query("SELECT * FROM sport_center_services WHERE id_sport_center = :idSportCenter")
+    fun getAllServicesWithFee(idSportCenter: Int): LiveData<List<SportCenterServices>>
 
 }
