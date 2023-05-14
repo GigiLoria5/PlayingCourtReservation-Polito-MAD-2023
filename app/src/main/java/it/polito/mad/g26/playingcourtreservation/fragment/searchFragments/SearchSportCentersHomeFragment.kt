@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -8,46 +9,45 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import org.json.JSONObject
 
-class SearchCourtFragment : Fragment(R.layout.fragment_search_court) {
+class SearchSportCentersHomeFragment : Fragment(R.layout.fragment_search_sport_centers_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupActionBar(activity, "Playing Court Reservation", false)
 
         val cityNameTV = view.findViewById<TextView>(R.id.cityNameTV)
         val selectCityMCV = view.findViewById<MaterialCardView>(R.id.citySearchMCV)
         val searchMCV = view.findViewById<MaterialCardView>(R.id.searchMCV)
-        cityNameTV.text =
-            getString(R.string.default_city) //getUserCity()?:"Torino" // TODO TAKE USER CITY - SHARED PREF HANNO TURIN, DB HA TORINO. LASCIO IL MIO VALORE "Torino"
 
+        cityNameTV.text = getUserCity() ?: getString(R.string.default_city)
         selectCityMCV.setOnClickListener {
             val direction =
-                SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtActionFragment(
+                SearchSportCentersHomeFragmentDirections.actionHomeToSportCentersAction(
                     "home", cityNameTV.text.toString()
                 )
             findNavController().navigate(direction)
         }
         searchMCV.setOnClickListener {
             val direction =
-                SearchCourtFragmentDirections.actionSearchCourtFragmentToSearchCourtResultsFragment(
+                SearchSportCentersHomeFragmentDirections.actionHomeToSearchSportCenters(
                     "home", cityNameTV.text.toString()
                 )
             findNavController().navigate(direction)
         }
     }
 
-    /* private fun getUserCity():String?{
-         val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
-         if(sharedPref.contains("profile")) {
-             val json= sharedPref.getString("profile","Default")?.let { JSONObject(it) }
-             if (json != null) {
-                 return json.getString("location")
-             }
-             return null
-         }
-         return null
-     }
-     */
+    private fun getUserCity(): String? {
+        val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
+        if (sharedPref.contains("profile")) {
+            val json = sharedPref.getString("profile", "Default")?.let { JSONObject(it) }
+            if (json != null) {
+                return json.getString("location")
+            }
+            return null
+        }
+        return null
+    }
+
 }

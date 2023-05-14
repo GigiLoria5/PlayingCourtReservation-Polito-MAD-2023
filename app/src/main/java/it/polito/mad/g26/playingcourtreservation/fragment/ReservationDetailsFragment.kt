@@ -3,15 +3,14 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -20,10 +19,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.adapter.ReservationDetailsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.ui.CustomDialogAlertAddReview
@@ -33,7 +32,7 @@ import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetail
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReviewsVM
 
 
-class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
+class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_details) {
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
@@ -93,13 +92,18 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
                 val dayRes = dateList[0].toInt()
                 val timeList = reservation.reservation.time.split(":")
                 val hourRes = timeList[0].toInt()
-                val calendarRes = Calendar.getInstance()
-                calendarRes.set(yearRes, monthRes - 1, dayRes, hourRes, 0)
+                val calendarRes = Calendar.getInstance().apply {
+                    set(Calendar.YEAR, yearRes)
+                    set(Calendar.MONTH, monthRes - 1)
+                    set(Calendar.DAY_OF_MONTH, dayRes)
+                    set(Calendar.HOUR_OF_DAY, hourRes)
+                    set(Calendar.MINUTE, 0)
+                }
 
                 //Alert Dialog
                 val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
                 builder.setMessage("Are you sure you want to delete the reservation?")
-                builder.setPositiveButton("Yes") { dialog, id ->
+                builder.setPositiveButton("Yes") { _, _ ->
                     // User clicked OK button
                     reservationWithDetailsVM.deleteReservationById(reservationId)
                     findNavController().popBackStack()
@@ -126,22 +130,33 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
                 } else {
                     deleteButton.isEnabled = false
                     modifyButton.isEnabled = false
-                    deleteButton.setBackgroundColor(resources.getColor(R.color.grey))
-                    modifyButton.setBackgroundColor(resources.getColor(R.color.grey))
+                    deleteButton.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey
+                        )
+                    )
+                    modifyButton.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.grey
+                        )
+                    )
                 }
 
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
                     .observe(viewLifecycleOwner) { listOfServicesWithSportCenter ->
                         //List of services with fee of the sport center
-                        val c = listOfServicesWithSportCenter
 
                         reservationWithDetailsVM.getAllServices()
                             .observe(viewLifecycleOwner) { listService ->
                                 //List of all services
-                                val d = listService
 
-                                //List of ServiceWithFee of that Sportcenter
-                                servicesAll = reservationWithDetailsVM.allServiceWithoutSport(c, d)
+                                //List of ServiceWithFee of that Sport center
+                                servicesAll = reservationWithDetailsVM.allServiceWithoutSport(
+                                    listOfServicesWithSportCenter,
+                                    listService
+                                )
 
                                 //Filter service to take only chosen
                                 servicesChosen = reservationWithDetailsVM.filterServicesWithFee(
@@ -154,10 +169,9 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
                                     view.findViewById<RecyclerView>(R.id.service_list)
                                 if (servicesChosen.isEmpty())
                                     recyclerView.adapter =
-                                        MyAdapterRecycle1(dummyListServiceWithFee, true)
+                                        ReservationDetailsAdapter(dummyListServiceWithFee, true)
                                 else
-                                    recyclerView.adapter = MyAdapterRecycle1(servicesChosen, false)
-                                recyclerView.layoutManager = GridLayoutManager(context, 2)
+                                    recyclerView.adapter = ReservationDetailsAdapter(servicesChosen, false)
                             }
                     }
             }
@@ -183,43 +197,5 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
             }
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-    }
-
-
-}
-
-//Class to contain the view of a single random item
-class MyViewHolder1(v: View) : RecyclerView.ViewHolder(v) {
-
-    private val cBox = v.findViewById<MaterialButton>(R.id.material_button)
-
-    fun bind(s: ServiceWithFee, empty: Boolean) {
-        if (empty)
-            cBox.text = "No service chosen"
-        else
-            cBox.text = "${s.service.name}\n€${s.fee}"
-    }
-}
-
-
-class MyAdapterRecycle1(private val l: List<ServiceWithFee>, private val empty: Boolean) :
-    RecyclerView.Adapter<MyViewHolder1>() {
-
-    //Inflater of the parent transform the xml of a row of the recyclerView into a view
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder1 {
-        val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.service_recycler, parent, false)
-        return MyViewHolder1(v)
-    }
-
-    //Need to know the max value of position
-    override fun getItemCount(): Int {
-        return l.size
-    }
-
-    //called after viewHolder are created, to put data into them
-    override fun onBindViewHolder(holder: MyViewHolder1, position: Int) {
-        holder.bind(l[position], empty)
     }
 }

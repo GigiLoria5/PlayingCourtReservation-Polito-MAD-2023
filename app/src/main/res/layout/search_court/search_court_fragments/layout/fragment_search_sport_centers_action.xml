@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_light"
-    tools:context=".fragment.searchFragments.SearchCourtActionFragment">
+    tools:context=".fragment.searchFragments.SearchSportCentersActionFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/searchCityABL"
@@ -51,7 +51,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:paddingVertical="2dp">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cityResultMCV"
