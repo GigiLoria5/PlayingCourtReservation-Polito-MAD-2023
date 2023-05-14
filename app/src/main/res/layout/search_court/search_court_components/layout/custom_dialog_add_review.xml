@@ -28,7 +28,7 @@
             style="?android:attr/ratingBarStyleIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/rating_description"
+            android:contentDescription="@string/review_rating_description"
             android:isIndicator="false"
             android:numStars="5"
             android:rating="@fraction/default_rating"

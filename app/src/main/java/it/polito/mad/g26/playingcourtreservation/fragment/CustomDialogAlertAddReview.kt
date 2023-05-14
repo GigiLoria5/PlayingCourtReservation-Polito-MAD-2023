@@ -1,4 +1,4 @@
-package it.polito.mad.g26.playingcourtreservation.ui
+package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.app.Dialog
 import android.os.Bundle
@@ -32,7 +32,7 @@ class CustomDialogAlertAddReview: DialogFragment() {
 
             val idReservation = arguments?.getInt("idReservation")
             val idUser = arguments?.getInt("idUser")
-            val view: View = LayoutInflater.from(context).inflate(R.layout.custom_dialog_add_review, null)
+            val view: View = layoutInflater.inflate(R.layout.custom_dialog_add_review, null)
             val builder = AlertDialog.Builder(it!!)
             builder.setView(view)
             val rating = view.findViewById<RatingBar>(R.id.rating)
@@ -54,8 +54,7 @@ class CustomDialogAlertAddReview: DialogFragment() {
                 if (textReview.length() < 10)
                     textReview.error = "Review size should be at least 10 characters long"
                 else{
-                    println("good review")
-                    //review.addReview(idReservation!!, idUser!!, rating.rating, textReview.toString() )
+                    review.addReview(idReservation!!, idUser!!, rating.rating, textReview.toString() )
                     this.dismiss()
                     confirmDialog.show()
                 }
@@ -67,34 +66,4 @@ class CustomDialogAlertAddReview: DialogFragment() {
             builder.create()
         }
     }
-
-    /*
-    private fun initialize() {
-        val view: View = LayoutInflater.from(context).inflate(R.layout.custom_dialog_add_review, null)
-        setView(view)
-        val builder = Builder(context)
-        builder.setView(view)
-        val rating = view.findViewById<RatingBar>(R.id.rating)
-        val textReview = view.findViewById<EditText>(R.id.et_review)
-        val submit = view.findViewById<Button>(R.id.submit_button)
-        val cancel = view.findViewById<Button>(R.id.cancel_button)
-
-        submit.setOnClickListener {
-            println("${rating.rating}")
-            println("$textReview")
-            if (textReview.length() < 10)
-                textReview.error = "Review size should be at least 10 characters long"
-            else{
-                println("good review")
-                vm.addReview(idReservation, idUser, rating, textReview)
-
-            }
-        }
-
-        cancel.setOnClickListener {
-            this.dismiss()
-        }
-    }
-
-     */
 }

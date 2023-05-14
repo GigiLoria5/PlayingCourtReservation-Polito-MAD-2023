@@ -93,4 +93,8 @@
     <string name="cancel_button">Cancel</string>
     <string name="submit_button">Submit</string>
     <string name="edit_text_review">Write a text review \n(min 10 characters)</string>
+
+    <string name="review_rating_description">Rating of the court</string>
+    <string name="review_list_text">Written review</string>
+
 </resources>
