@@ -3,13 +3,11 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -105,34 +103,38 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                     // User cancelled the dialog
                 }
 
-                //Button for modify and delete
-                val modifyButton = view.findViewById<MaterialButton>(R.id.modify_reservation_button)
-                val deleteButton = view.findViewById<Button>(R.id.delete_reservation_button)
+                //View to inflate dynamically
+                val viewReservationButtons = view.findViewById<ConstraintLayout>(R.id.reservation_buttons)
+                viewReservationButtons.removeAllViews()
+
+                //Show reservation button if future or edit button if past
                 if (today <= calendarRes) {
+
+                    // Inflate the new layout with two buttons
+                    val inflater = LayoutInflater.from(requireContext())
+                    val viewDeleteAndEdit = inflater.inflate(R.layout.delete_and_edit_buttons, null, false)
+
+                    // Get references to the two buttons in the new layout
+                    val deleteButton = viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
+                    val editButton = viewDeleteAndEdit.findViewById<MaterialButton>(R.id.modify_reservation_button)
+                    viewReservationButtons.addView(viewDeleteAndEdit)
+
                     deleteButton.setOnClickListener {
                         builder.show()
                     }
-                    modifyButton.setOnClickListener {
+                    editButton.setOnClickListener {
                         val action =
                             ReservationDetailsFragmentDirections.openReservationEdit(reservationId)
                         findNavController().navigate(action)
                     }
 
-                } else {
-                    deleteButton.isEnabled = false
-                    modifyButton.isEnabled = false
-                    deleteButton.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey
-                        )
-                    )
-                    modifyButton.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey
-                        )
-                    )
+                }else{
+
+                    val inflater = LayoutInflater.from(requireContext())
+                    val viewEditReview = inflater.inflate(R.layout.edit_review_button, null, false)
+                    val reviewEditButton= viewEditReview.findViewById<MaterialButton>(R.id.edit_review_button)
+                    viewReservationButtons.addView(viewEditReview)
+
                 }
 
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
