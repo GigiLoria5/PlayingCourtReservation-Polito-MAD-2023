@@ -63,6 +63,7 @@
             android:ems="10"
             android:minHeight="48dp"
             android:hint="@string/edit_text_review"
+            android:maxLength="80"
             android:importantForAutofill="no"/>
     </LinearLayout>
 
