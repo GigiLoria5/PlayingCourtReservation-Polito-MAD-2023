@@ -4,33 +4,20 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import it.polito.mad.g26.playingcourtreservation.dao.CourtDao
-import it.polito.mad.g26.playingcourtreservation.dao.ReservationDao
-import it.polito.mad.g26.playingcourtreservation.dao.ReservationServicesDao
-import it.polito.mad.g26.playingcourtreservation.dao.ReservationWithDetailsDao
-import it.polito.mad.g26.playingcourtreservation.dao.ServiceDao
-import it.polito.mad.g26.playingcourtreservation.dao.SportCenterDao
-import it.polito.mad.g26.playingcourtreservation.dao.SportCenterServicesDao
-import it.polito.mad.g26.playingcourtreservation.dao.SportDao
-import it.polito.mad.g26.playingcourtreservation.model.Court
-import it.polito.mad.g26.playingcourtreservation.model.Reservation
-import it.polito.mad.g26.playingcourtreservation.model.ReservationServices
-import it.polito.mad.g26.playingcourtreservation.model.Service
-import it.polito.mad.g26.playingcourtreservation.model.Sport
-import it.polito.mad.g26.playingcourtreservation.model.SportCenter
-import it.polito.mad.g26.playingcourtreservation.model.SportCenterServices
+import it.polito.mad.g26.playingcourtreservation.dao.*
+import it.polito.mad.g26.playingcourtreservation.model.*
 
-@Database(
-    entities = [
-        Court::class,
-        Reservation::class,
-        ReservationServices::class,
-        Service::class,
-        SportCenter::class,
-        SportCenterServices::class,
-        Sport::class], version = 1
-)
-abstract class CourtReservationDatabase : RoomDatabase() {
+@Database(entities = [
+    Court::class,
+    Reservation::class,
+    ReservationServices::class,
+    Review::class,
+    Service::class,
+    SportCenter::class,
+    SportCenterServices::class,
+    Sport::class], version = 1)
+abstract class CourtReservationDatabase: RoomDatabase() {
+
     abstract fun courtDao(): CourtDao
     abstract fun reservationDao(): ReservationDao
     abstract fun reservationWithDetailsDao(): ReservationWithDetailsDao
@@ -39,6 +26,7 @@ abstract class CourtReservationDatabase : RoomDatabase() {
     abstract fun sportCenterDao(): SportCenterDao
     abstract fun sportCenterServiceDao(): SportCenterServicesDao
     abstract fun sportDao(): SportDao
+    abstract fun reviewDao(): ReviewDao
 
     companion object {
         @Volatile
