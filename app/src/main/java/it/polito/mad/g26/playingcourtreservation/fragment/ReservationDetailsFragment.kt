@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -29,12 +30,14 @@ import it.polito.mad.g26.playingcourtreservation.ui.CustomDialogAlertAddReview
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.ReviewsVM
 
 
 class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
+    private val reviewVM by viewModels<ReviewsVM>()
     private lateinit var servicesAll: List<ServiceWithFee>
     private lateinit var servicesUsed: List<Service>
     private lateinit var servicesChosen: List<ServiceWithFee>
@@ -69,8 +72,6 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
 
         // Retrieve Reservation Details
         val reservationId = args.reservationId
-
-        val addReview = CustomDialogAlertAddReview(requireContext(), reservationId, 1)
 
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
@@ -120,7 +121,6 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_x) {
                             ReservationDetailsFragmentDirections.openReservationEdit(reservationId)
                         findNavController().navigate(action)
                          */
-                        addReview.show()
                     }
 
                 } else {
