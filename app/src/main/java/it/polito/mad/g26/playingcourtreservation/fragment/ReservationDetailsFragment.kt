@@ -14,7 +14,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -29,14 +28,12 @@ import it.polito.mad.g26.playingcourtreservation.ui.CustomDialogAlertAddReview
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
-import it.polito.mad.g26.playingcourtreservation.viewmodel.ReviewsVM
 
 
 class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_details) {
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
-    private val reviewVM by viewModels<ReviewsVM>()
     private lateinit var servicesAll: List<ServiceWithFee>
     private lateinit var servicesUsed: List<Service>
     private lateinit var servicesChosen: List<ServiceWithFee>
@@ -44,8 +41,6 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
     private val dummyServiceWithFee = ServiceWithFee(dummyService, 0.0f)
     private val dummyListServiceWithFee = listOf(dummyServiceWithFee)
     private val today = Calendar.getInstance()
-
-    private lateinit var addReview: CustomDialogAlertAddReview
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -115,6 +110,9 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                 //Button for modify and delete
                 val modifyButton = view.findViewById<MaterialButton>(R.id.modify_reservation_button)
                 val deleteButton = view.findViewById<Button>(R.id.delete_reservation_button)
+
+                val reviewDialog = CustomDialogAlertAddReview.newInstance(reservationId, 1)
+
                 if (today <= calendarRes) {
                     deleteButton.setOnClickListener {
                         builder.show()
@@ -125,6 +123,7 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                             ReservationDetailsFragmentDirections.openReservationEdit(reservationId)
                         findNavController().navigate(action)
                          */
+                        reviewDialog.show(parentFragmentManager, reviewDialog.tag)
                     }
 
                 } else {

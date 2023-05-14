@@ -14,7 +14,7 @@ class ReviewRepository(application: Application) {
             it.idReservation = idReservation
             it.idUser = idUser
             it.rating = rating
-            it.textReview = textReview
+            it.text = textReview
             it.date = date
         }
         return reviewDao.addReview(review)
