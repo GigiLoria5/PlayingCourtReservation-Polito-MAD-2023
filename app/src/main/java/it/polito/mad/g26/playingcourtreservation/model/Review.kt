@@ -24,11 +24,10 @@ class Review {
 
     var rating: Float = 0.0F
 
-    @ColumnInfo(name = "text_review")
-    var textReview: String = ""
+    var text: String = ""
 
     var date: String = ""
 
     override fun toString() = "{ id_reservation: $idReservation, id_user: $idUser, rating: $rating, " +
-            "text_review: \"$textReview\"}"
+            "text: \"$text\"}"
 }
