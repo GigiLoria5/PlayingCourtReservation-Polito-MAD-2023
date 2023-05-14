@@ -4,11 +4,9 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -105,14 +103,13 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
 
                 //View to inflate dynamically
                 val viewReservationButtons = view.findViewById<ConstraintLayout>(R.id.reservation_buttons)
-                viewReservationButtons.removeAllViews()
 
                 //Show reservation button if future or edit button if past
                 if (today <= calendarRes) {
 
                     // Inflate the new layout with two buttons
                     val inflater = LayoutInflater.from(requireContext())
-                    val viewDeleteAndEdit = inflater.inflate(R.layout.delete_and_edit_buttons, null, false)
+                    val viewDeleteAndEdit = inflater.inflate(R.layout.delete_and_edit_buttons, viewReservationButtons, false)
 
                     // Get references to the two buttons in the new layout
                     val deleteButton = viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
@@ -131,7 +128,7 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                 }else{
 
                     val inflater = LayoutInflater.from(requireContext())
-                    val viewEditReview = inflater.inflate(R.layout.edit_review_button, null, false)
+                    val viewEditReview = inflater.inflate(R.layout.edit_review_button, viewReservationButtons, false)
                     val reviewEditButton= viewEditReview.findViewById<MaterialButton>(R.id.edit_review_button)
                     viewReservationButtons.addView(viewEditReview)
 
