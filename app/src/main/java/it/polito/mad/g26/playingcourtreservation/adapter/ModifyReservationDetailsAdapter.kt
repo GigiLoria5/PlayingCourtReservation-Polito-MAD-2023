@@ -55,11 +55,11 @@ class ModifyReservationDetailsAdapter(
                 if (chip.isChecked) {
                     lUsed.add(s)
                     amount[0] += s.fee
-                    price.text = amount[0].toString()
+                    price.text = "€"+amount[0].toString()
                 } else {
                     lUsed.remove(s)
                     amount[0] -= s.fee
-                    price.text = amount[0].toString()
+                    price.text ="€"+amount[0].toString()
                 }
             }
         }

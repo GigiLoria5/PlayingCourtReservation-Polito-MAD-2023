@@ -95,11 +95,11 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 address.text = reservation.courtWithDetails.sportCenter.address
                 date.text = reservation.reservation.date
                 time.text = reservation.reservation.time
-                price.text = reservation.reservation.amount.toString()
+                price.text = "€"+reservation.reservation.amount.toString()
                 amount = mutableListOf(reservation.reservation.amount)
                 dateNew.text = reservation.reservation.date
                 timeNew.text = reservation.reservation.time
-                priceNew.text = reservation.reservation.amount.toString()
+                priceNew.text = "€"+reservation.reservation.amount.toString()
 
                 //Variables
                 val dateDayReservation = createCalendarObject(

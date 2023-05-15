@@ -72,7 +72,7 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                 address.text = reservation.courtWithDetails.sportCenter.address
                 date.text = reservation.reservation.date
                 time.text = reservation.reservation.time
-                price.text = reservation.reservation.amount.toString()
+                price.text = "€"+reservation.reservation.amount.toString()
 
                 //List of variable
                 val dateList = reservation.reservation.date.split("-")
@@ -101,17 +101,15 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                     // User cancelled the dialog
                 }
 
-                //View to inflate dynamically
+                //View to be inflated with buttons
                 val viewReservationButtons = view.findViewById<ConstraintLayout>(R.id.reservation_buttons)
 
-                //Show reservation button if future or edit button if past
+                //Show reservation buttons if future or review button if past
                 if (today <= calendarRes) {
 
-                    // Inflate the new layout with two buttons
+                    // Inflate the new layout with two buttons of reservation
                     val inflater = LayoutInflater.from(requireContext())
                     val viewDeleteAndEdit = inflater.inflate(R.layout.delete_and_edit_buttons, viewReservationButtons, false)
-
-                    // Get references to the two buttons in the new layout
                     val deleteButton = viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
                     val editButton = viewDeleteAndEdit.findViewById<MaterialButton>(R.id.modify_reservation_button)
                     viewReservationButtons.addView(viewDeleteAndEdit)
@@ -126,12 +124,11 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                     }
 
                 }else{
-
+                    //Inflate with button of review
                     val inflater = LayoutInflater.from(requireContext())
                     val viewEditReview = inflater.inflate(R.layout.edit_review_button, viewReservationButtons, false)
                     val reviewEditButton= viewEditReview.findViewById<MaterialButton>(R.id.edit_review_button)
                     viewReservationButtons.addView(viewEditReview)
-
                 }
 
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)

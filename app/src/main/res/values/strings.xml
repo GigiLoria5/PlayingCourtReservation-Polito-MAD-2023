@@ -5,7 +5,7 @@
     <string name="calendarNext">Go Next</string>
     <string name="has_reservation">Has Reservation</string>
     <string name="no_reservations">No reservations for this day</string>
-    <string name="reservation_info_concatenation">%1$s, %2$s</string>
+    <string name="reservation_info_concatenation">%1$s, €%2$s</string>
     <string name="reservation_info_amount">€%1$s</string>
     <string name="no_services_chosen">No service chosen</string>
     <!-- Show Profile -->
