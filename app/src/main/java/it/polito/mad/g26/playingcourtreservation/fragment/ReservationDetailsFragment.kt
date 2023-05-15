@@ -72,7 +72,10 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                 address.text = reservation.courtWithDetails.sportCenter.address
                 date.text = reservation.reservation.date
                 time.text = reservation.reservation.time
-                price.text = "€"+reservation.reservation.amount.toString()
+                price.text = view.context.getString(
+                    R.string.set_text_with_euro,
+                    reservation.reservation.amount.toString()
+                )
 
                 //List of variable
                 val dateList = reservation.reservation.date.split("-")

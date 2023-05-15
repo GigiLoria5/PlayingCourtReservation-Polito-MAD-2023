@@ -67,6 +67,7 @@
     <string name="edit_date_time">Edit Date/time</string>
     <string name="choose_services">Choose services</string>
     <string name="chosen_services">Chosen services</string>
+    <string name="set_text_with_euro">€%1$s</string>
 
     <string-array name="position_array">
         <item>Attacker</item>
