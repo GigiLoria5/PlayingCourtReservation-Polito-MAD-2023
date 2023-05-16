@@ -21,12 +21,14 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtsVM
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReviewsVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.SportCentersVM
 
 class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
 
     //private val args: CourtReviewsFragmentArgs by navArgs()
     private val vm by viewModels<ReviewsVM>()
     private val courtVm by viewModels<CourtsVM>()
+    private val sportCenterVm by viewModels<SportCentersVM>()
 
     private lateinit var reviewsRV: RecyclerView
     private lateinit var sportCenterTV: TextView
@@ -44,6 +46,9 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
         courtTV = view.findViewById(R.id.courtTV)
         courtVm.getCourt(courtId).observe(viewLifecycleOwner){
             courtTV.text = it.name
+            sportCenterVm.getSportCenterName(it.idSportCenter).observe(viewLifecycleOwner){ scName->
+                sportCenterTV.text = scName
+            }
         }
 
 

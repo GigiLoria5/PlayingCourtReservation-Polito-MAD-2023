@@ -97,4 +97,7 @@ interface SportCenterDao {
         sportId: Int
     ): LiveData<List<SportCenterServicesCourts>>
 
+    @Query("SELECT name from sport_center WHERE id=:sportCenterId")
+    fun getSportCenterName(sportCenterId: Int): LiveData<String>
+
 }
