@@ -9,4 +9,6 @@ class CourtRepository(application: Application) {
     private val courtDao = CourtReservationDatabase.getDatabase(application).courtDao()
 
     fun getAllCourt(): LiveData<List<Court>> = courtDao.findAllCourt()
+
+    fun getCourt(courtId: Int): LiveData<Court> = courtDao.findCourt(courtId)
 }
