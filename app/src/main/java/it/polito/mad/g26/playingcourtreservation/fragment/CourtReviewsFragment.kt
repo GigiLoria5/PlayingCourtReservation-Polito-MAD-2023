@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReviewsAdapter
 import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
@@ -33,12 +34,13 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
     private lateinit var reviewsRV: RecyclerView
     private lateinit var sportCenterTV: TextView
     private lateinit var courtTV: TextView
+    private lateinit var noReviewMCV: MaterialCardView
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBar(activity, "Court Reviews", true)
 
         //val courtId = args.courtId
-        val courtId = 1
+        val courtId = 2
         println("courtId = $courtId")
 
         //Set up SportCenter name and field name
@@ -51,17 +53,19 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
             }
         }
 
-
         /*Set-up recycle view */
         reviewsRV = view.findViewById(R.id.reviewsRV)
         val reviewsAdapter = ReviewsAdapter(vm.courtReviews(courtId).value?: listOf())
+        noReviewMCV = view.findViewById(R.id.noReviewFoundMCV)
 
         vm.courtReviews(courtId).observe(viewLifecycleOwner){
             if (it.isNotEmpty()) {
                 reviewsRV.makeVisible()
+                noReviewMCV.makeInVisible()
 
             } else {
                 reviewsRV.makeInVisible()
+                noReviewMCV.makeVisible()
             }
             reviewsAdapter.updateReviews(it)
         }

@@ -97,4 +97,6 @@
     <string name="review_rating_description">Rating of the court</string>
     <string name="review_list_text">Written review</string>
 
+    <string name="no_review_found">There are no reviews available for this court</string>
+
 </resources>

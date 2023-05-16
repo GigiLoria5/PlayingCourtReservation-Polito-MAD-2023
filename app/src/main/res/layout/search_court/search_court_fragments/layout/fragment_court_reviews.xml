@@ -54,4 +54,43 @@
         app:layout_constraintTop_toBottomOf="@id/reviewListABL"
         tools:listitem="@layout/review_item" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/noReviewFoundMCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/pageExternalSpace"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/grey_light_2"
+        app:cardCornerRadius="@dimen/cornerRadius"
+        app:cardElevation="@dimen/standardElevation"
+        app:cardMaxElevation="@dimen/standardElevation"
+        app:cardPreventCornerOverlap="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reviewListABL">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/pageExternalSpace">
+
+            <TextView
+                android:id="@+id/noReviewFoundTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:text="@string/no_review_found"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/grey"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
