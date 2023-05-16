@@ -2,6 +2,8 @@ package it.polito.mad.g26.playingcourtreservation.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import it.polito.mad.g26.playingcourtreservation.model.Review
 import it.polito.mad.g26.playingcourtreservation.repository.ReviewRepository
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -19,5 +21,7 @@ class ReviewsVM(application: Application) : AndroidViewModel(application) {
         }
 
     }
+
+    fun courtReviews(courtId: Int): LiveData<List<Review>> = repo.courtReviews(courtId)
 
 }

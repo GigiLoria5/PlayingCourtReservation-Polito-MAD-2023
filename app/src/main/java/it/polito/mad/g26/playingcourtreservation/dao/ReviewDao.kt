@@ -15,4 +15,9 @@ interface ReviewDao {
     @Insert
     fun addReview(reservation: Review)
 
+    @Query("SELECT review.* from review INNER JOIN reservation ON " +
+            "review.id_reservation = reservation.id " +
+            "WHERE id_court =:courtId ORDER BY DATE(review.date) DESC")
+    fun findAllCourtReviews(courtId: Int): LiveData<List<Review>>
+
 }

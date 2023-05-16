@@ -8,22 +8,47 @@ import android.view.View
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.adapter.ReviewsAdapter
+import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
+import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.viewmodel.ReviewsVM
 
 class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
 
-    private val args: CourtReviewsFragmentArgs by navArgs()
+    //private val args: CourtReviewsFragmentArgs by navArgs()
+    private val vm by viewModels<ReviewsVM>()
 
+    private lateinit var reviewsRV: RecyclerView
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBar(activity, "Court Reviews", true)
 
-        val courtId = args.courtId
+        //val courtId = args.courtId
+        val courtId = 1
         println("courtId = $courtId")
+
+        /*Set-up recycle view */
+        reviewsRV = view.findViewById(R.id.reviewsRV)
+        val reviewsAdapter = ReviewsAdapter(vm.courtReviews(courtId).value?: listOf())
+
+        vm.courtReviews(courtId).observe(viewLifecycleOwner){
+            if (it.isNotEmpty()) {
+                reviewsRV.makeVisible()
+
+            } else {
+                reviewsRV.makeInVisible()
+            }
+            reviewsAdapter.updateReviews(it)
+        }
+
+        reviewsRV.adapter = reviewsAdapter
 
         // Handle Menu Items
         val menuHost: MenuHost = requireActivity()

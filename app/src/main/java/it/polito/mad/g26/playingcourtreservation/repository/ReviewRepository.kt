@@ -19,4 +19,6 @@ class ReviewRepository(application: Application) {
         }
         return reviewDao.addReview(review)
     }
+
+    fun courtReviews(courtId: Int): LiveData<List<Review>> = reviewDao.findAllCourtReviews(courtId)
 }

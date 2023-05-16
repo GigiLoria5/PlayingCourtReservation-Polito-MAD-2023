@@ -54,7 +54,7 @@ class CustomDialogAlertAddReview: DialogFragment() {
                 if (textReview.length() < 10)
                     textReview.error = "Review size should be at least 10 characters long"
                 else{
-                    review.addReview(idReservation!!, idUser!!, rating.rating, textReview.toString() )
+                    review.addReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString() )
                     this.dismiss()
                     confirmDialog.show()
                 }
