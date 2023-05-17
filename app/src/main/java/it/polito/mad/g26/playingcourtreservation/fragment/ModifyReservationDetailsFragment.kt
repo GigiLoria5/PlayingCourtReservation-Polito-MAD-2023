@@ -57,7 +57,9 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         var centerCloseTime = 20
 
         //List of text
-        val center = view.findViewById<CustomTextView>(R.id.center_name)
+        val centerName = view.findViewById<CustomTextView>(R.id.sportCenter_name)
+            .findViewById<TextView>(R.id.value)
+        val centerTime=view.findViewById<CustomTextView>(R.id.sportCenter_time)
             .findViewById<TextView>(R.id.value)
         val field = view.findViewById<CustomTextView>(R.id.court_name)
             .findViewById<TextView>(R.id.value)
@@ -88,7 +90,12 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
                 //Compile TextView
-                center.text = reservation.courtWithDetails.sportCenter.name
+                centerName.text = reservation.courtWithDetails.sportCenter.name
+                centerTime.text=view.context.getString(
+                    R.string.set_opening_hours,
+                    reservation.courtWithDetails.sportCenter.openTime,
+                    reservation.courtWithDetails.sportCenter.closeTime
+                )
                 field.text = reservation.courtWithDetails.court.name
                 sport.text = reservation.courtWithDetails.sport.name
                 city.text = reservation.courtWithDetails.sportCenter.city

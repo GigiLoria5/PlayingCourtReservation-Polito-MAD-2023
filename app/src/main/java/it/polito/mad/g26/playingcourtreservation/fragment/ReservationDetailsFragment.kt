@@ -42,7 +42,9 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
         setupActionBar(activity, "Reservation Details", true)
 
         //List of text
-        val center = view.findViewById<CustomTextView>(R.id.center_name)
+        val centerName = view.findViewById<CustomTextView>(R.id.sportCenter_name)
+            .findViewById<TextView>(R.id.value)
+        val centerTime=view.findViewById<CustomTextView>(R.id.sportCenter_time)
             .findViewById<TextView>(R.id.value)
         val field = view.findViewById<CustomTextView>(R.id.court_name)
             .findViewById<TextView>(R.id.value)
@@ -65,7 +67,12 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
                 servicesUsed = reservation.services
-                center.text = reservation.courtWithDetails.sportCenter.name
+                centerName.text = reservation.courtWithDetails.sportCenter.name
+                centerTime.text=view.context.getString(
+                    R.string.set_opening_hours,
+                    reservation.courtWithDetails.sportCenter.openTime,
+                    reservation.courtWithDetails.sportCenter.closeTime
+                )
                 field.text = reservation.courtWithDetails.court.name
                 sport.text = reservation.courtWithDetails.sport.name
                 city.text = reservation.courtWithDetails.sportCenter.city
@@ -88,8 +95,8 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                     set(Calendar.YEAR, yearRes)
                     set(Calendar.MONTH, monthRes - 1)
                     set(Calendar.DAY_OF_MONTH, dayRes)
-                    set(Calendar.HOUR_OF_DAY, hourRes)
-                    set(Calendar.MINUTE, 0)
+                    set(Calendar.HOUR_OF_DAY, hourRes-1)
+                    set(Calendar.MINUTE, 30)
                 }
 
                 //Alert Dialog

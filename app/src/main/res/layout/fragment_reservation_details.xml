@@ -20,15 +20,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                android:id="@+id/center_name"
+            <LinearLayout
+                android:id="@+id/sportCenter_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margins_reservation_details"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toTopOf="@id/sport_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:title="Sport Center" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                    android:id="@+id/sportCenter_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="Sport Center" />
+
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                    android:id="@+id/sportCenter_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="Opening hours" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/sport_info"
@@ -39,7 +56,7 @@
                 app:layout_constraintBottom_toTopOf="@id/location_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/center_name">
+                app:layout_constraintTop_toBottomOf="@id/sportCenter_info">
 
                 <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                     android:id="@+id/sport"
