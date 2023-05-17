@@ -20,7 +20,7 @@ import it.polito.mad.g26.playingcourtreservation.repository.ReservationServiceRe
 import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportRepository
-import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 import kotlin.collections.set
 import kotlin.concurrent.thread
 
@@ -32,7 +32,7 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
     private val reservationRepository = ReservationRepository(application)
     private val reservationServiceRepository = ReservationServiceRepository(application)
 
-    private val searchResultUtils = SearchCourtResultsUtil
+    private val searchResultUtils = SearchSportCentersUtil
 
     /*CITY MANAGEMENT*/
     private lateinit var selectedCity: String
@@ -240,11 +240,11 @@ class SearchCourtResultsVM(application: Application) : AndroidViewModel(applicat
     fun reserveCourt(idCourt: Int, amount: Float, selectedServicesIds: List<Int>) {
         setNewReservationId(0)
         thread {
-            val date = SearchCourtResultsUtil.getDateTimeFormatted(
+            val date = SearchSportCentersUtil.getDateTimeFormatted(
                 selectedDateTimeMillis.value ?: 0,
                 dateFormat
             )
-            val time = SearchCourtResultsUtil.getDateTimeFormatted(
+            val time = SearchSportCentersUtil.getDateTimeFormatted(
                 selectedDateTimeMillis.value ?: 0,
                 timeFormat
             )

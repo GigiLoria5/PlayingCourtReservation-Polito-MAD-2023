@@ -18,7 +18,7 @@ import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.SportCenterAdapter
-import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
@@ -44,7 +44,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
     private lateinit var selectionTutorialTV: TextView
 
     /* LOGIC OBJECT OF THIS FRAGMENT */
-    private val searchResultUtils = SearchCourtResultsUtil
+    private val searchResultUtils = SearchSportCentersUtil
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -100,20 +100,20 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         dateMCV = view.findViewById(R.id.dateMCV)
         dateTV = view.findViewById(R.id.dateTV)
         dateMCV.setOnClickListener {
-            searchResultUtils.showDatePickerDialog(
+            searchResultUtils.showAndManageBehaviorDatePickerDialog(
                 requireContext(),
-                vm
-            )
+                vm.selectedDateTimeMillis.value!!
+            ) { vm.changeSelectedDateTimeMillis(it) }
         }
 
         /* HOUR MATERIAL CARD VIEW MANAGEMENT*/
         hourMCV = view.findViewById(R.id.hourMCV)
         hourTV = view.findViewById(R.id.hourTV)
         hourMCV.setOnClickListener {
-            searchResultUtils.showNumberPickerDialog(
+            searchResultUtils.showAndManageBehaviorTimePickerDialog(
                 requireContext(),
-                vm
-            )
+                vm.selectedDateTimeMillis.value!!,
+            ) { vm.changeSelectedDateTimeMillis(it) }
         }
 
         vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
