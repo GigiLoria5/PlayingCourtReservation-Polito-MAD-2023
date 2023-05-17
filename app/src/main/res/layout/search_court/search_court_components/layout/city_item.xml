@@ -13,8 +13,6 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/grey"
         app:cardCornerRadius="@dimen/cornerRadius"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"

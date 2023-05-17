@@ -9,14 +9,14 @@
     tools:context=".fragment.searchFragments.SearchSportCentersHomeFragment">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/homeBackgroundLogo"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:scaleX="0.8"
-        android:scaleY="0.8"
+        android:layout_height="match_parent"
+        android:scaleX="@fraction/logoBackgroundScale"
+        android:scaleY="@fraction/logoBackgroundScale"
         android:src="@drawable/logo"
         android:contentDescription="@string/app_name"
-        app:layout_constraintBottom_toTopOf="@+id/searchInfoTV"
+        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
