@@ -3,7 +3,7 @@ package it.polito.mad.g26.playingcourtreservation.repository
 import android.app.Application
 import androidx.lifecycle.LiveData
 import it.polito.mad.g26.playingcourtreservation.database.CourtReservationDatabase
-import it.polito.mad.g26.playingcourtreservation.model.*
+import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
 
 class SportCenterRepository(application: Application) {
@@ -11,10 +11,15 @@ class SportCenterRepository(application: Application) {
 
     fun sportCenters(): LiveData<List<SportCenter>> = sportCenterDao.findAll()
 
+    fun findAllCities(): LiveData<List<String>> = sportCenterDao.findAllCities()
+
     fun filteredCities(cityNameStartingWith: String): LiveData<List<String>> =
         sportCenterDao.findFilteredCities(cityNameStartingWith)
 
-    fun filteredSportCentersBase(city: String, hour: String): LiveData<List<SportCenterServicesCourts>> =
+    fun filteredSportCentersBase(
+        city: String,
+        hour: String
+    ): LiveData<List<SportCenterServicesCourts>> =
         sportCenterDao.findFilteredBase(city, hour)
 
     fun filteredSportCentersSportId(
