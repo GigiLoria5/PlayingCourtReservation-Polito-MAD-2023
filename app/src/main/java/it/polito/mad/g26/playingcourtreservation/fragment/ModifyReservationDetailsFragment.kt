@@ -214,7 +214,8 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 reservationId,
                 hourTV,
                 viewLifecycleOwner,
-                dateNew
+                dateNew,
+                centerCloseTime
             )
         }
 
