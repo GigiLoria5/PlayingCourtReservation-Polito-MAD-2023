@@ -3,6 +3,7 @@ package it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
@@ -10,25 +11,21 @@ import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 
 class ServiceWithFeeAdapter(
     private var collection: List<ServiceWithFee>,
-    private val addServiceIdToSelectionList: (Int) -> Unit,
-    private val removeServiceIdFromSelectionList: (Int) -> Unit,
-    private val isServiceIdInSelectionList: (Int) -> Boolean
+    private val addServiceIdToList: ((Int) -> Unit)? = null,
+    private val removeServiceIdFromList: ((Int) -> Unit)? = null,
+    private val isServiceIdInList: (Int) -> Boolean,
+    private val isClickable: Boolean
 ) :
     RecyclerView.Adapter<ServiceWithFeeAdapter.ServiceWithFeeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceWithFeeViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.service_item, parent, false)
-
         return ServiceWithFeeViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ServiceWithFeeViewHolder, position: Int) {
-
-
-        holder.bind(
-            collection[position]
-        )
+        holder.bind(collection[position])
     }
 
     override fun onViewRecycled(holder: ServiceWithFeeViewHolder) {
@@ -43,7 +40,6 @@ class ServiceWithFeeAdapter(
 
         fun bind(
             collection: ServiceWithFee
-
         ) {
             val service = collection.service
             val fee = collection.fee
@@ -53,16 +49,36 @@ class ServiceWithFeeAdapter(
                 String.format("%.2f", fee)
             )
 
-            chip.isChecked = isServiceIdInSelectionList(service.id)
+            chip.isChecked = isServiceIdInList(service.id)
+            chip.isClickable = isClickable
+            chip.isCloseIconVisible = chip.isChecked && isClickable
+            when (isClickable) {
+                true -> chip.setOnClickListener {
+                    chip.isCloseIconVisible = chip.isChecked
+                    if (chip.isChecked)
+                        addServiceIdToList?.let { it(service.id) }
+                    else
+                        removeServiceIdFromList?.let { it(service.id) }
+                }
 
-            chip.isCloseIconVisible = chip.isChecked
+                false -> {
+                    chip.setOnClickListener(null)
+                    chip.elevation = 0F
+                    //TODO FARLO O NO?
+                    // chip.chipStrokeWidth = 3f
+                    // chip.chipStrokeColor = ContextCompat.getColorStateList(
+                    //    itemView.context, R.color.grey
+                    // )
 
-            chip.setOnClickListener {
-                chip.isCloseIconVisible = chip.isChecked
-                if (chip.isChecked)
-                    addServiceIdToSelectionList(service.id)
-                else
-                    removeServiceIdFromSelectionList(service.id)
+                    if (!chip.isChecked) {
+                        chip.setTextColor(
+                            ContextCompat.getColorStateList(
+                                itemView.context,
+                                R.color.grey
+                            )
+                        )
+                    }
+                }
             }
         }
 
@@ -70,6 +86,5 @@ class ServiceWithFeeAdapter(
             chip.text = ""
             chip.setOnClickListener(null)
         }
-
     }
 }

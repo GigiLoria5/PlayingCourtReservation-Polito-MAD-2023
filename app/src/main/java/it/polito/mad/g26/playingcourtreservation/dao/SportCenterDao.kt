@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import it.polito.mad.g26.playingcourtreservation.model.*
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithServices
 
 @Dao
 interface SportCenterDao {
@@ -27,7 +27,7 @@ interface SportCenterDao {
                 "AND " +
                 "sport_center.id=court.id_sport_center"
     )
-    fun findFilteredBase(city: String, hour: String): LiveData<List<SportCenterServicesCourts>>
+    fun findFilteredBase(city: String, hour: String): LiveData<List<SportCenterWithServices>>
 
     @Transaction
     @Query(
@@ -42,11 +42,11 @@ interface SportCenterDao {
                 "AND " +
                 "id_sport=:sportId "
     )
-    fun findFilteredSportId(
+    fun findFilteredBySportId(
         city: String,
         hour: String,
         sportId: Int
-    ): LiveData<List<SportCenterServicesCourts>>
+    ): LiveData<List<SportCenterWithServices>>
 
     @Transaction
     @Query(
@@ -63,12 +63,12 @@ interface SportCenterDao {
                 "GROUP BY sport_center.id " +
                 "HAVING COUNT(DISTINCT id_service)== :servicesSize"
     )
-    fun findFilteredServices(
+    fun findFilteredByServicesIds(
         city: String,
         hour: String,
         services: Set<Int>,
         servicesSize: Int
-    ): LiveData<List<SportCenterServicesCourts>>
+    ): LiveData<List<SportCenterWithServices>>
 
     @Transaction
     @Query(
@@ -89,12 +89,12 @@ interface SportCenterDao {
                 "GROUP BY sport_center.id " +
                 "HAVING COUNT(DISTINCT id_service)== :servicesSize"
     )
-    fun findFilteredServicesAndSport(
+    fun findFilteredByServicesIdsAndSportId(
         city: String,
         hour: String,
         services: Set<Int>,
         servicesSize: Int,
         sportId: Int
-    ): LiveData<List<SportCenterServicesCourts>>
+    ): LiveData<List<SportCenterWithServices>>
 
 }

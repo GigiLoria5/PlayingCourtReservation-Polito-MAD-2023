@@ -16,8 +16,6 @@ import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersHomeFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.model.Sport
-import it.polito.mad.g26.playingcourtreservation.model.custom.CourtWithDetails
-import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 import java.util.Locale
 
 object SearchSportCentersUtil {
@@ -50,8 +48,6 @@ object SearchSportCentersUtil {
         }
     }
 
-    /* -- */
-
     /* SUPPORT FUNCTIONS SearchSportCenterFragment */
 
     fun getDateTimeFormatted(
@@ -65,10 +61,7 @@ object SearchSportCentersUtil {
         return formatted
     }
 
-    /* -- */
-
-
-    /* OPERATIONS WITH SearchSportCentersFragment GUI OBJECTS */
+    /* OPERATIONS WITH SearchSportCentersFragment VISUAL COMPONENTS */
 
     fun setDateTimeTextViews(
         timeInMillis: Long,
@@ -103,9 +96,7 @@ object SearchSportCentersUtil {
         courtTypeACTV.setAdapter(adapterCourt)
     }
 
-    /* -- */
-
-    /* OPERATIONS WITH SearchSportCentersFragment GUI DIALOG OBJECTS*/
+    /* OPERATIONS WITH SearchSportCentersFragment DIALOG COMPONENTS*/
 
     fun showAndManageBehaviorDatePickerDialog(
         viewContext: Context,
@@ -147,79 +138,11 @@ object SearchSportCentersUtil {
         showTimePickerDialog(viewContext, minHour = minHour, currentHour = currentHour) {
             currentCalendar[Calendar.HOUR_OF_DAY] = it
             currentCalendar[Calendar.MINUTE] = 0
-            //Una volta che aggiorno la data, devo controllare la coppia data-ora per annullare possibili errori
+            //Once I update the date, I have to check the date-time pair to cancel possible errors
             adjustDateTimeCombination(currentCalendar)
             selectedTimeMillisTasks(currentCalendar.timeInMillis)
         }
     }
-
-    fun showConfirmReservationDialog(
-        viewContext: Context,
-        courtWithDetails: CourtWithDetails,
-        vm: SearchCourtResultsVM
-    ) {
-        val timeInMillis = vm.selectedDateTimeMillis.value ?: 0
-        var total: Float = courtWithDetails.court.hourCharge
-        var selectedServicesString = viewContext.getString(
-            R.string.selected_services
-        )
-        val selectedServicesIds: MutableList<Int> = mutableListOf()
-        vm.getSelectedServicesAndFees(courtWithDetails.sportCenter.id).forEach {
-            total += it.fee
-            selectedServicesIds.add(it.service.id)
-            selectedServicesString += viewContext.getString(
-                R.string.confirm_reservation_message_service_field,
-                it.service.name,
-                String.format("%.2f", it.fee)
-            )
-        }
-        if (selectedServicesIds.isEmpty())
-            selectedServicesString = viewContext.getString(
-                R.string.no_selected_services
-            )
-        val reservationConfirmationText = viewContext.getString(
-            R.string.confirm_reservation_message,
-            courtWithDetails.court.name,
-            courtWithDetails.sport.name,
-            courtWithDetails.sportCenter.name,
-            courtWithDetails.sportCenter.city,
-            getDateTimeFormatted(timeInMillis, viewContext.getString(R.string.hourFormat)),
-            getDateTimeFormatted(timeInMillis, viewContext.getString(R.string.dateExtendedFormat)),
-            selectedServicesString,
-            String.format("%.2f", courtWithDetails.court.hourCharge),
-            String.format("%.2f", total),
-        )
-
-
-        val builder: AlertDialog.Builder =
-            AlertDialog.Builder(viewContext)
-                .setTitle(
-                    viewContext.getString(
-                        R.string.reserve_this_court
-                    )
-                )
-                .setMessage(reservationConfirmationText)
-                .setPositiveButton(
-                    viewContext.getString(
-                        R.string.reserve_button
-                    )
-                ) { _, _ ->
-                    vm.reserveCourt(
-                        courtWithDetails.court.id,
-                        total,
-                        selectedServicesIds
-                    )
-                }.setNegativeButton(
-                    viewContext.getString(
-                        R.string.cancel_button
-                    )
-                ) { _, _ -> }
-                .setOnCancelListener { }
-        val dialog = builder.create()
-        dialog.show()
-    }
-
-    /* -- */
 
     /* OPERATIONS WITH SearchSportCentersFragment NAVIGATION  */
 
@@ -244,9 +167,7 @@ object SearchSportCentersUtil {
         }
     }
 
-    /* -- */
-
-    /* GUI CALENDAR AND TIME PICKER OBJECTS */
+    /* GUI CALENDAR AND TIME PICKER COMPONENTS */
 
     private fun showDatePickerDialog(
         viewContext: Context,
@@ -312,9 +233,78 @@ object SearchSportCentersUtil {
         builder.setPositiveButton("OK") { _, _ ->
             selectedHourTasks(numberPicker.value)
         }
+        builder.setNegativeButton("Cancel") { _, _ -> }
         val dialog = builder.create()
         dialog.show()
     }
 
-    /* -- */
+    /* RESERVATION CONFIRM */
+    /*
+ fun showConfirmReservationDialog(
+     viewContext: Context,
+     courtWithDetails: CourtWithDetails,
+     vm: SearchCourtResultsVM
+ ) {
+     val timeInMillis = vm.selectedDateTimeMillis.value ?: 0
+     var total: Float = courtWithDetails.court.hourCharge
+     var selectedServicesString = viewContext.getString(
+         R.string.selected_services
+     )
+     val selectedServicesIds: MutableList<Int> = mutableListOf()
+     vm.getSelectedServicesAndFees(courtWithDetails.sportCenter.id).forEach {
+         total += it.fee
+         selectedServicesIds.add(it.service.id)
+         selectedServicesString += viewContext.getString(
+             R.string.confirm_reservation_message_service_field,
+             it.service.name,
+             String.format("%.2f", it.fee)
+         )
+     }
+     if (selectedServicesIds.isEmpty())
+         selectedServicesString = viewContext.getString(
+             R.string.no_selected_services
+         )
+     val reservationConfirmationText = viewContext.getString(
+         R.string.confirm_reservation_message,
+         courtWithDetails.court.name,
+         courtWithDetails.sport.name,
+         courtWithDetails.sportCenter.name,
+         courtWithDetails.sportCenter.city,
+         getDateTimeFormatted(timeInMillis, viewContext.getString(R.string.hourFormat)),
+         getDateTimeFormatted(timeInMillis, viewContext.getString(R.string.dateExtendedFormat)),
+         selectedServicesString,
+         String.format("%.2f", courtWithDetails.court.hourCharge),
+         String.format("%.2f", total),
+     )
+
+
+     val builder: AlertDialog.Builder =
+         AlertDialog.Builder(viewContext)
+             .setTitle(
+                 viewContext.getString(
+                     R.string.reserve_this_court
+                 )
+             )
+             .setMessage(reservationConfirmationText)
+             .setPositiveButton(
+                 viewContext.getString(
+                     R.string.reserve_button
+                 )
+             ) { _, _ ->
+                 vm.reserveCourt(
+                     courtWithDetails.court.id,
+                     total,
+                     selectedServicesIds
+                 )
+             }.setNegativeButton(
+                 viewContext.getString(
+                     R.string.cancel_button
+                 )
+             ) { _, _ -> }
+             .setOnCancelListener { }
+     val dialog = builder.create()
+     dialog.show()
+ }
+*/
+
 }
