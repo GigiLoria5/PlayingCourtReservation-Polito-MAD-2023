@@ -4,7 +4,7 @@
     <string name="hourFormat">kk:mm</string>
     <string name="dateFormat">MMM dd</string>
     <string name="dateExtendedFormat">EEEE, MMMM dd, yyyy</string>
-    <string name="searchBoxInfoText">Where do you want to play</string>
+    <string name="searchBoxInfoText">Where do you want to play?</string>
     <string name="searchIcon">search icon</string>
     <string name="searchResultsInfo">Reserve a court with the desired services</string>
     <string name="selectCityIcon">select city icon</string>

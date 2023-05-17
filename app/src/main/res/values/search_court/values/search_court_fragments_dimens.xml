@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="pageExternalSpace">11dp</dimen>
-    <dimen name="searchInfoTextSize">15sp</dimen>
+    <dimen name="searchInfoTextSize">20sp</dimen>
     <dimen name="searchCityTextSize">18sp</dimen>
     <dimen name="dateTypeInternalMargin">4dp</dimen>
     <dimen name="cornerRadius">14dp</dimen>
