@@ -100,5 +100,6 @@
     <string name="no_review_found">There are no reviews available for this court</string>
     <string name="default_mean_rating_value">0.0/5</string>
     <string name="default_mean_rating_text">Based on 0 reviews</string>
+    <string name="rating_error">Error: min rating value is 0.5</string>
 
 </resources>
