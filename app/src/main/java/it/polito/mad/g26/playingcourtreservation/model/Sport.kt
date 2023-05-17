@@ -18,10 +18,10 @@ class Sport {
 // Remember to update it when adding new sports
 fun Sport.toSportColor(): Int {
     return when (name) {
-        "5-a-side football" -> R.color.sport5asidefootball
-        "8-a-side football" -> R.color.sport8asidefootball
-        "11-a-side football" -> R.color.sport11asidefootball
-        "Beach soccer" -> R.color.sportbeachsoccer
+        "5-a-side Football" -> R.color.sport5asidefootball
+        "8-a-side Football" -> R.color.sport8asidefootball
+        "11-a-side Football" -> R.color.sport11asidefootball
+        "Beach Soccer" -> R.color.sportbeachsoccer
         "Futsal" -> R.color.sportfutsal
         else -> R.color.custom_black
     }

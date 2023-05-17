@@ -13,12 +13,15 @@ interface SportCenterDao {
     @Query("SELECT * from sport_center")
     fun findAll(): LiveData<List<SportCenter>>
 
-    @Query("SELECT DISTINCT city FROM sport_center WHERE city LIKE :cityNameStartingWith")
+    @Query("SELECT DISTINCT city FROM sport_center ORDER BY city ASC")
+    fun findAllCities(): LiveData<List<String>>
+
+    @Query("SELECT DISTINCT city FROM sport_center WHERE city LIKE :cityNameStartingWith ORDER BY city ASC")
     fun findFilteredCities(cityNameStartingWith: String): LiveData<List<String>>
 
     @Transaction
     @Query(
-        "SELECT DISTINCT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.longitude, sport_center.latitude, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
+        "SELECT DISTINCT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
                 "from sport_center,court " +
                 "WHERE " +
                 "STRFTIME('%H:%M', open_time) <= :hour AND STRFTIME('%H:%M', close_time)> :hour " +
@@ -31,7 +34,7 @@ interface SportCenterDao {
 
     @Transaction
     @Query(
-        "SELECT DISTINCT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.longitude, sport_center.latitude, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
+        "SELECT DISTINCT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
                 "from sport_center, court " +
                 "WHERE " +
                 "STRFTIME('%H:%M', open_time) <= :hour AND STRFTIME('%H:%M', close_time)> :hour " +
@@ -50,7 +53,7 @@ interface SportCenterDao {
 
     @Transaction
     @Query(
-        "SELECT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.longitude, sport_center.latitude, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
+        "SELECT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
                 "from sport_center, sport_center_services " +
                 "WHERE " +
                 "STRFTIME('%H:%M', open_time) <= :hour AND STRFTIME('%H:%M', close_time)> :hour " +
@@ -72,7 +75,7 @@ interface SportCenterDao {
 
     @Transaction
     @Query(
-        "SELECT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.longitude, sport_center.latitude, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
+        "SELECT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
                 "from sport_center, sport_center_services, court " +
                 "WHERE " +
                 "STRFTIME('%H:%M', open_time) <= :hour AND STRFTIME('%H:%M', close_time)> :hour " +
