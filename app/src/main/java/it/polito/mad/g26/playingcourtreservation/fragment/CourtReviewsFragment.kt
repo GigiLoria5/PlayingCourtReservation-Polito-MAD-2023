@@ -26,7 +26,7 @@ import it.polito.mad.g26.playingcourtreservation.viewmodel.SportCentersVM
 
 class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
 
-    //private val args: CourtReviewsFragmentArgs by navArgs()
+    private val args: CourtReviewsFragmentArgs by navArgs()
     private val vm by viewModels<ReviewsVM>()
     private val courtVm by viewModels<CourtsVM>()
     private val sportCenterVm by viewModels<SportCentersVM>()
@@ -40,7 +40,7 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
         setupActionBar(activity, "Court Reviews", true)
 
         //val courtId = args.courtId
-        val courtId = 2
+        val courtId = 8
         println("courtId = $courtId")
 
         //Set up SportCenter name and field name
