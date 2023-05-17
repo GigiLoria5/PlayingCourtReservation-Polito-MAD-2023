@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_light"
+    android:background="@color/white"
     tools:context=".fragment.searchFragments.SearchSportCentersActionFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -108,8 +108,6 @@
                         app:tint="@color/grey" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -123,5 +121,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchCityABL"
         tools:listitem="@layout/city_item" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
