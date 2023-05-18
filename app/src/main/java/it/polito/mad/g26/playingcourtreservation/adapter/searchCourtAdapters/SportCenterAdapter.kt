@@ -6,14 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithServicesFormatted
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterReviewsSummary
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithServicesAndReviewsFormatted
 
 class SportCenterAdapter(
-    private var collection: List<SportCenterWithServicesFormatted>,
-    private val isServiceIdInList: (Int) -> Boolean
+    private var collection: List<SportCenterWithServicesAndReviewsFormatted>,
+    private val isServiceIdInList: (Int) -> Boolean,
+    private val navigateToSearchCourtFragment: (Int) -> Unit,
 ) :
     RecyclerView.Adapter<SportCenterAdapter.SportCenterViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportCenterViewHolder {
@@ -21,37 +24,54 @@ class SportCenterAdapter(
             LayoutInflater.from(parent.context).inflate(R.layout.sport_center_item, parent, false)
         return SportCenterViewHolder(view)
     }
+
     override fun onBindViewHolder(holder: SportCenterViewHolder, position: Int) {
         val sportCenter = collection[position].sportCenter
+        val reviewsSummary = collection[position].sportCenterReviewsSummary
         val servicesWithFee = collection[position].servicesWithFee
         holder.bind(
             sportCenter,
+            reviewsSummary,
             servicesWithFee,
         )
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateCollection(updatedCollection: List<SportCenterWithServicesFormatted>) {
+    fun updateCollection(updatedCollection: List<SportCenterWithServicesAndReviewsFormatted>) {
         this.collection = updatedCollection
         notifyDataSetChanged()
     }
+
     override fun onViewRecycled(holder: SportCenterViewHolder) {
         holder.unbind()
     }
+
     override fun getItemCount() = collection.size
     inner class SportCenterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val sportCenterInfoMCV =
+            itemView.findViewById<MaterialCardView>(R.id.sportCenterInfoMCV)
         private val sportCenterNameTV = itemView.findViewById<TextView>(R.id.sportCenterNameTV)
-        private val sportCenterAddressTV = itemView.findViewById<TextView>(R.id.sportCenterAddressTV)
+        private val sportCenterReviewsTV =
+            itemView.findViewById<TextView>(R.id.sportCenterReviewsTV)
+        private val sportCenterAddressTV =
+            itemView.findViewById<TextView>(R.id.sportCenterAddressTV)
         private val sportCenterHoursTV = itemView.findViewById<TextView>(R.id.sportCenterHoursTV)
         private val availableServicesTV =
             itemView.findViewById<TextView>(R.id.availableServicesTV)
-        private val sportCenterServicesRV = itemView.findViewById<RecyclerView>(R.id.sportCenterServicesRV)
+        private val sportCenterServicesRV =
+            itemView.findViewById<RecyclerView>(R.id.sportCenterServicesRV)
 
         fun bind(
             sportCenter: SportCenter,
+            reviewsSummary: SportCenterReviewsSummary,
             servicesWithFee: List<ServiceWithFee>,
         ) {
             sportCenterNameTV.text = sportCenter.name
+            sportCenterReviewsTV.text = itemView.context.getString(
+                R.string.sport_center_reviews,
+                String.format("%.2f", reviewsSummary.avg),
+                reviewsSummary.count.toString()
+            )
             sportCenterAddressTV.text = sportCenter.address
             sportCenterHoursTV.text = itemView.context.getString(
                 R.string.sport_center_hours,
@@ -63,11 +83,15 @@ class SportCenterAdapter(
 
             sportCenterServicesRV.adapter = ServiceWithFeeAdapter(
                 servicesWithFee,
-                isServiceIdInList={
+                isServiceIdInList = {
                     isServiceIdInList(it)
                 },
-                isClickable=false
+                isClickable = false
             )
+            sportCenterInfoMCV.setOnClickListener {
+                navigateToSearchCourtFragment(sportCenter.id)
+
+            }
         }
 
         fun unbind() {

@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="@dimen/pageExternalSpace"
-    android:paddingVertical="@dimen/sportCenterVerticalSpace"
-    >
+    android:paddingVertical="@dimen/sportCenterVerticalSpace">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/sportCenterInfoMCV"
@@ -15,7 +13,6 @@
         app:cardBackgroundColor="@color/grey_light_2"
         app:cardCornerRadius="@dimen/cornerRadius"
         app:cardElevation="@dimen/standardElevation"
-
         app:cardUseCompatPadding="true"
 
         app:layout_constraintBottom_toBottomOf="parent"
@@ -48,6 +45,27 @@
                     app:layout_constraintBottom_toTopOf="@id/sportCenterAddressTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/sportCenterReviewsTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sport_center_reviews"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/grey"
+                    app:layout_constraintBottom_toBottomOf="@id/sportCenterNameTV"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/sportCenterNameTV" />
+
+                <ImageView
+                    android:id="@+id/starIV"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@string/call_sport_center"
+                    app:layout_constraintBottom_toBottomOf="@id/sportCenterNameTV"
+                    app:layout_constraintEnd_toStartOf="@id/sportCenterReviewsTV"
+                    app:layout_constraintTop_toTopOf="@id/sportCenterNameTV"
+                    app:srcCompat="@drawable/baseline_star_24" />
 
                 <TextView
                     android:id="@+id/sportCenterAddressTV"
@@ -101,6 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/pageExternalSpace"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

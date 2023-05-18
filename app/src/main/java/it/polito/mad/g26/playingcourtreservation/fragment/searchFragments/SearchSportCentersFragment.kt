@@ -1,6 +1,5 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.AutoCompleteTextView
@@ -16,13 +15,14 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.SportCenterAdapter
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersVM
 
 class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_centers) {
@@ -142,25 +142,26 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         /*NUMBER OF SPORT CENTERS FOUND TV */
         numberOfSportCentersFoundTV = view.findViewById(R.id.numberOfSportCentersFoundTV)
 
-        // TODO: remove this click listener later
-        numberOfSportCentersFoundTV.setOnClickListener {
-            val direction =
-                SearchSportCentersFragmentDirections.actionSearchSportCentersToSearchCourts(1)
-            findNavController().navigate(direction)
-        }
-
         /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
         noSportCentersFoundTV = view.findViewById(R.id.noSportCentersFoundTV)
         val sportCentersAdapter = SportCenterAdapter(
-            vm.getSportCentersWithServicesFormatted()
-        ) { serviceId ->
-            vm.isServiceIdInList(serviceId)
-        }
+            vm.getSportCentersWithServicesAndReviewsFormatted(),
+            { serviceId ->
+                vm.isServiceIdInList(serviceId)
+            },
+            {
+                val direction =
+                    SearchSportCentersFragmentDirections.actionSearchSportCentersToSearchCourts(it)
+                findNavController().navigate(direction)
 
+            }
+        )
         sportCentersRV.adapter = sportCentersAdapter
-        vm.sportCenters.observe(viewLifecycleOwner) {
-            val sportCentersWithServicesFormatted = vm.getSportCentersWithServicesFormatted()
+
+        //WHY REVIEWS AND NOT SPORT CENTERS?
+        // BECAUSE REVIEWS DEPENDS (SWITCH MAP) ON SPORTCENTERS AND sportCentersWithServicesFormatted TAKES DATA BOTH FROM SPORTCENTERS AND REVIEWS
+        vm.reviews.observe(viewLifecycleOwner) {
             val numberOfSportCentersFound = vm.getNumberOfSportCentersFound()
             numberOfSportCentersFoundTV.text = view.context.getString(
                 R.string.searchSportCenterResultsInfo,
@@ -168,9 +169,13 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                 if (numberOfSportCentersFound != 1) "s" else ""
             )
             if (numberOfSportCentersFound > 0) {
-                if (vm.existingReservationIdByDateAndTime.value == null) sportCentersRV.makeVisible()
                 noSportCentersFoundTV.makeGone()
-                sportCentersAdapter.updateCollection(sportCentersWithServicesFormatted)
+                if (vm.existingReservationIdByDateAndTime.value == null) {
+                    sportCentersRV.makeVisible()
+                    val sportCentersWithServicesFormatted =
+                        vm.getSportCentersWithServicesAndReviewsFormatted()
+                    sportCentersAdapter.updateCollection(sportCentersWithServicesFormatted)
+                }
             } else {
                 sportCentersRV.makeInVisible()
                 noSportCentersFoundTV.makeVisible()
@@ -210,19 +215,10 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        //show again original toolbar out of this fragment
-        (activity as MainActivity).supportActionBar?.show()
-    }
 
-    @SuppressLint("RestrictedApi")
     override fun onResume() {
         super.onResume()
-        // Remove Default Status Bar
-        (activity as MainActivity).supportActionBar?.setShowHideAnimationEnabled(false)
-        (activity as MainActivity).supportActionBar?.hide()
-
+        hideActionBar(activity)
         //Restore autocomplete textview
         searchSportCentersUtil.setAutoCompleteTextViewSport(
             requireContext(),
@@ -230,5 +226,10 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
             courtTypeACTV,
             vm.getSelectedSportId()
         )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showActionBar(activity)
     }
 }

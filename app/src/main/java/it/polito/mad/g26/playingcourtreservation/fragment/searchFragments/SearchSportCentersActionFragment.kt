@@ -1,6 +1,5 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.*
@@ -13,8 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CityResultAdapter
+import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
+import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtActionVM
 
 class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport_centers_action) {
@@ -77,17 +77,13 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
         searchInputET.setText(args.city)
     }
 
-    @SuppressLint("RestrictedApi")
     override fun onResume() {
         super.onResume()
-        // Remove Default Status Bar
-        (activity as MainActivity).supportActionBar?.setShowHideAnimationEnabled(false)
-        (activity as MainActivity).supportActionBar?.hide()
+        hideActionBar(activity)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        //show again original toolbar out of this fragment
-        (activity as MainActivity).supportActionBar?.show()
+    override fun onPause() {
+        super.onPause()
+        showActionBar(activity)
     }
 }

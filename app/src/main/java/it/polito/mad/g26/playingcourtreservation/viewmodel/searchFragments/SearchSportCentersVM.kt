@@ -10,9 +10,11 @@ import it.polito.mad.g26.playingcourtreservation.model.Reservation.Companion.get
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.Sport
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterReviewsSummary
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithServices
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithServicesFormatted
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithServicesAndReviewsFormatted
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
+import it.polito.mad.g26.playingcourtreservation.repository.ReviewRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportRepository
@@ -24,6 +26,7 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     private val serviceRepository = ServiceRepository(application)
     private val sportRepository = SportRepository(application)
     private val reservationRepository = ReservationRepository(application)
+    private val reviewRepository = ReviewRepository(application)
 
     private val searchSportCentersUtil = SearchSportCentersUtil
 
@@ -44,8 +47,12 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     fun changeSelectedDateTimeMillis(newTimeInMillis: Long) {
         _selectedDateTimeMillis.value = newTimeInMillis
     }
+
     private fun getDateTimeFormatted(format: String): String {
-        return searchSportCentersUtil.getDateTimeFormatted(selectedDateTimeMillis.value ?: 0, format)
+        return searchSportCentersUtil.getDateTimeFormatted(
+            selectedDateTimeMillis.value ?: 0,
+            format
+        )
     }
 
     /*SPORT MANAGEMENT*/
@@ -54,6 +61,7 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     fun changeSelectedSport(sportId: Int) {
         selectedSport.value = sportId
     }
+
     fun getSelectedSportId(): Int = selectedSport.value ?: 0
 
     /*SERVICES MANAGEMENT*/
@@ -61,16 +69,19 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     private var selectedServices = MutableLiveData<MutableSet<Int>>().also {
         it.value = mutableSetOf()
     }
+
     fun addServiceIdToFilters(serviceId: Int) {
         val s = selectedServices.value
         s?.add(serviceId)
         selectedServices.value = s
     }
+
     fun removeServiceIdFromFilters(serviceId: Int) {
         val s = selectedServices.value
         s?.remove(serviceId)
         selectedServices.value = s
     }
+
     fun isServiceIdInList(serviceId: Int): Boolean {
         return selectedServices.value?.contains(serviceId) ?: false
     }
@@ -85,20 +96,32 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
             selectedSport.value ?: 0
         )
     }
-    private fun SportCenterWithServices.formatter(): SportCenterWithServicesFormatted {
-        return SportCenterWithServicesFormatted(sportCenter,
+
+    private fun SportCenterWithServices.formatter(): SportCenterWithServicesAndReviewsFormatted {
+        val reviews = reviews.value?.find { review -> review.sportCenterId == sportCenter.id }
+            ?: SportCenterReviewsSummary(sportCenter.id, 0.0, 0)
+
+        return SportCenterWithServicesAndReviewsFormatted(sportCenter,
             sportCenterServicesWithDetails.map {
                 ServiceWithFee(it.service, it.sportCenterServices.fee)
-            }
+            },
+            reviews
         )
     }
-    fun getSportCentersWithServicesFormatted(): List<SportCenterWithServicesFormatted> {
+
+    fun getNumberOfSportCentersFound(): Int = sportCenters.value?.size ?: 0
+
+    val reviews = sportCenters.switchMap {
+        val sportCentersIds = sportCenters.value?.map { it.sportCenter.id }?.toSet() ?: setOf()
+        reviewRepository.reviewsSummariesBySportCentersIds(sportCentersIds)
+    }
+
+    fun getSportCentersWithServicesAndReviewsFormatted(): List<SportCenterWithServicesAndReviewsFormatted> {
         return sportCenters.value?.map {
             it.formatter()
         } ?: listOf()
     }
-    
-    fun getNumberOfSportCentersFound():Int=sportCenters.value?.size?:0
+
 
     /*RESERVATION MANAGEMENT*/
     val existingReservationIdByDateAndTime: LiveData<Int?> = selectedDateTimeMillis.switchMap {

@@ -62,7 +62,6 @@ class ServiceWithFeeAdapter(
                 }
 
                 false -> {
-                    chip.setOnClickListener(null)
                     chip.elevation = 0F
                     //TODO FARLO O NO?
                     // chip.chipStrokeWidth = 3f

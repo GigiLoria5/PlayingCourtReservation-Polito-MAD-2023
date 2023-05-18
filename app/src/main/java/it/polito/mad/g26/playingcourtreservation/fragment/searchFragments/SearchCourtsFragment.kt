@@ -24,10 +24,10 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
         setupActionBar(activity, "Search Courts", true)
 
         val sportCenterId = args.sportCenterId
-        println("sportCenterId = $sportCenterId")
 
         // TODO: remove this click listener later
         val toBeRemovedSoon = view.findViewById<TextView>(R.id.searchCourtsLabelToBeRemoved)
+        toBeRemovedSoon.text="sportCenterId = $sportCenterId"
         toBeRemovedSoon.setOnClickListener {
             val direction =
                 SearchCourtsFragmentDirections.actionSearchCourtsToCourtReviews(1)
