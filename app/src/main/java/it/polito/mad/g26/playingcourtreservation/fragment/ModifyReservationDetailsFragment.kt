@@ -28,7 +28,6 @@ import it.polito.mad.g26.playingcourtreservation.util.createCalendarObject
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.takeIntCenterTime
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
-import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
 
 class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation_details) {
@@ -40,7 +39,6 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
     private lateinit var hourTV: TextView
 
     private val reservationDetailsUtil = ReservationWithDetailsUtil
-    private val vm by viewModels<SearchCourtResultsVM>()
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
@@ -245,7 +243,7 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         reservationWithDetailsVM.selectedDateTimeMillis.observe(viewLifecycleOwner) {
             //never used c?
             val c = Calendar.getInstance()
-            c.timeInMillis = vm.selectedDateTimeMillis.value!!
+            c.timeInMillis = reservationWithDetailsVM.selectedDateTimeMillis.value!!
             reservationDetailsUtil.setDateTimeTextViews(
                 reservationWithDetailsVM.selectedDateTimeMillis.value ?: 0,
                 getString(R.string.dateFormat),
