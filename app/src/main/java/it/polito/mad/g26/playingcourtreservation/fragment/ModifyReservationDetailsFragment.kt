@@ -249,7 +249,8 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 getString(R.string.dateFormat),
                 getString(R.string.hourFormat),
                 dateTV,
-                hourTV
+                hourTV,
+                timeNew
             )
         }
     }

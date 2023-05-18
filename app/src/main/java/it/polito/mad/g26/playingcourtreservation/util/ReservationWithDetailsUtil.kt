@@ -30,11 +30,13 @@ object ReservationWithDetailsUtil {
         dateFormat: String,
         hourFormat: String,
         dateTextView: TextView,
-        hourTextView: TextView
+        hourTextView: TextView,
+        newHourTextView: TextView
     ) {
 
         dateTextView.text = getDateTimeFormatted(timeInMillis, dateFormat)
         hourTextView.text = getDateTimeFormatted(timeInMillis, hourFormat)
+        newHourTextView.text = getDateTimeFormatted(timeInMillis, hourFormat)
     }
 
     private fun getDateTimeFormatted(
@@ -131,6 +133,7 @@ object ReservationWithDetailsUtil {
             datePickerDialog.datePicker.minDate = updatedCalendar.timeInMillis
         }else
             datePickerDialog.datePicker.minDate = minDate.timeInMillis
+
         datePickerDialog.show()
     }
 
@@ -160,7 +163,6 @@ object ReservationWithDetailsUtil {
             } else {
                 centerMinHour
             }
-
         numberPicker.maxValue = centerMaxHour-1
         numberPicker.value = c[Calendar.HOUR_OF_DAY]
 
@@ -197,6 +199,20 @@ object ReservationWithDetailsUtil {
 
         }
         val dialog = builder.create()
-        dialog.show()
+       /* val hourSelected= changeNumberToHour(numberPicker.value)
+        val dateSelected = changeDateToFull(dateChosen.text.toString())
+        //need to control if hour was setted by min
+        if(timeNew.text!=hourSelected){
+            val idRet = vm.findExistingReservation(dateSelected, hourSelected)
+            idRet.observe(life) { idReturned ->
+                //if yes, check if there is already a reservation
+                if (idReturned == null || idReturned == ownReservationId) {
+                    timeNew.text=hourSelected
+                } else {
+                    builderFound.show()
+                }
+            }
+        }else*/
+            dialog.show()
     }
 }
