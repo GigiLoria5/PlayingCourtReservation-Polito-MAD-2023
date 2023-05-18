@@ -62,7 +62,7 @@
     <!-- Reservations details-->
     <string name="delete_reservation_button">Delete</string>
     <string name="edit_reservation_button">Edit</string>
-    <string name="edit_review_button">Edit review</string>
+    <string name="add_review_button">Add review</string>
     <!-- Edit reservations details-->
     <string name="edit_date_time">Edit Date/time</string>
     <string name="choose_services">Choose services</string>

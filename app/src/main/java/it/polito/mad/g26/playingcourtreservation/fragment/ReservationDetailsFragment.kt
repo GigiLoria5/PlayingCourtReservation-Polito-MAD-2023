@@ -136,9 +136,13 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                 }else{
                     //Inflate with button of review
                     val inflater = LayoutInflater.from(requireContext())
-                    val viewEditReview = inflater.inflate(R.layout.edit_review_button, viewReservationButtons, false)
-                    val reviewEditButton= viewEditReview.findViewById<MaterialButton>(R.id.edit_review_button)
-                    viewReservationButtons.addView(viewEditReview)
+                    val viewAddReview = inflater.inflate(R.layout.add_review_button, viewReservationButtons, false)
+                    val reviewAddButton= viewAddReview.findViewById<MaterialButton>(R.id.add_review_button)
+                    viewReservationButtons.addView(viewAddReview)
+                    reviewAddButton.setOnClickListener {
+                        val action=ReservationDetailsFragmentDirections.openReview(reservation.reservation.idCourt)
+                        findNavController().navigate(action)
+                    }
                 }
 
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
