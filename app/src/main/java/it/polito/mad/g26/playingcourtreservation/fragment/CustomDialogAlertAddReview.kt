@@ -13,7 +13,7 @@ import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.viewmodel.ReviewsVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.CustomDialogAlertAddReviewVM
 
 class CustomDialogAlertAddReview: DialogFragment() {
     companion object {
@@ -45,7 +45,7 @@ class CustomDialogAlertAddReview: DialogFragment() {
             val submit = view.findViewById<Button>(R.id.submit_button)
             val cancel = view.findViewById<Button>(R.id.cancel_button)
 
-            val review by viewModels<ReviewsVM>()
+            val review by viewModels<CustomDialogAlertAddReviewVM>()
 
             val builderConfirm = AlertDialog.Builder(it)
             builderConfirm .setMessage("Review added successfully")

@@ -21,16 +21,12 @@ import it.polito.mad.g26.playingcourtreservation.adapter.ReviewsAdapter
 import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
-import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtsVM
-import it.polito.mad.g26.playingcourtreservation.viewmodel.ReviewsVM
-import it.polito.mad.g26.playingcourtreservation.viewmodel.SportCentersVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtReviewsVM
 
 class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
 
     private val args: CourtReviewsFragmentArgs by navArgs()
-    private val vm by viewModels<ReviewsVM>()
-    private val courtVm by viewModels<CourtsVM>()
-    private val sportCenterVm by viewModels<SportCentersVM>()
+    private val vm by viewModels<CourtReviewsVM>()
 
     private lateinit var reviewsRV: RecyclerView
     private lateinit var sportCenterTV: TextView
@@ -51,9 +47,9 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
         //Set up SportCenter name and field name
         sportCenterTV = view.findViewById(R.id.sportCenterTV)
         courtTV = view.findViewById(R.id.courtTV)
-        courtVm.getCourt(courtId).observe(viewLifecycleOwner){
+        vm.getCourt(courtId).observe(viewLifecycleOwner){
             courtTV.text = it.name
-            sportCenterVm.getSportCenterName(it.idSportCenter).observe(viewLifecycleOwner){ scName->
+            vm.getSportCenterName(it.idSportCenter).observe(viewLifecycleOwner){ scName->
                 sportCenterTV.text = scName
             }
         }
