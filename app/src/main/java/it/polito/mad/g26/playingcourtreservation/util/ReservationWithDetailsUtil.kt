@@ -76,7 +76,9 @@ object ReservationWithDetailsUtil {
     ) {
 
         val c = Calendar.getInstance()
+        val c2= Calendar.getInstance()
         c.timeInMillis = vm.selectedDateTimeMillis.value!!
+        c2.timeInMillis = vm.selectedDateTimeMillis.value!!
 
         //Alert dialog design
         val builderFound = AlertDialog.Builder(viewContext, R.style.MyAlertDialogStyle)
@@ -94,15 +96,25 @@ object ReservationWithDetailsUtil {
             val id = vm.findExistingReservation(date, hour)
             id.observe(life) { idReturned ->
                 if (idReturned == null || idReturned == ownReservationId) {
-                    dateNew.text = date
                     //Set and adjust if time is outside
-                    c.apply {
+                    c2.apply {
                         set(Calendar.YEAR, year)
                         set(Calendar.MONTH, month)
                         set(Calendar.DAY_OF_MONTH, day)
                     }
-                    adjustDateDateCombination(c)
-                    vm.changeSelectedDateTimeMillis(c.timeInMillis)
+                    adjustDateDateCombination(c2)
+
+                    //now search again for possible reservation
+                    val hourAdjusted= changeNumberToHour(c2[Calendar.HOUR_OF_DAY])
+                    val id2=vm.findExistingReservation(date, hourAdjusted)
+                    id2.observe(life){ id2Returned->
+                        if (id2Returned == null || id2Returned == ownReservationId) {
+                            dateNew.text = date
+                            vm.changeSelectedDateTimeMillis(c2.timeInMillis)
+                        }else
+                            builderFound.show()
+                    }
+
                 } else {
                     builderFound.show()
                 }
@@ -199,20 +211,6 @@ object ReservationWithDetailsUtil {
 
         }
         val dialog = builder.create()
-       /* val hourSelected= changeNumberToHour(numberPicker.value)
-        val dateSelected = changeDateToFull(dateChosen.text.toString())
-        //need to control if hour was setted by min
-        if(timeNew.text!=hourSelected){
-            val idRet = vm.findExistingReservation(dateSelected, hourSelected)
-            idRet.observe(life) { idReturned ->
-                //if yes, check if there is already a reservation
-                if (idReturned == null || idReturned == ownReservationId) {
-                    timeNew.text=hourSelected
-                } else {
-                    builderFound.show()
-                }
-            }
-        }else*/
-            dialog.show()
+        dialog.show()
     }
 }
