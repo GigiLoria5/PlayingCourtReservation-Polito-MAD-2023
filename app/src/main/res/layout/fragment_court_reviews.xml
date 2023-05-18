@@ -36,6 +36,7 @@
                 android:id="@+id/courtTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="4dp"
                 android:text="@string/court_name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/white"
@@ -138,7 +139,8 @@
         app:cardPreventCornerOverlap="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reviewListABL">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
