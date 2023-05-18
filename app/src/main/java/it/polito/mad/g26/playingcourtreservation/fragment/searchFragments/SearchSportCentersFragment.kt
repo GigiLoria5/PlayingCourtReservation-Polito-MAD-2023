@@ -43,7 +43,6 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
     private lateinit var hourTV: TextView
     private lateinit var servicesShimmerView: ShimmerFrameLayout
 
-
     private lateinit var courtTypeACTV: AutoCompleteTextView
     private lateinit var courtTypeMCV: MaterialCardView
     private lateinit var servicesRV: RecyclerView
@@ -63,7 +62,6 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
         /* VM INITIALIZATIONS */
         vm.setCity(city)
-
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -149,7 +147,6 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
         /* servicesShimmerView INITIALIZER */
         servicesShimmerView = view.findViewById(R.id.servicesShimmerView)
-
         vm.services.observe(viewLifecycleOwner) {
             servicesShimmerView.startShimmerAnimation(servicesRV)
             Handler(Looper.getMainLooper()).postDelayed({
@@ -166,7 +163,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
         noSportCentersFoundTV = view.findViewById(R.id.noSportCentersFoundTV)
         val sportCentersAdapter = SportCenterAdapter(
-            vm.getSportCentersWithServicesAndReviewsFormatted(),
+            vm.getSportCentersWithDetailsFormatted(),
             { serviceId ->
                 vm.isServiceIdInList(serviceId)
             },
@@ -181,11 +178,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
         /* shimmerFrameLayout INITIALIZER */
         sportCentersShimmerView = view.findViewById(R.id.sportCentersShimmerView)
-
-        //WHY REVIEWS AND NOT SPORT CENTERS?
-        // BECAUSE REVIEWS DEPENDS (SWITCH MAP) ON SPORTCENTERS AND sportCentersWithServicesFormatted TAKES DATA BOTH FROM SPORTCENTERS AND REVIEWS
-        vm.reviews.observe(viewLifecycleOwner) {
-
+        vm.sportCentersMediator.observe(viewLifecycleOwner) {
             // Start Shimmer loading
             sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
             numberOfSportCentersFoundTV.makeGone()
@@ -196,7 +189,9 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                 sportCentersShimmerView.stopShimmerAnimation(sportCentersRV)
                 if (vm.existingReservationIdByDateAndTime.value == null) {
                     numberOfSportCentersFoundTV.makeVisible()
-                    val numberOfSportCentersFound = vm.getNumberOfSportCentersFound()
+                    val sportCentersWithDetailsFormatted =
+                        vm.getSportCentersWithDetailsFormatted()
+                    val numberOfSportCentersFound = sportCentersWithDetailsFormatted.size
                     numberOfSportCentersFoundTV.text = view.context.getString(
                         R.string.searchSportCenterResultsInfo,
                         numberOfSportCentersFound,
@@ -205,10 +200,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                     if (numberOfSportCentersFound > 0) {
                         noSportCentersFoundTV.makeGone()
                         sportCentersRV.makeVisible()
-                        val sportCentersWithServicesFormatted =
-                            vm.getSportCentersWithServicesAndReviewsFormatted()
-                        sportCentersAdapter.updateCollection(sportCentersWithServicesFormatted)
-
+                        sportCentersAdapter.updateCollection(sportCentersWithDetailsFormatted)
                     } else {
                         sportCentersRV.makeInvisible()
                         noSportCentersFoundTV.makeVisible()
@@ -219,7 +211,6 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                     existingReservationCL.makeVisible()
                 }
             }, 200)
-
         }
 
         /* EXISTING RESERVATION INITIALIZER*/
@@ -245,7 +236,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                         )
                     }
                 } else {
-                    if (vm.getNumberOfSportCentersFound() > 0)
+                    if (vm.getSportCentersWithDetailsFormatted().isNotEmpty())
                         sportCentersRV.makeVisible()
                     servicesRV.makeVisible()
                     courtTypeACTV.makeVisible()
@@ -256,7 +247,6 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
             }, 300)
         }
     }
-
 
     override fun onResume() {
         super.onResume()

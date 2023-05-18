@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import it.polito.mad.g26.playingcourtreservation.database.CourtReservationDatabase
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithServices
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetails
 
 class SportCenterRepository(application: Application) {
     private val sportCenterDao = CourtReservationDatabase.getDatabase(application).sportCenterDao()
@@ -18,33 +18,8 @@ class SportCenterRepository(application: Application) {
 
     fun filterSportCenters(
         city: String,
-        hour: String,
-        services: Set<Int>,
-        sportId: Int
-    ): LiveData<List<SportCenterWithServices>> {
-        return when {
-            /* FILTERING BY SPORT, SERVICES AND BASE (DATE,TIME,CITY)*/
-            (sportId != 0 && services.isNotEmpty()) ->
-                sportCenterDao.findFilteredByServicesIdsAndSportId(
-                    city,
-                    hour,
-                    services,
-                    services.size,
-                    sportId
-                )
-            /* FILTERING BY SPORT AND BASE (DATE,TIME,CITY)*/
-            (sportId != 0) -> sportCenterDao.findFilteredBySportId(city, hour, sportId)
+        hour: String
+    ): LiveData<List<SportCenterWithDetails>> = sportCenterDao.findFiltered(city, hour)
 
-            /* FILTERING BY SERVICES AND BASE (DATE,TIME,CITY)*/
-            (services.isNotEmpty()) -> sportCenterDao.findFilteredByServicesIds(
-                city,
-                hour,
-                services,
-                services.size
-            )
 
-            /* BASE FILTERING (DATE,TIME,CITY) */
-            else -> sportCenterDao.findFilteredBase(city, hour)
-        }
-    }
 }

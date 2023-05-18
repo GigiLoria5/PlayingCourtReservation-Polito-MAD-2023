@@ -11,8 +11,8 @@ import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.Sport
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterReviewsSummary
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithServices
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithServicesAndReviewsFormatted
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetails
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetailsFormatted
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReviewRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
@@ -87,43 +87,81 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     }
 
     /*SPORT CENTERS MANAGEMENT*/
-    private val sportCentersMediator = MediatorLiveData<Int>()
-    val sportCenters = sportCentersMediator.switchMap {
+    val sportCentersMediator = MediatorLiveData<Int>()
+    private val sportCenters = selectedDateTimeMillis.switchMap {
         sportCenterRepository.filterSportCenters(
             selectedCity,
-            getDateTimeFormatted(timeFormat),
-            selectedServices.value?.toSet() ?: setOf(),
-            selectedSport.value ?: 0
+            getDateTimeFormatted(timeFormat)
         )
     }
 
-    private fun SportCenterWithServices.formatter(): SportCenterWithServicesAndReviewsFormatted {
+    private fun SportCenterWithDetails.formatter(): SportCenterWithDetailsFormatted {
         val reviews = reviews.value?.find { review -> review.sportCenterId == sportCenter.id }
             ?: SportCenterReviewsSummary(sportCenter.id, 0.0, 0)
 
-        return SportCenterWithServicesAndReviewsFormatted(sportCenter,
+        return SportCenterWithDetailsFormatted(
+            sportCenter,
             sportCenterServicesWithDetails.map {
                 ServiceWithFee(it.service, it.sportCenterServices.fee)
             },
-            reviews
+            reviews,
+            courts
         )
     }
 
-    fun getNumberOfSportCentersFound(): Int = sportCenters.value?.size ?: 0
-
-    val reviews = sportCenters.switchMap {
+    private val reviews = sportCenters.switchMap {
         val sportCentersIds = sportCenters.value?.map { it.sportCenter.id }?.toSet() ?: setOf()
         reviewRepository.reviewsSummariesBySportCentersIds(sportCentersIds)
     }
 
-    fun getSportCentersWithServicesAndReviewsFormatted(): List<SportCenterWithServicesAndReviewsFormatted> {
-        return sportCenters.value?.map {
+    fun getSportCentersWithDetailsFormatted(): List<SportCenterWithDetailsFormatted> {
+        val selectedServices = selectedServices.value?.toSet() ?: setOf()
+        val sportId = selectedSport.value ?: 0
+        val sportCentersFormatted = sportCenters.value?.map {
             it.formatter()
         } ?: listOf()
+        return when {
+
+            sportCentersFormatted.isEmpty() -> sportCentersFormatted
+
+            /* FILTERING BY SPORT, SERVICES AND BASE (DATE,TIME,CITY)*/
+            (sportId != 0 && selectedServices.isNotEmpty()) ->
+                sportCentersFormatted.filter { sportCenter ->
+                    sportCenter.courts.any { court ->
+                        court.idSport == sportId
+                    }
+                            &&
+                            selectedServices.all { selectedService ->
+                                sportCenter.servicesWithFee.any { serviceWithFee ->
+                                    serviceWithFee.service.id == selectedService
+                                }
+                            }
+                }
+
+            /* FILTERING BY SPORT AND BASE (DATE,TIME,CITY)*/
+            (sportId != 0) ->
+                sportCentersFormatted.filter { sportCenter ->
+                    sportCenter.courts.any { court ->
+                        court.idSport == sportId
+                    }
+                }
+
+            /* FILTERING BY SERVICES AND BASE (DATE,TIME,CITY)*/
+            (selectedServices.isNotEmpty()) ->
+                sportCentersFormatted.filter { sportCenter ->
+                    selectedServices.all { selectedService ->
+                        sportCenter.servicesWithFee.any { serviceWithFee ->
+                            serviceWithFee.service.id == selectedService
+                        }
+                    }
+                }
+
+            /* BASE FILTERING (DATE,TIME,CITY) */
+            else -> sportCentersFormatted
+        }
     }
 
-
-    /*RESERVATION MANAGEMENT*/
+    /*EXISTING RESERVATION MANAGEMENT*/
     val existingReservationIdByDateAndTime: LiveData<Int?> = selectedDateTimeMillis.switchMap {
         reservationRepository.reservationIdByUserIdAndDateAndHour(
             1, //should be replaced with userId
@@ -134,13 +172,17 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
 
     /*CHANGES IN SEARCH PARAMETERS MANAGEMENT*/
     init {
-        sportCentersMediator.addSource(selectedDateTimeMillis) {
+        sportCentersMediator.addSource(selectedSport) {
             sportCentersMediator.value = 1
         }
-        sportCentersMediator.addSource(selectedSport) {
+        sportCentersMediator.addSource(selectedServices) {
             sportCentersMediator.value = 2
         }
-        sportCentersMediator.addSource(selectedServices) {
+
+        //PUT REVIEW INSTEAD OF SPORT CENTER BECAUSE THE REVIEW UPDATE IS SUBSEQUENT
+        // TO THE SPORT CENTER UPDATE (SWITCH MAP) AND THE REVIEW INFORMATION IS
+        // NEEDED TO CREATE THE FINAL SPORT CENTER OBJECT
+        sportCentersMediator.addSource(reviews) {
             sportCentersMediator.value = 3
         }
     }
