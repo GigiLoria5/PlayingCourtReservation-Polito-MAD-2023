@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -35,13 +36,17 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
     private lateinit var sportCenterTV: TextView
     private lateinit var courtTV: TextView
     private lateinit var noReviewMCV: MaterialCardView
+
+    private lateinit var meanRatingMCV: MaterialCardView
+    private lateinit var meanRatingBar: RatingBar
+    private lateinit var meanRatingTV: TextView
+    private lateinit var meanRatingValueTV: TextView
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBar(activity, "Court Reviews", true)
 
-        //val courtId = args.courtId
-        val courtId = 8
-        println("courtId = $courtId")
+        val courtId = args.courtId
 
         //Set up SportCenter name and field name
         sportCenterTV = view.findViewById(R.id.sportCenterTV)
@@ -53,6 +58,12 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
             }
         }
 
+        /*Set-up mean value*/
+        meanRatingMCV = view.findViewById(R.id.meanRatingMCV)
+        meanRatingBar = view.findViewById(R.id.meanRating)
+        meanRatingValueTV = view.findViewById(R.id.meanRatingValueTV)
+        meanRatingTV = view.findViewById(R.id.meanRatingTV)
+
         /*Set-up recycle view */
         reviewsRV = view.findViewById(R.id.reviewsRV)
         val reviewsAdapter = ReviewsAdapter(vm.courtReviews(courtId).value?: listOf())
@@ -62,10 +73,20 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
             if (it.isNotEmpty()) {
                 reviewsRV.makeVisible()
                 noReviewMCV.makeInVisible()
+                meanRatingMCV.makeVisible()
+
+                vm.courtReviewsMean(courtId).observe(viewLifecycleOwner){mean ->
+                    meanRatingBar.rating = mean
+                    meanRatingValueTV.text = getString(R.string.mean_rating_value, mean.toString())
+                }
+                vm.courtReviewsCount(courtId).observe(viewLifecycleOwner){count ->
+                    meanRatingTV.text = getString(R.string.mean_rating_text, count.toString())
+                }
 
             } else {
                 reviewsRV.makeInVisible()
                 noReviewMCV.makeVisible()
+                meanRatingMCV.makeInVisible()
             }
             reviewsAdapter.updateReviews(it)
         }

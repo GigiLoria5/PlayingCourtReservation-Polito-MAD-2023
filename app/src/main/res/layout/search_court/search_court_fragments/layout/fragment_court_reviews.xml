@@ -44,7 +44,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/meanRateMCV"
+        android:id="@+id/meanRatingMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/pageExternalSpace"
@@ -54,14 +54,14 @@
         app:layout_constraintTop_toBottomOf="@+id/reviewListABL">
 
         <LinearLayout
-            android:id="@+id/meanRateValueLL"
+            android:id="@+id/meanRatingValueLL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/pageExternalSpace">
 
             <LinearLayout
-                android:id="@+id/meanRateLL"
+                android:id="@+id/meanRatingLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -85,10 +85,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/meanRateValueTV"
+                    android:id="@+id/meanRatingValueTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/default_mean_rating_value"
+                    android:text="@string/mean_rating_value"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/black"
                     tools:ignore="TextContrastCheck" />
@@ -102,11 +102,11 @@
                 android:layout_gravity="center">
 
                 <TextView
-                    android:id="@+id/meanRateTV"
+                    android:id="@+id/meanRatingTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/default_mean_rating_text"
+                    android:text="@string/mean_rating_text"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/black"
                     tools:ignore="TextContrastCheck" />
@@ -122,7 +122,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/meanRateMCV"
+        app:layout_constraintTop_toBottomOf="@id/meanRatingMCV"
         tools:listitem="@layout/review_item" />
 
     <com.google.android.material.card.MaterialCardView

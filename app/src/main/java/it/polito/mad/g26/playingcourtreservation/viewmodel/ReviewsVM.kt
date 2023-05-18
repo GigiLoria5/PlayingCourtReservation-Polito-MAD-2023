@@ -23,5 +23,6 @@ class ReviewsVM(application: Application) : AndroidViewModel(application) {
     }
 
     fun courtReviews(courtId: Int): LiveData<List<Review>> = repo.courtReviews(courtId)
-
+    fun courtReviewsCount(courtId: Int): LiveData<Int> = repo.courtReviewsCount(courtId)
+    fun courtReviewsMean(courtId: Int): LiveData<Float> = repo.courtReviewsMean(courtId)
 }

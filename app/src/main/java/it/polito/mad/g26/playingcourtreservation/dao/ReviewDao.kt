@@ -19,5 +19,13 @@ interface ReviewDao {
             "review.id_reservation = reservation.id " +
             "WHERE id_court =:courtId ORDER BY DATE(review.date) DESC")
     fun findAllCourtReviews(courtId: Int): LiveData<List<Review>>
+    @Query("SELECT count() from review INNER JOIN reservation ON " +
+            "review.id_reservation = reservation.id " +
+            "WHERE id_court =:courtId")
+    fun courtReviewsCount(courtId: Int): LiveData<Int>
 
+    @Query("SELECT avg(rating) from review INNER JOIN reservation ON " +
+            "review.id_reservation = reservation.id " +
+            "WHERE id_court =:courtId")
+    fun courtReviewsMean(courtId: Int): LiveData<Float>
 }

@@ -21,4 +21,7 @@ class ReviewRepository(application: Application) {
     }
 
     fun courtReviews(courtId: Int): LiveData<List<Review>> = reviewDao.findAllCourtReviews(courtId)
+
+    fun courtReviewsCount(courtId: Int): LiveData<Int> = reviewDao.courtReviewsCount(courtId)
+    fun courtReviewsMean(courtId: Int): LiveData<Float> = reviewDao.courtReviewsMean(courtId)
 }
