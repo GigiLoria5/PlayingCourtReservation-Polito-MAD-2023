@@ -120,6 +120,18 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
         val sportCentersFormatted = sportCenters.value?.map {
             it.formatter()
         } ?: listOf()
+        val filterBySportId = { sportCenter: SportCenterWithDetailsFormatted ->
+            sportCenter.courts.any { court ->
+                court.sport.id == sportId
+            }
+        }
+        val filterBySelectedServices = { sportCenter: SportCenterWithDetailsFormatted ->
+            selectedServices.all { selectedService ->
+                sportCenter.servicesWithFee.any { serviceWithFee ->
+                    serviceWithFee.service.id == selectedService
+                }
+            }
+        }
         return when {
 
             sportCentersFormatted.isEmpty() -> sportCentersFormatted
@@ -127,33 +139,19 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
             /* FILTERING BY SPORT, SERVICES AND BASE (DATE,TIME,CITY)*/
             (sportId != 0 && selectedServices.isNotEmpty()) ->
                 sportCentersFormatted.filter { sportCenter ->
-                    sportCenter.courts.any { court ->
-                        court.idSport == sportId
-                    }
-                            &&
-                            selectedServices.all { selectedService ->
-                                sportCenter.servicesWithFee.any { serviceWithFee ->
-                                    serviceWithFee.service.id == selectedService
-                                }
-                            }
+                    filterBySportId(sportCenter) && filterBySelectedServices(sportCenter)
                 }
 
             /* FILTERING BY SPORT AND BASE (DATE,TIME,CITY)*/
             (sportId != 0) ->
                 sportCentersFormatted.filter { sportCenter ->
-                    sportCenter.courts.any { court ->
-                        court.idSport == sportId
-                    }
+                    filterBySportId(sportCenter)
                 }
 
             /* FILTERING BY SERVICES AND BASE (DATE,TIME,CITY)*/
             (selectedServices.isNotEmpty()) ->
                 sportCentersFormatted.filter { sportCenter ->
-                    selectedServices.all { selectedService ->
-                        sportCenter.servicesWithFee.any { serviceWithFee ->
-                            serviceWithFee.service.id == selectedService
-                        }
-                    }
+                    filterBySelectedServices(sportCenter)
                 }
 
             /* BASE FILTERING (DATE,TIME,CITY) */

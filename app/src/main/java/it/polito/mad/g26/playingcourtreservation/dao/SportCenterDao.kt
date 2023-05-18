@@ -21,7 +21,7 @@ interface SportCenterDao {
 
     @Transaction
     @Query(
-        "SELECT DISTINCT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
+        "SELECT * " +
                 "from sport_center " +
                 "WHERE " +
                 "STRFTIME('%H:%M', open_time) <= :hour AND STRFTIME('%H:%M', close_time)> :hour " +
@@ -30,5 +30,13 @@ interface SportCenterDao {
     )
     fun findFiltered(city: String, hour: String): LiveData<List<SportCenterWithDetails>>
 
+    @Transaction
+    @Query(
+        "SELECT * " +
+                "from sport_center " +
+                "WHERE " +
+                "id=:sportCenterId "
+    )
+    fun findById(sportCenterId: Int): LiveData<SportCenterWithDetails>
 
 }
