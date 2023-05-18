@@ -10,7 +10,7 @@
         android:id="@+id/searchABL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/sportCentersRV"
+        app:layout_constraintBottom_toTopOf="@id/sportCentersRL"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -54,7 +54,7 @@
                 android:id="@+id/dateTypeCL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@id/servicesRV"
+                app:layout_constraintBottom_toTopOf="@id/servicesRL"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/customToolBarCL">
@@ -195,6 +195,16 @@
                 </com.google.android.material.card.MaterialCardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <RelativeLayout
+                android:id="@+id/servicesRL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/searchResultsTextCL"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dateTypeCL"
+                >
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/servicesRV"
                 android:layout_width="match_parent"
@@ -203,12 +213,32 @@
                 android:clipToPadding="false"
                 android:paddingHorizontal="@dimen/pageExternalSpace"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/searchResultsTextCL"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dateTypeCL"
                 tools:listitem="@layout/service_item" />
 
+                <!-- Placeholder -->
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/servicesShimmerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:shimmer_repeat_mode="restart"
+                    android:paddingStart="@dimen/pageExternalSpace"
+                    android:paddingEnd="0dp"
+                    app:shimmer_shape="radial">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <include layout="@layout/service_item_placeholder" />
+                        <include layout="@layout/service_item_placeholder" />
+                        <include layout="@layout/service_item_placeholder" />
+
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+            </RelativeLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/searchResultsTextCL"
                 android:layout_width="match_parent"
@@ -218,7 +248,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/servicesRV">
+                app:layout_constraintTop_toBottomOf="@id/servicesRL">
 
                 <TextView
                     android:id="@+id/numberOfSportCentersFoundTV"
@@ -236,19 +266,43 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sportCentersRV"
+    <RelativeLayout
+        android:id="@+id/sportCentersRL"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:paddingVertical="@dimen/pageExternalSpace"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchABL"
+        >
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/sportCentersRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/pageExternalSpace"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/sport_center_item" />
 
+        <!-- Placeholder -->
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sportCentersShimmerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shimmer_repeat_mode="restart"
+            app:shimmer_shape="radial">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/sport_center_item_placeholder" />
+
+
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+    </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/existingReservationCL"

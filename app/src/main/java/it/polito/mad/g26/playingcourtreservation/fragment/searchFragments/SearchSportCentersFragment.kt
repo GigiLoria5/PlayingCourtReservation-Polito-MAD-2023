@@ -1,6 +1,8 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -13,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceAdapter
@@ -24,6 +27,8 @@ import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersVM
 
 class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_centers) {
@@ -36,11 +41,14 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
     private lateinit var dateTV: TextView
     private lateinit var hourMCV: MaterialCardView
     private lateinit var hourTV: TextView
+    private lateinit var servicesShimmerView: ShimmerFrameLayout
+
 
     private lateinit var courtTypeACTV: AutoCompleteTextView
     private lateinit var courtTypeMCV: MaterialCardView
     private lateinit var servicesRV: RecyclerView
     private lateinit var sportCentersRV: RecyclerView
+    private lateinit var sportCentersShimmerView: ShimmerFrameLayout
     private lateinit var noSportCentersFoundTV: TextView
     private lateinit var existingReservationCL: ConstraintLayout
     private lateinit var numberOfSportCentersFoundTV: TextView
@@ -138,12 +146,21 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         val itemDecoration =
             HorizontalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.chipDistance))
         servicesRV.addItemDecoration(itemDecoration)
+
+        /* servicesShimmerView INITIALIZER */
+        servicesShimmerView = view.findViewById(R.id.servicesShimmerView)
+
         vm.services.observe(viewLifecycleOwner) {
-            servicesAdapter.updateCollection(vm.services.value ?: listOf())
+            servicesShimmerView.startShimmerAnimation(servicesRV)
+            Handler(Looper.getMainLooper()).postDelayed({
+                servicesShimmerView.stopShimmerAnimation(servicesRV)
+                servicesAdapter.updateCollection(vm.services.value ?: listOf())
+            }, 200)
         }
 
         /*NUMBER OF SPORT CENTERS FOUND TV */
         numberOfSportCentersFoundTV = view.findViewById(R.id.numberOfSportCentersFoundTV)
+        numberOfSportCentersFoundTV.makeGone()
 
         /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
@@ -162,59 +179,81 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         )
         sportCentersRV.adapter = sportCentersAdapter
 
+        /* shimmerFrameLayout INITIALIZER */
+        sportCentersShimmerView = view.findViewById(R.id.sportCentersShimmerView)
+
         //WHY REVIEWS AND NOT SPORT CENTERS?
         // BECAUSE REVIEWS DEPENDS (SWITCH MAP) ON SPORTCENTERS AND sportCentersWithServicesFormatted TAKES DATA BOTH FROM SPORTCENTERS AND REVIEWS
         vm.reviews.observe(viewLifecycleOwner) {
-            val numberOfSportCentersFound = vm.getNumberOfSportCentersFound()
-            numberOfSportCentersFoundTV.text = view.context.getString(
-                R.string.searchSportCenterResultsInfo,
-                numberOfSportCentersFound,
-                if (numberOfSportCentersFound != 1) "s" else ""
-            )
-            if (numberOfSportCentersFound > 0) {
-                noSportCentersFoundTV.makeGone()
+
+            // Start Shimmer loading
+            sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
+            numberOfSportCentersFoundTV.makeGone()
+            noSportCentersFoundTV.makeGone()
+            existingReservationCL.makeGone()
+            // Stop Shimmer loading
+            Handler(Looper.getMainLooper()).postDelayed({
+                sportCentersShimmerView.stopShimmerAnimation(sportCentersRV)
                 if (vm.existingReservationIdByDateAndTime.value == null) {
-                    sportCentersRV.makeVisible()
-                    val sportCentersWithServicesFormatted =
-                        vm.getSportCentersWithServicesAndReviewsFormatted()
-                    sportCentersAdapter.updateCollection(sportCentersWithServicesFormatted)
+                    numberOfSportCentersFoundTV.makeVisible()
+                    val numberOfSportCentersFound = vm.getNumberOfSportCentersFound()
+                    numberOfSportCentersFoundTV.text = view.context.getString(
+                        R.string.searchSportCenterResultsInfo,
+                        numberOfSportCentersFound,
+                        if (numberOfSportCentersFound != 1) "s" else ""
+                    )
+                    if (numberOfSportCentersFound > 0) {
+                        noSportCentersFoundTV.makeGone()
+                        sportCentersRV.makeVisible()
+                        val sportCentersWithServicesFormatted =
+                            vm.getSportCentersWithServicesAndReviewsFormatted()
+                        sportCentersAdapter.updateCollection(sportCentersWithServicesFormatted)
+
+                    } else {
+                        sportCentersRV.makeInvisible()
+                        noSportCentersFoundTV.makeVisible()
+                    }
+                } else {
+                    numberOfSportCentersFoundTV.makeGone()
+                    sportCentersRV.makeInvisible()
+                    existingReservationCL.makeVisible()
                 }
-            } else {
-                sportCentersRV.makeInvisible()
-                noSportCentersFoundTV.makeVisible()
-            }
+            }, 200)
+
         }
 
         /* EXISTING RESERVATION INITIALIZER*/
         existingReservationCL = view.findViewById(R.id.existingReservationCL)
         vm.existingReservationIdByDateAndTime.observe(viewLifecycleOwner) {
-            if (it != null) {
-                sportCentersRV.makeInvisible()
-                servicesRV.makeGone()
-                courtTypeACTV.makeInvisible()
-                courtTypeMCV.makeInvisible()
-                numberOfSportCentersFoundTV.makeGone()
-                existingReservationCL.makeVisible()
-                noSportCentersFoundTV.makeGone()
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (it != null) {
+                    sportCentersRV.makeInvisible()
+                    servicesRV.makeGone()
+                    courtTypeACTV.makeInvisible()
+                    courtTypeMCV.makeInvisible()
+                    numberOfSportCentersFoundTV.makeGone()
+                    existingReservationCL.makeVisible()
+                    noSportCentersFoundTV.makeGone()
 
-                val navigateToReservationBTN =
-                    view.findViewById<Button>(R.id.navigateToReservationBTN)
-                navigateToReservationBTN.setOnClickListener { _ ->
-                    findNavController().navigate(
-                        SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
-                            it
+                    val navigateToReservationBTN =
+                        view.findViewById<Button>(R.id.navigateToReservationBTN)
+                    navigateToReservationBTN.setOnClickListener { _ ->
+                        findNavController().navigate(
+                            SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
+                                it
+                            )
                         )
-                    )
+                    }
+                } else {
+                    if (vm.getNumberOfSportCentersFound() > 0)
+                        sportCentersRV.makeVisible()
+                    servicesRV.makeVisible()
+                    courtTypeACTV.makeVisible()
+                    courtTypeMCV.makeVisible()
+                    numberOfSportCentersFoundTV.makeVisible()
+                    existingReservationCL.makeGone()
                 }
-            } else {
-                if (vm.getNumberOfSportCentersFound() > 0)
-                    sportCentersRV.makeVisible()
-                servicesRV.makeVisible()
-                courtTypeACTV.makeVisible()
-                courtTypeMCV.makeVisible()
-                numberOfSportCentersFoundTV.makeVisible()
-                existingReservationCL.makeGone()
-            }
+            }, 300)
         }
     }
 

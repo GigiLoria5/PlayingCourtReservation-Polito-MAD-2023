@@ -62,6 +62,11 @@ class SportCenterAdapter(
         private val sportCenterServicesRV =
             itemView.findViewById<RecyclerView>(R.id.sportCenterServicesRV)
 
+        init {
+            val itemDecoration =
+                HorizontalSpaceItemDecoration(itemView.context.resources.getDimensionPixelSize(R.dimen.chipDistance))
+            sportCenterServicesRV.addItemDecoration(itemDecoration)
+        }
         fun bind(
             sportCenter: SportCenter,
             reviewsSummary: SportCenterReviewsSummary,
@@ -89,10 +94,6 @@ class SportCenterAdapter(
                 },
                 isClickable = false
             )
-            val itemDecoration =
-                HorizontalSpaceItemDecoration(itemView.context.resources.getDimensionPixelSize(R.dimen.chipDistance))
-            sportCenterServicesRV.addItemDecoration(itemDecoration)
-
             sportCenterInfoMCV.setOnClickListener {
                 navigateToSearchCourtFragment(sportCenter.id)
 
