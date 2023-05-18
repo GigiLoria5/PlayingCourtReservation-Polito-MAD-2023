@@ -17,6 +17,7 @@
     <dimen name="courtBoxMinDim">145dp</dimen>
     <dimen name="courtBoxElevation">7dp</dimen>
     <dimen name="courtNameCourtBox">18sp</dimen>
+    <dimen name="chipDistance">9dp</dimen>
     <dimen name="MarginsPaddingsCourtInfoBox">8dp</dimen>
     <fraction name="logoBackgroundScale">0.8</fraction>
 </resources>

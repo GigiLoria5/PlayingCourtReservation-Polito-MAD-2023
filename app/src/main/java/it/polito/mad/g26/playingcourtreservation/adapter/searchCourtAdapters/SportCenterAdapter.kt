@@ -12,6 +12,7 @@ import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterReviewsSummary
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithServicesAndReviewsFormatted
+import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 
 class SportCenterAdapter(
     private var collection: List<SportCenterWithServicesAndReviewsFormatted>,
@@ -88,6 +89,10 @@ class SportCenterAdapter(
                 },
                 isClickable = false
             )
+            val itemDecoration =
+                HorizontalSpaceItemDecoration(itemView.context.resources.getDimensionPixelSize(R.dimen.chipDistance))
+            sportCenterServicesRV.addItemDecoration(itemDecoration)
+
             sportCenterInfoMCV.setOnClickListener {
                 navigateToSearchCourtFragment(sportCenter.id)
 

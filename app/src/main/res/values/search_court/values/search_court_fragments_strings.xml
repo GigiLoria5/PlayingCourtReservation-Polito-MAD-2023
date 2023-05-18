@@ -35,6 +35,7 @@
     <string name="sport_center_opening_hours">00:00 – 15:00</string>
     <string name="sport_center_reviews">%1$s/5 (%2$s)</string>
     <string name="call_sport_center">call sport center</string>
+    <string name="star_vector">star vector</string>
     <string name="reserve_this_court">Reserve this court</string>
     <string name="selected_services">Selected services:\n\n</string>
     <string name="no_selected_services">No services selected</string>

@@ -190,7 +190,7 @@
                             android:textSize="@dimen/dateTypeButtonsTextSize"
                             android:textStyle="normal"
                             tools:ignore="LabelFor,TextContrastCheck,VisualLintTextFieldSize"
-                            tools:text="Calcio a 5" />
+                            tools:text="@string/all_sports" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </com.google.android.material.card.MaterialCardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -200,6 +200,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:clipToPadding="false"
                 android:paddingHorizontal="@dimen/pageExternalSpace"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toTopOf="@id/searchResultsTextCL"
@@ -239,6 +240,8 @@
         android:id="@+id/sportCentersRV"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/pageExternalSpace"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

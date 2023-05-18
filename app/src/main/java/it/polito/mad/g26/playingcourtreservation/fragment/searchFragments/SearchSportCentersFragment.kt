@@ -17,6 +17,7 @@ import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.SportCenterAdapter
+import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
@@ -134,7 +135,9 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
             { vm.isServiceIdInList(it) }
         )
         servicesRV.adapter = servicesAdapter
-
+        val itemDecoration =
+            HorizontalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.chipDistance))
+        servicesRV.addItemDecoration(itemDecoration)
         vm.services.observe(viewLifecycleOwner) {
             servicesAdapter.updateCollection(vm.services.value ?: listOf())
         }
