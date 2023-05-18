@@ -20,7 +20,7 @@ import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.Ser
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.SportCenterAdapter
 import it.polito.mad.g26.playingcourtreservation.util.SearchCourtResultsUtil
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
-import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
+import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
@@ -187,7 +187,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                 noCourtFoundMCV.makeGone()
 
             } else {
-                sportCentersRV.makeInVisible()
+                sportCentersRV.makeInvisible()
                 noCourtFoundMCV.makeVisible()
             }
         }
@@ -210,10 +210,10 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         vm.myReservation.observe(viewLifecycleOwner) { //X GESTIRE RESERVATIONS GIà PRESENTI
             if (it != null) {
                 if (vm.newReservationId.value == -1) { //se sono qui senza sapere di avere una reservation
-                    sportCentersRV.makeInVisible()
+                    sportCentersRV.makeInvisible()
                     servicesRV.makeGone()
-                    courtTypeACTV.makeInVisible()
-                    courtTypeMCV.makeInVisible()
+                    courtTypeACTV.makeInvisible()
+                    courtTypeMCV.makeInvisible()
                     selectionTutorialTV.makeGone()
                     reservationMCV.makeVisible()
                     noCourtFoundMCV.makeGone()
