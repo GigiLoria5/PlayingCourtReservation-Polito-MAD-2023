@@ -21,7 +21,7 @@ import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecorat
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
-import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
+import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersVM
@@ -180,7 +180,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                     sportCentersAdapter.updateCollection(sportCentersWithServicesFormatted)
                 }
             } else {
-                sportCentersRV.makeInVisible()
+                sportCentersRV.makeInvisible()
                 noSportCentersFoundTV.makeVisible()
             }
         }
@@ -189,10 +189,10 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         existingReservationCL = view.findViewById(R.id.existingReservationCL)
         vm.existingReservationIdByDateAndTime.observe(viewLifecycleOwner) {
             if (it != null) {
-                sportCentersRV.makeInVisible()
+                sportCentersRV.makeInvisible()
                 servicesRV.makeGone()
-                courtTypeACTV.makeInVisible()
-                courtTypeMCV.makeInVisible()
+                courtTypeACTV.makeInvisible()
+                courtTypeMCV.makeInvisible()
                 numberOfSportCentersFoundTV.makeGone()
                 existingReservationCL.makeVisible()
                 noSportCentersFoundTV.makeGone()
