@@ -3,20 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/sportCenterVerticalSpace">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/sportCenterInfoMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/sportCenterTopMargin"
-        android:layout_marginBottom="@dimen/sportCenterBottomMargin"
         app:cardBackgroundColor="@color/grey_light_2"
         app:cardCornerRadius="@dimen/cornerRadius"
         app:cardElevation="@dimen/standardElevation"
-
         app:cardUseCompatPadding="true"
-
+        
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/sportCenterVerticalPadding">
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/sportCenterInfoCL"
@@ -38,60 +35,72 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+
                 <TextView
                     android:id="@+id/sportCenterNameTV"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/sport_center_name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/custom_black"
                     app:layout_constraintBottom_toTopOf="@id/sportCenterAddressTV"
+                    app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/sportCenterInfoGL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.67" />
+
+                <ImageView
+                    android:id="@+id/starIV"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:contentDescription="@string/star_vector"
+                    app:layout_constraintBottom_toBottomOf="@id/sportCenterNameTV"
+                    app:layout_constraintEnd_toStartOf="@id/sportCenterReviewsTV"
+                    app:layout_constraintTop_toTopOf="@id/sportCenterNameTV"
+                    app:srcCompat="@drawable/baseline_star_24" />
+
+                <TextView
+                    android:id="@+id/sportCenterReviewsTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sport_center_reviews"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="@color/grey"
+                    app:layout_constraintBottom_toBottomOf="@id/sportCenterNameTV"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/sportCenterNameTV" />
+
+
                 <TextView
                     android:id="@+id/sportCenterAddressTV"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/sport_center_address"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/grey"
                     app:layout_constraintBottom_toTopOf="@id/sportCenterHoursTV"
+                    app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/sportCenterNameTV" />
 
                 <TextView
                     android:id="@+id/sportCenterHoursTV"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/sport_center_opening_hours"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/grey"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/sportCenterAddressTV" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/phoneMCV"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/green_500"
-                    app:cardCornerRadius="@dimen/cornerRadius"
-                    app:layout_constraintBottom_toBottomOf="@id/sportCenterHoursTV"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/stat_sys_phone_call">
-
-                    <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="@string/call_sport_center"
-                        android:padding="5dp"
-                        app:srcCompat="@android:drawable/stat_sys_phone_call" />
-                </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -100,20 +109,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/distanceSportCenterInfoCourtData"
-                app:layout_constraintBottom_toTopOf="@id/courtsDataCL"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sportCenterInfoCL">
 
                 <TextView
                     android:id="@+id/availableServicesTV"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="@dimen/pageExternalSpace"
-                    android:text="@string/choose_your_services"
+                    android:text="@string/available_services"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/grey"
                     app:layout_constraintBottom_toTopOf="@id/sportCenterServicesRV"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -121,7 +131,9 @@
                     android:id="@+id/sportCenterServicesRV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clipToPadding="false"
                     android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/pageExternalSpace"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -130,41 +142,6 @@
                     tools:listitem="@layout/service_item" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/courtsDataCL"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/distanceSportCenterInfoCourtData"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sportCenterServicesCL">
-
-                <TextView
-                    android:id="@+id/selectCourtTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/pageExternalSpace"
-                    android:text="@string/select_your_court"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/grey"
-                    app:layout_constraintBottom_toTopOf="@id/courtsDataRV"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/courtsDataRV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/selectCourtTV"
-                    tools:listitem="@layout/court_item" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

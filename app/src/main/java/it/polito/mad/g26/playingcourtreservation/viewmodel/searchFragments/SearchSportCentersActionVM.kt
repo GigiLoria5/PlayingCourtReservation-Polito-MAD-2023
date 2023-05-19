@@ -6,11 +6,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
-
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
-import java.util.*
+import java.util.Locale
 
-class SearchCourtActionVM(application: Application) : AndroidViewModel(application) {
+class SearchSportCentersActionVM(application: Application) : AndroidViewModel(application) {
 
     private val sportCenterRepository = SportCenterRepository(application)
 
@@ -18,7 +17,7 @@ class SearchCourtActionVM(application: Application) : AndroidViewModel(applicati
     val cities: LiveData<List<String>> = searchStringLiveData.switchMap { string ->
         val adjustedString = string.trim().lowercase(Locale.ROOT)
         if (TextUtils.isEmpty(adjustedString)) {
-            sportCenterRepository.filteredCities("")
+            sportCenterRepository.findAllCities()
         } else {
             sportCenterRepository.filteredCities("${adjustedString}%")
         }
