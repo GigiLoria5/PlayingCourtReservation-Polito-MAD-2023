@@ -9,22 +9,24 @@ import android.widget.TextView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtsVM
 
 class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
 
     private val args: SearchCourtsFragmentArgs by navArgs()
+    private val vm by viewModels<SearchCourtsVM>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBar(activity, "Search Courts", true)
-
         val sportCenterId = args.sportCenterId
-        println("sportCenterId = $sportCenterId")
+        vm.setSportCenterId(sportCenterId)
 
         // TODO: remove this click listener later
         val toBeRemovedSoon = view.findViewById<TextView>(R.id.searchCourtsLabelToBeRemoved)
@@ -33,6 +35,30 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
                 SearchCourtsFragmentDirections.actionSearchCourtsToCourtReviews(1)
             findNavController().navigate(direction)
         }
+
+
+        //init rv services
+        //init rv courts
+
+        vm.sportCenter.observe(viewLifecycleOwner) {
+            val sportCenterWithDetailsFormatted = vm.getSportCenterWithDetailsFormatted()
+            val sportCenter = sportCenterWithDetailsFormatted.sportCenter
+            val reviewsSummary = sportCenterWithDetailsFormatted.sportCenterReviewsSummary
+            val courts = sportCenterWithDetailsFormatted.courts
+            val servicesWithFee = sportCenterWithDetailsFormatted.servicesWithFee
+
+            toBeRemovedSoon.text =sportCenter.name + " "+toBeRemovedSoon.text
+
+
+            //update sport center texts
+            //update services rv
+            //update courts rv (courtsAdapter.updateCollection(courts))
+        }
+
+        vm.reviews.observe(viewLifecycleOwner){
+            toBeRemovedSoon.text=toBeRemovedSoon.text.toString()+it.avg
+        }
+
 
         // Handle Menu Items
         val menuHost: MenuHost = requireActivity()

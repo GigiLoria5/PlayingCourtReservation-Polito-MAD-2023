@@ -4,21 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_light"
+    android:background="@color/white"
     android:paddingBottom="@dimen/pageExternalSpace"
     tools:context=".fragment.searchFragments.SearchSportCentersHomeFragment">
 
+    <ImageView
+        android:id="@+id/homeBackgroundLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:scaleX="@fraction/logoBackgroundScale"
+        android:scaleY="@fraction/logoBackgroundScale"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintBottom_toTopOf="@id/searchInfoTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/searchInfoTV"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/pageExternalSpace"
-        android:gravity="center"
         android:text="@string/searchBoxInfoText"
         android:textColor="@color/custom_black"
         android:textSize="@dimen/searchInfoTextSize"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/cityNameMCV"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/cityNameMCV"
+        app:layout_constraintEnd_toEndOf="@id/cityNameMCV"
+        />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cityNameMCV"
@@ -28,6 +43,8 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/grey"
         app:cardCornerRadius="@dimen/cornerRadius"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"

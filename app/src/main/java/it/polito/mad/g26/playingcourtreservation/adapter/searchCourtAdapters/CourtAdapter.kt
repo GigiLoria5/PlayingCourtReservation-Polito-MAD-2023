@@ -8,7 +8,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.custom.CourtWithDetails
+import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails //TODO ORA STAI UTILIZZANDO QUELLO CHE HA CREATO LUIGI, ATTENTO CASOMAI CI SONO DIFFERENZE
 import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
 
 class CourtAdapter(

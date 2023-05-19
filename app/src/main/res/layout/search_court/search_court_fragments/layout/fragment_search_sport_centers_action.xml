@@ -108,8 +108,6 @@
                         app:tint="@color/grey" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -123,5 +121,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchCityABL"
         tools:listitem="@layout/city_item" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
