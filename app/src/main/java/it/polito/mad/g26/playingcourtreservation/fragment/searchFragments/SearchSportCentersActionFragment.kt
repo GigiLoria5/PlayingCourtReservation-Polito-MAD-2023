@@ -15,12 +15,12 @@ import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CityResultAdapter
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
-import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtActionVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersActionVM
 
 class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport_centers_action) {
 
     private val args: SearchSportCentersActionFragmentArgs by navArgs()
-    private val vm by viewModels<SearchCourtActionVM>()
+    private val vm by viewModels<SearchSportCentersActionVM>()
 
     private lateinit var searchInputET: EditText
     private lateinit var citiesResultRV: RecyclerView

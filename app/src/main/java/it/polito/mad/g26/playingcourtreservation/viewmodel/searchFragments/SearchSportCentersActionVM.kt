@@ -9,7 +9,7 @@ import androidx.lifecycle.switchMap
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import java.util.Locale
 
-class SearchCourtActionVM(application: Application) : AndroidViewModel(application) {
+class SearchSportCentersActionVM(application: Application) : AndroidViewModel(application) {
 
     private val sportCenterRepository = SportCenterRepository(application)
 

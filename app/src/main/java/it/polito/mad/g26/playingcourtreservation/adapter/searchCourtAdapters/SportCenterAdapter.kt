@@ -11,11 +11,11 @@ import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterReviewsSummary
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetailsFormatted
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithMoreDetailsFormatted
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 
 class SportCenterAdapter(
-    private var collection: List<SportCenterWithDetailsFormatted>,
+    private var collection: List<SportCenterWithMoreDetailsFormatted>,
     private val isServiceIdInList: (Int) -> Boolean,
     private val navigateToSearchCourtFragment: (Int) -> Unit,
 ) :
@@ -38,7 +38,7 @@ class SportCenterAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateCollection(updatedCollection: List<SportCenterWithDetailsFormatted>) {
+    fun updateCollection(updatedCollection: List<SportCenterWithMoreDetailsFormatted>) {
         this.collection = updatedCollection
         notifyDataSetChanged()
     }

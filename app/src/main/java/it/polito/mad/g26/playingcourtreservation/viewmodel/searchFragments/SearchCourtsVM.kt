@@ -7,7 +7,7 @@ import androidx.lifecycle.switchMap
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterReviewsSummary
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetails
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetailsFormatted
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithMoreDetailsFormatted
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReviewRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
@@ -34,10 +34,10 @@ class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
         reviewRepository.reviewsSummaryBySportCenterId(sportCenterId)
     }
 
-    private fun SportCenterWithDetails.formatter(): SportCenterWithDetailsFormatted {
+    private fun SportCenterWithDetails.formatter(): SportCenterWithMoreDetailsFormatted {
         val reviews = reviews.value ?: SportCenterReviewsSummary(sportCenter.id, 0.0, 0)
 
-        return SportCenterWithDetailsFormatted(
+        return SportCenterWithMoreDetailsFormatted(
             sportCenter,
             sportCenterServicesWithDetails.map {
                 ServiceWithFee(it.service, it.sportCenterServices.fee)
@@ -47,7 +47,7 @@ class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
         )
     }
 
-    fun getSportCenterWithDetailsFormatted(): SportCenterWithDetailsFormatted =
+    fun getSportCenterWithDetailsFormatted(): SportCenterWithMoreDetailsFormatted =
         sportCenter.value!!.formatter()
 
 

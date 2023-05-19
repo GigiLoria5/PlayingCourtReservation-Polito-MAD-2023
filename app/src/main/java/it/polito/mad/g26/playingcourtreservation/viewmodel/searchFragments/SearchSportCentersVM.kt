@@ -12,7 +12,7 @@ import it.polito.mad.g26.playingcourtreservation.model.Sport
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterReviewsSummary
 import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetails
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetailsFormatted
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithMoreDetailsFormatted
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReviewRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ServiceRepository
@@ -95,11 +95,11 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
         )
     }
 
-    private fun SportCenterWithDetails.formatter(): SportCenterWithDetailsFormatted {
+    private fun SportCenterWithDetails.formatter(): SportCenterWithMoreDetailsFormatted {
         val reviews = reviews.value?.find { review -> review.sportCenterId == sportCenter.id }
             ?: SportCenterReviewsSummary(sportCenter.id, 0.0, 0)
 
-        return SportCenterWithDetailsFormatted(
+        return SportCenterWithMoreDetailsFormatted(
             sportCenter,
             sportCenterServicesWithDetails.map {
                 ServiceWithFee(it.service, it.sportCenterServices.fee)
@@ -114,18 +114,18 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
         reviewRepository.reviewsSummariesBySportCentersIds(sportCentersIds)
     }
 
-    fun getSportCentersWithDetailsFormatted(): List<SportCenterWithDetailsFormatted> {
+    fun getSportCentersWithDetailsFormatted(): List<SportCenterWithMoreDetailsFormatted> {
         val selectedServices = selectedServices.value?.toSet() ?: setOf()
         val sportId = selectedSport.value ?: 0
         val sportCentersFormatted = sportCenters.value?.map {
             it.formatter()
         } ?: listOf()
-        val filterBySportId = { sportCenter: SportCenterWithDetailsFormatted ->
+        val filterBySportId = { sportCenter: SportCenterWithMoreDetailsFormatted ->
             sportCenter.courts.any { court ->
                 court.sport.id == sportId
             }
         }
-        val filterBySelectedServices = { sportCenter: SportCenterWithDetailsFormatted ->
+        val filterBySelectedServices = { sportCenter: SportCenterWithMoreDetailsFormatted ->
             selectedServices.all { selectedService ->
                 sportCenter.servicesWithFee.any { serviceWithFee ->
                     serviceWithFee.service.id == selectedService
