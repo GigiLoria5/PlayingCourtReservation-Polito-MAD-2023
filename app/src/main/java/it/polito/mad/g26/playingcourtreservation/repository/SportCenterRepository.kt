@@ -25,4 +25,6 @@ class SportCenterRepository(application: Application) {
         sportCenterId: Int
     ): LiveData<SportCenterWithDetails> = sportCenterDao.findById(sportCenterId)
 
+    fun getSportCenterName(sportCenterId: Int): LiveData<String> = sportCenterDao.getSportCenterName(sportCenterId)
+
 }

@@ -3,4 +3,5 @@
     <dimen name="profile_image">120dp</dimen>
     <dimen name="item_space_vertical">6dp</dimen>
     <dimen name="margins_reservation_details">8dp</dimen>
+    <dimen name="review_item_vertical_margin">12dp</dimen>
 </resources>

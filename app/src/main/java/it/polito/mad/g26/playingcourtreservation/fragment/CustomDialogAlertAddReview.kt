@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
+import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.viewmodel.CustomDialogAlertAddReviewVM
 
@@ -40,7 +40,7 @@ class CustomDialogAlertAddReview: DialogFragment() {
             val rating = view.findViewById<RatingBar>(R.id.rating)
             val textReview = view.findViewById<EditText>(R.id.et_review)
             val ratingError = view.findViewById<MaterialCardView>(R.id.errorRatingMCV)
-            ratingError.makeInVisible()
+            ratingError.makeInvisible()
 
             val submit = view.findViewById<Button>(R.id.submit_button)
             val cancel = view.findViewById<Button>(R.id.cancel_button)
@@ -53,7 +53,7 @@ class CustomDialogAlertAddReview: DialogFragment() {
 
             val confirmDialog = builderConfirm.create()
 
-            rating.setOnRatingBarChangeListener { _, _, _ ->  ratingError.makeInVisible()}
+            rating.setOnRatingBarChangeListener { _, _, _ ->  ratingError.makeInvisible()}
 
             submit.setOnClickListener {
                 var error = false

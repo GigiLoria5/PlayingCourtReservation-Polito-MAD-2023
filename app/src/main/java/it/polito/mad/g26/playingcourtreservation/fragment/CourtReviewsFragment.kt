@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReviewsAdapter
-import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
+import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtReviewsVM
@@ -68,7 +68,7 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
         vm.courtReviews(courtId).observe(viewLifecycleOwner){
             if (it.isNotEmpty()) {
                 reviewsRV.makeVisible()
-                noReviewMCV.makeInVisible()
+                noReviewMCV.makeInvisible()
                 meanRatingMCV.makeVisible()
 
                 vm.courtReviewsMean(courtId).observe(viewLifecycleOwner){mean ->
@@ -80,9 +80,9 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
                 }
 
             } else {
-                reviewsRV.makeInVisible()
+                reviewsRV.makeInvisible()
                 noReviewMCV.makeVisible()
-                meanRatingMCV.makeInVisible()
+                meanRatingMCV.makeInvisible()
             }
             reviewsAdapter.updateReviews(it)
         }

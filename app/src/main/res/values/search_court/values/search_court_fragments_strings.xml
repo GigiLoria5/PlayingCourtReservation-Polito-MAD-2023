@@ -47,5 +47,4 @@
     </string>
     <string name="confirm_reservation_message_service_field">-%1$s: €%2$s\n</string>
     <string name="reserve_button">Reserve</string>
-    <string name="cancel_button">Cancel</string>
 </resources>
