@@ -47,4 +47,9 @@ interface ReviewDao {
 
     @Query("SELECT * from review WHERE id_reservation =:reservationId AND id_user=:userId")
     fun findReservationReview(reservationId: Int, userId: Int): LiveData<Review?>
+    @Query("DELETE FROM review WHERE id_reservation = :reservationId AND id_user=:userId")
+    fun deleteReviewById(reservationId: Int, userId: Int)
+
+    @Query("UPDATE review SET rating=:rating, text=:textReview, date=:date WHERE id_reservation=:idReservation AND id_user=:idUser")
+    fun updateReview(idReservation: Int, idUser: Int, rating: Float, textReview: String, date:String)
 }

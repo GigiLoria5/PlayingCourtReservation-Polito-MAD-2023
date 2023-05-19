@@ -100,4 +100,10 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
 
     fun findReservationReview(reservationId: Int, userId: Int): LiveData<Review?> = reviewRepo.findReservationReview(reservationId, userId)
 
+    fun deleteReviewById(reservationId: Int, userId: Int) {
+        thread {
+            reviewRepo.deleteReviewById(reservationId, userId)
+        }
+    }
+
 }

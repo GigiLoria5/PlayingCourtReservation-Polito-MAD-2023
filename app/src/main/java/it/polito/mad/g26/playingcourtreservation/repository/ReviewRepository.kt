@@ -33,4 +33,9 @@ class ReviewRepository(application: Application) {
         reviewDao.findSummariesBySportCentersIds(sportCentersIds)
 
     fun findReservationReview(reservationId: Int, userId: Int): LiveData<Review?> = reviewDao.findReservationReview(reservationId, userId)
+    fun deleteReviewById(reservationId: Int, userId: Int) = reviewDao.deleteReviewById(reservationId, userId)
+
+    fun updateReview(idReservation: Int, idUser: Int, rating: Float, textReview: String, date:String){
+        return reviewDao.updateReview(idReservation, idUser, rating, textReview, date)
+    }
 }

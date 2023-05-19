@@ -33,6 +33,7 @@ class CustomDialogAlertAddReview: DialogFragment() {
         return context.let {
 
             val idReservation = arguments?.getInt("idReservation")
+            println("$idReservation")
             val idUser = arguments?.getInt("idUser")
             val view: View = layoutInflater.inflate(R.layout.custom_dialog_add_review, null)
             val builder = AlertDialog.Builder(it!!)
@@ -45,16 +46,29 @@ class CustomDialogAlertAddReview: DialogFragment() {
             val submit = view.findViewById<Button>(R.id.submit_button)
             val cancel = view.findViewById<Button>(R.id.cancel_button)
 
-            val review by viewModels<CustomDialogAlertAddReviewVM>()
+            val reviewVM by viewModels<CustomDialogAlertAddReviewVM>()
 
             val builderConfirm = AlertDialog.Builder(it)
             builderConfirm .setMessage("Review added successfully")
                 .setPositiveButton("Ok"){ _, _ -> }
 
             val confirmDialog = builderConfirm.create()
+            var update = false
 
             rating.setOnRatingBarChangeListener { _, _, _ ->  ratingError.makeInvisible()}
 
+            parentFragment?.let { it1 ->
+                reviewVM.findReservationReview(idReservation!!, idUser!!).observe(it1.viewLifecycleOwner){ review->
+                    if (review == null){
+                        update = false
+                    }else{
+                        update = true
+                        rating.rating = review.rating
+                        textReview.setText(review.text)
+                    }
+
+                }
+            }
             submit.setOnClickListener {
                 var error = false
                 if (textReview.length() < 10)
@@ -67,8 +81,13 @@ class CustomDialogAlertAddReview: DialogFragment() {
                     ratingError.makeVisible()
                     error = true
                 }
-                if (!error){
-                    review.addReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString() )
+                if (!error && !update){
+                    reviewVM.addReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString() )
+                    this.dismiss()
+                    confirmDialog.show()
+                }
+                if (!error && update){
+                    reviewVM.updateReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString() )
                     this.dismiss()
                     confirmDialog.show()
                 }

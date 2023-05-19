@@ -123,7 +123,6 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
 
                 //Show reservation buttons if future or review button if past
                 if (today <= calendarRes) {
-
                     // Inflate the new layout with two buttons of reservation
                     val inflater = LayoutInflater.from(requireContext())
                     val viewDeleteAndEdit = inflater.inflate(R.layout.delete_and_edit_buttons, viewReservationButtons, false)
@@ -145,6 +144,7 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                     reservationWithDetailsVM.findReservationReview(reservationId, 1).observe(viewLifecycleOwner){review->
                         if (review == null){
                             reservationReviewMCV.makeInvisible()
+                            viewReservationButtons.removeAllViews()
                             val inflater = LayoutInflater.from(requireContext())
                             val viewAddReview = inflater.inflate(R.layout.add_review_button, viewReservationButtons, false)
                             val reviewAddButton= viewAddReview.findViewById<MaterialButton>(R.id.add_review_button)
@@ -154,6 +154,7 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                                 addReviewDialog.show(parentFragmentManager, CustomDialogAlertAddReview.TAG)
                             }
                         }else{
+                            viewReservationButtons.removeAllViews()
                             val inflater = LayoutInflater.from(requireContext())
                             val viewEditDeleteReview = inflater.inflate(R.layout.delete_and_edit_review_buttons, viewReservationButtons, false)
                             val reviewEditButton= viewEditDeleteReview.findViewById<MaterialButton>(R.id.modify_review_button)
@@ -166,6 +167,23 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                             rating.rating = review.rating
                             reviewDate.text = review.date
                             reviewText.text = review.text
+                            reviewDeleteButton.setOnClickListener {
+                                //Alert Dialog
+                                val builderDeleteReview = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+                                builderDeleteReview.setMessage("Are you sure you want to delete the review?")
+                                builderDeleteReview.setPositiveButton("Yes") { _, _ ->
+                                    // User clicked OK button
+                                    reservationWithDetailsVM.deleteReviewById(reservationId, 1)
+                                }
+                                builderDeleteReview.setNegativeButton("No") { _, _ ->
+                                    // User cancelled the dialog
+                                }
+                                builderDeleteReview.show()
+                            }
+                            reviewEditButton.setOnClickListener {
+                                val addReviewDialog = CustomDialogAlertAddReview.newInstance(reservationId, 1)
+                                addReviewDialog.show(parentFragmentManager, CustomDialogAlertAddReview.TAG)
+                            }
                         }
                     }
 
