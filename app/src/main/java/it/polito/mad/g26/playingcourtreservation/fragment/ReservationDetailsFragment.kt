@@ -4,6 +4,7 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.*
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +23,7 @@ import it.polito.mad.g26.playingcourtreservation.adapter.ReservationDetailsAdapt
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
@@ -67,7 +69,6 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
         // Retrieve Reservation Details
         val reservationId = args.reservationId
         reservationReviewMCV = view.findViewById(R.id.reservationReviewMCV)
-        reservationReviewMCV.makeVisible()
 
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
@@ -141,14 +142,33 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
 
                 }else{
                     //Inflate with button of review
-                    val inflater = LayoutInflater.from(requireContext())
-                    val viewAddReview = inflater.inflate(R.layout.add_review_button, viewReservationButtons, false)
-                    val reviewAddButton= viewAddReview.findViewById<MaterialButton>(R.id.add_review_button)
-                    viewReservationButtons.addView(viewAddReview)
-                    reviewAddButton.setOnClickListener {
-                        val addReviewDialog = CustomDialogAlertAddReview.newInstance(reservationId, 1)
-                        addReviewDialog.show(parentFragmentManager, CustomDialogAlertAddReview.TAG)
+                    reservationWithDetailsVM.findReservationReview(reservationId, 1).observe(viewLifecycleOwner){review->
+                        if (review == null){
+                            reservationReviewMCV.makeInvisible()
+                            val inflater = LayoutInflater.from(requireContext())
+                            val viewAddReview = inflater.inflate(R.layout.add_review_button, viewReservationButtons, false)
+                            val reviewAddButton= viewAddReview.findViewById<MaterialButton>(R.id.add_review_button)
+                            viewReservationButtons.addView(viewAddReview)
+                            reviewAddButton.setOnClickListener {
+                                val addReviewDialog = CustomDialogAlertAddReview.newInstance(reservationId, 1)
+                                addReviewDialog.show(parentFragmentManager, CustomDialogAlertAddReview.TAG)
+                            }
+                        }else{
+                            val inflater = LayoutInflater.from(requireContext())
+                            val viewEditDeleteReview = inflater.inflate(R.layout.delete_and_edit_review_buttons, viewReservationButtons, false)
+                            val reviewEditButton= viewEditDeleteReview.findViewById<MaterialButton>(R.id.modify_review_button)
+                            val reviewDeleteButton= viewEditDeleteReview.findViewById<MaterialButton>(R.id.delete_review_button)
+                            viewReservationButtons.addView(viewEditDeleteReview)
+                            reservationReviewMCV.makeVisible()
+                            val rating = view.findViewById<RatingBar>(R.id.rating)
+                            val reviewDate = view.findViewById<TextView>(R.id.reviewDateTV)
+                            val reviewText = view.findViewById<TextView>(R.id.reviewTextTV)
+                            rating.rating = review.rating
+                            reviewDate.text = review.date
+                            reviewText.text = review.text
+                        }
                     }
+
                 }
 
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)

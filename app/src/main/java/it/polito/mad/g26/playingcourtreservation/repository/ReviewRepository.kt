@@ -31,4 +31,6 @@ class ReviewRepository(application: Application) {
 
     fun reviewsSummariesBySportCentersIds(sportCentersIds: Set<Int>): LiveData<List<SportCenterReviewsSummary>> =
         reviewDao.findSummariesBySportCentersIds(sportCentersIds)
+
+    fun findReservationReview(reservationId: Int, userId: Int): LiveData<Review?> = reviewDao.findReservationReview(reservationId, userId)
 }

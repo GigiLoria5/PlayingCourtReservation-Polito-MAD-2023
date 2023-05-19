@@ -6,11 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.Transaction
 import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
+import it.polito.mad.g26.playingcourtreservation.model.Review
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.SportCenterServices
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationServiceRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationWithDetailsRepository
+import it.polito.mad.g26.playingcourtreservation.repository.ReviewRepository
 import it.polito.mad.g26.playingcourtreservation.util.ReservationWithDetailsUtil
 import kotlin.concurrent.thread
 
@@ -18,6 +20,7 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
 
     private val repo = ReservationWithDetailsRepository(application)
     private val repoSer = ReservationServiceRepository(application)
+    private val reviewRepo = ReviewRepository(application)
 
     private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
         it.value = ReservationWithDetailsUtil.getMockInitialDateTime().timeInMillis
@@ -94,5 +97,7 @@ class ReservationWithDetailsVM(application: Application) : AndroidViewModel(appl
     fun findExistingReservation(date: String, hour: String): LiveData<Int?> {
         return repo.findDataAndHour(date, hour)
     }
+
+    fun findReservationReview(reservationId: Int, userId: Int): LiveData<Review?> = reviewRepo.findReservationReview(reservationId, userId)
 
 }

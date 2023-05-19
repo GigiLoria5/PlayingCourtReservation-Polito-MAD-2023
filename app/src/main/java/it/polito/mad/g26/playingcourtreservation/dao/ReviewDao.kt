@@ -44,4 +44,7 @@ interface ReviewDao {
             "review.id_reservation = reservation.id " +
             "WHERE id_court =:courtId")
     fun courtReviewsMean(courtId: Int): LiveData<Float>
+
+    @Query("SELECT * from review WHERE id_reservation =:reservationId AND id_user=:userId")
+    fun findReservationReview(reservationId: Int, userId: Int): LiveData<Review?>
 }
