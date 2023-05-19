@@ -63,6 +63,7 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
 
         // Retrieve Reservation Details
         val reservationId = args.reservationId
+
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
@@ -140,8 +141,8 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                     val reviewAddButton= viewAddReview.findViewById<MaterialButton>(R.id.add_review_button)
                     viewReservationButtons.addView(viewAddReview)
                     reviewAddButton.setOnClickListener {
-                        val action=ReservationDetailsFragmentDirections.openReview(reservation.reservation.idCourt)
-                        findNavController().navigate(action)
+                        val addReviewDialog = CustomDialogAlertAddReview.newInstance(reservationId, 1)
+                        addReviewDialog.show(parentFragmentManager, CustomDialogAlertAddReview.TAG)
                     }
                 }
 
