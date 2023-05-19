@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import it.polito.mad.g26.playingcourtreservation.database.CourtReservationDatabase
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetails
 
 class SportCenterRepository(application: Application) {
     private val sportCenterDao = CourtReservationDatabase.getDatabase(application).sportCenterDao()
@@ -16,31 +16,13 @@ class SportCenterRepository(application: Application) {
     fun filteredCities(cityNameStartingWith: String): LiveData<List<String>> =
         sportCenterDao.findFilteredCities(cityNameStartingWith)
 
-    fun filteredSportCentersBase(
+    fun filterSportCenters(
         city: String,
         hour: String
-    ): LiveData<List<SportCenterServicesCourts>> =
-        sportCenterDao.findFilteredBase(city, hour)
+    ): LiveData<List<SportCenterWithDetails>> = sportCenterDao.findFiltered(city, hour)
 
-    fun filteredSportCentersSportId(
-        city: String,
-        hour: String,
-        sportId: Int
-    ): LiveData<List<SportCenterServicesCourts>> =
-        sportCenterDao.findFilteredSportId(city, hour, sportId)
+    fun sportCenterById(
+        sportCenterId: Int
+    ): LiveData<SportCenterWithDetails> = sportCenterDao.findById(sportCenterId)
 
-    fun filteredSportCentersServices(
-        city: String,
-        hour: String,
-        services: Set<Int>
-    ): LiveData<List<SportCenterServicesCourts>> =
-        sportCenterDao.findFilteredServices(city, hour, services, services.size)
-
-    fun filteredSportCentersServicesAndSport(
-        city: String,
-        hour: String,
-        services: Set<Int>,
-        sportId: Int
-    ): LiveData<List<SportCenterServicesCourts>> =
-        sportCenterDao.findFilteredServicesAndSport(city, hour, services, services.size, sportId)
 }

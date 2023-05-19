@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import it.polito.mad.g26.playingcourtreservation.model.*
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesCourts
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetails
 
 @Dao
 interface SportCenterDao {
@@ -21,83 +21,22 @@ interface SportCenterDao {
 
     @Transaction
     @Query(
-        "SELECT DISTINCT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
-                "from sport_center,court " +
+        "SELECT * " +
+                "from sport_center " +
                 "WHERE " +
                 "STRFTIME('%H:%M', open_time) <= :hour AND STRFTIME('%H:%M', close_time)> :hour " +
                 "AND " +
-                "city=:city " +
-                "AND " +
-                "sport_center.id=court.id_sport_center"
+                "city=:city "
     )
-    fun findFilteredBase(city: String, hour: String): LiveData<List<SportCenterServicesCourts>>
+    fun findFiltered(city: String, hour: String): LiveData<List<SportCenterWithDetails>>
 
     @Transaction
     @Query(
-        "SELECT DISTINCT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
-                "from sport_center, court " +
+        "SELECT * " +
+                "from sport_center " +
                 "WHERE " +
-                "STRFTIME('%H:%M', open_time) <= :hour AND STRFTIME('%H:%M', close_time)> :hour " +
-                "AND " +
-                "city=:city " +
-                "AND " +
-                "court.id_sport_center=sport_center.id " +
-                "AND " +
-                "id_sport=:sportId "
+                "id=:sportCenterId "
     )
-    fun findFilteredSportId(
-        city: String,
-        hour: String,
-        sportId: Int
-    ): LiveData<List<SportCenterServicesCourts>>
-
-    @Transaction
-    @Query(
-        "SELECT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
-                "from sport_center, sport_center_services " +
-                "WHERE " +
-                "STRFTIME('%H:%M', open_time) <= :hour AND STRFTIME('%H:%M', close_time)> :hour " +
-                "AND " +
-                "city=:city " +
-                "AND " +
-                "sport_center_services.id_sport_center=sport_center.id " +
-                "AND " +
-                "sport_center_services.id_service IN (:services) " +
-                "GROUP BY sport_center.id " +
-                "HAVING COUNT(DISTINCT id_service)== :servicesSize"
-    )
-    fun findFilteredServices(
-        city: String,
-        hour: String,
-        services: Set<Int>,
-        servicesSize: Int
-    ): LiveData<List<SportCenterServicesCourts>>
-
-    @Transaction
-    @Query(
-        "SELECT sport_center.id, sport_center.name, sport_center.address, sport_center.city, sport_center.phone_number, sport_center.open_time, sport_center.close_time " +
-                "from sport_center, sport_center_services, court " +
-                "WHERE " +
-                "STRFTIME('%H:%M', open_time) <= :hour AND STRFTIME('%H:%M', close_time)> :hour " +
-                "AND " +
-                "city=:city " +
-                "AND " +
-                "sport_center_services.id_sport_center=sport_center.id " +
-                "AND " +
-                "sport_center_services.id_service IN (:services) " +
-                "AND " +
-                "court.id_sport_center=sport_center.id " +
-                "AND " +
-                "id_sport=:sportId " +
-                "GROUP BY sport_center.id " +
-                "HAVING COUNT(DISTINCT id_service)== :servicesSize"
-    )
-    fun findFilteredServicesAndSport(
-        city: String,
-        hour: String,
-        services: Set<Int>,
-        servicesSize: Int,
-        sportId: Int
-    ): LiveData<List<SportCenterServicesCourts>>
+    fun findById(sportCenterId: Int): LiveData<SportCenterWithDetails>
 
 }

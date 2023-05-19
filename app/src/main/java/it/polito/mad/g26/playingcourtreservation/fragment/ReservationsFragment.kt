@@ -2,6 +2,8 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,6 +13,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
@@ -26,11 +29,13 @@ import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
 import it.polito.mad.g26.playingcourtreservation.util.getWeekPageTitle
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
-import it.polito.mad.g26.playingcourtreservation.util.makeInVisible
+import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
 import it.polito.mad.g26.playingcourtreservation.util.setVisibility
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 import java.time.LocalDate
 import java.time.YearMonth
@@ -38,7 +43,7 @@ import java.time.format.DateTimeFormatter
 
 class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
-    private val reservationWithDetails by viewModels<ReservationWithDetailsVM>()
+    private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
 
     private val reservationsAdapter = ReservationsAdapter()
     private val reservations = mutableMapOf<LocalDate, LiveData<List<ReservationWithDetails>>>()
@@ -46,12 +51,20 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
     private val today = LocalDate.now()
     private var selectedDate: LocalDate = today
     private val reservationDatePattern = Reservation.getReservationDatePattern()
-    var isSetupFinished = false
     private val selectionFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy")
+
+    private lateinit var reservationsRv: RecyclerView
+    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
+
+    var isSetupFinished = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBar(activity, "Reservations", false)
+
+        // Setup late init variables
+        reservationsRv = view.findViewById(R.id.reservationsRv)
+        shimmerFrameLayout = view.findViewById(R.id.reservationsShimmerView)
 
         // Setup WeekCalendarView
         var isInitialDateSet = false // Keep track of the initial selected date
@@ -62,6 +75,9 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         configureBinders(view)
         weekCalendarView.setup(startDate, endDate, firstDayOfWeekFromLocale())
         weekCalendarView.scrollToDate(selectedDate)
+
+        // Start Shimmer loading
+        shimmerFrameLayout.startShimmerAnimation(reservationsRv)
 
         // Current Date Selected Text
         val selectedDateView =
@@ -95,7 +111,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         }
 
         // Get All Reservations
-        reservationWithDetails.reservationWithDetails.observe(viewLifecycleOwner) {
+        reservationWithDetailsVM.reservationWithDetails.observe(viewLifecycleOwner) {
             reservations.clear()
             it.forEach { reservationWithDetails ->
                 val localDate = LocalDate.parse(
@@ -111,10 +127,13 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
             configureBinders(view)
             updateSelectedDate(selectedDateView, weekCalendarView, selectedDate) // Force update
             updateAdapterForDate(selectedDate)
+            // Stop Shimmer loading
+            Handler(Looper.getMainLooper()).postDelayed({
+                shimmerFrameLayout.stopShimmerAnimation(reservationsRv)
+            }, 1000)
         }
 
         // Set Up Reservations RecyclerView
-        val reservationsRv = view.findViewById<RecyclerView>(R.id.reservationsRv)
         reservationsRv.apply {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = reservationsAdapter
@@ -175,7 +194,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                         if (today.isEqual(selectedDate)) {
                             dateTextView.setBackgroundResource(R.drawable.calendar_today_selected_bg)
                         }
-                        dotImageView.makeInVisible()
+                        dotImageView.makeInvisible()
                         if (!isSetupFinished || reservations[selectedDate]?.value != null) {
                             noReservationsTextView.makeGone()
                         } else {

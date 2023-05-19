@@ -17,7 +17,7 @@ internal fun TextView.setTextColorRes(@ColorRes color: Int) =
     setTextColor(context.getColorCompat(color))
 
 fun View.setVisibility(isVisible: Boolean) {
-    if (isVisible) makeVisible() else makeInVisible()
+    if (isVisible) makeVisible() else makeInvisible()
 }
 
 fun setupActionBar(activity: FragmentActivity?, title: String, enableBackButton: Boolean) {
@@ -43,7 +43,7 @@ fun View.makeVisible() {
     visibility = View.VISIBLE
 }
 
-fun View.makeInVisible() {
+fun View.makeInvisible() {
     visibility = View.INVISIBLE
 }
 

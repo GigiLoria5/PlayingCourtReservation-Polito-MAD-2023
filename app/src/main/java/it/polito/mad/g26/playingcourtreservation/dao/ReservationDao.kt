@@ -34,11 +34,15 @@ interface ReservationDao {
     @Query(
         "SELECT reservation.id " +
                 "FROM reservation " +
-                "WHERE reservation.id_user=:myUserId " +
+                "WHERE reservation.id_user=:userId " +
                 "AND reservation.date=:date " +
                 "AND reservation.time=:hour "
     )
-    fun findMyReservationId(myUserId: Int, date: String, hour: String): LiveData<Int?>
+    fun findReservationIdByUserIdAndDateAndHour(
+        userId: Int,
+        date: String,
+        hour: String
+    ): LiveData<Int?>
 
     @Transaction
     @Query("DELETE FROM reservation WHERE id= :id")
