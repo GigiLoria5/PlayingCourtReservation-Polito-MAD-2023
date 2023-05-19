@@ -5,7 +5,7 @@
     <string name="calendarNext">Go Next</string>
     <string name="has_reservation">Has Reservation</string>
     <string name="no_reservations">No reservations for this day</string>
-    <string name="reservation_info_concatenation">%1$s, €%2$s</string>
+    <string name="reservation_info_concatenation">%1$s, %2$s</string>
     <string name="reservation_info_amount">€%1$s</string>
     <string name="no_services_chosen">No service chosen</string>
     <!-- Show Profile -->
@@ -69,6 +69,7 @@
     <string name="chosen_services">Chosen services</string>
     <string name="set_text_with_euro">€%1$s</string>
     <string name="set_opening_hours">%1$s-%2$s</string>
+    <string name="reservation_details_concatenation">%1$s, €%2$s</string>
 
     <string-array name="position_array">
         <item>Attacker</item>
