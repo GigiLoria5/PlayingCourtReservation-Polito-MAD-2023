@@ -16,6 +16,7 @@
     <color name="green_700">#007D46</color>
     <color name="yellow">#FFDF37</color>
     <color name="red">#FF4F37</color>
+    <color name="red_dark">#B00020</color>
     <!-- Sport Colors -->
     <color name="sport5asidefootball">#006400</color>
     <color name="sport8asidefootball">#8B0000</color>

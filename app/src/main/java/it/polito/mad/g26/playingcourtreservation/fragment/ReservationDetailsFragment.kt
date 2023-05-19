@@ -3,14 +3,10 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.widget.Button
+import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -46,7 +42,9 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
         setupActionBar(activity, "Reservation Details", true)
 
         //List of text
-        val center = view.findViewById<CustomTextView>(R.id.center_name)
+        val centerName = view.findViewById<CustomTextView>(R.id.sportCenter_name)
+            .findViewById<TextView>(R.id.value)
+        val centerTime=view.findViewById<CustomTextView>(R.id.sportCenter_time)
             .findViewById<TextView>(R.id.value)
         val field = view.findViewById<CustomTextView>(R.id.court_name)
             .findViewById<TextView>(R.id.value)
@@ -69,14 +67,22 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
                 servicesUsed = reservation.services
-                center.text = reservation.courtWithDetails.sportCenter.name
+                centerName.text = reservation.courtWithDetails.sportCenter.name
+                centerTime.text=view.context.getString(
+                    R.string.set_opening_hours,
+                    reservation.courtWithDetails.sportCenter.openTime,
+                    reservation.courtWithDetails.sportCenter.closeTime
+                )
                 field.text = reservation.courtWithDetails.court.name
                 sport.text = reservation.courtWithDetails.sport.name
                 city.text = reservation.courtWithDetails.sportCenter.city
                 address.text = reservation.courtWithDetails.sportCenter.address
                 date.text = reservation.reservation.date
                 time.text = reservation.reservation.time
-                price.text = reservation.reservation.amount.toString()
+                price.text = view.context.getString(
+                    R.string.set_text_with_euro,
+                    reservation.reservation.amount.toString()
+                )
 
                 //List of variable
                 val dateList = reservation.reservation.date.split("-")
@@ -89,8 +95,8 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                     set(Calendar.YEAR, yearRes)
                     set(Calendar.MONTH, monthRes - 1)
                     set(Calendar.DAY_OF_MONTH, dayRes)
-                    set(Calendar.HOUR_OF_DAY, hourRes)
-                    set(Calendar.MINUTE, 0)
+                    set(Calendar.HOUR_OF_DAY, hourRes-1)
+                    set(Calendar.MINUTE, 30)
                 }
 
                 //Alert Dialog
@@ -105,34 +111,38 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                     // User cancelled the dialog
                 }
 
-                //Button for modify and delete
-                val modifyButton = view.findViewById<MaterialButton>(R.id.modify_reservation_button)
-                val deleteButton = view.findViewById<Button>(R.id.delete_reservation_button)
+                //View to be inflated with buttons
+                val viewReservationButtons = view.findViewById<ConstraintLayout>(R.id.reservation_buttons)
+
+                //Show reservation buttons if future or review button if past
                 if (today <= calendarRes) {
+
+                    // Inflate the new layout with two buttons of reservation
+                    val inflater = LayoutInflater.from(requireContext())
+                    val viewDeleteAndEdit = inflater.inflate(R.layout.delete_and_edit_buttons, viewReservationButtons, false)
+                    val deleteButton = viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
+                    val editButton = viewDeleteAndEdit.findViewById<MaterialButton>(R.id.modify_reservation_button)
+                    viewReservationButtons.addView(viewDeleteAndEdit)
+
                     deleteButton.setOnClickListener {
                         builder.show()
                     }
-                    modifyButton.setOnClickListener {
+                    editButton.setOnClickListener {
                         val action =
                             ReservationDetailsFragmentDirections.openReservationEdit(reservationId)
                         findNavController().navigate(action)
                     }
 
-                } else {
-                    deleteButton.isEnabled = false
-                    modifyButton.isEnabled = false
-                    deleteButton.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey
-                        )
-                    )
-                    modifyButton.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.grey
-                        )
-                    )
+                }else{
+                    //Inflate with button of review
+                    val inflater = LayoutInflater.from(requireContext())
+                    val viewAddReview = inflater.inflate(R.layout.add_review_button, viewReservationButtons, false)
+                    val reviewAddButton= viewAddReview.findViewById<MaterialButton>(R.id.add_review_button)
+                    viewReservationButtons.addView(viewAddReview)
+                    reviewAddButton.setOnClickListener {
+                        val action=ReservationDetailsFragmentDirections.openReview(reservation.reservation.idCourt)
+                        findNavController().navigate(action)
+                    }
                 }
 
                 reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)

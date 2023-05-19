@@ -37,7 +37,7 @@ class ReservationDetailsAdapter(private val l: List<ServiceWithFee>, private val
                 cBox.text = super.itemView.context.getString(R.string.no_services_chosen)
             else
                 cBox.text = super.itemView.context.getString(
-                    R.string.reservation_info_concatenation,
+                    R.string.reservation_details_concatenation,
                     s.service.name,
                     s.fee.toString()
                 )
