@@ -20,9 +20,7 @@ class ReviewRepository(application: Application) {
         }
         return reviewDao.addReview(review)
     }
-
     fun courtReviews(courtId: Int): LiveData<List<Review>> = reviewDao.findAllCourtReviews(courtId)
-
     fun courtReviewsCount(courtId: Int): LiveData<Int> = reviewDao.courtReviewsCount(courtId)
     fun courtReviewsMean(courtId: Int): LiveData<Float> = reviewDao.courtReviewsMean(courtId)
 
@@ -34,7 +32,6 @@ class ReviewRepository(application: Application) {
 
     fun findReservationReview(reservationId: Int, userId: Int): LiveData<Review?> = reviewDao.findReservationReview(reservationId, userId)
     fun deleteReviewById(reservationId: Int, userId: Int) = reviewDao.deleteReviewById(reservationId, userId)
-
     fun updateReview(idReservation: Int, idUser: Int, rating: Float, textReview: String, date:String){
         return reviewDao.updateReview(idReservation, idUser, rating, textReview, date)
     }
