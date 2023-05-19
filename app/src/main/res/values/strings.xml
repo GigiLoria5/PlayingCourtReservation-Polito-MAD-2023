@@ -107,4 +107,8 @@
     <string name="mean_rating_text">Based on %1$s reviews</string>
     <string name="rating_error"> Rating required</string>
 
+    <string name="my_review">My review</string>
+    <string name="edit_review_button">Edit review button</string>
+    <string name="delete_review_button">Delete review button</string>
+
 </resources>
