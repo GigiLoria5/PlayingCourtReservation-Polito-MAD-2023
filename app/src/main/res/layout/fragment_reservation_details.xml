@@ -20,15 +20,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                android:id="@+id/center_name"
+            <LinearLayout
+                android:id="@+id/sportCenter_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margins_reservation_details"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toTopOf="@id/sport_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:title="Sport Center" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                    android:id="@+id/sportCenter_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="Sport Center" />
+
+                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                    android:id="@+id/sportCenter_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:title="Opening hours" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/sport_info"
@@ -39,7 +56,7 @@
                 app:layout_constraintBottom_toTopOf="@id/location_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/center_name">
+                app:layout_constraintTop_toBottomOf="@id/sportCenter_info">
 
                 <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                     android:id="@+id/sport"
@@ -126,10 +143,9 @@
                 android:id="@+id/service_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margins_reservation_details"
+                android:layout_marginTop="16dp"
                 android:text="@string/chosen_services"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintBottom_toTopOf="@id/service_list"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/price" />
@@ -139,15 +155,16 @@
                 android:id="@+id/service_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/service_title"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginVertical="@dimen/margins_reservation_details"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/service_title"
+                app:layout_constraintVertical_bias="0.0"
                 app:spanCount="2"
                 tools:listitem="@layout/service_recycler" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
@@ -160,31 +177,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/modify_reservation_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/green_700"
-            android:text="@string/edit_reservation_button"
-            android:textColor="@color/white"
-            app:cornerRadius="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/delete_reservation_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/delete_reservation_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/red"
-            android:text="@string/delete_reservation_button"
-            android:textColor="@color/white"
-            app:cornerRadius="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/modify_reservation_button"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

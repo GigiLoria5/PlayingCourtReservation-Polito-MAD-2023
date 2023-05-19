@@ -12,6 +12,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LifecycleOwner
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Locale
 import kotlin.math.max
 
@@ -28,11 +30,13 @@ object ReservationWithDetailsUtil {
         dateFormat: String,
         hourFormat: String,
         dateTextView: TextView,
-        hourTextView: TextView
+        hourTextView: TextView,
+        newHourTextView: TextView
     ) {
 
         dateTextView.text = getDateTimeFormatted(timeInMillis, dateFormat)
         hourTextView.text = getDateTimeFormatted(timeInMillis, hourFormat)
+        newHourTextView.text = getDateTimeFormatted(timeInMillis, hourFormat)
     }
 
     private fun getDateTimeFormatted(
@@ -68,11 +72,13 @@ object ReservationWithDetailsUtil {
 
     fun showDatePickerDialog(
         viewContext: Context, vm: ReservationWithDetailsVM, ownReservationId: Int,
-        timeChosen: TextView, life: LifecycleOwner, dateNew: TextView
+        timeChosen: TextView, life: LifecycleOwner, dateNew: TextView, centerCloseTime:Int
     ) {
 
         val c = Calendar.getInstance()
+        val c2= Calendar.getInstance()
         c.timeInMillis = vm.selectedDateTimeMillis.value!!
+        c2.timeInMillis = vm.selectedDateTimeMillis.value!!
 
         //Alert dialog design
         val builderFound = AlertDialog.Builder(viewContext, R.style.MyAlertDialogStyle)
@@ -90,15 +96,25 @@ object ReservationWithDetailsUtil {
             val id = vm.findExistingReservation(date, hour)
             id.observe(life) { idReturned ->
                 if (idReturned == null || idReturned == ownReservationId) {
-                    dateNew.text = date
                     //Set and adjust if time is outside
-                    c.apply {
+                    c2.apply {
                         set(Calendar.YEAR, year)
                         set(Calendar.MONTH, month)
                         set(Calendar.DAY_OF_MONTH, day)
                     }
-                    adjustDateDateCombination(c)
-                    vm.changeSelectedDateTimeMillis(c.timeInMillis)
+                    adjustDateDateCombination(c2)
+
+                    //now search again for possible reservation
+                    val hourAdjusted= changeNumberToHour(c2[Calendar.HOUR_OF_DAY])
+                    val id2=vm.findExistingReservation(date, hourAdjusted)
+                    id2.observe(life){ id2Returned->
+                        if (id2Returned == null || id2Returned == ownReservationId) {
+                            dateNew.text = date
+                            vm.changeSelectedDateTimeMillis(c2.timeInMillis)
+                        }else
+                            builderFound.show()
+                    }
+
                 } else {
                     builderFound.show()
                 }
@@ -115,7 +131,21 @@ object ReservationWithDetailsUtil {
         )
 
         val minDate = getDelayedCalendar()
-        datePickerDialog.datePicker.minDate = minDate.timeInMillis
+        if(minDate[Calendar.HOUR_OF_DAY]>=centerCloseTime)
+        //updating the minimum day if sportCenter is already closed
+        {
+            val localDate = LocalDate.now()
+
+            // Add one day to the LocalDate
+            val updatedLocalDate = localDate.plusDays(1)
+
+            // Convert LocalDate back to Calendar
+            val updatedCalendar = Calendar.getInstance()
+            updatedCalendar.time = java.util.Date.from(updatedLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+            datePickerDialog.datePicker.minDate = updatedCalendar.timeInMillis
+        }else
+            datePickerDialog.datePicker.minDate = minDate.timeInMillis
+
         datePickerDialog.show()
     }
 
@@ -145,8 +175,7 @@ object ReservationWithDetailsUtil {
             } else {
                 centerMinHour
             }
-
-        numberPicker.maxValue = centerMaxHour
+        numberPicker.maxValue = centerMaxHour-1
         numberPicker.value = c[Calendar.HOUR_OF_DAY]
 
         numberPicker.displayedValues = (0..23).toList().map { if (it < 10) "0$it:00" else "$it:00" }
@@ -172,7 +201,7 @@ object ReservationWithDetailsUtil {
                 if (idReturned == null || idReturned == ownReservationId) {
                     timeNew.text = hour
                     c[Calendar.HOUR_OF_DAY] = numberPicker.value
-                    //Una volta che aggiorno la data, devo controllare la coppia data-ora per annullare possibili errori
+                    //control the new couple date-time when i update the date
                     adjustDateDateCombination(c)
                     vm.changeSelectedDateTimeMillis(c.timeInMillis)
                 } else {

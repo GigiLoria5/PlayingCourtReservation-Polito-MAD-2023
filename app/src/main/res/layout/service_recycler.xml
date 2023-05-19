@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    >
+    android:layout_centerInParent="false"
+    android:orientation="vertical">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/material_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="@string/service_name"
         android:textColor="@color/custom_black"
         android:textSize="14sp"
-        android:text="@string/service_name"
-        android:enabled="false"
+      android:backgroundTint="@color/white"
+        app:backgroundTintMode="add"
         app:cornerRadius="16dp"
-        />
+        app:strokeColor="@color/custom_black"
+        app:strokeWidth="1dp" />
 
 </LinearLayout>
