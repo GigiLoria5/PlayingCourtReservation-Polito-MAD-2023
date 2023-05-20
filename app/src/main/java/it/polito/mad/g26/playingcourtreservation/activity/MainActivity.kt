@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
                     R.id.searchSportCentersFragment -> lockOrientationAndShowNav()
 
-                    R.id.searchCourtsFragment -> lockOrientationAndShowNav()
+                    R.id.searchCourtsFragment -> lockOrientationAndHideNav()
 
                     R.id.courtReviewsFragment -> lockOrientationAndShowNav()
 

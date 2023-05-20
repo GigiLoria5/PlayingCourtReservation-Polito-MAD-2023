@@ -16,8 +16,9 @@
     <string name="available_services">Available services</string>
     <string name="choose_your_services">Choose the services you want to receive</string>
     <string name="no_services_available">No available services for this sport center</string>
-    <string name="select_your_court">Select your court</string>
+    <string name="reserve_a_court">Reserve a court</string>
     <string name="hour_charge_court">hour charge: €%1$s</string>
+    <string name="hour_charge_court_short">€%1$s</string>
     <string name="sport_center_hours">%1$s - %2$s</string>
     <string name="court_available">Available</string>
     <string name="court_not_available">Unavailable</string>
@@ -32,10 +33,15 @@
     <string name="service_name">Service name</string>
     <string name="sport_center_name">Sport center name</string>
     <string name="sport_center_address">Sport center address</string>
+    <string name="sport_center_address_res">%1$s, %2$s</string>
     <string name="sport_center_opening_hours">00:00 – 15:00</string>
-    <string name="sport_center_reviews">%1$s/5 (%2$s)</string>
+    <string name="reviews_summary">%1$s/5 (%2$s)</string>
     <string name="call_sport_center">call sport center</string>
     <string name="star_vector">star vector</string>
+    <string name="selected_date_time">hh:mm, MMM dd</string>
+    <string name="selected_date_time_res">%1$s, %2$s</string>
+    <string name="search_courts_results_info">%1$d court%2$s available</string>
+
     <string name="reserve_this_court">Reserve this court</string>
     <string name="selected_services">Selected services:\n\n</string>
     <string name="no_selected_services">No services selected</string>
@@ -47,5 +53,4 @@
     </string>
     <string name="confirm_reservation_message_service_field">-%1$s: €%2$s\n</string>
     <string name="reserve_button">Reserve</string>
-    <string name="cancel_button">Cancel</string>
 </resources>

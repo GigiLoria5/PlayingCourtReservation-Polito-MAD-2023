@@ -1,6 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
-import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CityResultAdapter
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
-import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersActionVM
 
 class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport_centers_action) {
@@ -36,20 +35,14 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
         customToolBar.title = "Find your Sport Center"
         searchInputET = view.findViewById(R.id.searchInputET)
         searchInputET.requestFocus()
-        val inputMethodManager: InputMethodManager =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(searchInputET, InputMethodManager.SHOW_IMPLICIT)
-        searchInputET.doOnTextChanged { text, _, _, _ ->
-            vm.searchNameChanged(text.toString())
-        }
-
+        openKeyboard()
         /* CITIES RESULTS RECYCLE VIEW INITIALIZER*/
         citiesResultRV = view.findViewById(R.id.citiesResultRV)
 
         val cityResultAdapter = CityResultAdapter(vm.cities.value ?: listOf()) {
             //comingFrom: result - arrivi da results page
             //comingFrom: home - arrivi dalla home page
-
+            closeKeyboard()
             when (args.bornFrom) {
                 "result" -> {
                     findNavController().popBackStack()
@@ -71,19 +64,31 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
         citiesResultRV.adapter = cityResultAdapter
 
         vm.cities.observe(viewLifecycleOwner) {
-            //AGGIORNA RECYCLE VIEW
             cityResultAdapter.updateCollection(vm.cities.value ?: listOf())
         }
         searchInputET.setText(args.city)
     }
 
+    private fun openKeyboard() {
+        val inputMethodManager: InputMethodManager =
+            requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(searchInputET, InputMethodManager.SHOW_IMPLICIT)
+        searchInputET.doOnTextChanged { text, _, _, _ ->
+            vm.searchNameChanged(text.toString())
+        }
+    }
+
+    private fun closeKeyboard() {
+        val view: View? = this.view
+        if (view != null) {
+            val inputMethodManager =
+                requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         hideActionBar(activity)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        showActionBar(activity)
     }
 }

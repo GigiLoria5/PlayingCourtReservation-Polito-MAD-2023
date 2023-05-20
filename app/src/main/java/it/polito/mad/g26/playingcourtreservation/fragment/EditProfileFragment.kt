@@ -39,6 +39,7 @@ import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
@@ -410,6 +411,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
     override fun onResume() {
         super.onResume()
+        showActionBar(activity)
         //position dropdown management
         val positionItems = resources.getStringArray(R.array.position_array)
         val adapterPos = ArrayAdapter(requireContext(), R.layout.list_item, positionItems)

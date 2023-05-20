@@ -12,6 +12,7 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersHomeFragmentDirections
@@ -48,7 +49,7 @@ object SearchSportCentersUtil {
         }
     }
 
-    /* SUPPORT FUNCTIONS SearchSportCenterFragment */
+    /* SUPPORT FUNCTIONS */
 
     fun getDateTimeFormatted(
         timeInMillis: Long,
@@ -163,7 +164,13 @@ object SearchSportCentersUtil {
                 SearchSportCentersHomeFragmentDirections.actionHomeToSportCentersAction(
                     "home", city
                 )
-            navController.navigate(direction)
+            val options= NavOptions.Builder()
+                .setEnterAnim(R.anim.from_left)
+                .setExitAnim(R.anim.to_right)
+                .setPopEnterAnim(R.anim.from_left)
+                .setPopExitAnim(R.anim.to_right)
+                .build()
+            navController.navigate(direction,options)
         }
     }
 

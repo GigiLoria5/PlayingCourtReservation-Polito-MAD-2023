@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
+import android.view.animation.AnimationUtils
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.ImageView
@@ -26,7 +29,6 @@ import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersVM
@@ -52,9 +54,12 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
     private lateinit var existingReservationCL: ConstraintLayout
     private lateinit var numberOfSportCentersFoundTV: TextView
 
+    private lateinit var sportCentersAdapter: SportCenterAdapter
+    private lateinit var servicesAdapter: ServiceAdapter
+
     /* LOGIC OBJECT OF THIS FRAGMENT */
     private val searchSportCentersUtil = SearchSportCentersUtil
-
+    private var goingToSearchCourt = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val city = args.city
@@ -134,7 +139,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
         /* SERVICES RECYCLE VIEW INITIALIZER*/
         servicesRV = view.findViewById(R.id.servicesRV)
-        val servicesAdapter = ServiceAdapter(
+        servicesAdapter = ServiceAdapter(
             vm.services.value ?: listOf(),
             { vm.addServiceIdToFilters(it) },
             { vm.removeServiceIdFromFilters(it) },
@@ -147,13 +152,6 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
         /* servicesShimmerView INITIALIZER */
         servicesShimmerView = view.findViewById(R.id.servicesShimmerView)
-        vm.services.observe(viewLifecycleOwner) {
-            servicesShimmerView.startShimmerAnimation(servicesRV)
-            Handler(Looper.getMainLooper()).postDelayed({
-                servicesShimmerView.stopShimmerAnimation(servicesRV)
-                servicesAdapter.updateCollection(vm.services.value ?: listOf())
-            }, 200)
-        }
 
         /*NUMBER OF SPORT CENTERS FOUND TV */
         numberOfSportCentersFoundTV = view.findViewById(R.id.numberOfSportCentersFoundTV)
@@ -162,14 +160,18 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
         sportCentersRV = view.findViewById(R.id.sportCentersRV)
         noSportCentersFoundTV = view.findViewById(R.id.noSportCentersFoundTV)
-        val sportCentersAdapter = SportCenterAdapter(
+        sportCentersAdapter = SportCenterAdapter(
             vm.getSportCentersWithDetailsFormatted(),
             { serviceId ->
                 vm.isServiceIdInList(serviceId)
             },
             {
+                goingToSearchCourt = true
                 val direction =
-                    SearchSportCentersFragmentDirections.actionSearchSportCentersToSearchCourts(it)
+                    SearchSportCentersFragmentDirections.actionSearchSportCentersToSearchCourts(
+                        it,
+                        vm.getSelectedSportId()
+                    )
                 findNavController().navigate(direction)
 
             }
@@ -178,90 +180,134 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
         /* shimmerFrameLayout INITIALIZER */
         sportCentersShimmerView = view.findViewById(R.id.sportCentersShimmerView)
-        vm.sportCentersMediator.observe(viewLifecycleOwner) {
-            // Start Shimmer loading
-            sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
-            numberOfSportCentersFoundTV.makeGone()
-            noSportCentersFoundTV.makeGone()
-            existingReservationCL.makeGone()
-            // Stop Shimmer loading
-            Handler(Looper.getMainLooper()).postDelayed({
-                sportCentersShimmerView.stopShimmerAnimation(sportCentersRV)
-                if (vm.existingReservationIdByDateAndTime.value == null) {
-                    numberOfSportCentersFoundTV.makeVisible()
-                    val sportCentersWithDetailsFormatted =
-                        vm.getSportCentersWithDetailsFormatted()
-                    val numberOfSportCentersFound = sportCentersWithDetailsFormatted.size
-                    numberOfSportCentersFoundTV.text = view.context.getString(
-                        R.string.searchSportCenterResultsInfo,
-                        numberOfSportCentersFound,
-                        if (numberOfSportCentersFound != 1) "s" else ""
-                    )
-                    if (numberOfSportCentersFound > 0) {
-                        noSportCentersFoundTV.makeGone()
-                        sportCentersRV.makeVisible()
-                        sportCentersAdapter.updateCollection(sportCentersWithDetailsFormatted)
-                    } else {
-                        sportCentersRV.makeInvisible()
-                        noSportCentersFoundTV.makeVisible()
-                    }
-                } else {
-                    numberOfSportCentersFoundTV.makeGone()
-                    sportCentersRV.makeInvisible()
-                    existingReservationCL.makeVisible()
-                }
-            }, 200)
-        }
 
         /* EXISTING RESERVATION INITIALIZER*/
         existingReservationCL = view.findViewById(R.id.existingReservationCL)
-        vm.existingReservationIdByDateAndTime.observe(viewLifecycleOwner) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                if (it != null) {
-                    sportCentersRV.makeInvisible()
-                    servicesRV.makeGone()
-                    courtTypeACTV.makeInvisible()
-                    courtTypeMCV.makeInvisible()
-                    numberOfSportCentersFoundTV.makeGone()
-                    existingReservationCL.makeVisible()
-                    noSportCentersFoundTV.makeGone()
-
-                    val navigateToReservationBTN =
-                        view.findViewById<Button>(R.id.navigateToReservationBTN)
-                    navigateToReservationBTN.setOnClickListener { _ ->
-                        findNavController().navigate(
-                            SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
-                                it
-                            )
-                        )
-                    }
-                } else {
-                    if (vm.getSportCentersWithDetailsFormatted().isNotEmpty())
-                        sportCentersRV.makeVisible()
-                    servicesRV.makeVisible()
-                    courtTypeACTV.makeVisible()
-                    courtTypeMCV.makeVisible()
-                    numberOfSportCentersFoundTV.makeVisible()
-                    existingReservationCL.makeGone()
-                }
-            }, 300)
-        }
     }
 
     override fun onResume() {
         super.onResume()
+        goingToSearchCourt = false
         hideActionBar(activity)
-        //Restore autocomplete textview
-        searchSportCentersUtil.setAutoCompleteTextViewSport(
-            requireContext(),
-            vm.sports.value,
-            courtTypeACTV,
-            vm.getSelectedSportId()
-        )
     }
 
-    override fun onPause() {
-        super.onPause()
-        showActionBar(activity)
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation {
+        val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
+        anim.setAnimationListener(object : AnimationListener {
+            override fun onAnimationStart(animation: Animation) {
+                if (!goingToSearchCourt) {
+                    numberOfSportCentersFoundTV.makeGone()
+                    noSportCentersFoundTV.makeGone()
+                    existingReservationCL.makeGone()
+                    servicesRV.makeInvisible()
+                    sportCentersRV.makeInvisible()
+                }
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {
+            }
+
+            override fun onAnimationEnd(animation: Animation) {
+                /* USE EXISTING VIEW */
+                val view = view!!
+
+                /* SERVICES LOADING */
+                vm.services.observe(viewLifecycleOwner) {
+                    servicesShimmerView.startShimmerAnimation(servicesRV)
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        servicesShimmerView.stopShimmerAnimation(servicesRV)
+                        if (vm.existingReservationIdByDateAndTime.value == null) {
+                            servicesAdapter.updateCollection(vm.services.value ?: listOf())
+                        } else {
+                            servicesRV.makeInvisible()
+                        }
+                    }, 200)
+                }
+
+                /* SPORT CENTERS LOADING */
+                vm.sportCentersMediator.observe(viewLifecycleOwner) {
+                    // Start Shimmer loading
+                    sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
+                    numberOfSportCentersFoundTV.makeGone()
+                    noSportCentersFoundTV.makeGone()
+                    existingReservationCL.makeGone()
+                    // Stop Shimmer loading
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        sportCentersShimmerView.stopShimmerAnimation(sportCentersRV)
+                        if (vm.existingReservationIdByDateAndTime.value == null) {
+                            numberOfSportCentersFoundTV.makeVisible()
+                            servicesRV.makeVisible()
+
+                            val sportCentersWithDetailsFormatted =
+                                vm.getSportCentersWithDetailsFormatted()
+                            val numberOfSportCentersFound = sportCentersWithDetailsFormatted.size
+                            numberOfSportCentersFoundTV.text = view.context.getString(
+                                R.string.searchSportCenterResultsInfo,
+                                numberOfSportCentersFound,
+                                if (numberOfSportCentersFound != 1) "s" else ""
+                            )
+                            if (numberOfSportCentersFound > 0) {
+                                noSportCentersFoundTV.makeGone()
+                                sportCentersRV.makeVisible()
+                                sportCentersAdapter.updateCollection(
+                                    sportCentersWithDetailsFormatted
+                                )
+                            } else {
+                                sportCentersRV.makeInvisible()
+                                noSportCentersFoundTV.makeVisible()
+                            }
+                        } else {
+                            numberOfSportCentersFoundTV.makeGone()
+                            sportCentersRV.makeInvisible()
+                            courtTypeACTV.makeInvisible()
+                            courtTypeMCV.makeInvisible()
+                            servicesRV.makeInvisible()
+                            println("INVISIBLE 276")
+
+                            noSportCentersFoundTV.makeGone()
+                            existingReservationCL.makeVisible()
+                        }
+                    }, 200)
+                }
+
+                /* EXISTING RESERVATION LOADING*/
+                vm.existingReservationIdByDateAndTime.observe(viewLifecycleOwner) {
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        if (it != null) {
+                            sportCentersRV.makeInvisible()
+                            servicesRV.makeInvisible()
+                            courtTypeACTV.makeInvisible()
+                            courtTypeMCV.makeInvisible()
+                            numberOfSportCentersFoundTV.makeGone()
+                            existingReservationCL.makeVisible()
+                            noSportCentersFoundTV.makeGone()
+
+                            val navigateToReservationBTN =
+                                view.findViewById<Button>(R.id.navigateToReservationBTN)
+                            navigateToReservationBTN.setOnClickListener { _ ->
+                                findNavController().navigate(
+                                    SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
+                                        it
+                                    )
+                                )
+                            }
+                        } else {
+                            if (vm.getSportCentersWithDetailsFormatted().isNotEmpty())
+                                sportCentersRV.makeVisible()
+                            servicesRV.makeVisible()
+
+                            courtTypeACTV.makeVisible()
+                            courtTypeMCV.makeVisible()
+                            numberOfSportCentersFoundTV.makeVisible()
+                            existingReservationCL.makeGone()
+                        }
+                    }, 300)
+                }
+
+            }
+        })
+        return anim
     }
 }

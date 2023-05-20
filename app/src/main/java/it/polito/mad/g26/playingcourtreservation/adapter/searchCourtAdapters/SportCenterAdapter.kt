@@ -74,7 +74,7 @@ class SportCenterAdapter(
         ) {
             sportCenterNameTV.text = sportCenter.name
             sportCenterReviewsTV.text = itemView.context.getString(
-                R.string.sport_center_reviews,
+                R.string.reviews_summary,
                 String.format("%.2f", reviewsSummary.avg),
                 reviewsSummary.count.toString()
             )
