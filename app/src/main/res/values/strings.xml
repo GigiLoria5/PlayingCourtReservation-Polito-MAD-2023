@@ -3,6 +3,7 @@
     <!-- Reservations -->
     <string name="calendarPrevious">Go Previous</string>
     <string name="calendarNext">Go Next</string>
+    <string name="calendarExpand">Expand</string>
     <string name="has_reservation">Has Reservation</string>
     <string name="no_reservations">No reservations for this day</string>
     <string name="reservation_info_concatenation">%1$s, %2$s</string>

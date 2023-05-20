@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -53,6 +54,7 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Calendar.MONTH
 import java.util.Calendar.WEEK_OF_MONTH
+
 
 class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
@@ -111,7 +113,8 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
         // Current Month Selected Text
         currentMonthView.setOnClickListener { // onClick switch Calendar View
-            switchCalendarView()
+            if (isSetupFinished)
+                switchCalendarView()
         }
         weekCalendarView.weekScrollListener = weekScrollListener@{ weekDays ->
             currentMonthView.text = getWeekPageTitle(weekDays)
@@ -164,7 +167,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
             // Stop Shimmer loading
             Handler(Looper.getMainLooper()).postDelayed({
                 shimmerFrameLayout.stopShimmerAnimation(reservationsRv)
-            }, 1000)
+            }, 500)
         }
 
         // Set Up Reservations RecyclerView
@@ -179,6 +182,16 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
     private fun switchCalendarView() {
         if (calendarViewActive == WEEK_OF_MONTH) {
+            val expandDrawable = AppCompatResources.getDrawable(
+                requireContext(),
+                R.drawable.baseline_expand_less_36
+            )
+            currentMonthView.setCompoundDrawablesWithIntrinsicBounds(
+                null,
+                null,
+                expandDrawable,
+                null
+            )
             reservationsRv.makeGone()
             noReservationsTextView.makeGone()
             selectedDateTextView.makeGone()
@@ -190,6 +203,16 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
             calendarViewActive = MONTH
             return
         }
+        val expandDrawable = AppCompatResources.getDrawable(
+            requireContext(),
+            R.drawable.baseline_expand_more_36
+        )
+        currentMonthView.setCompoundDrawablesWithIntrinsicBounds(
+            null,
+            null,
+            expandDrawable,
+            null
+        )
         monthCalendarView.makeGone()
         currentMonthView.text = getWeekPageTitle(selectedDate)
         weekCalendarView.scrollToDate(selectedDate)
@@ -246,8 +269,10 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
             init {
                 view.setOnClickListener {
-                    updateSelectedDate(calendarDay.date)
-                    switchCalendarView()
+                    if (calendarDay.position == DayPosition.MonthDate) {
+                        updateSelectedDate(calendarDay.date)
+                        switchCalendarView()
+                    }
                 }
             }
         }
