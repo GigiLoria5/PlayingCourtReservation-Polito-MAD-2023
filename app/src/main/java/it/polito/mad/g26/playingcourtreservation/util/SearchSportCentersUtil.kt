@@ -149,10 +149,16 @@ object SearchSportCentersUtil {
 
     /* OPERATIONS WITH SearchSportCentersFragment NAVIGATION  */
 
-    fun navigateToAction(navController: NavController, city: String) {
+    fun navigateToAction(
+        navController: NavController,
+        city: String,
+        dateTime: Long,
+        sportId: Int,
+        selectedServicesIds: IntArray
+    ) {
         val direction =
             SearchSportCentersFragmentDirections.actionSearchSportCentersToSportCentersAction(
-                city, "result"
+                city, "result", dateTime, sportId, selectedServicesIds
             )
         navController.navigate(direction)
     }
@@ -164,15 +170,15 @@ object SearchSportCentersUtil {
             navController.popBackStack()
             val direction =
                 SearchSportCentersHomeFragmentDirections.actionHomeToSportCentersAction(
-                    "home", city
+                    "home", city, 0, 0, intArrayOf()
                 )
-            val options= NavOptions.Builder()
+            val options = NavOptions.Builder()
                 .setEnterAnim(R.anim.from_left)
                 .setExitAnim(R.anim.to_right)
                 .setPopEnterAnim(R.anim.from_left)
                 .setPopExitAnim(R.anim.to_right)
                 .build()
-            navController.navigate(direction,options)
+            navController.navigate(direction, options)
         }
     }
 

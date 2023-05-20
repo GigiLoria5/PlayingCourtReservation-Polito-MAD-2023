@@ -5,14 +5,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
-import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.repository.CourtRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReviewRepository
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 
-class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
+class CompleteReservationVM(application: Application) : AndroidViewModel(application) {
 
     private val courtRepository = CourtRepository(application)
     private val reservationRepository = ReservationRepository(application)
@@ -22,21 +21,11 @@ class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
     private val dateFormat = Reservation.getReservationDatePattern()
     private val timeFormat = Reservation.getReservationTimePattern()
     private var dateTime: Long = 0
-    fun setDateTime(selectedDateTime: Long) {
-        dateTime = selectedDateTime
-    }
-
     private fun getDateTimeFormatted(format: String): String {
         return SearchSportCentersUtil.getDateTimeFormatted(
             dateTime,
             format
         )
-    }
-
-    /*SPORT MANAGEMENT*/
-    private var sportId: Int = 0
-    fun setSportId(selectedSportId: Int) {
-        sportId = selectedSportId
     }
 
     /*SPORT CENTER MANAGEMENT*/
@@ -46,19 +35,14 @@ class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
         sportCenterIdLiveData.value = id
     }
 
+    fun setDateTime(selectedDateTime: Long) {
+        dateTime = selectedDateTime
+    }
+
     val courts =
         sportCenterIdLiveData.switchMap { sportCenterId ->
             courtRepository.getBySportCenterId(sportCenterId)
         }
-
-    fun getCourtsBySelectedSport(): List<CourtWithDetails> {
-        return courts.value!!.filter { court ->
-            if (sportId == 0)
-                true
-            else
-                court.sport.id == sportId
-        }
-    }
 
     /*RESERVATIONS MANAGEMENT*/
     private val reservations: LiveData<List<Reservation>> = courts.switchMap {
@@ -68,7 +52,7 @@ class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
         reservationRepository.filteredReservations(date, hour, courtsIdList)
     }
 
-    fun getTotAvailableCourts(): Int = getCourtsBySelectedSport().size - reservations.value!!.size
+    fun getTotAvailableCourts(): Int = courts.value!!.size - reservations.value!!.size
 
     fun isCourtAvailable(courtId: Int): Boolean {
         return reservations.value?.find { it.idCourt == courtId }?.idUser == null

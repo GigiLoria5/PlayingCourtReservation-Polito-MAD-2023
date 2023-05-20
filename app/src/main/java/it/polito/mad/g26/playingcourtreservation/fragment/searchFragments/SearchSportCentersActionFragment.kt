@@ -24,8 +24,21 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
     private lateinit var searchInputET: EditText
     private lateinit var citiesResultRV: RecyclerView
 
+    /* ARGS */
+    private var city: String = ""
+    private var bornFrom: String = ""
+    private var dateTime: Long = 0
+    private var sportId: Int = 0
+    private var selectedServicesIds: IntArray = intArrayOf()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        city = args.city
+        bornFrom = args.bornFrom
+        dateTime = args.dateTime
+        sportId = args.sportId
+        selectedServicesIds = args.selectedServicesIds
+
 
         /* CUSTOM TOOLBAR BACK MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -46,7 +59,7 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
             //comingFrom: result - arrivi da results page
             //comingFrom: home - arrivi dalla home page
             closeKeyboard()
-            when (args.bornFrom) {
+            when (bornFrom) {
                 "result" -> {
                     findNavController().popBackStack()
                     findNavController().popBackStack()
@@ -59,7 +72,10 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
             findNavController().navigate(
                 SearchSportCentersHomeFragmentDirections.actionHomeToSearchSportCenters(
                     "actionSearch",
-                    it
+                    it,
+                    dateTime,
+                    sportId,
+                    selectedServicesIds
                 )
             )
         }
@@ -69,7 +85,7 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
         vm.cities.observe(viewLifecycleOwner) {
             cityResultAdapter.updateCollection(vm.cities.value ?: listOf())
         }
-        searchInputET.setText(args.city)
+        searchInputET.setText(city)
     }
 
     private fun openKeyboard() {

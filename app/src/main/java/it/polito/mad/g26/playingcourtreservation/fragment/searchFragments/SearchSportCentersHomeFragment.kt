@@ -25,14 +25,14 @@ class SearchSportCentersHomeFragment : Fragment(R.layout.fragment_search_sport_c
         selectCityMCV.setOnClickListener {
             val direction =
                 SearchSportCentersHomeFragmentDirections.actionHomeToSportCentersAction(
-                    "home", cityNameTV.text.toString()
+                    "home", cityNameTV.text.toString(),0,0, intArrayOf()
                 )
             findNavController().navigate(direction)
         }
         searchMCV.setOnClickListener {
             val direction =
                 SearchSportCentersHomeFragmentDirections.actionHomeToSearchSportCenters(
-                    "home", cityNameTV.text.toString()
+                    "home", cityNameTV.text.toString(),0,0, intArrayOf()
                 )
             findNavController().navigate(direction)
         }

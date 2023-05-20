@@ -44,7 +44,11 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     }
     val selectedDateTimeMillis: LiveData<Long> = _selectedDateTimeMillis
     fun changeSelectedDateTimeMillis(newTimeInMillis: Long) {
-        _selectedDateTimeMillis.value = newTimeInMillis
+        _selectedDateTimeMillis.value =
+            if (newTimeInMillis >= SearchSportCentersUtil.getMockInitialDateTime())
+                newTimeInMillis
+            else
+                SearchSportCentersUtil.getMockInitialDateTime()
     }
 
     private fun getDateTimeFormatted(format: String): String {
@@ -84,6 +88,8 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     fun isServiceIdInList(serviceId: Int): Boolean {
         return selectedServices.value?.contains(serviceId) ?: false
     }
+
+    fun getSelectedServices(): IntArray = selectedServices.value?.toIntArray() ?: intArrayOf()
 
     /*SPORT CENTERS MANAGEMENT*/
     val sportCentersMediator = MediatorLiveData<Int>()

@@ -51,14 +51,16 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
     /* SUPPORT VARIABLES */
 
     private lateinit var courts: List<CourtWithDetails>
-    private var goingToSelectServices = false
+    private var goingToCompleteReservation = false
     private var goingToCourtReviews = false
 
+    /* ARGS */
     private var sportCenterId: Int = 0
     private var sportCenterName: String = ""
     private var sportCenterAddress: String = ""
     private var sportCenterPhoneNumber: String = ""
     private var sportId: Int = 0
+    private var sportName: String = ""
     private var dateTime: Long = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,11 +69,14 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
         sportCenterAddress = args.sportCenterAddress
         sportCenterPhoneNumber = args.sportCenterPhoneNumber
         sportId = args.sportId
+        sportId = args.sportId
+        sportName = args.sportName
         dateTime = args.dateTime
 
         /* VM INITIALIZATIONS */
         vm.setSportCenterId(sportCenterId)
         vm.setDateTime(dateTime)
+        vm.setSportId(sportId)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)
@@ -92,45 +97,45 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
         numberOfAvailableCourtsTV = view.findViewById(R.id.numberOfAvailableCourtsTV)
         sportCenterPhoneNumberMCV = view.findViewById(R.id.sportCenterPhoneNumberMCV)
 
+        /* SET VALUES TO VISUAL COMPONENTS*/
+        sportCenterNameTV.text = sportCenterName
+        sportCenterAddressTV.text = sportCenterAddress
+        selectedDateTimeTV.text = getString(
+            R.string.selected_date_time_res,
+            SearchSportCentersUtil.getDateTimeFormatted(
+                dateTime,
+                getString(R.string.hourFormat)
+            ),
+            SearchSportCentersUtil.getDateTimeFormatted(
+                dateTime,
+                getString(R.string.dateFormat)
+            )
+        )
+        selectedSportTV.text = sportName
+
+        vm.courts.observe(viewLifecycleOwner) {
+            courts = vm.getCourtsBySelectedSport()
+        }
+
+        sportCenterPhoneNumberMCV.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:$sportCenterPhoneNumber")
+            startActivity(intent)
+        }
+
         /* COURTS RECYCLE VIEW INITIALIZER*/
         courtsRV = view.findViewById(R.id.courtsRV)
 
         /* shimmerFrameLayout INITIALIZER */
         courtsShimmerView = view.findViewById(R.id.courtsShimmerView)
 
-
-        vm.courts.observe(viewLifecycleOwner) {
-            courts = it
-            sportCenterNameTV.text = sportCenterName
-            sportCenterAddressTV.text = sportCenterAddress
-            selectedDateTimeTV.text = getString(
-                R.string.selected_date_time_res,
-                SearchSportCentersUtil.getDateTimeFormatted(
-                    dateTime,
-                    getString(R.string.hourFormat)
-                ),
-                SearchSportCentersUtil.getDateTimeFormatted(
-                    dateTime,
-                    getString(R.string.dateFormat)
-                )
-            )
-            if (sportId != 0)
-                selectedSportTV.text =
-                    courts.first { court -> court.sport.id == sportId }.sport.name
-
-            sportCenterPhoneNumberMCV.setOnClickListener {
-                val intent = Intent(Intent.ACTION_DIAL)
-                intent.data = Uri.parse("tel:$sportCenterPhoneNumber")
-                startActivity(intent)
-            }
-        }
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation {
         val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
         anim.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
-                if (!(goingToSelectServices || goingToCourtReviews)) {
+                if (!(goingToCompleteReservation || goingToCourtReviews)) {
                     numberOfAvailableCourtsTV.makeGone()
                     courtsRV.makeInvisible()
                 }
@@ -166,7 +171,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
                                     )
                                 findNavController().navigate(direction)
                             }
-                        ) {
+                        ) { courtId, courtName, courtHourCharge, sportName ->
                             if (dateTime < SearchSportCentersUtil.getMockInitialDateTime()) {
                                 findNavController().popBackStack()
                                 Toast.makeText(
@@ -174,6 +179,21 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
                                     R.string.too_late_for_time_slot,
                                     Toast.LENGTH_LONG
                                 ).show()
+                            } else {
+                                goingToCompleteReservation = true
+                                val direction =
+                                    SearchCourtsFragmentDirections.actionSearchCourtsFragmentToCompleteReservationFragment(
+                                        sportCenterName,
+                                        sportCenterAddress,
+                                        sportCenterPhoneNumber,
+                                        courtId,
+                                        courtName,
+                                        courtHourCharge,
+                                        sportName,
+                                        dateTime
+                                    )
+                                findNavController().navigate(direction)
+
                             }
                         }
                         courtsRV.adapter = courtsAdapter
@@ -186,7 +206,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
 
     override fun onResume() {
         super.onResume()
-        goingToSelectServices = false
+        goingToCompleteReservation = false
         goingToCourtReviews = false
         hideActionBar(activity)
     }

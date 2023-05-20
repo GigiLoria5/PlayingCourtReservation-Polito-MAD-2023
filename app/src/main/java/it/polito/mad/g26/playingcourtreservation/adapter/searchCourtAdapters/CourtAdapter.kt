@@ -17,8 +17,7 @@ class CourtAdapter(
     private val reviews: List<CourtReviewsSummary>,
     private val isCourtAvailable: (Int) -> Boolean,
     private val navigateToReviews: (Int) -> Unit,
-    private val navigateToChooseServices: (Int) -> Unit
-
+    private val navigateToChooseServices: (Int, String, Float, String) -> Unit
 ) :
     RecyclerView.Adapter<CourtAdapter.CourtViewHolder>() {
 
@@ -114,7 +113,11 @@ class CourtAdapter(
                     courtAvailability.text =
                         itemView.context.getString(R.string.court_available)
                     courtMCV.setOnClickListener {
-                        navigateToChooseServices(courtWithDetails.court.id)
+                        val court = courtWithDetails.court
+                        val sport = courtWithDetails.sport
+                        navigateToChooseServices(
+                            court.id, court.name, court.hourCharge, sport.name
+                        )
                     }
                 }
 

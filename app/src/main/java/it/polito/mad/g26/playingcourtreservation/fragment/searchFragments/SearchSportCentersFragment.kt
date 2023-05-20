@@ -60,13 +60,27 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
     /* LOGIC OBJECT OF THIS FRAGMENT */
     private val searchSportCentersUtil = SearchSportCentersUtil
     private var goingToSearchCourt = false
+
+    /* ARGS */
+    private var city: String = ""
+    private var bornFrom: String = ""
+    private var dateTime: Long = 0
+    private var sportId: Int = 0
+    private var selectedServicesIds: IntArray = intArrayOf()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val city = args.city
-        val bornFrom = args.bornFrom
+        city = args.city
+        bornFrom = args.bornFrom
+        dateTime = args.dateTime
+        sportId = args.sportId
+        selectedServicesIds = args.selectedServicesIds
 
         /* VM INITIALIZATIONS */
         vm.setCity(city)
+        vm.changeSelectedDateTimeMillis(dateTime)
+        vm.changeSelectedSport(sportId)
+        selectedServicesIds.forEach { vm.addServiceIdToFilters(it) }
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -76,11 +90,23 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
         val customSearchIconIV = view.findViewById<ImageView>(R.id.customSearchIconIV)
         customSearchIconIV.setOnClickListener {
-            searchSportCentersUtil.navigateToAction(findNavController(), city)
+            searchSportCentersUtil.navigateToAction(
+                findNavController(),
+                city,
+                vm.selectedDateTimeMillis.value!!,
+                vm.getSelectedSportId(),
+                vm.getSelectedServices()
+            )
         }
 
         customToolBar.setOnClickListener {
-            searchSportCentersUtil.navigateToAction(findNavController(), city)
+            searchSportCentersUtil.navigateToAction(
+                findNavController(),
+                city,
+                vm.selectedDateTimeMillis.value!!,
+                vm.getSelectedSportId(),
+                vm.getSelectedServices()
+            )
         }
 
         customToolBar.title = "Sport Centers in $city"
@@ -165,16 +191,17 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
             { serviceId ->
                 vm.isServiceIdInList(serviceId)
             },
-            { courtId, sportCenterName, sportCenterAddress, sportCenterPhoneNumber ->
+            { sportCenterId, sportCenterName, sportCenterAddress, sportCenterPhoneNumber ->
                 goingToSearchCourt = true
                 val direction =
                     SearchSportCentersFragmentDirections.actionSearchSportCentersToSearchCourts(
-                        courtId,
-                        vm.getSelectedSportId(),
-                        vm.selectedDateTimeMillis.value ?: 0,
+                        sportCenterId,
                         sportCenterName,
                         sportCenterAddress,
-                        sportCenterPhoneNumber
+                        sportCenterPhoneNumber,
+                        vm.getSelectedSportId(),
+                        courtTypeACTV.text.toString(),
+                        vm.selectedDateTimeMillis.value ?: 0,
                     )
                 findNavController().navigate(direction)
 
