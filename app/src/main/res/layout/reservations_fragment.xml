@@ -104,6 +104,7 @@
             android:id="@+id/reservationsMonthCalendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:cv_dayViewResource="@layout/reservations_calendar_day_reservations"
             app:cv_monthHeaderResource="@layout/reservations_calendar_month_header" />
 
