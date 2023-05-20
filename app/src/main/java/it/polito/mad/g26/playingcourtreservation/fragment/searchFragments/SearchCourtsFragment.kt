@@ -22,7 +22,6 @@ import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CourtAdapter
 import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails
-import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
@@ -51,17 +50,22 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
 
     /* SUPPORT VARIABLES */
 
-    private lateinit var sportCenter: SportCenter
     private lateinit var courts: List<CourtWithDetails>
     private var goingToSelectServices = false
     private var goingToCourtReviews = false
 
     private var sportCenterId: Int = 0
+    private var sportCenterName: String = ""
+    private var sportCenterAddress: String = ""
+    private var sportCenterPhoneNumber: String = ""
     private var sportId: Int = 0
     private var dateTime: Long = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sportCenterId = args.sportCenterId
+        sportCenterName = args.sportCenterName
+        sportCenterAddress = args.sportCenterAddress
+        sportCenterPhoneNumber = args.sportCenterPhoneNumber
         sportId = args.sportId
         dateTime = args.dateTime
 
@@ -95,15 +99,10 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
         courtsShimmerView = view.findViewById(R.id.courtsShimmerView)
 
 
-        vm.sportCenter.observe(viewLifecycleOwner) {
-            sportCenter = it.sportCenter
-            courts = it.courts
-
-            sportCenterNameTV.text = sportCenter.name
-            sportCenterAddressTV.text = getString(
-                R.string.sport_center_address_res,
-                sportCenter.address, sportCenter.city
-            )
+        vm.courts.observe(viewLifecycleOwner) {
+            courts = it
+            sportCenterNameTV.text = sportCenterName
+            sportCenterAddressTV.text = sportCenterAddress
             selectedDateTimeTV.text = getString(
                 R.string.selected_date_time_res,
                 SearchSportCentersUtil.getDateTimeFormatted(
@@ -121,7 +120,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
 
             sportCenterPhoneNumberMCV.setOnClickListener {
                 val intent = Intent(Intent.ACTION_DIAL)
-                intent.data = Uri.parse("tel:${sportCenter.phoneNumber}")
+                intent.data = Uri.parse("tel:$sportCenterPhoneNumber")
                 startActivity(intent)
             }
         }

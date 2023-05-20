@@ -156,6 +156,15 @@
         <argument
             android:name="dateTime"
             app:argType="long" />
+        <argument
+            android:name="sportCenterName"
+            app:argType="string" />
+        <argument
+            android:name="sportCenterAddress"
+            app:argType="string" />
+        <argument
+            android:name="sportCenterPhoneNumber"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/courtReviewsFragment"

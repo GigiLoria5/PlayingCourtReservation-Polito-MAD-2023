@@ -165,13 +165,16 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
             { serviceId ->
                 vm.isServiceIdInList(serviceId)
             },
-            {
+            { courtId, sportCenterName, sportCenterAddress, sportCenterPhoneNumber ->
                 goingToSearchCourt = true
                 val direction =
                     SearchSportCentersFragmentDirections.actionSearchSportCentersToSearchCourts(
-                        it,
+                        courtId,
                         vm.getSelectedSportId(),
-                        vm.selectedDateTimeMillis.value ?: 0
+                        vm.selectedDateTimeMillis.value ?: 0,
+                        sportCenterName,
+                        sportCenterAddress,
+                        sportCenterPhoneNumber
                     )
                 findNavController().navigate(direction)
 
