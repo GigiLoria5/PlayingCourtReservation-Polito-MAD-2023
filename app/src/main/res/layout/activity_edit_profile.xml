@@ -20,7 +20,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/user_photo_view"
@@ -251,7 +251,7 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/editProfile_sport_recycler_view"
+                    android:id="@+id/edit_profile_recycler_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"

@@ -159,6 +159,8 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         usernameContainer = view.findViewById(R.id.username_container)
         fullNameContainer = view.findViewById(R.id.fullname_container)
         locationContainer = view.findViewById(R.id.location_container)
+        sportRecycleView= view.findViewById(R.id.edit_profile_recycler_view)
+        sportList=resources.getStringArray(R.array.sport_array).toList()
 
         //PERSISTENCE
         val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
@@ -174,6 +176,17 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             json?.getInt("year")?.let { myCalendar[Calendar.YEAR] = it }
             json?.getInt("month")?.let { myCalendar[Calendar.MONTH] = it }
             json?.getInt("day")?.let { myCalendar[Calendar.DAY_OF_MONTH] = it }
+            if(json?.getString("rating")!=null){
+                //retrieve rating from json
+                val sublist= json.getString("rating").split(",")
+                //transform in float
+                sportRating= mutableListOf()
+                for(string in sublist)
+                    sportRating.add(string.toFloat())
+                sportRecycleView.adapter= EditProfileAdapter(sportList, sportRating)
+                sportRecycleView.layoutManager=
+                    LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
+            }
         } else {//put the default value
             usernameEditText.setText(getString(R.string.default_username))
             autoCompletePosition.setText(getString(R.string.default_position), false)
@@ -182,6 +195,11 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             autoCompleteGender.setText(getString(R.string.default_gender), false)
             locationEditText.setText(getString(R.string.default_location))
             myCalendar.add(Calendar.YEAR, -21)
+            //RecyclerView Management
+            sportRating= MutableList(sportList.size){0f}
+            sportRecycleView.adapter=EditProfileAdapter(sportList,sportRating)
+            sportRecycleView.layoutManager=
+                LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)
         }
         //position dropdown management
         val positionItems = resources.getStringArray(R.array.position_array)
@@ -225,12 +243,6 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         // Set other dialog properties
         profilePictureAlertDialog.setCancelable(true)
 
-        //RecyclerView Management
-        sportList=resources.getStringArray(R.array.sport_array).toList()
-        sportRecycleView=view.findViewById(R.id.editProfile_sport_recycler_view)
-        sportRecycleView.adapter=EditProfileAdapter(sportList,mutableListOf(),true)
-        sportRecycleView.layoutManager=LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)
-
         //Restore status
         if (savedInstanceState !== null) {
             //take calendar
@@ -268,10 +280,6 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             val confirmAlertOn = savedInstanceState.getBoolean("confirmAlertDialogShowing")
             if (confirmAlertOn)
                 submitForm()
-
-            //restore sport rating
-            sportRating=savedInstanceState.getFloatArray("sportRating")!!.toMutableList()
-            sportRecycleView.adapter=EditProfileAdapter(sportList,sportRating,false)
         }
 
 
@@ -390,6 +398,13 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                         json.put("year", myCalendar[Calendar.YEAR])
                         json.put("month", myCalendar[Calendar.MONTH])
                         json.put("day", myCalendar[Calendar.DAY_OF_MONTH])
+
+                        //save rating
+                        var rating=""
+                        for(i in sportRating)
+                            rating= "$rating,$i"
+                        val finalRating=rating.substring(1)
+                        json.put("rating",finalRating)
 
                         //Calculate and save age
                         val year = myCalendar[Calendar.YEAR]

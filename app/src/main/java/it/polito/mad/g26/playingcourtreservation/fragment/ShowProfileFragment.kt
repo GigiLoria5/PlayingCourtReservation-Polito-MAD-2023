@@ -15,12 +15,19 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.adapter.ShowProfileAdapter
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import org.json.JSONObject
 
 class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
+
+    private lateinit var sportList : List<String>
+    private lateinit var ratingList: MutableList<Float>
+    private lateinit var sportRecycleView: RecyclerView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -79,6 +86,29 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
             val location = requireView().findViewById<CustomTextView>(R.id.location)
                 .findViewById<TextView>(R.id.value)
             location.text = json?.getString("location")
+
+            if(json?.getString("rating")!=null){
+                //retrieve name sport
+                sportList=resources.getStringArray(R.array.sport_array).toList()
+                //retrieve rating from json
+                val sublist= json.getString("rating").split(",")
+                //transform in float
+                ratingList= mutableListOf()
+                for(string in sublist)
+                    {ratingList.add(string.toFloat())}
+                //link the two list and sort by ranking
+                val sortedPair=sportList.zip(ratingList).sortedByDescending { it.second }
+                val sportList2=sortedPair.map{it.first}
+                val sortedRating = sortedPair.map { it.second }
+                //filter the 0 rating
+                val ratingFinal=sortedRating.filter{it!=0F}
+
+                //populate recycler view for every rating>0
+                sportRecycleView=requireView().findViewById(R.id.show_profile_recycler_view)
+                sportRecycleView.adapter= ShowProfileAdapter(sportList2,ratingFinal)
+                sportRecycleView.layoutManager=
+                    LinearLayoutManager(context)
+            }
         }
 
         //IMAGE MANAGEMENT
