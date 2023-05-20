@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="pageExternalSpace">11dp</dimen>
-    <dimen name="searchInfoTextSize">15sp</dimen>
+    <dimen name="searchInfoTextSize">20sp</dimen>
     <dimen name="searchCityTextSize">18sp</dimen>
     <dimen name="dateTypeInternalMargin">4dp</dimen>
     <dimen name="cornerRadius">14dp</dimen>
     <dimen name="searchIconPadding">30dp</dimen>
     <dimen name="standardElevation">4dp</dimen>
     <dimen name="dateTypeButtonsTextSize">15sp</dimen>
-    <dimen name="reserveACourtInfoTextSize">16sp</dimen>
+    <dimen name="numberOfSportCentersFoundTextSize">16sp</dimen>
     <dimen name="dividerWidth">1dp</dimen>
     <dimen name="dividerMargin">6dp</dimen>
-    <dimen name="sportCenterBottomMargin">12dp</dimen>
-    <dimen name="sportCenterTopMargin">12dp</dimen>
+    <dimen name="sportCenterVerticalSpace">4dp</dimen>
     <dimen name="sportCenterVerticalPadding">5dp</dimen>
     <dimen name="distanceSportCenterInfoCourtData">16dp</dimen>
     <dimen name="courtBoxMinDim">145dp</dimen>
     <dimen name="courtBoxElevation">7dp</dimen>
     <dimen name="courtNameCourtBox">18sp</dimen>
+    <dimen name="chipDistance">9dp</dimen>
     <dimen name="MarginsPaddingsCourtInfoBox">8dp</dimen>
+    <fraction name="logoBackgroundScale">0.8</fraction>
 </resources>

@@ -8,14 +8,15 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
+import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import org.json.JSONObject
 
 class SearchSportCentersHomeFragment : Fragment(R.layout.fragment_search_sport_centers_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupActionBar(activity, "Playing Court Reservation", false)
+        hideActionBar(activity)
 
         val cityNameTV = view.findViewById<TextView>(R.id.cityNameTV)
         val selectCityMCV = view.findViewById<MaterialCardView>(R.id.citySearchMCV)
@@ -50,4 +51,13 @@ class SearchSportCentersHomeFragment : Fragment(R.layout.fragment_search_sport_c
         return null
     }
 
+    override fun onResume() {
+        super.onResume()
+        hideActionBar(activity)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        showActionBar(activity)
+    }
 }

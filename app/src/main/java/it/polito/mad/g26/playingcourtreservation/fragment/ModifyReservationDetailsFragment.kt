@@ -28,7 +28,6 @@ import it.polito.mad.g26.playingcourtreservation.util.createCalendarObject
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.takeIntCenterTime
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
-import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtResultsVM
 
 
 class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation_details) {
@@ -40,7 +39,6 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
     private lateinit var hourTV: TextView
 
     private val reservationDetailsUtil = ReservationWithDetailsUtil
-    private val vm by viewModels<SearchCourtResultsVM>()
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
@@ -57,7 +55,9 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         var centerCloseTime = 20
 
         //List of text
-        val center = view.findViewById<CustomTextView>(R.id.center_name)
+        val centerName = view.findViewById<CustomTextView>(R.id.sportCenter_name)
+            .findViewById<TextView>(R.id.value)
+        val centerTime=view.findViewById<CustomTextView>(R.id.sportCenter_time)
             .findViewById<TextView>(R.id.value)
         val field = view.findViewById<CustomTextView>(R.id.court_name)
             .findViewById<TextView>(R.id.value)
@@ -88,18 +88,29 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
                 //Compile TextView
-                center.text = reservation.courtWithDetails.sportCenter.name
+                centerName.text = reservation.courtWithDetails.sportCenter.name
+                centerTime.text=view.context.getString(
+                    R.string.set_opening_hours,
+                    reservation.courtWithDetails.sportCenter.openTime,
+                    reservation.courtWithDetails.sportCenter.closeTime
+                )
                 field.text = reservation.courtWithDetails.court.name
                 sport.text = reservation.courtWithDetails.sport.name
                 city.text = reservation.courtWithDetails.sportCenter.city
                 address.text = reservation.courtWithDetails.sportCenter.address
                 date.text = reservation.reservation.date
                 time.text = reservation.reservation.time
-                price.text = reservation.reservation.amount.toString()
+                price.text = view.context.getString(
+                    R.string.set_text_with_euro,
+                    reservation.reservation.amount.toString()
+                )
                 amount = mutableListOf(reservation.reservation.amount)
                 dateNew.text = reservation.reservation.date
                 timeNew.text = reservation.reservation.time
-                priceNew.text = reservation.reservation.amount.toString()
+                priceNew.text = view.context.getString(
+                    R.string.set_text_with_euro,
+                    reservation.reservation.amount.toString()
+                )
 
                 //Variables
                 val dateDayReservation = createCalendarObject(
@@ -208,7 +219,8 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 reservationId,
                 hourTV,
                 viewLifecycleOwner,
-                dateNew
+                dateNew,
+                centerCloseTime
             )
         }
 
@@ -231,13 +243,14 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
         reservationWithDetailsVM.selectedDateTimeMillis.observe(viewLifecycleOwner) {
             //never used c?
             val c = Calendar.getInstance()
-            c.timeInMillis = vm.selectedDateTimeMillis.value!!
+            c.timeInMillis = reservationWithDetailsVM.selectedDateTimeMillis.value!!
             reservationDetailsUtil.setDateTimeTextViews(
                 reservationWithDetailsVM.selectedDateTimeMillis.value ?: 0,
                 getString(R.string.dateFormat),
                 getString(R.string.hourFormat),
                 dateTV,
-                hourTV
+                hourTV,
+                timeNew
             )
         }
     }

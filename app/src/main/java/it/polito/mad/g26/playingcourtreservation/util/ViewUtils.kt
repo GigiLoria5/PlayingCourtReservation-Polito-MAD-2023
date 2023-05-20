@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.widget.TextView
@@ -16,7 +17,7 @@ internal fun TextView.setTextColorRes(@ColorRes color: Int) =
     setTextColor(context.getColorCompat(color))
 
 fun View.setVisibility(isVisible: Boolean) {
-    if (isVisible) makeVisible() else makeInVisible()
+    if (isVisible) makeVisible() else makeInvisible()
 }
 
 fun setupActionBar(activity: FragmentActivity?, title: String, enableBackButton: Boolean) {
@@ -24,11 +25,25 @@ fun setupActionBar(activity: FragmentActivity?, title: String, enableBackButton:
     (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(enableBackButton)
 }
 
+@SuppressLint("RestrictedApi")
+fun showActionBar(activity: FragmentActivity?) {
+    val actionBar = (activity as? AppCompatActivity)?.supportActionBar
+    actionBar?.setShowHideAnimationEnabled(false)
+    actionBar?.show()
+}
+
+@SuppressLint("RestrictedApi")
+fun hideActionBar(activity: FragmentActivity?) {
+    val actionBar = (activity as? AppCompatActivity)?.supportActionBar
+    actionBar?.setShowHideAnimationEnabled(false)
+    actionBar?.hide()
+}
+
 fun View.makeVisible() {
     visibility = View.VISIBLE
 }
 
-fun View.makeInVisible() {
+fun View.makeInvisible() {
     visibility = View.INVISIBLE
 }
 

@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <!-- Custom Colors -->
     <color name="custom_black">#1B1C1D</color>
+    <color name="loading">#DDB6B4B4</color>
     <color name="grey">#6E6E6E</color>
     <color name="grey_light">#E1E2E6</color>
     <color name="grey_light_2">#F5F5F5F5</color>
@@ -15,6 +16,7 @@
     <color name="green_700">#007D46</color>
     <color name="yellow">#FFDF37</color>
     <color name="red">#FF4F37</color>
+    <color name="red_dark">#B00020</color>
     <!-- Sport Colors -->
     <color name="sport5asidefootball">#006400</color>
     <color name="sport8asidefootball">#8B0000</color>

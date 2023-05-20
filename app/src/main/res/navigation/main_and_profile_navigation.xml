@@ -55,6 +55,10 @@
         <action
             android:id="@+id/openReservationEdit"
             app:destination="@id/modifyReservationDetailsFragment" />
+        <action
+            android:id="@+id/openReview"
+            app:destination="@id/courtReviewsFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/modifyReservationDetailsFragment"
