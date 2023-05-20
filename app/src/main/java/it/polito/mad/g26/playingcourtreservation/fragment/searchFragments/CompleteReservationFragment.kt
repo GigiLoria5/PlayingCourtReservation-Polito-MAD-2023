@@ -11,11 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.RecyclerView
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.CompleteReservationVM
@@ -35,17 +32,7 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
     private lateinit var selectedDateTimeTV: TextView
     private lateinit var selectedCourtTV: TextView
     private lateinit var selectedSportTV: TextView
-    private lateinit var numberOfAvailableCourtsTV: TextView
     private lateinit var sportCenterPhoneNumberMCV: MaterialCardView
-
-    private lateinit var courtsRV: RecyclerView
-    private lateinit var courtsShimmerView: ShimmerFrameLayout
-
-    /* SUPPORT VARIABLES */
-
-    private lateinit var courts: List<CourtWithDetails>
-    private var goingToSelectServices = false
-    private var goingToCourtReviews = false
 
     /* ARGS */
 
@@ -70,10 +57,6 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
         courtHourCharge = args.courtHourCharge
         sportName = args.sportName
         dateTime = args.dateTime
-        /*
-                    /* VM INITIALIZATIONS */
-                    vm.setDateTime(dateTime)
-        */
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)
         customToolBar.setNavigationOnClickListener {
@@ -115,79 +98,8 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
             startActivity(intent)
         }
 
-        /*
-                    /* COURTS RECYCLE VIEW INITIALIZER*/
-                    courtsRV = view.findViewById(R.id.courtsRV)
-
-                    /* shimmerFrameLayout INITIALIZER */
-                    courtsShimmerView = view.findViewById(R.id.courtsShimmerView)
-
-
-                    vm.courts.observe(viewLifecycleOwner) {
-                        courts = it
-                    }
-                */
     }
 
-    /*
-        override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation {
-            val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
-            anim.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation) {
-                    if (!(goingToSelectServices || goingToCourtReviews)) {
-                        numberOfAvailableCourtsTV.makeGone()
-                        courtsRV.makeInvisible()
-                    }
-                }
-
-                override fun onAnimationRepeat(animation: Animation) {
-                }
-
-                override fun onAnimationEnd(animation: Animation) {
-
-                    /* COURTS LOADING */
-                    vm.reviews.observe(viewLifecycleOwner) { it ->
-                        courtsShimmerView.startShimmerAnimation(courtsRV)
-                        numberOfAvailableCourtsTV.makeGone()
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            courtsShimmerView.stopShimmerAnimation(courtsRV)
-                            val numberOfAvailableCourts = vm.getTotAvailableCourts()
-                            numberOfAvailableCourtsTV.text = getString(
-                                R.string.search_courts_results_info,
-                                numberOfAvailableCourts,
-                                if (numberOfAvailableCourts != 1) "s" else ""
-                            )
-                            numberOfAvailableCourtsTV.makeVisible()
-                            val courtsAdapter = CourtAdapter(
-                                courts,
-                                it,
-                                { vm.isCourtAvailable(it) },
-                                { courtId ->
-                                    goingToCourtReviews = true
-                                    val direction =
-                                        SearchCourtsFragmentDirections.actionSearchCourtsToCourtReviews(
-                                            courtId
-                                        )
-                                    findNavController().navigate(direction)
-                                }
-                            ) {
-                                if (dateTime < SearchSportCentersUtil.getMockInitialDateTime()) {
-                                    findNavController().popBackStack()
-                                    Toast.makeText(
-                                        context,
-                                        R.string.too_late_for_time_slot,
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-                            courtsRV.adapter = courtsAdapter
-                        }, 200)
-                    }
-                }
-            })
-            return anim
-        }
-    */
     override fun onResume() {
         super.onResume()
         hideActionBar(activity)

@@ -21,7 +21,6 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CourtAdapter
-import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
@@ -47,10 +46,9 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
 
     private lateinit var courtsRV: RecyclerView
     private lateinit var courtsShimmerView: ShimmerFrameLayout
-
+    private lateinit var courtsAdapter: CourtAdapter
     /* SUPPORT VARIABLES */
 
-    private lateinit var courts: List<CourtWithDetails>
     private var goingToCompleteReservation = false
     private var goingToCourtReviews = false
 
@@ -113,9 +111,6 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
         )
         selectedSportTV.text = sportName
 
-        vm.courts.observe(viewLifecycleOwner) {
-            courts = vm.getCourtsBySelectedSport()
-        }
 
         sportCenterPhoneNumberMCV.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
@@ -125,10 +120,73 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
 
         /* COURTS RECYCLE VIEW INITIALIZER*/
         courtsRV = view.findViewById(R.id.courtsRV)
+        courtsAdapter = createCourtAdapter()
+        courtsRV.adapter = courtsAdapter
 
         /* shimmerFrameLayout INITIALIZER */
         courtsShimmerView = view.findViewById(R.id.courtsShimmerView)
 
+    }
+
+    private fun createCourtAdapter(): CourtAdapter {
+        return CourtAdapter(
+            vm.getCourtsBySelectedSport(),
+            vm.reviews.value ?: listOf(),
+            { vm.isCourtAvailable(it) },
+            { courtId ->
+                goingToCourtReviews = true
+                val direction =
+                    SearchCourtsFragmentDirections.actionSearchCourtsToCourtReviews(
+                        courtId
+                    )
+                findNavController().navigate(direction)
+            }
+        ) { courtId, courtName, courtHourCharge, sportName ->
+            if (dateTime < SearchSportCentersUtil.getMockInitialDateTime()) {
+                findNavController().popBackStack()
+                Toast.makeText(
+                    context,
+                    R.string.too_late_for_time_slot,
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                goingToCompleteReservation = true
+                val direction =
+                    SearchCourtsFragmentDirections.actionSearchCourtsFragmentToCompleteReservationFragment(
+                        sportCenterName,
+                        sportCenterAddress,
+                        sportCenterPhoneNumber,
+                        courtId,
+                        courtName,
+                        courtHourCharge,
+                        sportName,
+                        dateTime
+                    )
+                findNavController().navigate(direction)
+            }
+        }
+    }
+
+    private fun loadCourts() {
+
+        /* COURTS LOADING */
+        vm.reviews.observe(viewLifecycleOwner) { it ->
+            courtsShimmerView.startShimmerAnimation(courtsRV)
+            numberOfAvailableCourtsTV.makeGone()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                courtsShimmerView.stopShimmerAnimation(courtsRV)
+                val numberOfAvailableCourts = vm.getTotAvailableCourts()
+                numberOfAvailableCourtsTV.text = getString(
+                    R.string.search_courts_results_info,
+                    numberOfAvailableCourts,
+                    if (numberOfAvailableCourts != 1) "s" else ""
+                )
+                numberOfAvailableCourtsTV.makeVisible()
+
+                courtsAdapter.updateCollection(vm.getCourtsBySelectedSport(), it)
+            }, 200)
+        }
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation {
@@ -146,60 +204,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
             }
 
             override fun onAnimationEnd(animation: Animation) {
-
-                /* COURTS LOADING */
-                vm.reviews.observe(viewLifecycleOwner) { it ->
-                    courtsShimmerView.startShimmerAnimation(courtsRV)
-                    numberOfAvailableCourtsTV.makeGone()
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        courtsShimmerView.stopShimmerAnimation(courtsRV)
-                        val numberOfAvailableCourts = vm.getTotAvailableCourts()
-                        numberOfAvailableCourtsTV.text = getString(
-                            R.string.search_courts_results_info,
-                            numberOfAvailableCourts,
-                            if (numberOfAvailableCourts != 1) "s" else ""
-                        )
-                        numberOfAvailableCourtsTV.makeVisible()
-                        val courtsAdapter = CourtAdapter(
-                            courts,
-                            it,
-                            { vm.isCourtAvailable(it) },
-                            { courtId ->
-                                goingToCourtReviews = true
-                                val direction =
-                                    SearchCourtsFragmentDirections.actionSearchCourtsToCourtReviews(
-                                        courtId
-                                    )
-                                findNavController().navigate(direction)
-                            }
-                        ) { courtId, courtName, courtHourCharge, sportName ->
-                            if (dateTime < SearchSportCentersUtil.getMockInitialDateTime()) {
-                                findNavController().popBackStack()
-                                Toast.makeText(
-                                    context,
-                                    R.string.too_late_for_time_slot,
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            } else {
-                                goingToCompleteReservation = true
-                                val direction =
-                                    SearchCourtsFragmentDirections.actionSearchCourtsFragmentToCompleteReservationFragment(
-                                        sportCenterName,
-                                        sportCenterAddress,
-                                        sportCenterPhoneNumber,
-                                        courtId,
-                                        courtName,
-                                        courtHourCharge,
-                                        sportName,
-                                        dateTime
-                                    )
-                                findNavController().navigate(direction)
-
-                            }
-                        }
-                        courtsRV.adapter = courtsAdapter
-                    }, 200)
-                }
+                loadCourts()
             }
         })
         return anim

@@ -52,12 +52,10 @@ class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
         }
 
     fun getCourtsBySelectedSport(): List<CourtWithDetails> {
-        return courts.value!!.filter { court ->
-            if (sportId == 0)
-                true
-            else
-                court.sport.id == sportId
-        }
+        return courts.value?.filter { court ->
+            sportId == 0 || court.sport.id == sportId
+
+        } ?: listOf()
     }
 
     /*RESERVATIONS MANAGEMENT*/

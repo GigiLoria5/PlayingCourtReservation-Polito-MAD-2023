@@ -16,7 +16,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            >
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/customToolBar"
@@ -129,7 +131,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_begin="301dp" />
+                    app:layout_constraintGuide_percent="0.77"
+                    />
 
 
                 <com.google.android.material.card.MaterialCardView

@@ -17,7 +17,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/customToolBarCL"
@@ -30,23 +31,31 @@
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/customToolBar"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/cityTitleGL"
                     app:navigationIcon="@drawable/baseline_arrow_back_24"
-                    app:title=""
+                    app:subtitleTextColor="@color/white"
                     app:titleTextColor="@color/white" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/cityTitleGL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.77" />
 
                 <ImageView
                     android:id="@+id/customSearchIconIV"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:contentDescription="@string/searchIcon"
                     android:paddingHorizontal="@dimen/searchIconPadding"
                     android:src="@drawable/baseline_search_24"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/customToolBar"
+                    app:layout_constraintStart_toEndOf="@id/cityTitleGL"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -242,7 +251,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/pageExternalSpace"
-
+                android:animateLayoutChanges="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -268,6 +277,7 @@
         android:id="@+id/sportCentersRL"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:animateLayoutChanges="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

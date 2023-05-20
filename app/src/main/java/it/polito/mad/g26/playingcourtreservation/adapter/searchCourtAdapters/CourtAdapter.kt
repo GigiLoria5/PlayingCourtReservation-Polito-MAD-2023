@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +14,8 @@ import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails
 import it.polito.mad.g26.playingcourtreservation.model.custom.CourtReviewsSummary
 
 class CourtAdapter(
-    private val collection: List<CourtWithDetails>,
-    private val reviews: List<CourtReviewsSummary>,
+    private var collection: List<CourtWithDetails>,
+    private var reviews: List<CourtReviewsSummary>,
     private val isCourtAvailable: (Int) -> Boolean,
     private val navigateToReviews: (Int) -> Unit,
     private val navigateToChooseServices: (Int, String, Float, String) -> Unit
@@ -35,6 +36,16 @@ class CourtAdapter(
             0
         )
         holder.bind(collection[position], courtReviews)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateCollection(
+        updatedCollection: List<CourtWithDetails>,
+        updatedReviews: List<CourtReviewsSummary>
+    ) {
+        this.collection = updatedCollection
+        this.reviews = updatedReviews
+        notifyDataSetChanged()
     }
 
     override fun onViewRecycled(holder: CourtViewHolder) {
