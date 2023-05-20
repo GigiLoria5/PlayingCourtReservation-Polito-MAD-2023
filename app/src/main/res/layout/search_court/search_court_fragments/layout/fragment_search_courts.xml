@@ -17,8 +17,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            >
+            android:animateLayoutChanges="true">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/customToolBar"
@@ -98,8 +97,7 @@
                         android:id="@+id/selectedSportTV"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/pageExternalSpace"
-                        android:paddingBottom="@dimen/pageExternalSpace"
+                        android:paddingVertical="@dimen/pageExternalSpace"
                         android:text="@string/all_sports"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/white"
@@ -151,14 +149,16 @@
 
             <TextView
                 android:id="@+id/numberOfAvailableCourtsTV"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/pageExternalSpace"
+                android:paddingBottom="@dimen/pageExternalSpace"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textColor="@color/white"
                 android:textSize="@dimen/numberOfSportCentersFoundTextSize"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sportCenterInfoCL"
                 tools:ignore="TextContrastCheck" />
 
@@ -170,9 +170,9 @@
         android:id="@+id/courtsRL"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:animateLayoutChanges="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:animateLayoutChanges="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchCourtsABL">
 
