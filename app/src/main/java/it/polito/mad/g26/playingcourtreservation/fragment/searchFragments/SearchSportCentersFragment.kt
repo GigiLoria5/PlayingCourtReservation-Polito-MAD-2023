@@ -171,7 +171,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                     SearchSportCentersFragmentDirections.actionSearchSportCentersToSearchCourts(
                         it,
                         vm.getSelectedSportId(),
-                        vm.selectedDateTimeMillis.value?:0
+                        vm.selectedDateTimeMillis.value ?: 0
                     )
                 findNavController().navigate(direction)
 
@@ -190,8 +190,11 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         super.onResume()
         goingToSearchCourt = false
         hideActionBar(activity)
+        val minDateTime = SearchSportCentersUtil.getMockInitialDateTime()
+        if (vm.selectedDateTimeMillis.value!! < minDateTime) {
+            vm.changeSelectedDateTimeMillis(minDateTime)
+        }
     }
-
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation {
         val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
@@ -243,7 +246,8 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
                             val sportCentersWithDetailsFormatted =
                                 vm.getSportCentersWithDetailsFormatted()
-                            val numberOfSportCentersFound = sportCentersWithDetailsFormatted.size
+                            val numberOfSportCentersFound =
+                                sportCentersWithDetailsFormatted.size
                             numberOfSportCentersFoundTV.text = view.context.getString(
                                 R.string.searchSportCenterResultsInfo,
                                 numberOfSportCentersFound,

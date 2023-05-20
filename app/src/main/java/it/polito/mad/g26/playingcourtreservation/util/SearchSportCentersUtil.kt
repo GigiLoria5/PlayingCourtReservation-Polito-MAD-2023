@@ -23,10 +23,12 @@ object SearchSportCentersUtil {
 
     /* OPERATIONS WITH CALENDAR OBJECTS */
 
-    fun getMockInitialDateTime(): Calendar {
+    fun getMockInitialDateTime(): Long {
         val calendar = getDelayedCalendar()
         calendar[Calendar.MINUTE] = 0
-        return calendar
+        calendar[Calendar.SECOND] = 0
+        calendar[Calendar.MILLISECOND] = 0
+        return calendar.timeInMillis
     }
 
     private fun getDelayedCalendar(): Calendar {

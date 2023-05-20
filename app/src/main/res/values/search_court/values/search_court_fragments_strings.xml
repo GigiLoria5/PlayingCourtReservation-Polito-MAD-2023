@@ -41,7 +41,7 @@
     <string name="selected_date_time">hh:mm, MMM dd</string>
     <string name="selected_date_time_res">%1$s, %2$s</string>
     <string name="search_courts_results_info">%1$d court%2$s available</string>
-
+<string name="too_late_for_time_slot">Unfortunately, it\'s too late to make a reservation for this time slot</string>
     <string name="reserve_this_court">Reserve this court</string>
     <string name="selected_services">Selected services:\n\n</string>
     <string name="no_selected_services">No services selected</string>

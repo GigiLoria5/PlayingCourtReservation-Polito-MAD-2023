@@ -9,6 +9,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
@@ -55,11 +56,14 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
     private var goingToSelectServices = false
     private var goingToCourtReviews = false
 
+    private var sportCenterId: Int = 0
+    private var sportId: Int = 0
+    private var dateTime: Long = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val sportCenterId = args.sportCenterId
-        val sportId = args.sportId
-        val dateTime = args.dateTime
+        sportCenterId = args.sportCenterId
+        sportId = args.sportId
+        dateTime = args.dateTime
 
         /* VM INITIALIZATIONS */
         vm.setSportCenterId(sportCenterId)
@@ -163,7 +167,16 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
                                     )
                                 findNavController().navigate(direction)
                             }
-                        ) {}
+                        ) {
+                            if (dateTime < SearchSportCentersUtil.getMockInitialDateTime()) {
+                                findNavController().popBackStack()
+                                Toast.makeText(
+                                    context,
+                                    R.string.too_late_for_time_slot,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
                         courtsRV.adapter = courtsAdapter
                     }, 200)
                 }

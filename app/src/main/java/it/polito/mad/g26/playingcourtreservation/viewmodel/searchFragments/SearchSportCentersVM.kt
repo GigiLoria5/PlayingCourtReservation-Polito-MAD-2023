@@ -39,7 +39,7 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     private val dateFormat = Reservation.getReservationDatePattern()
     private val timeFormat = Reservation.getReservationTimePattern()
     private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
-        it.value = SearchSportCentersUtil.getMockInitialDateTime().timeInMillis
+        it.value = SearchSportCentersUtil.getMockInitialDateTime()
 
     }
     val selectedDateTimeMillis: LiveData<Long> = _selectedDateTimeMillis
