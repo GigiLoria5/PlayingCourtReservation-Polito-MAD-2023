@@ -33,10 +33,13 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.adapter.EditProfileAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import org.json.JSONObject
@@ -69,6 +72,11 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
     private var imageUri: Uri? = null
     private lateinit var bitMapImage: Bitmap
     private lateinit var profilePictureAlertDialog: BottomSheetDialog
+
+    private lateinit var sportRecycleView: RecyclerView
+    private lateinit var sportList : List<String>
+    private lateinit var sportRating: MutableList<Float>
+
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -217,6 +225,12 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         // Set other dialog properties
         profilePictureAlertDialog.setCancelable(true)
 
+        //RecyclerView Management
+        sportList=resources.getStringArray(R.array.sport_array).toList()
+        sportRecycleView=view.findViewById(R.id.editProfile_sport_recycler_view)
+        sportRecycleView.adapter=EditProfileAdapter(sportList,mutableListOf(),true)
+        sportRecycleView.layoutManager=LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)
+
         //Restore status
         if (savedInstanceState !== null) {
             //take calendar
@@ -254,7 +268,12 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             val confirmAlertOn = savedInstanceState.getBoolean("confirmAlertDialogShowing")
             if (confirmAlertOn)
                 submitForm()
+
+            //restore sport rating
+            sportRating=savedInstanceState.getFloatArray("sportRating")!!.toMutableList()
+            sportRecycleView.adapter=EditProfileAdapter(sportList,sportRating,false)
         }
+
 
         //IMAGE MANAGEMENT
         if (imageUri == null) {

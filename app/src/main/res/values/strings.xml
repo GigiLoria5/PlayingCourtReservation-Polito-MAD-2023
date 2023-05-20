@@ -70,6 +70,16 @@
     <string name="set_text_with_euro">€%1$s</string>
     <string name="set_opening_hours">%1$s-%2$s</string>
     <string name="reservation_details_concatenation">%1$s, €%2$s</string>
+    <!-- Edit profile-->
+    <string name="sport_default">Beach soccer</string>
+
+    <string-array name="sport_array">
+        <item>11-a-side-Football</item>
+        <item>8-a-side-Football</item>
+        <item>5-a-side-Football</item>
+        <item>Beach Soccer</item>
+        <item>Futsal</item>
+    </string-array>
 
     <string-array name="position_array">
         <item>Attacker</item>

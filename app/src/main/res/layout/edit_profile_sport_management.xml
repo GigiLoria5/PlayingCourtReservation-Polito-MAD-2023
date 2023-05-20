@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -9,7 +10,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:cardCornerRadius="@dimen/cornerRadius"
+        app:cardCornerRadius="4dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/grey">
 
@@ -17,13 +18,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <CheckBox
+            <TextView
                 android:id="@+id/sport_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Beach Soccer"
+                android:text="@string/sport_default"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                />
+
 
             <RatingBar
                 android:id="@+id/rating2"
@@ -32,11 +38,26 @@
                 android:contentDescription="@string/rating_description"
                 android:isIndicator="false"
                 android:numStars="5"
-                android:rating="3"
+                android:rating="0"
                 android:theme="@style/ratingBar"
                 style="?android:attr/ratingBarStyleIndicator"
                 app:layout_constraintTop_toBottomOf="@id/sport_title"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                />
+
+            <ImageButton
+                android:id="@+id/delete_sport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/sport_default"
+                app:srcCompat="@android:drawable/ic_delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"/>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
