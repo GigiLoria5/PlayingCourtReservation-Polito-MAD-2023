@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails //TODO ORA STAI UTILIZZANDO QUELLO CHE HA CREATO LUIGI, ATTENTO CASOMAI CI SONO DIFFERENZE
+import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails
 import it.polito.mad.g26.playingcourtreservation.model.custom.CourtReviewsSummary
 
 class CourtAdapter(

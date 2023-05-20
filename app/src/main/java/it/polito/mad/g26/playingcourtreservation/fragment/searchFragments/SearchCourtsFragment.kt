@@ -142,6 +142,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
             }
 
             override fun onAnimationRepeat(animation: Animation) {
+                //unuseful
             }
 
             override fun onAnimationEnd(animation: Animation) {

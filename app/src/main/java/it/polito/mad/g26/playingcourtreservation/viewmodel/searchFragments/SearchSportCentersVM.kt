@@ -28,10 +28,22 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     private val reservationRepository = ReservationRepository(application)
     private val reviewRepository = ReviewRepository(application)
 
+    /* INITIALIZATION */
+    fun initialize(city: String, dateTime: Long, sportId: Int, selectedServicesIds: IntArray) {
+
+        if (
+            _selectedDateTimeMillis.value!!.toInt() == 0
+        ) {
+            setCity(city)
+            changeSelectedDateTimeMillis(dateTime)
+            changeSelectedSport(sportId)
+            selectedServicesIds.forEach { addServiceIdToFilters(it) }
+        }
+    }
 
     /*CITY MANAGEMENT*/
     private lateinit var selectedCity: String
-    fun setCity(city: String) {
+    private fun setCity(city: String) {
         selectedCity = city
     }
 
@@ -39,7 +51,7 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     private val dateFormat = Reservation.getReservationDatePattern()
     private val timeFormat = Reservation.getReservationTimePattern()
     private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
-        it.value = SearchSportCentersUtil.getMockInitialDateTime()
+        it.value = 0
 
     }
     val selectedDateTimeMillis: LiveData<Long> = _selectedDateTimeMillis

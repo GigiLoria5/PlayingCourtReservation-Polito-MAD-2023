@@ -77,10 +77,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         selectedServicesIds = args.selectedServicesIds
 
         /* VM INITIALIZATIONS */
-        vm.setCity(city)
-        vm.changeSelectedDateTimeMillis(dateTime)
-        vm.changeSelectedSport(sportId)
-        selectedServicesIds.forEach { vm.addServiceIdToFilters(it) }
+        vm.initialize(city, dateTime, sportId, selectedServicesIds)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -216,15 +213,16 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         existingReservationCL = view.findViewById(R.id.existingReservationCL)
     }
 
-    override fun onResume() {
-        super.onResume()
-        goingToSearchCourt = false
-        hideActionBar(activity)
-        val minDateTime = SearchSportCentersUtil.getMockInitialDateTime()
-        if (vm.selectedDateTimeMillis.value!! < minDateTime) {
-            vm.changeSelectedDateTimeMillis(minDateTime)
-        }
+    private fun hideAll() {
+        sportCentersRV.makeInvisible()
+        servicesRV.makeInvisible()
+        courtTypeACTV.makeInvisible()
+        courtTypeMCV.makeInvisible()
+        numberOfSportCentersFoundTV.makeGone()
+        existingReservationCL.makeVisible()
+        noSportCentersFoundTV.makeGone()
     }
+
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation {
         val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
@@ -240,6 +238,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
             }
 
             override fun onAnimationRepeat(animation: Animation) {
+                //unuseful
             }
 
             override fun onAnimationEnd(animation: Animation) {
@@ -294,13 +293,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                                 noSportCentersFoundTV.makeVisible()
                             }
                         } else {
-                            numberOfSportCentersFoundTV.makeGone()
-                            sportCentersRV.makeInvisible()
-                            courtTypeACTV.makeInvisible()
-                            courtTypeMCV.makeInvisible()
-                            servicesRV.makeInvisible()
-                            noSportCentersFoundTV.makeGone()
-                            existingReservationCL.makeVisible()
+                            hideAll()
                         }
                     }, 200)
                 }
@@ -309,13 +302,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                 vm.existingReservationIdByDateAndTime.observe(viewLifecycleOwner) {
                     Handler(Looper.getMainLooper()).postDelayed({
                         if (it != null) {
-                            sportCentersRV.makeInvisible()
-                            servicesRV.makeInvisible()
-                            courtTypeACTV.makeInvisible()
-                            courtTypeMCV.makeInvisible()
-                            numberOfSportCentersFoundTV.makeGone()
-                            existingReservationCL.makeVisible()
-                            noSportCentersFoundTV.makeGone()
+                            hideAll()
 
                             val navigateToReservationBTN =
                                 view.findViewById<Button>(R.id.navigateToReservationBTN)
@@ -330,7 +317,6 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                             if (vm.getSportCentersWithDetailsFormatted().isNotEmpty())
                                 sportCentersRV.makeVisible()
                             servicesRV.makeVisible()
-
                             courtTypeACTV.makeVisible()
                             courtTypeMCV.makeVisible()
                             numberOfSportCentersFoundTV.makeVisible()
@@ -342,5 +328,15 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
             }
         })
         return anim
+    }
+
+    override fun onResume() {
+        super.onResume()
+        goingToSearchCourt = false
+        hideActionBar(activity)
+        val minDateTime = SearchSportCentersUtil.getMockInitialDateTime()
+        if (vm.selectedDateTimeMillis.value!! < minDateTime) {
+            vm.changeSelectedDateTimeMillis(minDateTime)
+        }
     }
 }
