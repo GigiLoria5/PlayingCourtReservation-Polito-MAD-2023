@@ -41,11 +41,11 @@ import it.polito.mad.g26.playingcourtreservation.util.VerticalSpaceItemDecoratio
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
 import it.polito.mad.g26.playingcourtreservation.util.getWeekPageTitle
+import it.polito.mad.g26.playingcourtreservation.util.handleReservationsDateUI
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
-import it.polito.mad.g26.playingcourtreservation.util.setVisibility
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
@@ -101,7 +101,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         val endDate = currentMonth.plusMonths(200).atEndOfMonth()
         val startMonth = currentMonth.minusMonths(200)
         val endMonth = currentMonth.plusMonths(200)
-        configureBinders(view)
+        configureBinders()
         weekCalendarView.setup(startDate, endDate, firstDayOfWeekFromLocale())
         weekCalendarView.scrollToDate(selectedDate)
         monthCalendarView.setup(startMonth, endMonth, firstDayOfWeekFromLocale())
@@ -164,7 +164,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                 if (currentList.isNotEmpty()) weekCalendarView.notifyDateChanged(localDate) // To show dotView
             }
             isSetupFinished = true
-            configureBinders(view)
+            configureBinders()
             updateSelectedDate(selectedDate) // Force update
             updateAdapterForDate(selectedDate)
             // Stop Shimmer loading
@@ -232,66 +232,40 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         updateAdapterForDate(selectedDate) // update Reservations RV with new date
     }
 
-    private fun configureBinders(view: View) {
-        val weekCalendarView = view.findViewById<WeekCalendarView>(R.id.reservationsCalendarView)
-        val monthCalendarView = view.findViewById<CalendarView>(R.id.reservationsMonthCalendarView)
-        val noReservationsTextView: TextView =
-            view.findViewById(R.id.reservationsNoReservationsText)
+    private fun configureBinders() {
+        // Setup Month Container
+        setupMonthCalendarHeader()
 
-        class WeekDayViewContainer(view: View) : ViewContainer(view) {
-            lateinit var weekDay: WeekDay // Will be set when this container is bound
+        // Setup Day Container
+        class DayViewContainer(view: View, isWeek: Boolean) : ViewContainer(view) {
+            lateinit var weekDay: WeekDay
+            lateinit var calendarDay: CalendarDay
             val dateTextView: TextView = view.findViewById(R.id.reservationsCalendarDateText)
             val dayTextView: TextView = view.findViewById(R.id.reservationsCalendarDayText)
             val dotImageView: ImageView = view.findViewById(R.id.dayHasReservationImage)
 
             init {
                 view.setOnClickListener {
-                    updateSelectedDate(weekDay.date)
-                    weekCalendarView.smoothScrollToDate(selectedDate)
-                }
-            }
-        }
+                    when (isWeek) {
+                        true -> {
+                            updateSelectedDate(weekDay.date)
+                            weekCalendarView.smoothScrollToDate(selectedDate)
+                        }
 
-        class CalendarDayViewContainer(view: View) : ViewContainer(view) {
-            lateinit var calendarDay: CalendarDay // Will be set when this container is bound.
-            val dateTextView: TextView = view.findViewById(R.id.reservationsCalendarDateText)
-            val dayTextView: TextView = view.findViewById(R.id.reservationsCalendarDayText)
-            val dotImageView: ImageView = view.findViewById(R.id.dayHasReservationImage)
-
-            init {
-                view.setOnClickListener {
-                    if (calendarDay.position == DayPosition.MonthDate) {
-                        updateSelectedDate(calendarDay.date)
-                        switchCalendarView()
+                        false -> {
+                            if (calendarDay.position == DayPosition.MonthDate) {
+                                updateSelectedDate(calendarDay.date)
+                                switchCalendarView()
+                            }
+                        }
                     }
                 }
             }
         }
 
-        class MonthViewContainer(view: View) : ViewContainer(view) {
-            val legendLayout: LinearLayout = view.findViewById(R.id.legendLayout)
-        }
-
-        // Setup Month Container
-        monthCalendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
-            override fun create(view: View) = MonthViewContainer(view)
-            override fun bind(container: MonthViewContainer, data: CalendarMonth) {
-                if (container.legendLayout.tag == null) {
-                    container.legendLayout.tag = data.yearMonth
-                    container.legendLayout.children.map { it as TextView }
-                        .forEachIndexed { index, tv ->
-                            val daysOfWeek = daysOfWeek()
-                            tv.text = daysOfWeek[index].displayText()
-                            tv.setTextColorRes(R.color.black)
-                        }
-                }
-            }
-        }
-
-        // Setup Day Container
-        monthCalendarView.dayBinder = object : MonthDayBinder<CalendarDayViewContainer> {
-            override fun create(view: View) = CalendarDayViewContainer(view)
-            override fun bind(container: CalendarDayViewContainer, data: CalendarDay) {
+        monthCalendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
+            override fun create(view: View) = DayViewContainer(view, false)
+            override fun bind(container: DayViewContainer, data: CalendarDay) {
                 container.calendarDay = data
                 container.dayTextView.makeGone()
                 val dateTextView = container.dateTextView
@@ -304,41 +278,21 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                     return
                 }
                 // Handle Date UI
-                val colorToday = R.color.green_500
-                val colorSelected = R.color.white
-                val colorUnselected = R.color.black
-                when (data.date) {
-                    selectedDate -> {
-                        dateTextView.setTextColorRes(colorSelected)
-                        dateTextView.setBackgroundResource(R.drawable.calendar_selected_bg)
-                        if (today.isEqual(selectedDate)) {
-                            dateTextView.setBackgroundResource(R.drawable.calendar_today_selected_bg)
-                        }
-                        dotImageView.makeInvisible()
-                    }
-
-                    today -> {
-                        dateTextView.setTextColorRes(colorToday)
-                        dateTextView.background = null
-                        dotImageView.setVisibility(
-                            reservations[data.date]?.value.orEmpty().isNotEmpty()
-                        )
-                    }
-
-                    else -> {
-                        dateTextView.setTextColorRes(colorUnselected)
-                        dateTextView.background = null
-                        dotImageView.setVisibility(
-                            reservations[data.date]?.value.orEmpty().isNotEmpty()
-                        )
-                    }
-                }
+                handleReservationsDateUI(
+                    data.date,
+                    selectedDate,
+                    dateTextView,
+                    dotImageView,
+                    reservations,
+                    noReservationsTextView,
+                    true
+                )
             }
         }
 
-        weekCalendarView.dayBinder = object : WeekDayBinder<WeekDayViewContainer> {
-            override fun create(view: View) = WeekDayViewContainer(view)
-            override fun bind(container: WeekDayViewContainer, data: WeekDay) {
+        weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
+            override fun create(view: View) = DayViewContainer(view, true)
+            override fun bind(container: DayViewContainer, data: WeekDay) {
                 container.weekDay = data
                 val dayTextView = container.dayTextView
                 val dateTextView = container.dateTextView
@@ -346,39 +300,34 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                 dayTextView.text = data.date.dayOfWeek.displayText()
                 dateTextView.text = data.date.displayDay()
                 // Handle Date UI
-                val colorToday = R.color.green_500
-                val colorSelected = R.color.white
-                val colorUnselected = R.color.black
-                when (data.date) {
-                    selectedDate -> {
-                        dateTextView.setTextColorRes(colorSelected)
-                        dateTextView.setBackgroundResource(R.drawable.calendar_selected_bg)
-                        if (today.isEqual(selectedDate)) {
-                            dateTextView.setBackgroundResource(R.drawable.calendar_today_selected_bg)
-                        }
-                        dotImageView.makeInvisible()
-                        if (!isSetupFinished || reservations[selectedDate]?.value != null) {
-                            noReservationsTextView.makeGone()
-                        } else {
-                            noReservationsTextView.makeVisible()
-                        }
-                    }
+                handleReservationsDateUI(
+                    data.date,
+                    selectedDate,
+                    dateTextView,
+                    dotImageView,
+                    reservations,
+                    noReservationsTextView,
+                    !isSetupFinished || reservations[selectedDate]?.value != null
+                )
+            }
+        }
+    }
 
-                    today -> {
-                        dateTextView.setTextColorRes(colorToday)
-                        dateTextView.background = null
-                        dotImageView.setVisibility(
-                            reservations[data.date]?.value.orEmpty().isNotEmpty()
-                        )
-                    }
-
-                    else -> {
-                        dateTextView.setTextColorRes(colorUnselected)
-                        dateTextView.background = null
-                        dotImageView.setVisibility(
-                            reservations[data.date]?.value.orEmpty().isNotEmpty()
-                        )
-                    }
+    private fun setupMonthCalendarHeader() {
+        class MonthViewContainer(view: View) : ViewContainer(view) {
+            val legendLayout: LinearLayout = view.findViewById(R.id.legendLayout)
+        }
+        monthCalendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
+            override fun create(view: View) = MonthViewContainer(view)
+            override fun bind(container: MonthViewContainer, data: CalendarMonth) {
+                if (container.legendLayout.tag == null) {
+                    container.legendLayout.tag = data.yearMonth
+                    container.legendLayout.children.map { it as TextView }
+                        .forEachIndexed { index, tv ->
+                            val daysOfWeek = daysOfWeek()
+                            tv.text = daysOfWeek[index].displayText()
+                            tv.setTextColorRes(R.color.black)
+                        }
                 }
             }
         }
