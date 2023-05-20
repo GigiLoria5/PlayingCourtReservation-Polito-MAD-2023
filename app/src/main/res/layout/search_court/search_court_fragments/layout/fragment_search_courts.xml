@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/pageExternalSpace"
-                app:layout_constraintBottom_toTopOf="@id/numberOfCourtsFoundTV"
+                app:layout_constraintBottom_toTopOf="@id/numberOfAvailableCourtsTV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/customToolBar">
@@ -81,6 +81,7 @@
                         android:id="@+id/selectedDateTimeTV"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/pageExternalSpace"
                         android:text="@string/selected_date_time"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/white"
@@ -147,7 +148,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/numberOfCourtsFoundTV"
+                android:id="@+id/numberOfAvailableCourtsTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/pageExternalSpace"

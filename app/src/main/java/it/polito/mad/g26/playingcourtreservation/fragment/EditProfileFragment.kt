@@ -487,28 +487,27 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         return validLocation && validFullName && validUsername
     }
 
-    private fun confirmAlertDialogBuilder(isOk: Boolean): AlertDialog {
-        val builder: AlertDialog.Builder = if (isOk) {
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.edit_profile_ok_update_dialog_title))
-                .setMessage(getString(R.string.edit_profile_ok_update_dialog_message))
-                .setPositiveButton("Ok") { _, _ ->
-                    findNavController().popBackStack()
-                }
-                .setOnCancelListener { findNavController().popBackStack() }
+    private fun confirmAlertDialogBuilder(isOk: Boolean) {
+        return if (isOk) {
+            findNavController().popBackStack()
+            Toast.makeText(
+                context,
+                R.string.edit_profile_ok_update_dialog_message,
+                Toast.LENGTH_SHORT
+            ).show()
+
         } else {
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.edit_profile_no_ok_update_dialog_title))
-                .setMessage(getString(R.string.edit_profile_no_ok_update_dialog_message))
-                .setPositiveButton("Modify") { _, _ ->
-                }
+            Toast.makeText(
+                context,
+                R.string.edit_profile_no_ok_update_dialog_message,
+                Toast.LENGTH_SHORT
+            ).show()
         }
-        return builder.create()
     }
 
     private fun submitForm() {
-        confirmAlertDialog = confirmAlertDialogBuilder(validInputData())
-        confirmAlertDialog.show()
+        confirmAlertDialogBuilder(validInputData())
+
     }
 
     //opens camera so that user can capture image

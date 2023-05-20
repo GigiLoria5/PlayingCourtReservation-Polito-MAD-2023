@@ -34,6 +34,9 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
         }
         customToolBar.title = "Find your Sport Center"
         searchInputET = view.findViewById(R.id.searchInputET)
+        searchInputET.doOnTextChanged { text, _, _, _ ->
+            vm.searchNameChanged(text.toString())
+        }
         searchInputET.requestFocus()
         openKeyboard()
         /* CITIES RESULTS RECYCLE VIEW INITIALIZER*/
@@ -73,9 +76,6 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
         val inputMethodManager: InputMethodManager =
             requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.showSoftInput(searchInputET, InputMethodManager.SHOW_IMPLICIT)
-        searchInputET.doOnTextChanged { text, _, _, _ ->
-            vm.searchNameChanged(text.toString())
-        }
     }
 
     private fun closeKeyboard() {

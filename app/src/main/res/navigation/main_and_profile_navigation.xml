@@ -12,7 +12,11 @@
         tools:layout="@layout/activity_show_profile">
         <action
             android:id="@+id/action_showProfileFragment_to_editProfileFragment"
-            app:destination="@id/editProfileFragment" />
+            app:destination="@id/editProfileFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -149,6 +153,9 @@
         <argument
             android:name="sportId"
             app:argType="integer" />
+        <argument
+            android:name="dateTime"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/courtReviewsFragment"

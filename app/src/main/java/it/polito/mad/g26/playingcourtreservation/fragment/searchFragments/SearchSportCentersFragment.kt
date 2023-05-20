@@ -170,7 +170,8 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                 val direction =
                     SearchSportCentersFragmentDirections.actionSearchSportCentersToSearchCourts(
                         it,
-                        vm.getSelectedSportId()
+                        vm.getSelectedSportId(),
+                        vm.selectedDateTimeMillis.value?:0
                     )
                 findNavController().navigate(direction)
 
@@ -264,8 +265,6 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                             courtTypeACTV.makeInvisible()
                             courtTypeMCV.makeInvisible()
                             servicesRV.makeInvisible()
-                            println("INVISIBLE 276")
-
                             noSportCentersFoundTV.makeGone()
                             existingReservationCL.makeVisible()
                         }

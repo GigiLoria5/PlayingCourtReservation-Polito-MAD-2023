@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
-import it.polito.mad.g26.playingcourtreservation.model.Reservation.Companion.getReservationDatePattern
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.Sport
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
@@ -28,7 +28,6 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     private val reservationRepository = ReservationRepository(application)
     private val reviewRepository = ReviewRepository(application)
 
-    private val searchSportCentersUtil = SearchSportCentersUtil
 
     /*CITY MANAGEMENT*/
     private lateinit var selectedCity: String
@@ -37,10 +36,10 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     }
 
     /*DATE TIME MANAGEMENT*/
-    private val dateFormat = getReservationDatePattern()
-    private val timeFormat = "kk:mm"
+    private val dateFormat = Reservation.getReservationDatePattern()
+    private val timeFormat = Reservation.getReservationTimePattern()
     private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
-        it.value = searchSportCentersUtil.getMockInitialDateTime().timeInMillis
+        it.value = SearchSportCentersUtil.getMockInitialDateTime().timeInMillis
 
     }
     val selectedDateTimeMillis: LiveData<Long> = _selectedDateTimeMillis
@@ -49,7 +48,7 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
     }
 
     private fun getDateTimeFormatted(format: String): String {
-        return searchSportCentersUtil.getDateTimeFormatted(
+        return SearchSportCentersUtil.getDateTimeFormatted(
             selectedDateTimeMillis.value ?: 0,
             format
         )

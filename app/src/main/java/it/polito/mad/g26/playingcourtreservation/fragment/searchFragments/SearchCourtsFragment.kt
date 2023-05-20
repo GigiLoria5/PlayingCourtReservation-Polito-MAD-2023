@@ -42,7 +42,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
     private lateinit var sportCenterAddressTV: TextView
     private lateinit var selectedDateTimeTV: TextView
     private lateinit var selectedSportTV: TextView
-    private lateinit var numberOfCourtsFoundTV: TextView
+    private lateinit var numberOfAvailableCourtsTV: TextView
     private lateinit var sportCenterPhoneNumberMCV: MaterialCardView
 
     private lateinit var courtsRV: RecyclerView
@@ -53,14 +53,17 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
     private lateinit var sportCenter: SportCenter
     private lateinit var courts: List<CourtWithDetails>
     private var goingToSelectServices = false
+    private var goingToCourtReviews = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val sportCenterId = args.sportCenterId
         val sportId = args.sportId
+        val dateTime = args.dateTime
 
         /* VM INITIALIZATIONS */
         vm.setSportCenterId(sportCenterId)
+        vm.setDateTime(dateTime)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)
@@ -78,7 +81,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
         sportCenterAddressTV = view.findViewById(R.id.sportCenterAddressTV)
         selectedDateTimeTV = view.findViewById(R.id.selectedDateTimeTV)
         selectedSportTV = view.findViewById(R.id.selectedSportTV)
-        numberOfCourtsFoundTV = view.findViewById(R.id.numberOfCourtsFoundTV)
+        numberOfAvailableCourtsTV = view.findViewById(R.id.numberOfAvailableCourtsTV)
         sportCenterPhoneNumberMCV = view.findViewById(R.id.sportCenterPhoneNumberMCV)
 
         /* COURTS RECYCLE VIEW INITIALIZER*/
@@ -100,20 +103,17 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
             selectedDateTimeTV.text = getString(
                 R.string.selected_date_time_res,
                 SearchSportCentersUtil.getDateTimeFormatted(
-                    111,
+                    dateTime,
                     getString(R.string.hourFormat)
                 ),
-                SearchSportCentersUtil.getDateTimeFormatted(111, getString(R.string.dateFormat))
+                SearchSportCentersUtil.getDateTimeFormatted(
+                    dateTime,
+                    getString(R.string.dateFormat)
+                )
             )
             if (sportId != 0)
-                selectedSportTV.text = courts.first { it.sport.id == sportId }.sport.name
-
-            val numberOfCourtsFound = courts.size
-            numberOfCourtsFoundTV.text = getString(
-                R.string.search_courts_results_info,
-                numberOfCourtsFound,
-                if (numberOfCourtsFound != 1) "s" else ""
-            )
+                selectedSportTV.text =
+                    courts.first { court -> court.sport.id == sportId }.sport.name
 
             sportCenterPhoneNumberMCV.setOnClickListener {
                 val intent = Intent(Intent.ACTION_DIAL)
@@ -127,8 +127,8 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
         val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
         anim.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
-                if (!goingToSelectServices) {
-                    numberOfCourtsFoundTV.makeGone()
+                if (!(goingToSelectServices || goingToCourtReviews)) {
+                    numberOfAvailableCourtsTV.makeGone()
                     courtsRV.makeInvisible()
                 }
             }
@@ -137,21 +137,26 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
             }
 
             override fun onAnimationEnd(animation: Animation) {
-                /* USE EXISTING VIEW */
-                val view = view!!
 
                 /* COURTS LOADING */
                 vm.reviews.observe(viewLifecycleOwner) { it ->
                     courtsShimmerView.startShimmerAnimation(courtsRV)
-                    numberOfCourtsFoundTV.makeGone()
+                    numberOfAvailableCourtsTV.makeGone()
                     Handler(Looper.getMainLooper()).postDelayed({
                         courtsShimmerView.stopShimmerAnimation(courtsRV)
-                        numberOfCourtsFoundTV.makeVisible()
+                        val numberOfAvailableCourts = vm.getTotAvailableCourts()
+                        numberOfAvailableCourtsTV.text = getString(
+                            R.string.search_courts_results_info,
+                            numberOfAvailableCourts,
+                            if (numberOfAvailableCourts != 1) "s" else ""
+                        )
+                        numberOfAvailableCourtsTV.makeVisible()
                         val courtsAdapter = CourtAdapter(
                             courts,
                             it,
-                            { true },//todo fai funzione per controllare se court è occupato
+                            { vm.isCourtAvailable(it) },
                             { courtId ->
+                                goingToCourtReviews = true
                                 val direction =
                                     SearchCourtsFragmentDirections.actionSearchCourtsToCourtReviews(
                                         courtId
@@ -170,6 +175,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
     override fun onResume() {
         super.onResume()
         goingToSelectServices = false
+        goingToCourtReviews = false
         hideActionBar(activity)
     }
 }
