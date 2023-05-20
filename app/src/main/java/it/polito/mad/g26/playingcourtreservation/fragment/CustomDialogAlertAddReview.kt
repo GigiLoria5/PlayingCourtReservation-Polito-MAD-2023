@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RatingBar
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -33,7 +34,6 @@ class CustomDialogAlertAddReview: DialogFragment() {
         return context.let {
 
             val idReservation = arguments?.getInt("idReservation")
-            println("$idReservation")
             val idUser = arguments?.getInt("idUser")
             val view: View = layoutInflater.inflate(R.layout.custom_dialog_add_review, null)
             val builder = AlertDialog.Builder(it!!)
@@ -48,11 +48,6 @@ class CustomDialogAlertAddReview: DialogFragment() {
 
             val reviewVM by viewModels<CustomDialogAlertAddReviewVM>()
 
-            val builderConfirm = AlertDialog.Builder(it)
-            builderConfirm .setMessage("Review added successfully")
-                .setPositiveButton("Ok"){ _, _ -> }
-
-            val confirmDialog = builderConfirm.create()
             var update = false
 
             rating.setOnRatingBarChangeListener { _, _, _ ->  ratingError.makeInvisible()}
@@ -84,12 +79,14 @@ class CustomDialogAlertAddReview: DialogFragment() {
                 if (!error && !update){
                     reviewVM.addReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString() )
                     this.dismiss()
-                    confirmDialog.show()
+                    Toast.makeText(context, "Review added successfully", Toast.LENGTH_SHORT
+                    ).show()
                 }
                 if (!error && update){
                     reviewVM.updateReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString() )
                     this.dismiss()
-                    confirmDialog.show()
+                    Toast.makeText(context, "Review added successfully", Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 

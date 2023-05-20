@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MenuHost
@@ -174,6 +175,8 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                                 builderDeleteReview.setPositiveButton("Yes") { _, _ ->
                                     // User clicked OK button
                                     reservationWithDetailsVM.deleteReviewById(reservationId, 1)
+                                    Toast.makeText(context, "Review deleted successfully", Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                                 builderDeleteReview.setNegativeButton("No") { _, _ ->
                                     // User cancelled the dialog
