@@ -72,6 +72,7 @@
     <string name="reservation_details_concatenation">%1$s, €%2$s</string>
     <!-- Edit profile-->
     <string name="sport_default">Beach soccer</string>
+    <string name="delete_button_rating">x</string>
 
     <string-array name="sport_array">
         <item>11-a-side-Football</item>

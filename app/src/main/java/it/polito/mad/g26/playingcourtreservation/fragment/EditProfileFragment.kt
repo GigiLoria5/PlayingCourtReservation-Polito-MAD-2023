@@ -185,7 +185,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                     sportRating.add(string.toFloat())
                 sportRecycleView.adapter= EditProfileAdapter(sportList, sportRating)
                 sportRecycleView.layoutManager=
-                    LinearLayoutManager(context, RecyclerView.HORIZONTAL,false)
+                    LinearLayoutManager(context)
             }
         } else {//put the default value
             usernameEditText.setText(getString(R.string.default_username))
@@ -199,7 +199,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             sportRating= MutableList(sportList.size){0f}
             sportRecycleView.adapter=EditProfileAdapter(sportList,sportRating)
             sportRecycleView.layoutManager=
-                LinearLayoutManager(context,RecyclerView.HORIZONTAL,false)
+                LinearLayoutManager(context)
         }
         //position dropdown management
         val positionItems = resources.getStringArray(R.array.position_array)
