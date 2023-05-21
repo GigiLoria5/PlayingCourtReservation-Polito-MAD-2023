@@ -12,7 +12,11 @@
         tools:layout="@layout/activity_show_profile">
         <action
             android:id="@+id/action_showProfileFragment_to_editProfileFragment"
-            app:destination="@id/editProfileFragment" />
+            app:destination="@id/editProfileFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -26,12 +30,20 @@
         tools:layout="@layout/fragment_search_sport_centers_home">
         <action
             android:id="@+id/action_home_to_sportCentersAction"
-            app:destination="@id/searchSportCentersActionFragment">
+            app:destination="@id/searchSportCentersActionFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right">
             <argument android:name="bornFrom" />
         </action>
         <action
             android:id="@+id/action_home_to_searchSportCenters"
-            app:destination="@id/searchSportCentersFragment">
+            app:destination="@id/searchSportCentersFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right">
             <argument android:name="bornFrom" />
         </action>
     </fragment>
@@ -57,8 +69,7 @@
             app:destination="@id/modifyReservationDetailsFragment" />
         <action
             android:id="@+id/openReview"
-            app:destination="@id/courtReviewsFragment"
-            />
+            app:destination="@id/courtReviewsFragment" />
     </fragment>
     <fragment
         android:id="@+id/modifyReservationDetailsFragment"
@@ -82,9 +93,22 @@
             app:argType="string" />
         <action
             android:id="@+id/action_sportCentersAction_to_searchSportCenters"
-            app:destination="@id/searchSportCentersFragment">
+            app:destination="@id/searchSportCentersFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right">
             <argument android:name="bornFrom" />
         </action>
+        <argument
+            android:name="dateTime"
+            app:argType="long" />
+        <argument
+            android:name="sportId"
+            app:argType="integer" />
+        <argument
+            android:name="selectedServicesIds"
+            app:argType="integer[]" />
     </fragment>
     <fragment
         android:id="@+id/searchSportCentersFragment"
@@ -99,24 +123,74 @@
             app:argType="string" />
         <action
             android:id="@+id/action_searchSportCenters_to_reservationDetails"
-            app:destination="@id/reservationDetailsFragment" />
+            app:destination="@id/reservationDetailsFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_searchSportCenters_to_searchCourts"
-            app:destination="@id/searchCourtsFragment" />
+            app:destination="@id/searchCourtsFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_searchSportCenters_to_sportCentersAction"
-            app:destination="@id/searchSportCentersActionFragment" />
+            app:destination="@id/searchSportCentersActionFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+        <argument
+            android:name="dateTime"
+            app:argType="long" />
+        <argument
+            android:name="sportId"
+            app:argType="integer" />
+        <argument
+            android:name="selectedServicesIds"
+            app:argType="integer[]" />
     </fragment>
     <fragment
         android:id="@+id/searchCourtsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCourtsFragment"
         android:label="SearchCourtsFragment">
+        <action
+            android:id="@+id/action_searchCourts_to_courtReviews"
+            app:destination="@id/courtReviewsFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <argument
             android:name="sportCenterId"
             app:argType="integer" />
+        <argument
+            android:name="sportCenterName"
+            app:argType="string" />
+        <argument
+            android:name="sportCenterAddress"
+            app:argType="string" />
+        <argument
+            android:name="sportCenterPhoneNumber"
+            app:argType="string" />
+        <argument
+            android:name="sportId"
+            app:argType="integer" />
+        <argument
+            android:name="sportName"
+            app:argType="string" />
+        <argument
+            android:name="dateTime"
+            app:argType="long" />
         <action
-            android:id="@+id/action_searchCourts_to_courtReviews"
-            app:destination="@id/courtReviewsFragment" />
+            android:id="@+id/action_searchCourtsFragment_to_completeReservationFragment"
+            app:destination="@id/completeReservationFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/courtReviewsFragment"
@@ -125,5 +199,37 @@
         <argument
             android:name="courtId"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/completeReservationFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.CompleteReservationFragment"
+        android:label="CompleteReservationFragment">
+        <argument
+            android:name="sportCenterId"
+            app:argType="integer" />
+        <argument
+            android:name="sportCenterName"
+            app:argType="string" />
+        <argument
+            android:name="sportCenterAddress"
+            app:argType="string" />
+        <argument
+            android:name="sportCenterPhoneNumber"
+            app:argType="string" />
+        <argument
+            android:name="courtId"
+            app:argType="integer" />
+        <argument
+            android:name="courtName"
+            app:argType="string" />
+        <argument
+            android:name="courtHourCharge"
+            app:argType="float" />
+        <argument
+            android:name="sportName"
+            app:argType="string" />
+        <argument
+            android:name="dateTime"
+            app:argType="long" />
     </fragment>
 </navigation>

@@ -14,10 +14,17 @@
     <dimen name="sportCenterVerticalSpace">4dp</dimen>
     <dimen name="sportCenterVerticalPadding">5dp</dimen>
     <dimen name="distanceSportCenterInfoCourtData">16dp</dimen>
+    <dimen name="chipEventualStrokeWidth">0.5dp</dimen>
     <dimen name="courtBoxMinDim">145dp</dimen>
-    <dimen name="courtBoxElevation">7dp</dimen>
     <dimen name="courtNameCourtBox">18sp</dimen>
+    <dimen name="availableServiceNameText">18sp</dimen>
+    <dimen name="availableServicePriceText">16sp</dimen>
+    <dimen name="spacesServicesMCV">3dp</dimen>
     <dimen name="chipDistance">9dp</dimen>
-    <dimen name="MarginsPaddingsCourtInfoBox">8dp</dimen>
+    <dimen name="spacesCourtInfoBox">8dp</dimen>
+<dimen name="phone_number_icon">40dp</dimen>
+    <dimen name="sport_center_name">19sp</dimen>
+    <dimen name="sport_center_secondary_info">16sp</dimen>
+
     <fraction name="logoBackgroundScale">0.8</fraction>
 </resources>

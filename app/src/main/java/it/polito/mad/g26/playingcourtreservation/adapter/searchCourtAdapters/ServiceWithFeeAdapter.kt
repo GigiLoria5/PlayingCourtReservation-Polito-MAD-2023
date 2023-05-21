@@ -63,12 +63,6 @@ class ServiceWithFeeAdapter(
 
                 false -> {
                     chip.elevation = 0F
-                    //TODO FARLO O NO?
-                    // chip.chipStrokeWidth = 3f
-                    // chip.chipStrokeColor = ContextCompat.getColorStateList(
-                    //    itemView.context, R.color.grey
-                    // )
-
                     if (!chip.isChecked) {
                         chip.setTextColor(
                             ContextCompat.getColorStateList(
@@ -76,6 +70,11 @@ class ServiceWithFeeAdapter(
                                 R.color.grey
                             )
                         )
+                        chip.chipStrokeColor = ContextCompat.getColorStateList(
+                            itemView.context,
+                            R.color.grey
+                        )
+                        chip.chipStrokeWidth = 0.7f
                     }
                 }
             }

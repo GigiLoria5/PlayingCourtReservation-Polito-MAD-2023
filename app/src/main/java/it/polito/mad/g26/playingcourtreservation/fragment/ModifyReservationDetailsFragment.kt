@@ -26,6 +26,7 @@ import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.ReservationWithDetailsUtil
 import it.polito.mad.g26.playingcourtreservation.util.createCalendarObject
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.util.takeIntCenterTime
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 
@@ -253,5 +254,9 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
                 timeNew
             )
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        showActionBar(activity)
     }
 }

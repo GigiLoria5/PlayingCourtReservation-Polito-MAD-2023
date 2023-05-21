@@ -92,4 +92,5 @@
         <item>Supporters</item>
         <item>MiniBar</item>
     </string-array>
+    <string name="cancel_button">Cancel</string>
 </resources>

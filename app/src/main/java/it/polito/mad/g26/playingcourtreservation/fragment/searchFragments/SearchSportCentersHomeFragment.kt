@@ -9,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
-import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import org.json.JSONObject
 
 class SearchSportCentersHomeFragment : Fragment(R.layout.fragment_search_sport_centers_home) {
@@ -26,14 +25,14 @@ class SearchSportCentersHomeFragment : Fragment(R.layout.fragment_search_sport_c
         selectCityMCV.setOnClickListener {
             val direction =
                 SearchSportCentersHomeFragmentDirections.actionHomeToSportCentersAction(
-                    "home", cityNameTV.text.toString()
+                    "home", cityNameTV.text.toString(),0,0, intArrayOf()
                 )
             findNavController().navigate(direction)
         }
         searchMCV.setOnClickListener {
             val direction =
                 SearchSportCentersHomeFragmentDirections.actionHomeToSearchSportCenters(
-                    "home", cityNameTV.text.toString()
+                    "home", cityNameTV.text.toString(),0,0, intArrayOf()
                 )
             findNavController().navigate(direction)
         }
@@ -54,10 +53,5 @@ class SearchSportCentersHomeFragment : Fragment(R.layout.fragment_search_sport_c
     override fun onResume() {
         super.onResume()
         hideActionBar(activity)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        showActionBar(activity)
     }
 }

@@ -47,6 +47,7 @@ import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
@@ -331,5 +332,9 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                 }
             }
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        showActionBar(activity)
     }
 }

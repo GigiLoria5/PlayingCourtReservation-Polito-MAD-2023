@@ -2,53 +2,85 @@ package it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
-import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterReviewsSummary
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetails
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithMoreDetailsFormatted
+import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
+import it.polito.mad.g26.playingcourtreservation.repository.CourtRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReviewRepository
-import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 
 class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
 
-    private val sportCenterRepository = SportCenterRepository(application)
+    private val courtRepository = CourtRepository(application)
     private val reservationRepository = ReservationRepository(application)
     private val reviewRepository = ReviewRepository(application)
+
+    /* INITIALIZATION */
+    fun initialize(sportCenterId: Int, sportId: Int, dateTime: Long) {
+        setSportCenterId(sportCenterId)
+        setDateTime(dateTime)
+        setSportId(sportId)
+    }
+
+    /*DATE TIME MANAGEMENT*/
+    private val dateFormat = Reservation.getReservationDatePattern()
+    private val timeFormat = Reservation.getReservationTimePattern()
+    private var dateTime: Long = 0
+    private fun setDateTime(selectedDateTime: Long) {
+        dateTime = selectedDateTime
+    }
+
+    private fun getDateTimeFormatted(format: String): String {
+        return SearchSportCentersUtil.getDateTimeFormatted(
+            dateTime,
+            format
+        )
+    }
+
+    /*SPORT MANAGEMENT*/
+    private var sportId: Int = 0
+    private fun setSportId(selectedSportId: Int) {
+        sportId = selectedSportId
+    }
 
     /*SPORT CENTER MANAGEMENT*/
     private val sportCenterIdLiveData = MutableLiveData(0)
 
-    fun setSportCenterId(id: Int) {
+    private fun setSportCenterId(id: Int) {
         sportCenterIdLiveData.value = id
     }
 
-    val sportCenter =
+    private val courts =
         sportCenterIdLiveData.switchMap { sportCenterId ->
-            sportCenterRepository.sportCenterById(sportCenterId)
+            courtRepository.getCourtsBySportCenterId(sportCenterId)
         }
 
-    val reviews = sportCenterIdLiveData.switchMap { sportCenterId ->
-        reviewRepository.reviewsSummaryBySportCenterId(sportCenterId)
+    fun getCourtsBySelectedSport(): List<CourtWithDetails> {
+        return courts.value?.filter { court ->
+            sportId == 0 || court.sport.id == sportId
+
+        } ?: listOf()
     }
 
-    private fun SportCenterWithDetails.formatter(): SportCenterWithMoreDetailsFormatted {
-        val reviews = reviews.value ?: SportCenterReviewsSummary(sportCenter.id, 0.0, 0)
-
-        return SportCenterWithMoreDetailsFormatted(
-            sportCenter,
-            sportCenterServicesWithDetails.map {
-                ServiceWithFee(it.service, it.sportCenterServices.fee)
-            },
-            reviews,
-            courts
-        )
+    /*RESERVATIONS MANAGEMENT*/
+    private val reservations: LiveData<List<Reservation>> = courts.switchMap {
+        val courtsIdList = it.map { court -> court.court.id }
+        val date = getDateTimeFormatted(dateFormat)
+        val hour = getDateTimeFormatted(timeFormat)
+        reservationRepository.filteredReservations(date, hour, courtsIdList)
     }
 
-    fun getSportCenterWithDetailsFormatted(): SportCenterWithMoreDetailsFormatted =
-        sportCenter.value!!.formatter()
+    fun getTotAvailableCourts(): Int = getCourtsBySelectedSport().size - reservations.value!!.size
 
+    fun isCourtAvailable(courtId: Int): Boolean {
+        return reservations.value?.find { it.idCourt == courtId }?.idUser == null
+    }
+
+    val reviews = reservations.switchMap {
+        reviewRepository.reviewsSummaryBySportCenterId(sportCenterIdLiveData.value!!)
+    }
 
 }

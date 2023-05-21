@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 
 class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
 
@@ -45,5 +46,8 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
-
+    override fun onResume() {
+        super.onResume()
+        showActionBar(activity)
+    }
 }
