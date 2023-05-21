@@ -6,7 +6,11 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -14,9 +18,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.kizitonwose.calendar.core.CalendarDay
+import com.kizitonwose.calendar.core.CalendarMonth
+import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
+import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+import com.kizitonwose.calendar.core.nextMonth
+import com.kizitonwose.calendar.core.previousMonth
+import com.kizitonwose.calendar.view.CalendarView
+import com.kizitonwose.calendar.view.MonthDayBinder
+import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
 import com.kizitonwose.calendar.view.WeekCalendarView
 import com.kizitonwose.calendar.view.WeekDayBinder
@@ -28,11 +41,11 @@ import it.polito.mad.g26.playingcourtreservation.util.VerticalSpaceItemDecoratio
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
 import it.polito.mad.g26.playingcourtreservation.util.getWeekPageTitle
+import it.polito.mad.g26.playingcourtreservation.util.handleReservationsDateUI
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
-import it.polito.mad.g26.playingcourtreservation.util.setVisibility
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
@@ -40,6 +53,9 @@ import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetail
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.util.Calendar.MONTH
+import java.util.Calendar.WEEK_OF_MONTH
+
 
 class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
@@ -52,9 +68,16 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
     private var selectedDate: LocalDate = today
     private val reservationDatePattern = Reservation.getReservationDatePattern()
     private val selectionFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy")
+    private var calendarViewActive = WEEK_OF_MONTH
 
+    private lateinit var monthCalendarView: CalendarView
+    private lateinit var weekCalendarView: WeekCalendarView
+    private lateinit var reservationsContainer: RelativeLayout
     private lateinit var reservationsRv: RecyclerView
     private lateinit var shimmerFrameLayout: ShimmerFrameLayout
+    private lateinit var selectedDateTextView: TextView
+    private lateinit var noReservationsTextView: TextView
+    private lateinit var currentMonthView: TextView
 
     var isSetupFinished = false
 
@@ -63,51 +86,68 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         setupActionBar(activity, "Reservations", false)
 
         // Setup late init variables
+        monthCalendarView = view.findViewById(R.id.reservationsMonthCalendarView)
+        weekCalendarView = view.findViewById(R.id.reservationsCalendarView)
+        reservationsContainer = view.findViewById(R.id.reservationsContainer)
         reservationsRv = view.findViewById(R.id.reservationsRv)
         shimmerFrameLayout = view.findViewById(R.id.reservationsShimmerView)
+        selectedDateTextView = view.findViewById(R.id.reservationsCalendarSelectedDateText)
+        noReservationsTextView = view.findViewById(R.id.reservationsNoReservationsText)
+        currentMonthView = view.findViewById(R.id.calendarMonthYearText)
 
-        // Setup WeekCalendarView
-        var isInitialDateSet = false // Keep track of the initial selected date
-        val weekCalendarView = view.findViewById<WeekCalendarView>(R.id.reservationsCalendarView)
+        // Setup Calendar Views
         val currentMonth = YearMonth.now()
         val startDate = currentMonth.minusMonths(200).atStartOfMonth()
         val endDate = currentMonth.plusMonths(200).atEndOfMonth()
-        configureBinders(view)
+        val startMonth = currentMonth.minusMonths(200)
+        val endMonth = currentMonth.plusMonths(200)
+        configureBinders()
         weekCalendarView.setup(startDate, endDate, firstDayOfWeekFromLocale())
         weekCalendarView.scrollToDate(selectedDate)
+        monthCalendarView.setup(startMonth, endMonth, firstDayOfWeekFromLocale())
+        monthCalendarView.scrollToMonth(currentMonth)
 
         // Start Shimmer loading
         shimmerFrameLayout.startShimmerAnimation(reservationsRv)
 
         // Current Date Selected Text
-        val selectedDateView =
-            view.findViewById<TextView>(R.id.reservationsCalendarSelectedDateText)
-        selectedDateView.text = selectionFormatter.format(selectedDate)
-        updateSelectedDate(selectedDateView, weekCalendarView, selectedDate)
+        selectedDateTextView.text = selectionFormatter.format(selectedDate)
+        updateSelectedDate(selectedDate)
 
         // Current Month Selected Text
-        val currentMonthView = view.findViewById<TextView>(R.id.calendarMonthYearText)
+        currentMonthView.setOnClickListener { // onClick switch Calendar View
+            if (isSetupFinished)
+                switchCalendarView()
+        }
         weekCalendarView.weekScrollListener = weekScrollListener@{ weekDays ->
             currentMonthView.text = getWeekPageTitle(weekDays)
-            // Update selectedDate to 7 days before or after
-            if (!isInitialDateSet) {
-                isInitialDateSet = true
-                return@weekScrollListener
-            }
-            val newDate =
-                if (weekDays.days.first().date.isBefore(selectedDate)) selectedDate.minusDays(7)
-                else selectedDate.plusDays(7)
-            updateSelectedDate(selectedDateView, weekCalendarView, newDate)
+        }
+        monthCalendarView.monthScrollListener = { month ->
+            currentMonthView.text = month.yearMonth.displayText()
         }
 
-        // Navigate Between Weeks
-        val previousWeekImage = view.findViewById<ImageView>(R.id.calendarPreviousImage)
-        previousWeekImage.setOnClickListener {
-            weekCalendarView.smoothScrollToDate(selectedDate.minusDays(7))
+        // Handle Calendar Navigation
+        val calendarPreviousBtn = view.findViewById<ImageView>(R.id.calendarPreviousImage)
+        calendarPreviousBtn.setOnClickListener {
+            if (calendarViewActive == WEEK_OF_MONTH) {
+                updateSelectedDate(selectedDate.minusDays(7))
+                weekCalendarView.smoothScrollToDate(selectedDate)
+            } else {
+                monthCalendarView.findFirstVisibleMonth()?.let {
+                    monthCalendarView.smoothScrollToMonth(it.yearMonth.previousMonth)
+                }
+            }
         }
-        val nextWeekImage = view.findViewById<ImageView>(R.id.calendarNextImage)
-        nextWeekImage.setOnClickListener {
-            weekCalendarView.smoothScrollToDate(selectedDate.plusDays(7))
+        val calendarNextBtn = view.findViewById<ImageView>(R.id.calendarNextImage)
+        calendarNextBtn.setOnClickListener {
+            if (calendarViewActive == WEEK_OF_MONTH) {
+                updateSelectedDate(selectedDate.plusDays(7))
+                weekCalendarView.smoothScrollToDate(selectedDate)
+            } else {
+                monthCalendarView.findFirstVisibleMonth()?.let {
+                    monthCalendarView.smoothScrollToMonth(it.yearMonth.nextMonth)
+                }
+            }
         }
 
         // Get All Reservations
@@ -124,13 +164,13 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
                 if (currentList.isNotEmpty()) weekCalendarView.notifyDateChanged(localDate) // To show dotView
             }
             isSetupFinished = true
-            configureBinders(view)
-            updateSelectedDate(selectedDateView, weekCalendarView, selectedDate) // Force update
+            configureBinders()
+            updateSelectedDate(selectedDate) // Force update
             updateAdapterForDate(selectedDate)
             // Stop Shimmer loading
             Handler(Looper.getMainLooper()).postDelayed({
                 shimmerFrameLayout.stopShimmerAnimation(reservationsRv)
-            }, 1000)
+            }, 500)
         }
 
         // Set Up Reservations RecyclerView
@@ -141,7 +181,37 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         val itemDecoration =
             VerticalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.item_space_vertical))
         reservationsRv.addItemDecoration(itemDecoration)
+    }
 
+    private fun switchCalendarView() {
+        val isWeekCalendarActive = calendarViewActive == WEEK_OF_MONTH
+        val expandDrawable = AppCompatResources.getDrawable(
+            requireContext(),
+            if (isWeekCalendarActive) R.drawable.baseline_expand_less_36 else R.drawable.baseline_expand_more_36
+        )
+        currentMonthView.setCompoundDrawablesWithIntrinsicBounds(null, null, expandDrawable, null)
+        if (isWeekCalendarActive) {
+            reservationsContainer.makeGone()
+            reservationsRv.makeGone()
+            noReservationsTextView.makeGone()
+            selectedDateTextView.makeGone()
+            weekCalendarView.makeGone()
+            val yearMonth = YearMonth.from(selectedDate)
+            currentMonthView.text = yearMonth.displayText()
+            monthCalendarView.scrollToMonth(yearMonth)
+            monthCalendarView.makeVisible()
+            calendarViewActive = MONTH
+            return
+        }
+        monthCalendarView.makeGone()
+        currentMonthView.text = getWeekPageTitle(selectedDate)
+        weekCalendarView.scrollToDate(selectedDate)
+        updateSelectedDate(selectedDate) // Force update
+        weekCalendarView.makeVisible()
+        selectedDateTextView.makeVisible()
+        reservationsRv.makeVisible()
+        reservationsContainer.makeVisible()
+        calendarViewActive = WEEK_OF_MONTH
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -150,90 +220,116 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         reservationsAdapter.notifyDataSetChanged()
     }
 
-    private fun configureBinders(view: View) {
-        val weekCalendarView = view.findViewById<WeekCalendarView>(R.id.reservationsCalendarView)
-        val selectedDateTextView =
-            view.findViewById<TextView>(R.id.reservationsCalendarSelectedDateText)
-        val noReservationsTextView: TextView =
-            view.findViewById(R.id.reservationsNoReservationsText)
+    private fun updateSelectedDate(newDate: LocalDate) {
+        val oldDate = selectedDate
+        selectedDate = newDate
+        // Update UI
+        weekCalendarView.notifyDateChanged(oldDate)
+        monthCalendarView.notifyDateChanged(oldDate)
+        weekCalendarView.notifyDateChanged(newDate)
+        monthCalendarView.notifyDateChanged(newDate)
+        selectedDateTextView.text = selectionFormatter.format(newDate)
+        updateAdapterForDate(selectedDate) // update Reservations RV with new date
+    }
+
+    private fun configureBinders() {
+        // Setup Month Container
+        setupMonthCalendarHeader()
 
         // Setup Day Container
-        class DayViewContainer(view: View) : ViewContainer(view) {
-            lateinit var day: WeekDay // Will be set when this container is bound
+        class DayViewContainer(view: View, isWeek: Boolean) : ViewContainer(view) {
+            lateinit var weekDay: WeekDay
+            lateinit var calendarDay: CalendarDay
             val dateTextView: TextView = view.findViewById(R.id.reservationsCalendarDateText)
             val dayTextView: TextView = view.findViewById(R.id.reservationsCalendarDayText)
             val dotImageView: ImageView = view.findViewById(R.id.dayHasReservationImage)
 
             init {
                 view.setOnClickListener {
-                    updateSelectedDate(selectedDateTextView, weekCalendarView, day.date)
+                    when (isWeek) {
+                        true -> {
+                            updateSelectedDate(weekDay.date)
+                            weekCalendarView.smoothScrollToDate(selectedDate)
+                        }
+
+                        false -> {
+                            if (calendarDay.position == DayPosition.MonthDate) {
+                                updateSelectedDate(calendarDay.date)
+                                switchCalendarView()
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
-            // Called only when a new container is needed
-            override fun create(view: View) = DayViewContainer(view)
+        monthCalendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
+            override fun create(view: View) = DayViewContainer(view, false)
+            override fun bind(container: DayViewContainer, data: CalendarDay) {
+                container.calendarDay = data
+                container.dayTextView.makeGone()
+                val dateTextView = container.dateTextView
+                val dotImageView = container.dotImageView
+                dateTextView.text = data.date.displayDay()
+                // Hide inDates and outDates
+                if (data.position != DayPosition.MonthDate) {
+                    dateTextView.makeInvisible()
+                    dotImageView.makeInvisible()
+                    return
+                }
+                // Handle Date UI
+                handleReservationsDateUI(
+                    data.date,
+                    selectedDate,
+                    dateTextView,
+                    dotImageView,
+                    reservations,
+                    noReservationsTextView,
+                    true
+                )
+            }
+        }
 
-            // Called every time we need to reuse a container
+        weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
+            override fun create(view: View) = DayViewContainer(view, true)
             override fun bind(container: DayViewContainer, data: WeekDay) {
-                container.day = data
+                container.weekDay = data
                 val dayTextView = container.dayTextView
                 val dateTextView = container.dateTextView
                 val dotImageView = container.dotImageView
                 dayTextView.text = data.date.dayOfWeek.displayText()
                 dateTextView.text = data.date.displayDay()
                 // Handle Date UI
-                val colorToday = R.color.green_500
-                val colorSelected = R.color.white
-                val colorUnselected = R.color.black
-                when (data.date) {
-                    selectedDate -> {
-                        dateTextView.setTextColorRes(colorSelected)
-                        dateTextView.setBackgroundResource(R.drawable.calendar_selected_bg)
-                        if (today.isEqual(selectedDate)) {
-                            dateTextView.setBackgroundResource(R.drawable.calendar_today_selected_bg)
-                        }
-                        dotImageView.makeInvisible()
-                        if (!isSetupFinished || reservations[selectedDate]?.value != null) {
-                            noReservationsTextView.makeGone()
-                        } else {
-                            noReservationsTextView.makeVisible()
-                        }
-                    }
-
-                    today -> {
-                        dateTextView.setTextColorRes(colorToday)
-                        dateTextView.background = null
-                        dotImageView.setVisibility(
-                            reservations[data.date]?.value.orEmpty().isNotEmpty()
-                        )
-                    }
-
-                    else -> {
-                        dateTextView.setTextColorRes(colorUnselected)
-                        dateTextView.background = null
-                        dotImageView.setVisibility(
-                            reservations[data.date]?.value.orEmpty().isNotEmpty()
-                        )
-                    }
-                }
+                handleReservationsDateUI(
+                    data.date,
+                    selectedDate,
+                    dateTextView,
+                    dotImageView,
+                    reservations,
+                    noReservationsTextView,
+                    !isSetupFinished || reservations[selectedDate]?.value != null
+                )
             }
         }
     }
 
-    private fun updateSelectedDate(
-        selectedDateTextView: TextView,
-        weekCalendarView: WeekCalendarView,
-        newDate: LocalDate
-    ) {
-        val oldDate = selectedDate
-        selectedDate = newDate
-        weekCalendarView.notifyDateChanged(oldDate)
-        weekCalendarView.notifyDateChanged(newDate)
-        // update Reservations RV with new date
-        selectedDateTextView.text = selectionFormatter.format(newDate)
-        updateAdapterForDate(selectedDate)
+    private fun setupMonthCalendarHeader() {
+        class MonthViewContainer(view: View) : ViewContainer(view) {
+            val legendLayout: LinearLayout = view.findViewById(R.id.legendLayout)
+        }
+        monthCalendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
+            override fun create(view: View) = MonthViewContainer(view)
+            override fun bind(container: MonthViewContainer, data: CalendarMonth) {
+                if (container.legendLayout.tag == null) {
+                    container.legendLayout.tag = data.yearMonth
+                    container.legendLayout.children.map { it as TextView }
+                        .forEachIndexed { index, tv ->
+                            val daysOfWeek = daysOfWeek()
+                            tv.text = daysOfWeek[index].displayText()
+                            tv.setTextColorRes(R.color.black)
+                        }
+                }
+            }
+        }
     }
-
 }
