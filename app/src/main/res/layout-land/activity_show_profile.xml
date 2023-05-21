@@ -145,8 +145,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:title="@string/fullname_title"
-                app:value="@string/default_fullname" />
+                app:title="@string/full_name_title"
+                app:value="@string/default_full_name" />
 
             <LinearLayout
                 android:id="@+id/user_information_container"

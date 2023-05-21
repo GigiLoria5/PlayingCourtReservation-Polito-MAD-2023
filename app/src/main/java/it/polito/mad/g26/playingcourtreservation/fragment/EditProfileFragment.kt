@@ -190,7 +190,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         } else {//put the default value
             usernameEditText.setText(getString(R.string.default_username))
             autoCompletePosition.setText(getString(R.string.default_position), false)
-            fullNameEditText.setText(getString(R.string.default_fullname))
+            fullNameEditText.setText(getString(R.string.default_full_name))
             dateOfBirthEditText.setText(getString(R.string.default_date))
             autoCompleteGender.setText(getString(R.string.default_gender), false)
             locationEditText.setText(getString(R.string.default_location))

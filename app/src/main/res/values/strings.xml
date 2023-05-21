@@ -9,7 +9,7 @@
     <string name="reservation_info_amount">€%1$s</string>
     <string name="no_services_chosen">No service chosen</string>
     <!-- Show Profile -->
-    <string name="fullname_title">Fullname</string>
+    <string name="full_name_title">Fullname</string>
     <string name="username_title">Username</string>
     <string name="age_title">Age</string>
     <string name="gender_title">Gender</string>
@@ -26,7 +26,7 @@
     <string name="default_username">NoobSmasher</string>
     <string name="default_position">Attacker</string>
     <fraction name="default_rating">0</fraction>
-    <string name="default_fullname">Giacinto Milanesi</string>
+    <string name="default_full_name">Giacinto Milanesi</string>
     <integer name="default_age">21</integer>
     <string name="default_gender">Male</string>
     <string name="default_location">Torino</string>

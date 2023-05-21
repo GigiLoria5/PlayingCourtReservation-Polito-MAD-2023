@@ -144,9 +144,9 @@
                         android:layout_height="wrap_content"
                         android:autofillHints="name"
                         android:ems="10"
-                        android:hint="@string/fullname_title"
+                        android:hint="@string/full_name_title"
                         android:inputType="text"
-                        android:text="@string/default_fullname"
+                        android:text="@string/default_full_name"
                         tools:ignore="VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
