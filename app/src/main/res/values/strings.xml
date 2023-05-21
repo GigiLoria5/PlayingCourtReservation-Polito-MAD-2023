@@ -112,5 +112,4 @@
     <string name="edit_review_button">Edit review</string>
     <string name="delete_review_button">Delete review</string>
     <string name="court_reviews">Court Reviews</string>
-    <string name="cancel_button">Cancel</string>
 </resources>
