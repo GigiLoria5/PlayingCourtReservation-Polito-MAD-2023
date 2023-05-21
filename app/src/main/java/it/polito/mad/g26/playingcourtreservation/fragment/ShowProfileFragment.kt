@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.imageview.ShapeableImageView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ShowProfileAdapter
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
@@ -29,6 +30,7 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
     private lateinit var sportList : List<String>
     private lateinit var ratingList: MutableList<Float>
     private lateinit var sportRecycleView: RecyclerView
+    private lateinit var avatarImage: ShapeableImageView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,13 +98,23 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
             if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 // The layout is in landscape mode
                 val height=metric.widthPixels
-                val pixelsFix=(height/100)*33
-                guide.setGuidelineBegin(pixelsFix)
+                var pixelsLimit=(height/100)*33
+                guide.setGuidelineBegin(pixelsLimit)
+                //set the image
+                pixelsLimit=(pixelsLimit*70)/100
+                avatarImage=requireView().findViewById<ShapeableImageView>(R.id.avatar)
+                avatarImage.layoutParams.width=pixelsLimit
+                avatarImage.layoutParams.height=pixelsLimit
             } else {
                 // The layout is in portrait mode
                 val height=metric.heightPixels
-                val pixelsFix=(height/100)*33
-                guide.setGuidelineBegin(pixelsFix)
+                var pixelsLimit=(height/100)*33
+                guide.setGuidelineBegin(pixelsLimit)
+                //set the image
+                pixelsLimit=(pixelsLimit*70)/100
+                avatarImage=requireView().findViewById<ShapeableImageView>(R.id.avatar)
+                avatarImage.layoutParams.width=pixelsLimit
+                avatarImage.layoutParams.height=pixelsLimit
             }
 
 
@@ -147,7 +159,7 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
             val fileInput = requireActivity().openFileInput("imageBit")
             if (fileInput.available() > 0) {
                 val bitmap = BitmapFactory.decodeStream(fileInput)//already decompressed
-                val avatarImage = requireView().findViewById<ImageView>(R.id.avatar)
+                avatarImage = requireView().findViewById(R.id.avatar)
                 avatarImage.setImageBitmap(bitmap)
             }
             fileInput.close()

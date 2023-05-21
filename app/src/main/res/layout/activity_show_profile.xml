@@ -75,7 +75,7 @@
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/custom_black"
-                        android:textSize="18sp"/>
+                        android:textSize="20sp"/>
 
                     <ImageView
                         android:id="@+id/warning_icon"
