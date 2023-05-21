@@ -174,8 +174,8 @@
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/cornerRadius"
                 app:cardElevation="0dp"
-                app:cardUseCompatPadding="true"
                 android:visibility="gone"
+                app:cardUseCompatPadding="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -197,12 +197,12 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:textColor="@color/black"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintBottom_toTopOf="@id/ReviewListCL"
+                        app:layout_constraintBottom_toTopOf="@id/reviewCL"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/ReviewListCL"
+                        android:id="@+id/reviewCL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="32dp"
@@ -243,13 +243,47 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:minHeight="48dp"
                         android:text="@string/review_list_text"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/black"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/deleteAndEditReviewButtonCL"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ReviewListCL" />
+                        app:layout_constraintTop_toBottomOf="@id/reviewCL" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/deleteAndEditReviewButtonCL"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/reviewTextTV">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/deleteReviewButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/red_dark"
+                            android:text="@string/delete_review_button"
+                            android:textColor="@color/white"
+                            app:cornerRadius="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/modifyReviewButton"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/modifyReviewButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/green_700"
+                            android:text="@string/edit_review_button"
+                            android:textColor="@color/white"
+                            app:cornerRadius="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/deleteReviewButton"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>

@@ -17,6 +17,9 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.viewmodel.CustomDialogAlertAddReviewVM
 
 class CustomDialogAlertAddReview: DialogFragment() {
+    private lateinit var rating: RatingBar
+    private lateinit var textReview: EditText
+    private lateinit var ratingError: MaterialCardView
     companion object {
 
         const val TAG = "Review Dialog"
@@ -38,9 +41,9 @@ class CustomDialogAlertAddReview: DialogFragment() {
             val view: View = layoutInflater.inflate(R.layout.custom_dialog_add_review, null)
             val builder = AlertDialog.Builder(it!!)
             builder.setView(view)
-            val rating = view.findViewById<RatingBar>(R.id.rating)
-            val textReview = view.findViewById<EditText>(R.id.et_review)
-            val ratingError = view.findViewById<MaterialCardView>(R.id.errorRatingMCV)
+            rating = view.findViewById(R.id.rating)
+            textReview = view.findViewById(R.id.et_review)
+            ratingError = view.findViewById(R.id.errorRatingMCV)
             ratingError.makeInvisible()
 
             val submit = view.findViewById<Button>(R.id.submit_button)
@@ -54,28 +57,15 @@ class CustomDialogAlertAddReview: DialogFragment() {
 
             parentFragment?.let { it1 ->
                 reviewVM.findReservationReview(idReservation!!, idUser!!).observe(it1.viewLifecycleOwner){ review->
-                    if (review == null){
-                        update = false
-                    }else{
+                    if (review != null){
                         update = true
                         rating.rating = review.rating
                         textReview.setText(review.text)
                     }
-
                 }
             }
             submit.setOnClickListener {
-                var error = false
-                if (textReview.length() < 10)
-                {
-                    textReview.error = "Review size should be at least 10 characters long"
-                    error = true
-                }
-                if (rating.rating == 0.0f)
-                {
-                    ratingError.makeVisible()
-                    error = true
-                }
+                val error = checkReviewValidity()
                 if (!error && !update){
                     reviewVM.addReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString() )
                     this.dismiss()
@@ -95,5 +85,19 @@ class CustomDialogAlertAddReview: DialogFragment() {
             }
             builder.create()
         }
+    }
+    private fun checkReviewValidity(): Boolean{
+        var error = false
+        if (textReview.text.toString().trim().length < 10)
+        {
+            textReview.error = "Review size should be at least 10 characters long"
+            error = true
+        }
+        if (rating.rating == 0.0f)
+        {
+            ratingError.makeVisible()
+            error = true
+        }
+        return error
     }
 }

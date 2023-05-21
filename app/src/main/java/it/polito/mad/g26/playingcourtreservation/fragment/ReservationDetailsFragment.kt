@@ -156,11 +156,8 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                             }
                         }else{
                             viewReservationButtons.removeAllViews()
-                            val inflater = LayoutInflater.from(requireContext())
-                            val viewEditDeleteReview = inflater.inflate(R.layout.delete_and_edit_review_buttons, viewReservationButtons, false)
-                            val reviewEditButton= viewEditDeleteReview.findViewById<MaterialButton>(R.id.modify_review_button)
-                            val reviewDeleteButton= viewEditDeleteReview.findViewById<MaterialButton>(R.id.delete_review_button)
-                            viewReservationButtons.addView(viewEditDeleteReview)
+                            val reviewEditButton= view.findViewById<MaterialButton>(R.id.modifyReviewButton)
+                            val reviewDeleteButton= view.findViewById<MaterialButton>(R.id.deleteReviewButton)
                             reservationReviewMCV.makeVisible()
                             val rating = view.findViewById<RatingBar>(R.id.rating)
                             val reviewDate = view.findViewById<TextView>(R.id.reviewDateTV)

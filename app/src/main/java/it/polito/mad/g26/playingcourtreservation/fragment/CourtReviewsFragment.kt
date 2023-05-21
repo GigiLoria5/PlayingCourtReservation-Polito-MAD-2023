@@ -73,7 +73,7 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
 
                 vm.courtReviewsMean(courtId).observe(viewLifecycleOwner){mean ->
                     meanRatingBar.rating = mean
-                    meanRatingValueTV.text = getString(R.string.mean_rating_value, mean.toString())
+                    meanRatingValueTV.text = getString(R.string.mean_rating_value, String.format("%.1f", mean))
                 }
                 vm.courtReviewsCount(courtId).observe(viewLifecycleOwner){count ->
                     meanRatingTV.text = getString(R.string.mean_rating_text, count.toString())
