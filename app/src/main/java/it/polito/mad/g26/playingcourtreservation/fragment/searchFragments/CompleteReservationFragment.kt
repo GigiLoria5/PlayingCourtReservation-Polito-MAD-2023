@@ -34,7 +34,7 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
 
     private val args: CompleteReservationFragmentArgs by navArgs()
     private val vm by viewModels<CompleteReservationVM>()
-    private val loadTime:Long=300
+    private val loadTime: Long = 300
 
     /*   VISUAL COMPONENTS       */
     private lateinit var customToolBar: Toolbar
@@ -160,7 +160,6 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
                     context,
                     getString(
                         R.string.confirm_reservation_message,
-                        String.format("%.2f", vm.totalAmountLiveData.value!!),
                         sportCenterName
                     ),
                     Toast.LENGTH_LONG

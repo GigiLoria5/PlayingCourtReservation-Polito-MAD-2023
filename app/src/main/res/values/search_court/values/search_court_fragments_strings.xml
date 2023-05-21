@@ -52,7 +52,8 @@
     <string name="no_selected_services">No services selected</string>
     <string name="total_amount">Total amount</string>
     <string name="just_price">€%1$s</string>
-    <string name="confirm_reservation_message">Reservation confirmed. You will pay €%1$s to %2$s</string>
+    <string name="confirm_reservation">Confirm Reservation</string>
+    <string name="confirm_reservation_message">Reservation at %1$s confirmed!</string>
     <string name="confirm_reservation_message_service_field">-%1$s: €%2$s\n</string>
     <string name="reserve_button">Reserve</string>
 </resources>
