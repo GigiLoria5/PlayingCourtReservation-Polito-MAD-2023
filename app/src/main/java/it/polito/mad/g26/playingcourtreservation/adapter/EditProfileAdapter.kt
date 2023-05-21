@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import it.polito.mad.g26.playingcourtreservation.R
 
 class EditProfileAdapter ( val list: List<String>, private var rating : MutableList<Float>) :
@@ -32,9 +33,9 @@ class EditProfileAdapter ( val list: List<String>, private var rating : MutableL
 
     inner class EditProfileViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
-        private val text = v.findViewById<TextView>(R.id.sport_title)
-        private val starRating= v.findViewById<RatingBar>(R.id.rating2)
-        private val buttonDelete=v.findViewById<ImageButton>(R.id.delete_sport)
+        private val text = v.findViewById<TextView>(R.id.sport_title_edit_profile)
+        private val starRating= v.findViewById<RatingBar>(R.id.sport_rating_edit_profile)
+        private val buttonDelete=v.findViewById<MaterialButton>(R.id.sport_delete_rating)
 
         fun bind(s: String, r:Float, rList: MutableList<Float>, p:Int) {
             text.text=s
