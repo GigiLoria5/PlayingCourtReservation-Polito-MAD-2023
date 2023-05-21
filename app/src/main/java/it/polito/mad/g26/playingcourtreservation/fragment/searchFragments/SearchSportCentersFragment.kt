@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
+import android.animation.LayoutTransition
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -52,6 +53,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
     private lateinit var sportCentersShimmerView: ShimmerFrameLayout
     private lateinit var noSportCentersFoundTV: TextView
     private lateinit var existingReservationCL: ConstraintLayout
+    private lateinit var numberOfSportCentersFoundCL: ConstraintLayout
     private lateinit var numberOfSportCentersFoundTV: TextView
 
     private lateinit var sportCentersAdapter: SportCenterAdapter
@@ -173,7 +175,8 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         /* servicesShimmerView INITIALIZER */
         servicesShimmerView = view.findViewById(R.id.servicesShimmerView)
 
-        /*NUMBER OF SPORT CENTERS FOUND TV */
+        /*NUMBER OF SPORT CENTERS FOUND RV AND TV */
+        numberOfSportCentersFoundCL = view.findViewById(R.id.numberOfSportCentersFoundCL)
         numberOfSportCentersFoundTV = view.findViewById(R.id.numberOfSportCentersFoundTV)
 
         /* SPORT CENTERS RECYCLE VIEW INITIALIZER*/
@@ -223,41 +226,68 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         )
     }
 
-    private fun loadServices() {
-        /* SERVICES LOADING */
-
-        vm.services.observe(viewLifecycleOwner) {
+    private fun initialLoading() {
+        /* INITIAL LOADING */
+        vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
+            courtTypeACTV.makeVisible()
+            courtTypeMCV.makeVisible()
+            numberOfSportCentersFoundTV.makeGone()
+            noSportCentersFoundTV.makeGone()
+            existingReservationCL.makeGone()
             servicesShimmerView.startShimmerAnimation(servicesRV)
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                servicesShimmerView.stopShimmerAnimation(servicesRV)
-                if (vm.existingReservationIdByDateAndTime.value == null) {
-                    servicesAdapter.updateCollection(vm.services.value ?: listOf())
-                } else {
-                    servicesRV.makeInvisible()
-                }
-            }, 200)
+            sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
         }
     }
 
-    private fun loadSportCenters() {
+    private fun loadExistingReservation(loadTime: Long) {
+        /* EXISTING RESERVATION LOADING*/
+
+        vm.existingReservationIdByDateAndTime.observe(viewLifecycleOwner) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (it != null) {
+                    servicesShimmerView.stopShimmer()
+                    sportCentersShimmerView.stopShimmer()
+                    hideAll()
+                    navigateToReservationBTN.setOnClickListener { _ ->
+                        findNavController().navigate(
+                            SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
+                                it
+                            )
+                        )
+                    }
+                }
+            }, loadTime)
+        }
+
+    }
+
+    private fun loadServices(loadTime: Long) {
+        /* SERVICES LOADING */
+
+        vm.services.observe(viewLifecycleOwner) {
+            if (vm.existingReservationIdByDateAndTime.value == null) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    servicesShimmerView.stopShimmerAnimation(servicesRV)
+                    servicesAdapter.updateCollection(vm.services.value ?: listOf())
+                }, loadTime)
+            }
+        }
+    }
+
+    private fun loadSportCenters(loadTime: Long) {
         /* SPORT CENTERS LOADING */
 
         vm.sportCentersMediator.observe(viewLifecycleOwner) {
-            // Start Shimmer loading
-            sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
-            numberOfSportCentersFoundTV.makeGone()
-            println("A")
-            noSportCentersFoundTV.makeGone()
-            existingReservationCL.makeGone()
-            // Stop Shimmer loading
-            Handler(Looper.getMainLooper()).postDelayed({
-                sportCentersShimmerView.stopShimmerAnimation(sportCentersRV)
-                if (vm.existingReservationIdByDateAndTime.value == null) {
+            if (vm.existingReservationIdByDateAndTime.value == null) {
+                if (!sportCentersShimmerView.isShimmerStarted) {
+                    sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
+                    numberOfSportCentersFoundTV.makeGone()
+                    noSportCentersFoundTV.makeGone()
+                }
+                Handler(Looper.getMainLooper()).postDelayed({
+                    sportCentersShimmerView.stopShimmer()
+                    sportCentersShimmerView.makeInvisible()
                     numberOfSportCentersFoundTV.makeVisible()
-                    println("B")
-
-                    servicesRV.makeVisible()
 
                     val sportCentersWithDetailsFormatted =
                         vm.getSportCentersWithDetailsFormatted()
@@ -272,90 +302,72 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                         sportCentersWithDetailsFormatted
                     )
                     if (numberOfSportCentersFound > 0) {
-                        noSportCentersFoundTV.makeGone()
                         sportCentersRV.makeVisible()
-
                     } else {
-                        sportCentersRV.makeInvisible()
                         noSportCentersFoundTV.makeVisible()
-
+                        sportCentersRV.makeInvisible()
                     }
-                } else {
-                    hideAll()
-                }
-            }, 200)
+                }, loadTime)
+            }
         }
-
     }
 
-    private fun loadExistingReservation() {
-        /* EXISTING RESERVATION LOADING*/
-
-        vm.existingReservationIdByDateAndTime.observe(viewLifecycleOwner) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                if (it != null) {
-                    hideAll()
-                    navigateToReservationBTN.setOnClickListener { _ ->
-                        findNavController().navigate(
-                            SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
-                                it
-                            )
-                        )
-                    }
-                } else {
-                    if (vm.getSportCentersWithDetailsFormatted().isNotEmpty())
-                        sportCentersRV.makeVisible()
-                    servicesRV.makeVisible()
-                    courtTypeACTV.makeVisible()
-                    courtTypeMCV.makeVisible()
-                    numberOfSportCentersFoundTV.makeVisible()
-                    println("C")
-
-                    existingReservationCL.makeGone()
-                }
-            }, 300)
-        }
-
-    }
 
     private fun hideAll() {
-        sportCentersRV.makeInvisible()
         servicesRV.makeInvisible()
+        servicesShimmerView.makeInvisible()
+
+        sportCentersRV.makeInvisible()
+        sportCentersShimmerView.makeInvisible()
+
         courtTypeACTV.makeInvisible()
         courtTypeMCV.makeInvisible()
+
         numberOfSportCentersFoundTV.makeGone()
-        println("D")
+        noSportCentersFoundTV.makeGone()
 
         existingReservationCL.makeVisible()
-        noSportCentersFoundTV.makeGone()
+
     }
 
 
-    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation {
-        val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
-        anim.setAnimationListener(object : AnimationListener {
-            override fun onAnimationStart(animation: Animation) {
-                if (!goingToSearchCourt) {
-                    numberOfSportCentersFoundTV.makeGone()
-                    println("E")
-                    noSportCentersFoundTV.makeGone()
-                    existingReservationCL.makeGone()
-                    servicesRV.makeInvisible()
-                    sportCentersRV.makeInvisible()
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        return if (nextAnim != 0) {
+            val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
+            anim.setAnimationListener(object : AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
+                    if (!goingToSearchCourt) {
+                        numberOfSportCentersFoundTV.makeGone()
+                        noSportCentersFoundTV.makeGone()
+                        existingReservationCL.makeGone()
+                        servicesRV.makeInvisible()
+                        sportCentersRV.makeInvisible()
+                    }
                 }
-            }
 
-            override fun onAnimationRepeat(animation: Animation) {
-                //unuseful
-            }
+                override fun onAnimationRepeat(animation: Animation) {
+                    //unuseful
+                }
 
-            override fun onAnimationEnd(animation: Animation) {
-                loadServices()
-                loadSportCenters()
-                loadExistingReservation()
+                override fun onAnimationEnd(animation: Animation) {
+                    initialLoading()
+                    loadExistingReservation(300)
+                    loadServices(300)
+                    loadSportCenters(300)
+                    numberOfSportCentersFoundCL.layoutTransition = LayoutTransition()
+                }
+            })
+            return anim
+        } else {
+            if (enter) {
+                initialLoading()
+                loadExistingReservation(300)
+                loadServices(300)
+                loadSportCenters(300)
+                numberOfSportCentersFoundCL.layoutTransition = LayoutTransition()
             }
-        })
-        return anim
+            null
+        }
     }
 
     override fun onResume() {

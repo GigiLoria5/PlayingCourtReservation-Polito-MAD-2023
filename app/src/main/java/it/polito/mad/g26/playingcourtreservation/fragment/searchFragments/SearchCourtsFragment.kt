@@ -189,25 +189,28 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
         }
     }
 
-    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation {
-        val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
-        anim.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) {
-                if (!(goingToCompleteReservation || goingToCourtReviews)) {
-                    numberOfAvailableCourtsTV.makeGone()
-                    courtsRV.makeInvisible()
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        return if (nextAnim != 0) {
+            val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
+            anim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
+                    if (!(goingToCompleteReservation || goingToCourtReviews)) {
+                        numberOfAvailableCourtsTV.makeGone()
+                        courtsRV.makeInvisible()
+                    }
                 }
-            }
 
-            override fun onAnimationRepeat(animation: Animation) {
-                //unuseful
-            }
+                override fun onAnimationRepeat(animation: Animation) {
+                    //unuseful
+                }
 
-            override fun onAnimationEnd(animation: Animation) {
-                loadCourts()
-            }
-        })
-        return anim
+                override fun onAnimationEnd(animation: Animation) {
+                    loadCourts()
+                }
+            })
+            anim
+        } else
+            null
     }
 
     override fun onResume() {

@@ -79,8 +79,29 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
 
     fun getSelectedSportId(): Int = selectedSport.value ?: 0
 
+    /* VM LIVE DATA CHAIN:
+    * selectedDateTimeMillis -> existingReservationIdByDateAndTime -> services
+    *                                                              -> sportCenters
+    * */
+
+    /*EXISTING RESERVATION MANAGEMENT*/
+    val existingReservationIdByDateAndTime: LiveData<Int?> = selectedDateTimeMillis.switchMap {
+        reservationRepository.reservationIdByUserIdAndDateAndHour(
+            1, //should be replaced with userId
+            getDateTimeFormatted(dateFormat),
+            getDateTimeFormatted(timeFormat)
+        )
+    }
+
+
     /*SERVICES MANAGEMENT*/
-    val services: LiveData<List<Service>> = serviceRepository.services()
+    val services: LiveData<List<Service>> = existingReservationIdByDateAndTime.switchMap {
+        if (it == null)
+            serviceRepository.services()
+        else MutableLiveData<List<Service>>().also { services ->
+            services.value = listOf()
+        }
+    }
     private var selectedServices = MutableLiveData<MutableSet<Int>>().also {
         it.value = mutableSetOf()
     }
@@ -103,13 +124,18 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
 
     fun getSelectedServices(): IntArray = selectedServices.value?.toIntArray() ?: intArrayOf()
 
+
     /*SPORT CENTERS MANAGEMENT*/
     val sportCentersMediator = MediatorLiveData<Int>()
-    private val sportCenters = selectedDateTimeMillis.switchMap {
-        sportCenterRepository.filterSportCenters(
-            selectedCity,
-            getDateTimeFormatted(timeFormat)
-        )
+    private val sportCenters = existingReservationIdByDateAndTime.switchMap {
+        if (it == null)
+            sportCenterRepository.filterSportCenters(
+                selectedCity,
+                getDateTimeFormatted(timeFormat)
+            ) else
+            MutableLiveData<List<SportCenterWithDetails>>().also { sportCenters ->
+                sportCenters.value = listOf()
+            }
     }
 
     private fun SportCenterWithDetails.formatter(): SportCenterWithMoreDetailsFormatted {
@@ -174,15 +200,6 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
             /* BASE FILTERING (DATE,TIME,CITY) */
             else -> sportCentersFormatted
         }
-    }
-
-    /*EXISTING RESERVATION MANAGEMENT*/
-    val existingReservationIdByDateAndTime: LiveData<Int?> = selectedDateTimeMillis.switchMap {
-        reservationRepository.reservationIdByUserIdAndDateAndHour(
-            1, //should be replaced with userId
-            getDateTimeFormatted(dateFormat),
-            getDateTimeFormatted(timeFormat)
-        )
     }
 
     /*CHANGES IN SEARCH PARAMETERS MANAGEMENT*/
