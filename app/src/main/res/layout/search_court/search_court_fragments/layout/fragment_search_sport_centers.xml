@@ -328,7 +328,7 @@
             android:id="@+id/existingReservationCL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/pageExternalSpace"
+            android:padding="@dimen/pageExternalSpace"
             android:visibility="gone"
 
             app:layout_constraintBottom_toBottomOf="parent"
@@ -360,7 +360,9 @@
                 android:text="@string/go_to_reservation"
                 android:textAllCaps="false"
                 android:textSize="@dimen/dateTypeButtonsTextSize"
+                android:layout_margin="@dimen/pageExternalSpace"
                 android:textStyle="normal"
+                app:cornerRadius="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

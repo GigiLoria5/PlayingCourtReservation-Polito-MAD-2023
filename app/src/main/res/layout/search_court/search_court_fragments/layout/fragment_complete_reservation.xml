@@ -326,7 +326,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/pageExternalSpace"
-            android:backgroundTint="@color/green_500"
             android:text="@string/confirm_reservation"
             app:cornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
