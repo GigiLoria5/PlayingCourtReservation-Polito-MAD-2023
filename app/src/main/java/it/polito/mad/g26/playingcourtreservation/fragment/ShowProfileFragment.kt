@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.TooltipCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -16,6 +17,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ShowProfileAdapter
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
@@ -108,11 +110,21 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
                 //filter the 0 rating
                 val ratingFinal=sortedRating.filter{it!=0F}
 
-                //populate recycler view for every rating>0
-                sportRecycleView=requireView().findViewById(R.id.show_profile_recycler_view)
-                sportRecycleView.adapter= ShowProfileAdapter(sportList2,ratingFinal)
-                sportRecycleView.layoutManager=
-                    LinearLayoutManager(context)
+                if(ratingFinal.isEmpty()){
+                    val rootView=requireView().findViewById<ConstraintLayout>(R.id.show_profile_main_container)
+                    val sportCardRating=requireView().findViewById<MaterialCardView>(R.id.show_profile_sport_card_view)
+                    rootView.removeView(sportCardRating)
+                }else{
+                    //populate recycler view for every rating>0
+                    sportRecycleView=requireView().findViewById(R.id.show_profile_recycler_view)
+                    sportRecycleView.adapter= ShowProfileAdapter(sportList2,ratingFinal)
+                    sportRecycleView.layoutManager=
+                        LinearLayoutManager(context)
+                }
+            }else{
+                val rootView=requireView().findViewById<ConstraintLayout>(R.id.show_profile_main_container)
+                val sportCardRating=requireView().findViewById<MaterialCardView>(R.id.show_profile_sport_card_view)
+                rootView.removeView(sportCardRating)
             }
         }
 

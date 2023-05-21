@@ -14,9 +14,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:paddingBottom="16dp"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -237,6 +235,7 @@
                             android:inputType="text"
                             android:text="@string/default_location"
                             tools:ignore="VisualLintTextFieldSize" />
+
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
@@ -257,7 +256,8 @@
                      app:strokeColor="@color/border_grey_light"
                      app:layout_constraintTop_toTopOf="parent"
                      app:layout_constraintStart_toStartOf="parent"
-                     >
+                     app:layout_constraintBottom_toBottomOf="parent"
+                     android:layout_marginBottom="16dp">
 
                         <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/edit_profile_recycler_view"
@@ -265,15 +265,11 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        android:orientation="vertical"
-                        />
+                        android:orientation="vertical" />
 
                 </com.google.android.material.card.MaterialCardView>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
