@@ -38,7 +38,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
     private val args: SearchSportCentersFragmentArgs by navArgs()
     private val vm by viewModels<SearchSportCentersVM>()
-    private val loadTime:Long=300
+    private val loadTime:Long=500
 
     /*   VISUAL COMPONENTS       */
     private lateinit var dateMCV: MaterialCardView

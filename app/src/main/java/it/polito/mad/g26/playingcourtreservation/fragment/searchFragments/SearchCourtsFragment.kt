@@ -34,6 +34,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
 
     private val args: SearchCourtsFragmentArgs by navArgs()
     private val vm by viewModels<SearchCourtsVM>()
+    private val loadTime:Long=500
 
     /*   VISUAL COMPONENTS       */
     private lateinit var customToolBar: Toolbar
@@ -184,7 +185,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
                 numberOfAvailableCourtsTV.makeVisible()
 
                 courtsAdapter.updateCollection(vm.getCourtsBySelectedSport(), it)
-            }, 200)
+            }, loadTime)
         }
     }
 

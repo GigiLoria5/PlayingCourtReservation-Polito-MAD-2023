@@ -34,7 +34,7 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
 
     private val args: CompleteReservationFragmentArgs by navArgs()
     private val vm by viewModels<CompleteReservationVM>()
-    private val loadTime: Long = 300
+    private val loadTime: Long = 500
 
     /*   VISUAL COMPONENTS       */
     private lateinit var customToolBar: Toolbar
