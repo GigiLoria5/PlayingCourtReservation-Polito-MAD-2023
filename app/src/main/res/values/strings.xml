@@ -103,12 +103,13 @@
     <string name="review_list_text">Written review</string>
 
     <string name="no_review_found">There are no reviews available for this court</string>
-    <string name="mean_rating_value">%1$s/5</string>
+    <string name="mean_rating_value">%1$s/5 (%2$s)</string>
     <string name="mean_rating_text">Based on %1$s reviews</string>
     <string name="rating_error"> Rating required</string>
 
     <string name="my_review">Review</string>
     <string name="edit_review_button">Edit review</string>
     <string name="delete_review_button">Delete review</string>
+    <string name="court_reviews">Court Reviews</string>
 
 </resources>
