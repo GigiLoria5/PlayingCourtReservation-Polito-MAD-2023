@@ -34,8 +34,8 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/avatar"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_width="240dp"
+                    android:layout_height="240dp"
                     android:contentDescription="@string/avatar_description"
                     android:padding="4dp"
                     android:scaleType="fitXY"
@@ -254,7 +254,7 @@
                      android:layout_height="wrap_content"
                      app:cardCornerRadius="4dp"
                      app:strokeWidth="1dp"
-                     app:strokeColor="@color/border"
+                     app:strokeColor="@color/border_grey_light"
                      app:layout_constraintTop_toTopOf="parent"
                      app:layout_constraintStart_toStartOf="parent"
                      >

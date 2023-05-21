@@ -90,14 +90,26 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Secondary Information -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_secondary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/vertical_guideline"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/border_grey_light"
+                app:cardElevation="4dp"
+                android:paddingBottom="16dp">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/secondary_information"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:paddingBottom="16dp"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/vertical_guideline">
+                app:layout_constraintTop_toTopOf="@id/card_secondary"
+                >
 
                 <LinearLayout
                     android:id="@+id/name_information"
@@ -201,15 +213,38 @@
 
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Stats Container -->
+            <!-- Rating Container -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_secondary"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/border_grey_light"
+                app:cardElevation="4dp"
+                android:paddingBottom="16dp"
+                >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/show_profile_recycler_view"
-                app:layout_constraintTop_toBottomOf="@id/secondary_information"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,5 +24,5 @@
     <color name="sportbeachsoccer">#1E2D5A</color>
     <color name="sportfutsal">#333333</color>
     <!-- Profile Colors -->
-    <color name="border">#AAABAE</color>
+    <color name="border_grey_light">#AAABAE</color>
 </resources>
