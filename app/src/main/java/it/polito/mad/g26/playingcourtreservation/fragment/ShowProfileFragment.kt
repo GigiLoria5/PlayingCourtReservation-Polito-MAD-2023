@@ -70,9 +70,11 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
         val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
         if (sharedPref.contains("profile")) {
             val json = sharedPref.getString("profile", "Default")?.let { JSONObject(it) }
-            val username = requireView().findViewById<TextView>(R.id.username)
+            val username = requireView().findViewById<CustomTextView>(R.id.username)
+                .findViewById<TextView>(R.id.value)
             username.text = json?.getString("username")
-            val position = requireView().findViewById<TextView>(R.id.position)
+            val position = requireView().findViewById<CustomTextView>(R.id.position)
+                .findViewById<TextView>(R.id.value)
             position.text = json?.getString("position")
             val age = requireView().findViewById<CustomTextView>(R.id.age)
                 .findViewById<TextView>(R.id.value)
@@ -80,7 +82,7 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
             val gender = requireView().findViewById<CustomTextView>(R.id.gender)
                 .findViewById<TextView>(R.id.value)
             gender.text = json?.getString("gender")
-            val fullName = requireView().findViewById<CustomTextView>(R.id.fullname)
+            val fullName = requireView().findViewById<CustomTextView>(R.id.full_name)
                 .findViewById<TextView>(R.id.value)
             fullName.text = json?.getString("fullName")
             val location = requireView().findViewById<CustomTextView>(R.id.location)
