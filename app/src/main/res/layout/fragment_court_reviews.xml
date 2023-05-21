@@ -19,7 +19,7 @@
             android:id="@+id/customToolBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/sportCenterInfoCL"
+            app:layout_constraintBottom_toTopOf="@id/sportCenterDataCL"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,32 +27,58 @@
             app:title="@string/court_reviews"
             app:titleTextColor="@color/white" />
 
-        <LinearLayout
-            android:id="@+id/sportCenterCourtInfoLL"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sportCenterDataCL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/pageExternalSpace">
-
-            <TextView
-                android:id="@+id/sportCenterTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sport_center_name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="@color/white"
-                tools:ignore="TextContrastCheck" />
+            android:paddingHorizontal="@dimen/pageExternalSpace">
 
             <TextView
                 android:id="@+id/courtTV"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingTop="4dp"
                 android:text="@string/court_name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sport_center_name"
+                app:layout_constraintBottom_toTopOf="@id/sportCenterTV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="TextContrastCheck" />
+
+
+            <TextView
+                android:id="@+id/sportCenterTV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/pageExternalSpace"
+                android:text="@string/sport_center_name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/white"
+                android:textSize="@dimen/sport_center_secondary_info"
+                app:layout_constraintBottom_toTopOf="@id/sportCenterAddressTV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courtTV"
                 tools:ignore="TextContrastCheck" />
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/sportCenterAddressTV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/pageExternalSpace"
+                android:text="@string/sport_center_address"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sport_center_secondary_info"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sportCenterTV"
+                tools:ignore="TextContrastCheck" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.card.MaterialCardView
@@ -60,7 +86,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/pageExternalSpace"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
         app:cardPreventCornerOverlap="true"
+        app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reviewABL">
@@ -110,8 +139,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/meanRatingTV"
@@ -126,6 +155,15 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_margin="@dimen/pageExternalSpace"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@id/reviewsRV"
+        app:layout_constraintTop_toBottomOf="@id/meanRatingMCV" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reviewsRV"
         android:layout_width="match_parent"
@@ -133,8 +171,8 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/meanRatingMCV"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider"
         tools:listitem="@layout/review_item" />
 
     <com.google.android.material.card.MaterialCardView

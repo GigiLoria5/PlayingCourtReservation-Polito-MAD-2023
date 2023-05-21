@@ -31,7 +31,7 @@ interface SportCenterDao {
     fun findFiltered(city: String, hour: String): LiveData<List<SportCenterWithDetails>>
 
 
-    @Query("SELECT name from sport_center WHERE id=:sportCenterId")
-    fun getSportCenterName(sportCenterId: Int): LiveData<String>
+    @Query("SELECT * from sport_center WHERE id=:sportCenterId")
+    fun getSportCenter(sportCenterId: Int): LiveData<SportCenter>
 
 }
