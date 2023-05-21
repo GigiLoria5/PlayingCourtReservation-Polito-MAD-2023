@@ -67,13 +67,13 @@ class CustomDialogAlertAddReview: DialogFragment() {
             submit.setOnClickListener {
                 val error = checkReviewValidity()
                 if (!error && !update){
-                    reviewVM.addReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString() )
+                    reviewVM.addReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString().trim() )
                     this.dismiss()
                     Toast.makeText(context, "Review added successfully", Toast.LENGTH_SHORT
                     ).show()
                 }
                 if (!error && update){
-                    reviewVM.updateReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString() )
+                    reviewVM.updateReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString().trim() )
                     this.dismiss()
                     Toast.makeText(context, "Review added successfully", Toast.LENGTH_SHORT
                     ).show()
