@@ -358,7 +358,6 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:text="@string/go_to_reservation"
-                android:textAllCaps="false"
                 android:textSize="@dimen/dateTypeButtonsTextSize"
                 android:layout_margin="@dimen/pageExternalSpace"
                 android:textStyle="normal"

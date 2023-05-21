@@ -38,7 +38,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
     private val args: SearchSportCentersFragmentArgs by navArgs()
     private val vm by viewModels<SearchSportCentersVM>()
-    private val loadTime:Long=500
+    private val loadTime: Long = 500
 
     /*   VISUAL COMPONENTS       */
     private lateinit var dateMCV: MaterialCardView
@@ -244,15 +244,17 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         /* EXISTING RESERVATION LOADING*/
 
         vm.existingReservationIdByDateAndTime.observe(viewLifecycleOwner) {
+            //DO NOT USE it, TAKE THE CURRENT VALUE.
+            // DUE TO AVOID DELAY PROBLEMS. it USES THE VALUE RECEIVED BEFORE loadTime IS ELAPSED
             Handler(Looper.getMainLooper()).postDelayed({
-                if (it != null) {
+                if (vm.existingReservationIdByDateAndTime.value != null) {
                     servicesShimmerView.stopShimmer()
                     sportCentersShimmerView.stopShimmer()
                     showExistingReservationCL()
                     navigateToReservationBTN.setOnClickListener { _ ->
                         findNavController().navigate(
                             SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
-                                it
+                                vm.existingReservationIdByDateAndTime.value!!
                             )
                         )
                     }
@@ -316,8 +318,8 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
 
     private fun showExistingReservationCL() {
-        servicesRV.makeInvisible()
-        servicesShimmerView.makeInvisible()
+        servicesRV.makeGone()
+        servicesShimmerView.makeGone()
 
         sportCentersRV.makeInvisible()
         sportCentersShimmerView.makeInvisible()

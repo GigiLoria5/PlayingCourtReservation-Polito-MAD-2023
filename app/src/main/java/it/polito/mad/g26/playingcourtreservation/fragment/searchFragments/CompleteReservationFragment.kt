@@ -189,6 +189,7 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
                 chooseAvailableServicesShimmerView.stopShimmer()
                 chooseAvailableServicesShimmerView.makeInvisible()
                 numberOfAvailableServicesTV.makeVisible()
+                //HERE THERE ARE NO ISSUE IN THE USAGE OF it, BECAUSE SERVICES SHOULD NOT CHANGE AFTER loadTime
                 val numberOfAvailableServicesFound =
                     services.size
                 numberOfAvailableServicesTV.text = getString(

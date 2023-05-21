@@ -170,7 +170,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
     private fun loadCourts() {
 
         /* COURTS LOADING */
-        vm.reviews.observe(viewLifecycleOwner) { it ->
+        vm.reviews.observe(viewLifecycleOwner) {
             courtsShimmerView.startShimmerAnimation(courtsRV)
             numberOfAvailableCourtsTV.makeGone()
 
@@ -184,6 +184,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
                 )
                 numberOfAvailableCourtsTV.makeVisible()
 
+                //HERE THERE ARE NO ISSUE IN THE USAGE OF it, BECAUSE COURTS SHOULD NOT CHANGE AFTER loadTime
                 courtsAdapter.updateCollection(vm.getCourtsBySelectedSport(), it)
             }, loadTime)
         }
