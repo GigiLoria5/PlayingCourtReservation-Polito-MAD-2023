@@ -11,6 +11,6 @@ class CourtRepository(application: Application) {
 
     fun getAllCourt(): LiveData<List<Court>> = courtDao.findAllCourt()
 
-    fun getBySportCenterId(sportCenterId: Int): LiveData<List<CourtWithDetails>> =
+    fun getCourtsBySportCenterId(sportCenterId: Int): LiveData<List<CourtWithDetails>> =
         courtDao.findBySportCenterId(sportCenterId)
 }

@@ -46,9 +46,9 @@ class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
         sportCenterIdLiveData.value = id
     }
 
-    val courts =
+    private val courts =
         sportCenterIdLiveData.switchMap { sportCenterId ->
-            courtRepository.getBySportCenterId(sportCenterId)
+            courtRepository.getCourtsBySportCenterId(sportCenterId)
         }
 
     fun getCourtsBySelectedSport(): List<CourtWithDetails> {
