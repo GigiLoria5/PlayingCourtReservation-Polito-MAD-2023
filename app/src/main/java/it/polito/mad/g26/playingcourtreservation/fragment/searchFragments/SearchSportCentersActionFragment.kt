@@ -1,6 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
-import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CityResultAdapter
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
-import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersActionVM
 
 class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport_centers_action) {
@@ -25,8 +24,21 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
     private lateinit var searchInputET: EditText
     private lateinit var citiesResultRV: RecyclerView
 
+    /* ARGS */
+    private var city: String = ""
+    private var bornFrom: String = ""
+    private var dateTime: Long = 0
+    private var sportId: Int = 0
+    private var selectedServicesIds: IntArray = intArrayOf()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        city = args.city
+        bornFrom = args.bornFrom
+        dateTime = args.dateTime
+        sportId = args.sportId
+        selectedServicesIds = args.selectedServicesIds
+
 
         /* CUSTOM TOOLBAR BACK MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -35,22 +47,19 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
         }
         customToolBar.title = "Find your Sport Center"
         searchInputET = view.findViewById(R.id.searchInputET)
-        searchInputET.requestFocus()
-        val inputMethodManager: InputMethodManager =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(searchInputET, InputMethodManager.SHOW_IMPLICIT)
         searchInputET.doOnTextChanged { text, _, _, _ ->
             vm.searchNameChanged(text.toString())
         }
-
+        searchInputET.requestFocus()
+        openKeyboard()
         /* CITIES RESULTS RECYCLE VIEW INITIALIZER*/
         citiesResultRV = view.findViewById(R.id.citiesResultRV)
 
         val cityResultAdapter = CityResultAdapter(vm.cities.value ?: listOf()) {
             //comingFrom: result - arrivi da results page
             //comingFrom: home - arrivi dalla home page
-
-            when (args.bornFrom) {
+            closeKeyboard()
+            when (bornFrom) {
                 "result" -> {
                     findNavController().popBackStack()
                     findNavController().popBackStack()
@@ -63,7 +72,10 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
             findNavController().navigate(
                 SearchSportCentersHomeFragmentDirections.actionHomeToSearchSportCenters(
                     "actionSearch",
-                    it
+                    it,
+                    dateTime,
+                    sportId,
+                    selectedServicesIds
                 )
             )
         }
@@ -71,19 +83,28 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
         citiesResultRV.adapter = cityResultAdapter
 
         vm.cities.observe(viewLifecycleOwner) {
-            //AGGIORNA RECYCLE VIEW
             cityResultAdapter.updateCollection(vm.cities.value ?: listOf())
         }
-        searchInputET.setText(args.city)
+        searchInputET.setText(city)
+    }
+
+    private fun openKeyboard() {
+        val inputMethodManager: InputMethodManager =
+            requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(searchInputET, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun closeKeyboard() {
+        val view: View? = this.view
+        if (view != null) {
+            val inputMethodManager =
+                requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
     override fun onResume() {
         super.onResume()
         hideActionBar(activity)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        showActionBar(activity)
     }
 }

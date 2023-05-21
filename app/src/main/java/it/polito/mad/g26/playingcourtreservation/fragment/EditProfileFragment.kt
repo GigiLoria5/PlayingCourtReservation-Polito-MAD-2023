@@ -39,6 +39,7 @@ import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
@@ -410,6 +411,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
     override fun onResume() {
         super.onResume()
+        showActionBar(activity)
         //position dropdown management
         val positionItems = resources.getStringArray(R.array.position_array)
         val adapterPos = ArrayAdapter(requireContext(), R.layout.list_item, positionItems)
@@ -485,28 +487,27 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         return validLocation && validFullName && validUsername
     }
 
-    private fun confirmAlertDialogBuilder(isOk: Boolean): AlertDialog {
-        val builder: AlertDialog.Builder = if (isOk) {
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.edit_profile_ok_update_dialog_title))
-                .setMessage(getString(R.string.edit_profile_ok_update_dialog_message))
-                .setPositiveButton("Ok") { _, _ ->
-                    findNavController().popBackStack()
-                }
-                .setOnCancelListener { findNavController().popBackStack() }
+    private fun confirmAlertDialogBuilder(isOk: Boolean) {
+        return if (isOk) {
+            findNavController().popBackStack()
+            Toast.makeText(
+                context,
+                R.string.edit_profile_ok_update_dialog_message,
+                Toast.LENGTH_SHORT
+            ).show()
+
         } else {
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.edit_profile_no_ok_update_dialog_title))
-                .setMessage(getString(R.string.edit_profile_no_ok_update_dialog_message))
-                .setPositiveButton("Modify") { _, _ ->
-                }
+            Toast.makeText(
+                context,
+                R.string.edit_profile_no_ok_update_dialog_message,
+                Toast.LENGTH_SHORT
+            ).show()
         }
-        return builder.create()
     }
 
     private fun submitForm() {
-        confirmAlertDialog = confirmAlertDialogBuilder(validInputData())
-        confirmAlertDialog.show()
+        confirmAlertDialogBuilder(validInputData())
+
     }
 
     //opens camera so that user can capture image

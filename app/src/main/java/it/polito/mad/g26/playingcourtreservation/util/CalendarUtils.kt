@@ -8,6 +8,7 @@ import java.time.Month
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
+import java.time.temporal.WeekFields
 import java.util.Locale
 
 fun YearMonth.displayText(short: Boolean = false): String {
@@ -33,17 +34,31 @@ fun LocalDate.displayDay(): String {
 fun getWeekPageTitle(week: Week): String {
     val firstDate = week.days.first().date
     val lastDate = week.days.last().date
+    return getWeekPageTitle(firstDate, lastDate)
+}
+
+fun getWeekPageTitle(localDate: LocalDate): String {
+    val weekFields = WeekFields.of(Locale.getDefault())
+    val firstDayOfWeek = weekFields.firstDayOfWeek
+    val startOfWeek = localDate.with(firstDayOfWeek)
+        .let { if (it.dayOfWeek == firstDayOfWeek) it else it.with(firstDayOfWeek) }
+        .let { if (it > localDate) it.minusDays(7) else it }
+    val endOfWeek = startOfWeek.plusDays(6)
+    return getWeekPageTitle(startOfWeek, endOfWeek)
+}
+
+fun getWeekPageTitle(startOfWeek: LocalDate, endOfWeek: LocalDate): String {
     return when {
-        firstDate.yearMonth == lastDate.yearMonth -> {
-            firstDate.yearMonth.displayText()
+        startOfWeek.yearMonth == endOfWeek.yearMonth -> {
+            startOfWeek.yearMonth.displayText()
         }
 
-        firstDate.year == lastDate.year -> {
-            "${firstDate.month.displayText(short = false)} - ${lastDate.yearMonth.displayText()}"
+        startOfWeek.year == endOfWeek.year -> {
+            "${startOfWeek.month.displayText(short = false)} - ${endOfWeek.yearMonth.displayText()}"
         }
 
         else -> {
-            "${firstDate.yearMonth.displayText()} - ${lastDate.yearMonth.displayText()}"
+            "${startOfWeek.yearMonth.displayText()} - ${endOfWeek.yearMonth.displayText()}"
         }
     }
 }

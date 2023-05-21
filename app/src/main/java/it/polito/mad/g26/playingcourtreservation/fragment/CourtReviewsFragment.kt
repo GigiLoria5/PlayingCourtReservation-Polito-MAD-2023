@@ -23,6 +23,8 @@ import it.polito.mad.g26.playingcourtreservation.adapter.ReviewsAdapter
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtReviewsVM
+import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 
 class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
 
@@ -119,5 +121,8 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
-
+    override fun onResume() {
+        super.onResume()
+        showActionBar(activity)
+    }
 }

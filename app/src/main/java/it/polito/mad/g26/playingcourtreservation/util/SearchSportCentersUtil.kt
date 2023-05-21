@@ -12,6 +12,7 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersHomeFragmentDirections
@@ -22,10 +23,12 @@ object SearchSportCentersUtil {
 
     /* OPERATIONS WITH CALENDAR OBJECTS */
 
-    fun getMockInitialDateTime(): Calendar {
+    fun getMockInitialDateTime(): Long {
         val calendar = getDelayedCalendar()
         calendar[Calendar.MINUTE] = 0
-        return calendar
+        calendar[Calendar.SECOND] = 0
+        calendar[Calendar.MILLISECOND] = 0
+        return calendar.timeInMillis
     }
 
     private fun getDelayedCalendar(): Calendar {
@@ -48,7 +51,7 @@ object SearchSportCentersUtil {
         }
     }
 
-    /* SUPPORT FUNCTIONS SearchSportCenterFragment */
+    /* SUPPORT FUNCTIONS */
 
     fun getDateTimeFormatted(
         timeInMillis: Long,
@@ -146,10 +149,16 @@ object SearchSportCentersUtil {
 
     /* OPERATIONS WITH SearchSportCentersFragment NAVIGATION  */
 
-    fun navigateToAction(navController: NavController, city: String) {
+    fun navigateToAction(
+        navController: NavController,
+        city: String,
+        dateTime: Long,
+        sportId: Int,
+        selectedServicesIds: IntArray
+    ) {
         val direction =
             SearchSportCentersFragmentDirections.actionSearchSportCentersToSportCentersAction(
-                city, "result"
+                city, "result", dateTime, sportId, selectedServicesIds
             )
         navController.navigate(direction)
     }
@@ -161,9 +170,15 @@ object SearchSportCentersUtil {
             navController.popBackStack()
             val direction =
                 SearchSportCentersHomeFragmentDirections.actionHomeToSportCentersAction(
-                    "home", city
+                    "home", city, 0, 0, intArrayOf()
                 )
-            navController.navigate(direction)
+            val options = NavOptions.Builder()
+                .setEnterAnim(R.anim.from_left)
+                .setExitAnim(R.anim.to_right)
+                .setPopEnterAnim(R.anim.from_left)
+                .setPopExitAnim(R.anim.to_right)
+                .build()
+            navController.navigate(direction, options)
         }
     }
 
