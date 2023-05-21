@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
@@ -33,7 +34,9 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
     private lateinit var courtTV: TextView
     private lateinit var noReviewMCV: MaterialCardView
     private lateinit var meanRatingMCV: MaterialCardView
+    private lateinit var meanRatingBar: RatingBar
     private lateinit var meanRatingTV: TextView
+    private lateinit var meanRatingValueTV: TextView
     private lateinit var customToolBar: Toolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,6 +66,8 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
 
         /*Set-up mean value*/
         meanRatingMCV = view.findViewById(R.id.meanRatingMCV)
+        meanRatingBar = view.findViewById(R.id.meanRating)
+        meanRatingValueTV = view.findViewById(R.id.meanRatingValueTV)
         meanRatingTV = view.findViewById(R.id.meanRatingTV)
 
         /*Set-up recycle view */
@@ -77,9 +82,11 @@ class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
                 meanRatingMCV.makeVisible()
 
                 vm.courtReviewsMean(courtId).observe(viewLifecycleOwner){mean ->
-                    vm.courtReviewsCount(courtId).observe(viewLifecycleOwner){count ->
-                        meanRatingTV.text = getString(R.string.mean_rating_value, String.format("%.2f", mean), count.toString())
-                    }
+                    meanRatingBar.rating = mean
+                    meanRatingValueTV.text = getString(R.string.mean_rating_value, String.format("%.2f", mean))
+                }
+                vm.courtReviewsCount(courtId).observe(viewLifecycleOwner){count ->
+                    meanRatingTV.text = getString(R.string.mean_rating_text, count.toString())
                 }
 
             } else {
