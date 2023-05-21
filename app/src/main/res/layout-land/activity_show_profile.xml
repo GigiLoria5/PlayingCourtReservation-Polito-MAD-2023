@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.33" />
+        app:layout_constraintGuide_begin="300dp" />
 
     <!-- Primary Information -->
     <HorizontalScrollView
@@ -61,64 +61,35 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/avatar">
 
-                <LinearLayout
-                    android:id="@+id/username_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/username"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/default_username"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/custom_black"
-                        android:textSize="18sp"
-                        android:textAlignment="center" />
-
-                    <ImageView
-                        android:id="@+id/warning_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/warning_icon_description"
-                        android:src="@drawable/baseline_warning_24"
-                        android:visibility="gone"
-                        tools:ignore="ImageContrastCheck" />
-
-                    <ImageView
-                        android:id="@+id/danger_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/danger_icon_description"
-                        android:src="@drawable/baseline_dangerous_24"
-                        android:visibility="gone" />
-                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/position"
+                    android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginVertical="8dp"
-                    android:text="@string/default_position"
-                    android:textColor="@color/grey"
-                    android:textSize="16sp"
+                    android:text="@string/default_username"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/custom_black"
+                    android:textSize="18sp"
                     android:textAlignment="center" />
 
-                <RatingBar
-                    android:id="@+id/rating"
-                    style="?android:attr/ratingBarStyleIndicator"
+                <ImageView
+                    android:id="@+id/warning_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:contentDescription="@string/rating_description"
-                    android:isIndicator="true"
-                    android:numStars="5"
-                    android:rating="@fraction/default_rating"
-                    android:theme="@style/ratingBar" />
+                    android:contentDescription="@string/warning_icon_description"
+                    android:src="@drawable/baseline_warning_24"
+                    android:visibility="gone"
+                    tools:ignore="ImageContrastCheck" />
+
+                <ImageView
+                    android:id="@+id/danger_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/danger_icon_description"
+                    android:src="@drawable/baseline_dangerous_24"
+                    android:visibility="gone" />
             </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </HorizontalScrollView>
 
@@ -129,178 +100,144 @@
         app:layout_constraintStart_toEndOf="@+id/vertical_guideline"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- User Information -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/secondary_information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="16dp"
-            android:orientation="vertical">
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                android:id="@+id/fullname"
+        <!-- User Information -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:backgroundTint="@color/grey_light_2"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:cardCornerRadius="@dimen/cornerRadius">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/secondary_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:title="@string/full_name_title"
-                app:value="@string/default_full_name" />
-
-            <LinearLayout
-                android:id="@+id/user_information_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fullname">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="16dp"
+                android:orientation="vertical">
 
                 <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                    android:id="@+id/age"
-                    android:layout_width="0dp"
+                    android:id="@+id/full_name"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:title="@string/age_title"
-                    app:value="@integer/default_age" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:title="@string/full_name_title"
+                    app:value="@string/default_full_name" />
 
-                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                    android:id="@+id/gender"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/user_information_container"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:title="@string/gender_title"
-                    app:value="@string/default_gender" />
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/full_name">
 
-                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                    android:id="@+id/placeholder"
-                    android:layout_width="0dp"
+                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                        android:id="@+id/age"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:title="@string/age_title"
+                        app:value="@integer/default_age" />
+
+                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                        android:id="@+id/gender"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:title="@string/gender_title"
+                        app:value="@string/default_gender" />
+
+                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                        android:id="@+id/placeholder"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:title=""
+                        app:value="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:title=""
-                    app:value="" />
-            </LinearLayout>
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/user_information_container">
 
-            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                android:id="@+id/location"
+                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                        android:id="@+id/location"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:title="@string/location_title"
+                        app:value="@string/default_location" />
+
+                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                        android:id="@+id/position"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:title="@string/position_title"
+                        app:value="@string/default_position" />
+
+                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                        android:id="@+id/placeholder2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:title=""
+                        app:value="" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+            <!-- Rating Container -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/show_profile_sport_card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                app:cardCornerRadius="@dimen/cornerRadius"
+                app:cardElevation="@dimen/cardview_default_elevation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/user_information_container"
-                app:layout_constraintBottom_toTopOf="@+id/border_view"
-                app:title="@string/location_title"
-                app:value="@string/default_location" />
+                app:layout_constraintTop_toBottomOf="@id/card_secondary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/grey_light_2">
 
-            <View
-                android:id="@+id/border_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bottom_border"
-                android:layout_marginTop="16dp"
-
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/location"
-                app:layout_constraintBottom_toTopOf="@id/stats_container" />
-
-            <LinearLayout
-                android:id="@+id/stats_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="16dp"
-
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/border_view">
-
-                <TextView
-                    android:id="@+id/stats_title"
-                    android:layout_width="wrap_content"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/show_profile_recycler_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/stats_container_title"
-                    android:textColor="@color/custom_black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Games Stats -->
-                <LinearLayout
-                    android:id="@+id/game_stats"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/stats_title">
-
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/organized"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title="@string/games_organized_title"
-                        app:value="@integer/default_organized" />
-
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/played"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title="@string/games_played_title"
-                        app:value="@integer/default_played" />
-
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/record"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title="@string/games_record_title"
-                        app:value="@string/default_wdl" />
-                </LinearLayout>
-
-                <!-- Personal Stats -->
-                <LinearLayout
-                    android:id="@+id/personal_stats"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/stats_title">
-
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/goals"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title="@string/games_goals_title"
-                        app:value="@integer/default_goals" />
-
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/assists"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title="@string/games_assists_title"
-                        app:value="@integer/default_assists" />
-
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/mvp"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title="@string/games_mvp_title"
-                        app:value="@integer/default_mvp" />
-                </LinearLayout>
-            </LinearLayout>
-
+            </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.core.widget.NestedScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

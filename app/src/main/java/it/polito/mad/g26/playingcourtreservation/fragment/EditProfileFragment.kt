@@ -142,6 +142,10 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             confirmAlertDialog.dismiss()
         } else
             outState.putBoolean("confirmAlertDialogShowing", false)
+
+        //save rating
+        if(::sportRating.isInitialized)
+            outState.putFloatArray("rating",sportRating.toFloatArray())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -280,6 +284,9 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             val confirmAlertOn = savedInstanceState.getBoolean("confirmAlertDialogShowing")
             if (confirmAlertOn)
                 submitForm()
+
+            sportRating=savedInstanceState.getFloatArray("rating")!!.toMutableList()
+            sportRecycleView.adapter= EditProfileAdapter(sportList, sportRating)
         }
 
 

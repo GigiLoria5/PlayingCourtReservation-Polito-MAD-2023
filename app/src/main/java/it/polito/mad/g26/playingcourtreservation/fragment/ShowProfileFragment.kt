@@ -1,9 +1,9 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
@@ -89,10 +89,22 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
                 .findViewById<TextView>(R.id.value)
             location.text = json?.getString("location")
             val guide=requireView().findViewById<Guideline>(R.id.vertical_guideline)
-            val c= requireContext().resources.displayMetrics
-            val height=c.heightPixels
-            val pixelsFix=(height/100)*33
-            guide.setGuidelineBegin(pixelsFix)
+            val metric= requireContext().resources.displayMetrics
+            // Get the current configuration
+            val configuration: Configuration = resources.configuration
+            // Check if the orientation is landscape
+            if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                // The layout is in landscape mode
+                val height=metric.widthPixels
+                val pixelsFix=(height/100)*33
+                guide.setGuidelineBegin(pixelsFix)
+            } else {
+                // The layout is in portrait mode
+                val height=metric.heightPixels
+                val pixelsFix=(height/100)*33
+                guide.setGuidelineBegin(pixelsFix)
+            }
+
 
             if(json?.getString("rating")!=null){
                 //retrieve name sport
