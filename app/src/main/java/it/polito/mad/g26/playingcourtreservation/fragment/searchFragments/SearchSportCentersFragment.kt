@@ -38,6 +38,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
 
     private val args: SearchSportCentersFragmentArgs by navArgs()
     private val vm by viewModels<SearchSportCentersVM>()
+    private val loadTime:Long=300
 
     /*   VISUAL COMPONENTS       */
     private lateinit var dateMCV: MaterialCardView
@@ -239,7 +240,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         }
     }
 
-    private fun loadExistingReservation(loadTime: Long) {
+    private fun loadExistingReservation() {
         /* EXISTING RESERVATION LOADING*/
 
         vm.existingReservationIdByDateAndTime.observe(viewLifecycleOwner) {
@@ -247,7 +248,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                 if (it != null) {
                     servicesShimmerView.stopShimmer()
                     sportCentersShimmerView.stopShimmer()
-                    hideAll()
+                    showExistingReservationCL()
                     navigateToReservationBTN.setOnClickListener { _ ->
                         findNavController().navigate(
                             SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
@@ -255,13 +256,14 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                             )
                         )
                     }
-                }
+                } else
+                    hideExistingReservationCL()
             }, loadTime)
         }
 
     }
 
-    private fun loadServices(loadTime: Long) {
+    private fun loadServices() {
         /* SERVICES LOADING */
 
         vm.services.observe(viewLifecycleOwner) {
@@ -274,7 +276,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         }
     }
 
-    private fun loadSportCenters(loadTime: Long) {
+    private fun loadSportCenters() {
         /* SPORT CENTERS LOADING */
 
         vm.sportCentersMediator.observe(viewLifecycleOwner) {
@@ -313,7 +315,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
     }
 
 
-    private fun hideAll() {
+    private fun showExistingReservationCL() {
         servicesRV.makeInvisible()
         servicesShimmerView.makeInvisible()
 
@@ -327,6 +329,15 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         noSportCentersFoundTV.makeGone()
 
         existingReservationCL.makeVisible()
+
+    }
+
+    private fun hideExistingReservationCL() {
+
+        courtTypeACTV.makeVisible()
+        courtTypeMCV.makeVisible()
+
+        existingReservationCL.makeGone()
 
     }
 
@@ -348,12 +359,11 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                 override fun onAnimationRepeat(animation: Animation) {
                     //unuseful
                 }
-
                 override fun onAnimationEnd(animation: Animation) {
                     initialLoading()
-                    loadExistingReservation(300)
-                    loadServices(300)
-                    loadSportCenters(300)
+                    loadExistingReservation()
+                    loadServices()
+                    loadSportCenters()
                     numberOfSportCentersFoundCL.layoutTransition = LayoutTransition()
                 }
             })
@@ -361,9 +371,9 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         } else {
             if (enter) {
                 initialLoading()
-                loadExistingReservation(300)
-                loadServices(300)
-                loadSportCenters(300)
+                loadExistingReservation()
+                loadServices()
+                loadSportCenters()
                 numberOfSportCentersFoundCL.layoutTransition = LayoutTransition()
             }
             null

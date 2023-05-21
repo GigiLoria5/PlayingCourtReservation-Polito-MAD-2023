@@ -162,7 +162,11 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
         val sportId = selectedSport.value ?: 0
         val sportCentersFormatted = sportCenters.value?.map {
             it.formatter()
+        }?.filter { sportCenter ->
+            sportCenter.courts.isNotEmpty()
         } ?: listOf()
+
+
         val filterBySportId = { sportCenter: SportCenterWithMoreDetailsFormatted ->
             sportCenter.courts.any { court ->
                 court.sport.id == sportId

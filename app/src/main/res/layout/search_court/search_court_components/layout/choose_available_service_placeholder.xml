@@ -5,17 +5,20 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/courtMCV"
+        android:id="@+id/AvailableServiceMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/pageExternalSpace"
+        android:layout_marginHorizontal="@dimen/pageExternalSpace"
+        android:layout_marginBottom="@dimen/pageExternalSpace"
         android:clickable="true"
+
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="@color/grey_light_2"
         app:cardCornerRadius="@dimen/cornerRadius"
         app:cardElevation="@dimen/standardElevation"
         app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,35 +38,28 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/courtNameTV"
-                    android:layout_width="150dp"
+                    android:id="@+id/serviceNameTV"
+                    android:layout_width="180dp"
                     android:layout_height="match_parent"
                     android:background="@color/loading"
-                    android:textSize="@dimen/courtNameCourtBox"
-                    app:layout_constraintBottom_toTopOf="@id/courtTypeTV"
+                    android:textColor="@color/custom_black"
+                    android:textSize="@dimen/availableServiceNameText"
+                    app:layout_constraintBottom_toTopOf="@id/servicePriceTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/courtTypeTV"
-                    android:layout_width="80dp"
+                    android:id="@+id/servicePriceTV"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="@dimen/spacesServicesMCV"
                     android:background="@color/loading"
-                    app:layout_constraintBottom_toTopOf="@id/courtAvailabilityTV"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/courtNameTV" />
-
-                <TextView
-                    android:id="@+id/courtAvailabilityTV"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:background="@color/loading"
-                    android:textColor="@color/white"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/availableServicePriceText"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/courtTypeTV" />
+                    app:layout_constraintTop_toBottomOf="@+id/serviceNameTV" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.Guideline
@@ -71,21 +67,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.67"
-                />
+                app:layout_constraintGuide_percent="0.80" />
 
-            <TextView
-                android:id="@+id/courtPriceTV"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:background="@color/loading"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="@dimen/courtNameCourtBox"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/sportCenterInfoGL"
-                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

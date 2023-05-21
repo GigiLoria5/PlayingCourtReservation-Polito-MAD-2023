@@ -205,6 +205,9 @@
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.CompleteReservationFragment"
         android:label="CompleteReservationFragment">
         <argument
+            android:name="sportCenterId"
+            app:argType="integer" />
+        <argument
             android:name="sportCenterName"
             app:argType="string" />
         <argument

@@ -18,11 +18,18 @@ class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
     private val reservationRepository = ReservationRepository(application)
     private val reviewRepository = ReviewRepository(application)
 
+    /* INITIALIZATION */
+    fun initialize(sportCenterId: Int, sportId: Int, dateTime: Long) {
+        setSportCenterId(sportCenterId)
+        setDateTime(dateTime)
+        setSportId(sportId)
+    }
+
     /*DATE TIME MANAGEMENT*/
     private val dateFormat = Reservation.getReservationDatePattern()
     private val timeFormat = Reservation.getReservationTimePattern()
     private var dateTime: Long = 0
-    fun setDateTime(selectedDateTime: Long) {
+    private fun setDateTime(selectedDateTime: Long) {
         dateTime = selectedDateTime
     }
 
@@ -35,14 +42,14 @@ class SearchCourtsVM(application: Application) : AndroidViewModel(application) {
 
     /*SPORT MANAGEMENT*/
     private var sportId: Int = 0
-    fun setSportId(selectedSportId: Int) {
+    private fun setSportId(selectedSportId: Int) {
         sportId = selectedSportId
     }
 
     /*SPORT CENTER MANAGEMENT*/
     private val sportCenterIdLiveData = MutableLiveData(0)
 
-    fun setSportCenterId(id: Int) {
+    private fun setSportCenterId(id: Int) {
         sportCenterIdLiveData.value = id
     }
 

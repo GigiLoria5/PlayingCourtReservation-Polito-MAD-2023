@@ -72,9 +72,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
         dateTime = args.dateTime
 
         /* VM INITIALIZATIONS */
-        vm.setSportCenterId(sportCenterId)
-        vm.setDateTime(dateTime)
-        vm.setSportId(sportId)
+        vm.initialize(sportCenterId,sportId,dateTime)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)
@@ -106,7 +104,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
             ),
             SearchSportCentersUtil.getDateTimeFormatted(
                 dateTime,
-                getString(R.string.dateFormat)
+                getString(R.string.dateExtendedFormat)
             )
         )
         selectedSportTV.text = sportName
@@ -153,6 +151,7 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
                 goingToCompleteReservation = true
                 val direction =
                     SearchCourtsFragmentDirections.actionSearchCourtsFragmentToCompleteReservationFragment(
+                        sportCenterId,
                         sportCenterName,
                         sportCenterAddress,
                         sportCenterPhoneNumber,
