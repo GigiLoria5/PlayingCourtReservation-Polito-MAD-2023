@@ -25,10 +25,11 @@
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/vertical_guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.33" />
+                app:layout_constraintGuide_begin="200dp"
+                 />
 
             <!-- Primary Information -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,7 +46,7 @@
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/profile_image"
                     android:layout_height="@dimen/profile_image"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="8dp"
                     android:contentDescription="@string/avatar_description"
                     android:padding="4dp"
                     android:scaleType="fitXY"
@@ -68,6 +69,16 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/avatar">
+
+                    <TextView
+                        android:id="@+id/username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_username"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textColor="@color/custom_black"
+                        android:textSize="18sp"/>
 
                     <ImageView
                         android:id="@+id/warning_icon"
@@ -126,21 +137,6 @@
                             app:title="@string/full_name_title"
                             app:value="@string/default_full_name" />
 
-                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                            android:id="@+id/placeholder3"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:title=""
-                            app:value="" />
-
-                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                            android:id="@+id/username"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:title="@string/username_title"
-                            app:value="@string/default_username" />
 
                     </LinearLayout>
 
@@ -162,20 +158,20 @@
                             app:value="@integer/default_age" />
 
                         <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                            android:id="@+id/placeholder"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:title=""
-                            app:value="" />
-
-                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                             android:id="@+id/gender"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:title="@string/gender_title"
                             app:value="@string/default_gender" />
+
+                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                            android:id="@+id/placeholder"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            app:title=""
+                            app:value="" />
 
                     </LinearLayout>
 
@@ -195,20 +191,20 @@
                             app:value="@string/default_location" />
 
                         <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                            android:id="@+id/placeholder2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:title=""
-                            app:value="" />
-
-                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
                             android:id="@+id/position"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:title="@string/position_title"
                             app:value="@string/default_position" />
+
+                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                            android:id="@+id/placeholder2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            app:title=""
+                            app:value="" />
 
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -221,7 +217,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:paddingBottom="16dp"
-                app:cardElevation="4dp"
+                app:cardElevation="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_secondary"

@@ -3,13 +3,12 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.util.DisplayMetrics
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.TooltipCompat
+import androidx.constraintlayout.widget.Guideline
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -70,8 +69,7 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
         val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
         if (sharedPref.contains("profile")) {
             val json = sharedPref.getString("profile", "Default")?.let { JSONObject(it) }
-            val username = requireView().findViewById<CustomTextView>(R.id.username)
-                .findViewById<TextView>(R.id.value)
+            val username = requireView().findViewById<TextView>(R.id.username)
             username.text = json?.getString("username")
             val position = requireView().findViewById<CustomTextView>(R.id.position)
                 .findViewById<TextView>(R.id.value)
@@ -88,6 +86,11 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
             val location = requireView().findViewById<CustomTextView>(R.id.location)
                 .findViewById<TextView>(R.id.value)
             location.text = json?.getString("location")
+            val guide=requireView().findViewById<Guideline>(R.id.vertical_guideline)
+            val c= requireContext().resources.displayMetrics
+            val height=c.heightPixels
+            val pixelsFix=(height/100)*33
+            guide.setGuidelineBegin(pixelsFix)
 
             if(json?.getString("rating")!=null){
                 //retrieve name sport
