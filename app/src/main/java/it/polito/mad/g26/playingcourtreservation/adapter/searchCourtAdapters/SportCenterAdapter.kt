@@ -17,7 +17,7 @@ import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecorat
 class SportCenterAdapter(
     private var collection: List<SportCenterWithMoreDetailsFormatted>,
     private val isServiceIdInList: (Int) -> Boolean,
-    private val navigateToSearchCourtFragment: (Int) -> Unit,
+    private val navigateToSearchCourtFragment: (Int, String, String, String) -> Unit,
 ) :
     RecyclerView.Adapter<SportCenterAdapter.SportCenterViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportCenterViewHolder {
@@ -67,6 +67,7 @@ class SportCenterAdapter(
                 HorizontalSpaceItemDecoration(itemView.context.resources.getDimensionPixelSize(R.dimen.chipDistance))
             sportCenterServicesRV.addItemDecoration(itemDecoration)
         }
+
         fun bind(
             sportCenter: SportCenter,
             reviewsSummary: SportCenterReviewsSummary,
@@ -74,7 +75,7 @@ class SportCenterAdapter(
         ) {
             sportCenterNameTV.text = sportCenter.name
             sportCenterReviewsTV.text = itemView.context.getString(
-                R.string.sport_center_reviews,
+                R.string.reviews_summary,
                 String.format("%.2f", reviewsSummary.avg),
                 reviewsSummary.count.toString()
             )
@@ -95,7 +96,16 @@ class SportCenterAdapter(
                 isClickable = false
             )
             sportCenterInfoMCV.setOnClickListener {
-                navigateToSearchCourtFragment(sportCenter.id)
+                val sportCenterAddressFormatted = itemView.context.getString(
+                    R.string.sport_center_address_res,
+                    sportCenter.address, sportCenter.city
+                )
+                navigateToSearchCourtFragment(
+                    sportCenter.id,
+                    sportCenter.name,
+                    sportCenterAddressFormatted,
+                    sportCenter.phoneNumber
+                )
 
             }
         }

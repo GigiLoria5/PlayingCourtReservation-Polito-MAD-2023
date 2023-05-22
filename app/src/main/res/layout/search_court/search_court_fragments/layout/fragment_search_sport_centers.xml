@@ -10,7 +10,7 @@
         android:id="@+id/searchABL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/sportCentersRL"
+        app:layout_constraintBottom_toTopOf="@id/sportCentersCL"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,23 +30,32 @@
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/customToolBar"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@id/cityTitleGL"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:navigationIcon="@drawable/baseline_arrow_back_24"
-                    app:title=""
+                    app:subtitleTextColor="@color/white"
                     app:titleTextColor="@color/white" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/cityTitleGL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.77" />
 
                 <ImageView
                     android:id="@+id/customSearchIconIV"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:contentDescription="@string/searchIcon"
                     android:paddingHorizontal="@dimen/searchIconPadding"
                     android:src="@drawable/baseline_search_24"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/customToolBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/cityTitleGL"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -54,9 +63,11 @@
                 android:id="@+id/dateTypeCL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 app:layout_constraintBottom_toTopOf="@id/servicesRL"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+
                 app:layout_constraintTop_toBottomOf="@id/customToolBarCL">
 
                 <com.google.android.material.card.MaterialCardView
@@ -96,7 +107,6 @@
                                 android:layout_height="match_parent"
                                 android:ellipsize="end"
                                 android:gravity="center"
-                                android:text="@string/dateFormat"
                                 android:textAllCaps="false"
                                 android:textColor="@color/grey"
                                 android:textSize="@dimen/dateTypeButtonsTextSize"
@@ -132,7 +142,6 @@
                                 android:layout_height="match_parent"
                                 android:ellipsize="end"
                                 android:gravity="center"
-                                android:text="@string/hourFormat"
                                 android:textAllCaps="false"
                                 android:textColor="@color/grey"
                                 android:textSize="@dimen/dateTypeButtonsTextSize"
@@ -199,30 +208,29 @@
                 android:id="@+id/servicesRL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toTopOf="@id/searchResultsTextCL"
+                app:layout_constraintBottom_toTopOf="@id/numberOfSportCentersFoundCL"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dateTypeCL"
-                >
+                app:layout_constraintTop_toBottomOf="@id/dateTypeCL">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/servicesRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:clipToPadding="false"
-                android:paddingHorizontal="@dimen/pageExternalSpace"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/service_item" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/servicesRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/pageExternalSpace"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/service_item" />
 
                 <!-- Placeholder -->
                 <com.facebook.shimmer.ShimmerFrameLayout
                     android:id="@+id/servicesShimmerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:shimmer_repeat_mode="restart"
                     android:paddingStart="@dimen/pageExternalSpace"
                     android:paddingEnd="0dp"
+                    app:shimmer_repeat_mode="restart"
                     app:shimmer_shape="radial">
 
                     <LinearLayout
@@ -231,7 +239,9 @@
                         android:orientation="horizontal">
 
                         <include layout="@layout/service_item_placeholder" />
+
                         <include layout="@layout/service_item_placeholder" />
+
                         <include layout="@layout/service_item_placeholder" />
 
 
@@ -239,12 +249,12 @@
                 </com.facebook.shimmer.ShimmerFrameLayout>
 
             </RelativeLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/searchResultsTextCL"
+                android:id="@+id/numberOfSportCentersFoundCL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/pageExternalSpace"
-
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -254,7 +264,7 @@
                     android:id="@+id/numberOfSportCentersFoundTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/searchSportCenterResultsInfo"
+
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textColor="@color/white"
                     android:textSize="@dimen/numberOfSportCentersFoundTextSize"
@@ -266,106 +276,118 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
-        android:id="@+id/sportCentersRL"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sportCentersCL"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/searchABL"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchABL"
-        >
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sportCentersRV"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingVertical="@dimen/pageExternalSpace"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/sport_center_item" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:animateLayoutChanges="true">
 
-        <!-- Placeholder -->
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/sportCentersShimmerView"
+        <RelativeLayout
+            android:id="@+id/sportCentersRL"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:shimmer_repeat_mode="restart"
-            app:shimmer_shape="radial">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <include layout="@layout/sport_center_item_placeholder" />
-
-
-            </LinearLayout>
-        </com.facebook.shimmer.ShimmerFrameLayout>
-    </RelativeLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/existingReservationCL"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/pageExternalSpace"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchABL">
-
-        <TextView
-            android:id="@+id/reservationTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:text="@string/you_already_have_a_reservation"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/grey"
-            android:textStyle="normal"
-            app:layout_constraintBottom_toTopOf="@id/navigateToReservationBTN"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/navigateToReservationBTN"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:text="@string/go_to_reservation"
-            android:textAllCaps="false"
-            android:textSize="@dimen/dateTypeButtonsTextSize"
-            android:textStyle="normal"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reservationTV"
+            app:layout_constraintTop_toTopOf="parent">
 
-            />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/sportCentersRV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingVertical="@dimen/pageExternalSpace"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/sport_center_item" />
 
+            <!-- Placeholder -->
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/sportCentersShimmerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shimmer_repeat_mode="restart"
+                app:shimmer_shape="radial">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/sport_center_item_placeholder" />
+
+
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/existingReservationCL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/pageExternalSpace"
+            android:visibility="gone"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/reservationTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:text="@string/you_already_have_a_reservation"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/grey"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toTopOf="@id/navigateToReservationBTN"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/navigateToReservationBTN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:text="@string/go_to_reservation"
+                android:textSize="@dimen/dateTypeButtonsTextSize"
+                android:layout_margin="@dimen/pageExternalSpace"
+                android:textStyle="normal"
+                app:cornerRadius="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reservationTV"
+
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/noSportCentersFoundTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/pageExternalSpace"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:text="@string/no_sport_centers_found"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/grey"
+            android:textStyle="normal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <TextView
-        android:id="@+id/noSportCentersFoundTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/pageExternalSpace"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:text="@string/no_sport_centers_found"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/grey"
-        android:textStyle="normal"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchABL" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

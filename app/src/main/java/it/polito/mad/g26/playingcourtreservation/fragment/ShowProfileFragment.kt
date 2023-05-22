@@ -23,6 +23,7 @@ import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ShowProfileAdapter
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
+import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import org.json.JSONObject
 
 class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
@@ -169,6 +170,6 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
     override fun onResume() {
         super.onResume()
         loadProfileAndImage()
+        showActionBar(activity)
     }
-
 }

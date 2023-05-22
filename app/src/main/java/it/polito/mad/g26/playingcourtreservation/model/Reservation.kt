@@ -22,6 +22,9 @@ class Reservation {
         fun getReservationDatePattern(): String {
             return "dd-MM-yyyy"
         }
+        fun getReservationTimePattern(): String {
+            return "kk:mm"
+        }
     }
 
     @PrimaryKey(autoGenerate = true)
