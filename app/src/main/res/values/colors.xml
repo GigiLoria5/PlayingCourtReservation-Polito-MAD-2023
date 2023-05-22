@@ -23,4 +23,6 @@
     <color name="sport11asidefootball">#800080</color>
     <color name="sportbeachsoccer">#1E2D5A</color>
     <color name="sportfutsal">#333333</color>
+    <!-- Profile Colors -->
+    <color name="border_grey_light">#AAABAE</color>
 </resources>

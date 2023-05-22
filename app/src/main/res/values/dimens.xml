@@ -4,4 +4,18 @@
     <dimen name="item_space_vertical">6dp</dimen>
     <dimen name="margins_reservation_details">8dp</dimen>
     <dimen name="review_item_vertical_margin">6dp</dimen>
+    <!-- Show Profile and Edit Profile -->
+    <dimen name="show_default_guideline_begin">200dp</dimen>
+    <dimen name="show_padding_image">4dp</dimen>
+    <dimen name="show_default_margin">8dp</dimen>
+    <dimen name="show_username_size">20sp</dimen>
+    <dimen name="show_padding_inside_card">8dp</dimen>
+    <dimen name="show_default_margin_double">16dp</dimen>
+    <dimen name="required_padding">16dp</dimen>
+    <dimen name="edit_default_guideline_begin">200dp</dimen>
+    <dimen name="edit_padding_image">4dp</dimen>
+    <dimen name="edit_default_padding">8dp</dimen>
+    <dimen name="edit_default_margin">8dp</dimen>
+    <dimen name="edit_padding_inside_card">8dp</dimen>
+    <dimen name="edit_default_margin_double">16dp</dimen>
 </resources>

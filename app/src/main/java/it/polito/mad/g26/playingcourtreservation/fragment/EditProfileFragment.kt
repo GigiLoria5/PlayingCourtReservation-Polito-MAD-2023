@@ -9,6 +9,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -18,6 +19,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -25,6 +27,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.Guideline
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.MenuHost
@@ -33,10 +36,13 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.adapter.EditProfileAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
@@ -70,6 +76,14 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
     private var imageUri: Uri? = null
     private lateinit var bitMapImage: Bitmap
     private lateinit var profilePictureAlertDialog: BottomSheetDialog
+
+    private lateinit var sportRecycleView: RecyclerView
+    private lateinit var sportList : List<String>
+    private lateinit var sportRating: MutableList<Float>
+    private lateinit var guide: Guideline
+    private lateinit var configuration: Configuration
+    private lateinit var metrics: DisplayMetrics
+
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -135,6 +149,10 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             confirmAlertDialog.dismiss()
         } else
             outState.putBoolean("confirmAlertDialogShowing", false)
+
+        //save rating
+        if(::sportRating.isInitialized)
+            outState.putFloatArray("rating",sportRating.toFloatArray())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -152,6 +170,20 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         usernameContainer = view.findViewById(R.id.username_container)
         fullNameContainer = view.findViewById(R.id.fullname_container)
         locationContainer = view.findViewById(R.id.location_container)
+        sportRecycleView= view.findViewById(R.id.edit_profile_recycler_view)
+        sportList=resources.getStringArray(R.array.sport_array).toList()
+
+        guide=requireView().findViewById(R.id.guideline)
+        metrics= requireContext().resources.displayMetrics
+        // Get the current configuration
+        configuration= resources.configuration
+        // Check if the orientation is landscape
+        if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            // The layout is in portrait mode
+            val height=metrics.heightPixels
+            val pixelsLimit=(height/100)*33
+            guide.setGuidelineBegin(pixelsLimit)
+        }
 
         //PERSISTENCE
         val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
@@ -167,14 +199,30 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             json?.getInt("year")?.let { myCalendar[Calendar.YEAR] = it }
             json?.getInt("month")?.let { myCalendar[Calendar.MONTH] = it }
             json?.getInt("day")?.let { myCalendar[Calendar.DAY_OF_MONTH] = it }
+            if(json?.getString("rating")!=null){
+                //retrieve rating from json
+                val sublist= json.getString("rating").split(",")
+                //transform in float
+                sportRating= mutableListOf()
+                for(string in sublist)
+                    sportRating.add(string.toFloat())
+                sportRecycleView.adapter= EditProfileAdapter(sportList, sportRating)
+                sportRecycleView.layoutManager=
+                    LinearLayoutManager(context)
+            }
         } else {//put the default value
             usernameEditText.setText(getString(R.string.default_username))
             autoCompletePosition.setText(getString(R.string.default_position), false)
-            fullNameEditText.setText(getString(R.string.default_fullname))
+            fullNameEditText.setText(getString(R.string.default_full_name))
             dateOfBirthEditText.setText(getString(R.string.default_date))
             autoCompleteGender.setText(getString(R.string.default_gender), false)
             locationEditText.setText(getString(R.string.default_location))
             myCalendar.add(Calendar.YEAR, -21)
+            //RecyclerView Management
+            sportRating= MutableList(sportList.size){0f}
+            sportRecycleView.adapter=EditProfileAdapter(sportList,sportRating)
+            sportRecycleView.layoutManager=
+                LinearLayoutManager(context)
         }
         //position dropdown management
         val positionItems = resources.getStringArray(R.array.position_array)
@@ -255,7 +303,11 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
             val confirmAlertOn = savedInstanceState.getBoolean("confirmAlertDialogShowing")
             if (confirmAlertOn)
                 submitForm()
+
+            sportRating=savedInstanceState.getFloatArray("rating")!!.toMutableList()
+            sportRecycleView.adapter= EditProfileAdapter(sportList, sportRating)
         }
+
 
         //IMAGE MANAGEMENT
         if (imageUri == null) {
@@ -372,6 +424,13 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
                         json.put("year", myCalendar[Calendar.YEAR])
                         json.put("month", myCalendar[Calendar.MONTH])
                         json.put("day", myCalendar[Calendar.DAY_OF_MONTH])
+
+                        //save rating
+                        var rating=""
+                        for(i in sportRating)
+                            rating= "$rating,$i"
+                        val finalRating=rating.substring(1)
+                        json.put("rating",finalRating)
 
                         //Calculate and save age
                         val year = myCalendar[Calendar.YEAR]
