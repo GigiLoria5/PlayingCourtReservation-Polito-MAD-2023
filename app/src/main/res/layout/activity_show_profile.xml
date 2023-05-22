@@ -210,22 +210,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/show_default_margin_double"
+                android:layout_marginBottom="@dimen/show_default_margin_double"
+                android:backgroundTint="@color/grey_light_2"
                 app:cardCornerRadius="@dimen/cornerRadius"
                 app:cardElevation="@dimen/cardview_default_elevation"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_secondary"
-                android:layout_marginBottom="@dimen/show_default_margin_double"
-                android:backgroundTint="@color/grey_light_2">
+                app:layout_constraintVertical_bias="0.0">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/show_profile_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/show_padding_inside_card"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/show_profile_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/show_padding_inside_card"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
