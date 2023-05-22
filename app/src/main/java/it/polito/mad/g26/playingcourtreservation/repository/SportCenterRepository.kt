@@ -20,4 +20,6 @@ class SportCenterRepository(application: Application) {
         city: String,
         hour: String
     ): LiveData<List<SportCenterWithDetails>> = sportCenterDao.findFiltered(city, hour)
+
+    fun getSportCenter(sportCenterId: Int): LiveData<SportCenter> = sportCenterDao.getSportCenter(sportCenterId)
 }
