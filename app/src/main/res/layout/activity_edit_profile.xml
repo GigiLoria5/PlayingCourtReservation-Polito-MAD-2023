@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="16dp"
+    android:paddingHorizontal="@dimen/required_padding"
     tools:context=".fragment.EditProfileFragment">
 
     <ScrollView
@@ -24,7 +24,7 @@
                 android:id="@+id/user_photo_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:padding="8dp"
+                android:padding="@dimen/edit_default_padding"
                 app:layout_constraintBottom_toTopOf="@+id/guideline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:contentDescription="@string/avatar_description"
-                    android:padding="4dp"
+                    android:padding="@dimen/edit_padding_image"
                     android:scaleType="fitXY"
                     android:src="@drawable/profile_default"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="200dp" />
+                app:layout_constraintGuide_begin="@dimen/edit_default_guideline_begin" />
 
             <LinearLayout
                 android:id="@+id/info_layout"
@@ -78,7 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingTop="8dp">
+                    android:paddingTop="@dimen/edit_default_padding">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/username_container"
@@ -106,7 +106,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/edit_default_margin_double"
                     android:orientation="vertical">
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -133,7 +133,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/edit_default_margin_double"
                     android:orientation="vertical">
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -160,7 +160,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/edit_default_margin_double"
                     android:orientation="vertical">
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -190,16 +190,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/edit_default_margin_double"
                     android:orientation="vertical">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/gender_container"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-
-                        >
+                        android:layout_height="wrap_content">
 
                         <AutoCompleteTextView
                             android:id="@+id/gender_autocomplete"
@@ -216,7 +214,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/edit_default_margin_double"
                     android:orientation="vertical">
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -246,7 +244,7 @@
                 android:id="@+id/sport_star_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/edit_default_margin_double"
                 app:layout_constraintTop_toBottomOf="@id/info_layout">
 
                  <com.google.android.material.card.MaterialCardView
@@ -258,18 +256,18 @@
                      app:layout_constraintTop_toTopOf="parent"
                      app:layout_constraintStart_toStartOf="parent"
                      app:layout_constraintBottom_toBottomOf="parent"
-                     android:layout_marginBottom="16dp">
+                     android:layout_marginBottom="@dimen/edit_default_margin_double">
 
                         <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/edit_profile_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:orientation="vertical" />
+                            android:id="@+id/edit_profile_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/edit_default_padding"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:orientation="vertical" />
 
                 </com.google.android.material.card.MaterialCardView>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

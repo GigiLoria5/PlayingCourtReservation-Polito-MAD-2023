@@ -16,13 +16,6 @@
     <string name="location_title">Location</string>
     <string name="position_title">Position</string>
     <string name="dob_title">Date of birth</string>
-    <string name="stats_container_title">Stats</string>
-    <string name="games_organized_title">Organized</string>
-    <string name="games_played_title">Played</string>
-    <string name="games_record_title">W/D/L</string>
-    <string name="games_goals_title">Goals</string>
-    <string name="games_assists_title">Assists</string>
-    <string name="games_mvp_title">MVP</string>
     <string name="default_username">NoobSmasher</string>
     <string name="default_position">Attacker</string>
     <fraction name="default_rating">0</fraction>
@@ -30,12 +23,6 @@
     <integer name="default_age">21</integer>
     <string name="default_gender">Male</string>
     <string name="default_location">Torino</string>
-    <integer name="default_organized">0</integer>
-    <integer name="default_played">0</integer>
-    <string name="default_wdl">0/0/0</string>
-    <integer name="default_goals">0</integer>
-    <integer name="default_assists">0</integer>
-    <integer name="default_mvp">0</integer>
     <string name="avatar_description">User profile avatar</string>
     <string name="rating_description">User skill level</string>
     <string name="warning_icon_description">Warning Icon</string>

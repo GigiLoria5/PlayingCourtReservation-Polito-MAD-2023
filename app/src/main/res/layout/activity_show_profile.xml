@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="16dp"
+    android:paddingHorizontal="@dimen/required_padding"
     tools:context=".fragment.ShowProfileFragment">
 
     <ScrollView
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_begin="200dp" />
+                app:layout_constraintGuide_begin="@dimen/show_default_guideline_begin" />
 
             <!-- Primary Information -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,9 +43,9 @@
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/profile_image"
                     android:layout_height="@dimen/profile_image"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/show_default_margin"
                     android:contentDescription="@string/avatar_description"
-                    android:padding="4dp"
+                    android:padding="@dimen/show_padding_image"
                     android:scaleType="fitXY"
                     android:src="@drawable/profile_default"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +60,6 @@
                     android:id="@+id/user_main_info"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_marginStart="8dp"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +74,7 @@
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/custom_black"
-                        android:textSize="20sp"/>
+                        android:textSize="@dimen/show_username_size"/>
 
                     <ImageView
                         android:id="@+id/warning_icon"
@@ -102,7 +101,6 @@
                 android:id="@+id/card_secondary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
                 android:backgroundTint="@color/grey_light_2"
                 app:cardElevation="@dimen/cardview_default_elevation"
                 app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +111,7 @@
                     android:id="@+id/secondary_information"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
+                    android:padding="@dimen/show_padding_inside_card"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/card_secondary">
@@ -140,7 +138,7 @@
                         android:id="@+id/user_information_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/show_default_margin_double"
                         android:orientation="horizontal"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/name_information">
@@ -174,7 +172,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="@dimen/show_default_margin_double"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/user_information_container">
 
@@ -211,22 +209,21 @@
                 android:id="@+id/show_profile_sport_card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/show_default_margin_double"
                 app:cardCornerRadius="@dimen/cornerRadius"
                 app:cardElevation="@dimen/cardview_default_elevation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_secondary"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/show_default_margin_double"
                 android:backgroundTint="@color/grey_light_2">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/show_profile_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="8dp"
+                        android:padding="@dimen/show_padding_inside_card"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
