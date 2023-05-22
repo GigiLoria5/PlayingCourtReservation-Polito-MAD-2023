@@ -151,6 +151,10 @@ class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
                 val sportCardRating=requireView().findViewById<MaterialCardView>(R.id.show_profile_sport_card_view)
                 rootView.removeView(sportCardRating)
             }
+        }else{
+            val rootView=requireView().findViewById<ConstraintLayout>(R.id.show_profile_main_container)
+            val sportCardRating=requireView().findViewById<MaterialCardView>(R.id.show_profile_sport_card_view)
+            rootView.removeView(sportCardRating)
         }
 
         //IMAGE MANAGEMENT
