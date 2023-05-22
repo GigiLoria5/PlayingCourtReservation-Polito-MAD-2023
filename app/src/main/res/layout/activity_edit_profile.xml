@@ -24,7 +24,7 @@
                 android:id="@+id/user_photo_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:padding="30dp"
+                android:padding="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.33" />
+                app:layout_constraintGuide_begin="200dp" />
 
             <LinearLayout
                 android:id="@+id/info_layout"
@@ -77,7 +77,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingTop="8dp">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/username_container"

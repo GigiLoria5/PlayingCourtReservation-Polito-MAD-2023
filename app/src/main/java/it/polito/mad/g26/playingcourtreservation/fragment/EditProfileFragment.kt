@@ -9,6 +9,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -18,6 +19,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -25,6 +27,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.Guideline
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.MenuHost
@@ -37,6 +40,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.EditProfileAdapter
@@ -76,6 +80,9 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
     private lateinit var sportRecycleView: RecyclerView
     private lateinit var sportList : List<String>
     private lateinit var sportRating: MutableList<Float>
+    private lateinit var guide: Guideline
+    private lateinit var configuration: Configuration
+    private lateinit var metrics: DisplayMetrics
 
 
     private val requestPermissionLauncher =
@@ -165,6 +172,23 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         locationContainer = view.findViewById(R.id.location_container)
         sportRecycleView= view.findViewById(R.id.edit_profile_recycler_view)
         sportList=resources.getStringArray(R.array.sport_array).toList()
+
+        guide=requireView().findViewById(R.id.guideline)
+        metrics= requireContext().resources.displayMetrics
+        // Get the current configuration
+        configuration= resources.configuration
+        // Check if the orientation is landscape
+        if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            // The layout is in portrait mode
+            val height=metrics.heightPixels
+            var pixelsLimit=(height/100)*33
+            guide.setGuidelineBegin(pixelsLimit)
+            //set the image
+            /*pixelsLimit=(pixelsLimit*70)/100
+            avatarImage=requireView().findViewById<ShapeableImageView>(R.id.avatar)
+            avatarImage.layoutParams.width=pixelsLimit
+            avatarImage.layoutParams.height=pixelsLimit*/
+        }
 
         //PERSISTENCE
         val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
