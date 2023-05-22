@@ -40,7 +40,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textfield.TextInputLayout
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.EditProfileAdapter
@@ -182,13 +181,8 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
             // The layout is in portrait mode
             val height=metrics.heightPixels
-            var pixelsLimit=(height/100)*33
+            val pixelsLimit=(height/100)*33
             guide.setGuidelineBegin(pixelsLimit)
-            //set the image
-            /*pixelsLimit=(pixelsLimit*70)/100
-            avatarImage=requireView().findViewById<ShapeableImageView>(R.id.avatar)
-            avatarImage.layoutParams.width=pixelsLimit
-            avatarImage.layoutParams.height=pixelsLimit*/
         }
 
         //PERSISTENCE
