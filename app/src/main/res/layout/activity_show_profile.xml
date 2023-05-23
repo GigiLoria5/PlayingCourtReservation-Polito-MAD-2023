@@ -105,7 +105,7 @@
                 app:cardElevation="@dimen/cardview_default_elevation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/vertical_guideline"
-                app:cardCornerRadius="@dimen/cornerRadius">
+                app:cardCornerRadius="@dimen/corner_radius">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/secondary_information"
@@ -212,7 +212,7 @@
                 android:layout_marginTop="@dimen/show_default_margin_double"
                 android:layout_marginBottom="@dimen/show_default_margin_double"
                 android:backgroundTint="@color/grey_light_2"
-                app:cardCornerRadius="@dimen/cornerRadius"
+                app:cardCornerRadius="@dimen/corner_radius"
                 app:cardElevation="@dimen/cardview_default_elevation"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

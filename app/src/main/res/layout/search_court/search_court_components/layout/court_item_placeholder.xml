@@ -8,13 +8,13 @@
         android:id="@+id/courtMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/pageExternalSpace"
+        android:layout_margin="@dimen/page_external_space"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="@color/grey_light_2"
-        app:cardCornerRadius="@dimen/cornerRadius"
-        app:cardElevation="@dimen/standardElevation"
+        app:cardCornerRadius="@dimen/corner_radius"
+        app:cardElevation="@dimen/standard_elevation"
         app:cardPreventCornerOverlap="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/spacesCourtInfoBox">
+            android:padding="@dimen/spaces_court_info_box">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
@@ -39,7 +39,7 @@
                     android:layout_width="150dp"
                     android:layout_height="match_parent"
                     android:background="@color/loading"
-                    android:textSize="@dimen/courtNameCourtBox"
+                    android:textSize="@dimen/court_name_court_box"
                     app:layout_constraintBottom_toTopOf="@id/courtTypeTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -81,7 +81,7 @@
                 android:background="@color/loading"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="@dimen/courtNameCourtBox"
+                android:textSize="@dimen/court_name_court_box"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/sportCenterInfoGL"

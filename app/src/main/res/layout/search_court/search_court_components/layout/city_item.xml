@@ -9,11 +9,11 @@
         android:id="@+id/cityResultMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/pageExternalSpace"
+        android:layout_margin="@dimen/page_external_space"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="@dimen/cornerRadius"
+        app:cardCornerRadius="@dimen/corner_radius"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"
         app:cardPreventCornerOverlap="true"
@@ -41,7 +41,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/pageExternalSpace">
+                    android:padding="@dimen/page_external_space">
 
                     <TextView
                         android:id="@+id/cityNameTV"
@@ -49,7 +49,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text=""
-                        android:textSize="@dimen/searchCityTextSize"
+                        android:textSize="@dimen/search_city_text_size"
                         android:textColor="@color/grey"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:cardElevation="0dp"
-                android:padding="@dimen/pageExternalSpace"
+                android:padding="@dimen/page_external_space"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/horizontal_guideline"

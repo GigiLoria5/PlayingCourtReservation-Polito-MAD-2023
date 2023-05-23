@@ -8,10 +8,10 @@
         android:id="@+id/ReviewListMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/pageExternalSpace"
+        android:layout_marginHorizontal="@dimen/page_external_space"
         android:layout_marginVertical="@dimen/review_item_vertical_margin"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="@dimen/cornerRadius"
+        app:cardCornerRadius="@dimen/corner_radius"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,7 +22,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/spacesCourtInfoBox">
+            android:padding="@dimen/spaces_court_info_box">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout

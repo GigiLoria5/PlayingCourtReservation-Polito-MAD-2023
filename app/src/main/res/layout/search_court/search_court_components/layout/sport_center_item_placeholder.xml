@@ -2,15 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="@dimen/sportCenterVerticalSpace">
+    android:paddingVertical="@dimen/sport_center_vertical_space">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/sportCenterInfoMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/grey_light_2"
-        app:cardCornerRadius="@dimen/cornerRadius"
-        app:cardElevation="@dimen/standardElevation"
+        app:cardCornerRadius="@dimen/corner_radius"
+        app:cardElevation="@dimen/standard_elevation"
         app:cardUseCompatPadding="true"
 
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,13 +21,13 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/sportCenterVerticalPadding">
+            android:paddingVertical="@dimen/sport_center_vertical_padding">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/sportCenterInfoCL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/pageExternalSpace"
+                android:paddingHorizontal="@dimen/page_external_space"
                 app:layout_constraintBottom_toTopOf="@id/sportCenterServicesCL"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -103,7 +103,7 @@
                 android:id="@+id/sportCenterServicesCL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/distanceSportCenterInfoCourtData"
+                android:paddingTop="@dimen/distance_sport_center_info_court_data"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +113,7 @@
                     android:id="@+id/availableServicesTV"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/pageExternalSpace"
+                    android:layout_marginHorizontal="@dimen/page_external_space"
                     android:background="@color/loading"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/grey"
@@ -126,7 +126,7 @@
                     android:layout_width="match_parent"
 
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/pageExternalSpace"
+                    android:layout_marginStart="@dimen/page_external_space"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

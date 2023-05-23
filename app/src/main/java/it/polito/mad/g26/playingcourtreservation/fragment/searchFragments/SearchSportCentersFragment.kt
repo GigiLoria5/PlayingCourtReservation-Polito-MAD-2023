@@ -170,7 +170,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         servicesAdapter = createServiceAdapter()
         servicesRV.adapter = servicesAdapter
         val itemDecoration =
-            HorizontalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.chipDistance))
+            HorizontalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.chip_distance))
         servicesRV.addItemDecoration(itemDecoration)
 
         /* servicesShimmerView INITIALIZER */

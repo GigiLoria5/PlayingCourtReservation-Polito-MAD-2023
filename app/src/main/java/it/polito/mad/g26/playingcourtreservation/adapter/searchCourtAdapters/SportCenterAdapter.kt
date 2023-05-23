@@ -64,7 +64,7 @@ class SportCenterAdapter(
 
         init {
             val itemDecoration =
-                HorizontalSpaceItemDecoration(itemView.context.resources.getDimensionPixelSize(R.dimen.chipDistance))
+                HorizontalSpaceItemDecoration(itemView.context.resources.getDimensionPixelSize(R.dimen.chip_distance))
             sportCenterServicesRV.addItemDecoration(itemDecoration)
         }
 

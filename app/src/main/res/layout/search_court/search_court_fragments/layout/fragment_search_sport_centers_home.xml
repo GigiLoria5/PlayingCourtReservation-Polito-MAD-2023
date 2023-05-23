@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingBottom="@dimen/pageExternalSpace"
+    android:paddingBottom="@dimen/page_external_space"
     tools:context=".fragment.searchFragments.SearchSportCentersHomeFragment">
 
     <ImageView
         android:id="@+id/homeBackgroundLogo"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:scaleX="@fraction/logoBackgroundScale"
-        android:scaleY="@fraction/logoBackgroundScale"
+        android:scaleX="@fraction/logo_background_scale"
+        android:scaleY="@fraction/logo_background_scale"
         android:src="@drawable/logo"
         android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toTopOf="@id/searchInfoTV"
@@ -25,10 +25,10 @@
         android:id="@+id/searchInfoTV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/pageExternalSpace"
+        android:layout_margin="@dimen/page_external_space"
         android:text="@string/searchBoxInfoText"
         android:textColor="@color/custom_black"
-        android:textSize="@dimen/searchInfoTextSize"
+        android:textSize="@dimen/search_info_text_size"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/cityNameMCV"
         app:layout_constraintStart_toStartOf="@+id/cityNameMCV"
@@ -39,13 +39,13 @@
         android:id="@+id/cityNameMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/pageExternalSpace"
+        android:layout_margin="@dimen/page_external_space"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
         app:strokeWidth="1dp"
         app:strokeColor="@color/grey"
-        app:cardCornerRadius="@dimen/cornerRadius"
+        app:cardCornerRadius="@dimen/corner_radius"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"
         app:cardPreventCornerOverlap="true"
@@ -72,7 +72,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/pageExternalSpace">
+                    android:padding="@dimen/page_external_space">
 
                     <TextView
                         android:id="@+id/cityNameTV"
@@ -81,7 +81,7 @@
                         android:gravity="center"
                         android:text=""
                         android:textColor="@color/grey"
-                        android:textSize="@dimen/searchCityTextSize"
+                        android:textSize="@dimen/search_city_text_size"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -100,7 +100,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:cardElevation="0dp"
-                app:contentPadding="@dimen/pageExternalSpace"
+                app:contentPadding="@dimen/page_external_space"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/horizontal_guideline"

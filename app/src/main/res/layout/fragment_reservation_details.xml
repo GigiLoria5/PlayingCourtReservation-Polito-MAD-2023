@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/review_item_vertical_margin"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/cornerRadius"
+                app:cardCornerRadius="@dimen/corner_radius"
                 app:cardElevation="0dp"
                 android:visibility="gone"
                 app:cardUseCompatPadding="true"
@@ -186,7 +186,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/sportCenterVerticalPadding">
+                    android:paddingVertical="@dimen/sport_center_vertical_padding">
 
                     <TextView
                         android:id="@+id/myReviewTV"

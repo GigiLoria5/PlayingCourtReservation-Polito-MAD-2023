@@ -31,7 +31,7 @@
             android:id="@+id/sportCenterDataCL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/pageExternalSpace">
+            android:paddingHorizontal="@dimen/page_external_space">
 
             <TextView
                 android:id="@+id/courtTV"
@@ -52,7 +52,7 @@
                 android:id="@+id/sportCenterTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/pageExternalSpace"
+                android:paddingTop="@dimen/page_external_space"
                 android:text="@string/sport_center_name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/white"
@@ -67,7 +67,7 @@
                 android:id="@+id/sportCenterAddressTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/pageExternalSpace"
+                android:paddingBottom="@dimen/page_external_space"
                 android:text="@string/sport_center_address"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/white"
@@ -85,7 +85,7 @@
         android:id="@+id/meanRatingMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/pageExternalSpace"
+        android:layout_margin="@dimen/page_external_space"
         app:cardElevation="0dp"
         app:cardMaxElevation="0dp"
         app:cardPreventCornerOverlap="true"
@@ -99,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/pageExternalSpace">
+            android:padding="@dimen/page_external_space">
 
             <LinearLayout
                 android:id="@+id/meanRatingLL"
@@ -108,7 +108,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="@dimen/pageExternalSpace">
+                android:padding="@dimen/page_external_space">
 
                 <RatingBar
                     android:id="@+id/meanRating"
@@ -159,7 +159,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="0.1dp"
-        android:layout_margin="@dimen/pageExternalSpace"
+        android:layout_margin="@dimen/page_external_space"
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@id/reviewsRV"
         app:layout_constraintTop_toBottomOf="@id/meanRatingMCV" />
@@ -179,12 +179,12 @@
         android:id="@+id/noReviewFoundMCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/pageExternalSpace"
+        android:layout_margin="@dimen/page_external_space"
         android:visibility="gone"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="@dimen/cornerRadius"
-        app:cardElevation="@dimen/standardElevation"
-        app:cardMaxElevation="@dimen/standardElevation"
+        app:cardCornerRadius="@dimen/corner_radius"
+        app:cardElevation="@dimen/standard_elevation"
+        app:cardMaxElevation="@dimen/standard_elevation"
         app:cardPreventCornerOverlap="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -194,7 +194,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/pageExternalSpace">
+            android:padding="@dimen/page_external_space">
 
             <TextView
                 android:id="@+id/noReviewFoundTV"
