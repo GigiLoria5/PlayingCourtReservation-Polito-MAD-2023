@@ -33,7 +33,7 @@
                 android:layout_height="36dp"
                 android:layout_marginEnd="22dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/calendarPrevious"
+                android:contentDescription="@string/calendar_previous"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -47,6 +47,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/custom_black"
                 android:textSize="22sp"
+                app:drawableEndCompat="@drawable/baseline_expand_more_36"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/calendarNextImage"
                 app:layout_constraintStart_toEndOf="@id/calendarPreviousImage"
@@ -58,13 +59,12 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/calendarNext"
+                android:contentDescription="@string/calendar_next"
                 app:tint="@color/green_500"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/baseline_chevron_right_24" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -73,9 +73,10 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
-        <!-- Calendar -->
+        <!-- Week Calendar -->
         <com.kizitonwose.calendar.view.WeekCalendarView
             android:id="@+id/reservationsCalendarView"
             android:layout_width="match_parent"
@@ -113,14 +114,49 @@
             android:text="@string/no_reservations"
             android:textColor="@color/custom_black"
             android:textSize="18sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
-        <!-- Reservations -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/reservationsRv"
+        <RelativeLayout
+            android:id="@+id/reservationsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!-- Reservations -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/reservationsRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+            <!-- Reservations Placeholder -->
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/reservationsShimmerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shimmer_repeat_mode="restart"
+                app:shimmer_shape="radial">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/reservations_reservation_item_view_placeholder" />
+
+                    <include layout="@layout/reservations_reservation_item_view_placeholder" />
+
+                    <include layout="@layout/reservations_reservation_item_view_placeholder" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+        </RelativeLayout>
+
+        <!-- Month Calendar -->
+        <com.kizitonwose.calendar.view.CalendarView
+            android:id="@+id/reservationsMonthCalendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+            android:visibility="gone"
+            app:cv_dayViewResource="@layout/reservations_calendar_day_reservations"
+            app:cv_monthHeaderResource="@layout/reservations_calendar_month_header" />
+
     </LinearLayout>
 
 </LinearLayout>

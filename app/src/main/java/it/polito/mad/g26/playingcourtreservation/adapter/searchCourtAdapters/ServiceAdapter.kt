@@ -13,20 +13,17 @@ class ServiceAdapter(
     private var collection: List<Service>,
     private val addServiceIdToFilters: (Int) -> Unit,
     private val removeServiceIdFromFilters: (Int) -> Unit,
-    private val isServiceIdInList: (Int) -> Boolean
+    private val isServiceIdInList: (Int) -> Boolean,
 ) :
     RecyclerView.Adapter<ServiceAdapter.ServiceViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.service_item, parent, false)
-
+            .inflate(R.layout.chip_service_item, parent, false)
         return ServiceViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ServiceViewHolder, position: Int) {
-
-
         holder.bind(
             collection[position]
         )
@@ -68,6 +65,5 @@ class ServiceAdapter(
             chip.text = ""
             chip.setOnClickListener(null)
         }
-
     }
 }

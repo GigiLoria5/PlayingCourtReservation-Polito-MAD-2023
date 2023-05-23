@@ -3,8 +3,8 @@ package it.polito.mad.g26.playingcourtreservation.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "reservation", foreignKeys = [
@@ -17,6 +17,16 @@ import androidx.room.ForeignKey.Companion.CASCADE
     ]
 )
 class Reservation {
+
+    companion object {
+        fun getReservationDatePattern(): String {
+            return "dd-MM-yyyy"
+        }
+        fun getReservationTimePattern(): String {
+            return "kk:mm"
+        }
+    }
+
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
@@ -26,7 +36,6 @@ class Reservation {
     @ColumnInfo(name = "id_court")
     var idCourt: Int = 0
 
-    // Pattern: dd-MM-yyyy
     var date: String = ""
 
     var time: String = ""
@@ -35,4 +44,5 @@ class Reservation {
 
     override fun toString() = "{ id: $id, id_user: $idUser, id_court: $idCourt, " +
             "date: \"$date\", time: \"$time\", amount: $amount }"
+
 }

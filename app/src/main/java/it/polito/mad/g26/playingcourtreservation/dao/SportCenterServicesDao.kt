@@ -5,15 +5,16 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import it.polito.mad.g26.playingcourtreservation.model.*
+import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterServicesWithDetails
 
 @Dao
 interface SportCenterServicesDao {
 
-    @Query("SELECT * from sport_center_services")
-    fun findAllSportCenterServices(): LiveData<List<SportCenterServices>>
-
     @Transaction
-    @Query("SELECT * FROM sport_center_services WHERE id_sport_center = :id_sport_center")
-    fun getAllServicesWithFee(id_sport_center: Int): LiveData<List<SportCenterServices>>
+    @Query("SELECT * FROM sport_center_services WHERE id_sport_center = :idSportCenter")
+    fun getAllServicesWithFee(idSportCenter: Int): LiveData<List<SportCenterServices>>
+
+    @Query("SELECT * FROM sport_center_services WHERE id_sport_center = :idSportCenter")
+    fun getAllServicesWithFeeDetailed(idSportCenter: Int): LiveData<List<SportCenterServicesWithDetails>>
 
 }

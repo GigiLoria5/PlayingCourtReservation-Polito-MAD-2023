@@ -13,9 +13,6 @@ interface ReservationDao {
     @Insert
     fun addReservation(reservation: Reservation): Long
 
-    @Query("SELECT * from reservation")
-    fun findAll(): LiveData<List<Reservation>>
-
     @Query(
         "SELECT reservation.id , reservation.id_user , reservation.id_court , reservation.date , reservation.time , reservation.amount " +
                 "FROM reservation,court,sport_center " +
@@ -34,11 +31,15 @@ interface ReservationDao {
     @Query(
         "SELECT reservation.id " +
                 "FROM reservation " +
-                "WHERE reservation.id_user=:myUserId " +
+                "WHERE reservation.id_user=:userId " +
                 "AND reservation.date=:date " +
                 "AND reservation.time=:hour "
     )
-    fun findMyReservationId(myUserId: Int, date: String, hour: String): LiveData<Int?>
+    fun findReservationIdByUserIdAndDateAndHour(
+        userId: Int,
+        date: String,
+        hour: String
+    ): LiveData<Int?>
 
     @Transaction
     @Query("DELETE FROM reservation WHERE id= :id")

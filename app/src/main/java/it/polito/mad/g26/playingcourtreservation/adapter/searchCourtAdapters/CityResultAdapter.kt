@@ -16,7 +16,7 @@ class CityResultAdapter(
     RecyclerView.Adapter<CityResultAdapter.CityResultViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityResultViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.city_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.search_cities_city_item, parent, false)
         return CityResultViewHolder(view)
     }
 

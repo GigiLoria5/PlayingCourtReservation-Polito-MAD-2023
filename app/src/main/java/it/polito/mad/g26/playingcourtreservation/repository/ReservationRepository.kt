@@ -7,8 +7,6 @@ import it.polito.mad.g26.playingcourtreservation.model.*
 
 class ReservationRepository(application: Application) {
     private val reservationDao = CourtReservationDatabase.getDatabase(application).reservationDao()
-
-    fun reservations(): LiveData<List<Reservation>> = reservationDao.findAll()
     fun add(idUser: Int, idCourt: Int, date: String, time: String, amount: Float): Long {
         val reservation = Reservation().also {
             it.idUser = idUser
@@ -27,6 +25,6 @@ class ReservationRepository(application: Application) {
     ): LiveData<List<Reservation>> =
         reservationDao.findFiltered(date, hour, courtsIdList)
 
-    fun myReservationId(myUserId: Int, date: String, hour: String): LiveData<Int?> =
-        reservationDao.findMyReservationId(myUserId, date, hour)
+    fun reservationIdByUserIdAndDateAndHour(userId: Int, date: String, hour: String): LiveData<Int?> =
+        reservationDao.findReservationIdByUserIdAndDateAndHour(userId, date, hour)
 }

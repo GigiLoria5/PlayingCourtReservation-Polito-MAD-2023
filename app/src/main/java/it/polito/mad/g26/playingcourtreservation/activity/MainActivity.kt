@@ -1,6 +1,7 @@
 package it.polito.mad.g26.playingcourtreservation.activity
 
-import android.content.pm.ActivityInfo
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LOCKED
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.isItemChecked
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
+import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setCheckedMenuItem
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.home -> navigateToFragment(
                     navController,
                     R.id.home,
-                    R.id.searchCourtFragment
+                    R.id.searchSportCentersHomeFragment
                 )
 
                 R.id.reservations -> navigateToFragment(
@@ -53,38 +55,40 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             Handler(Looper.getMainLooper()).post {
                 when (destination.id) {
-                    // Main Views: the bottom navigation must be visible
-                    R.id.searchCourtFragment -> {
-                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+                    // Home
+                    R.id.searchSportCentersHomeFragment -> {
+                        requestedOrientation = SCREEN_ORIENTATION_LOCKED
                         bottomNav.setCheckedMenuItem(R.id.home)
                     }
 
+                    R.id.searchSportCentersActionFragment -> lockOrientationAndHideNav()
+
+                    R.id.searchSportCentersFragment -> lockOrientationAndShowNav()
+
+                    R.id.searchCourtsFragment -> lockOrientationAndHideNav()
+
+                    R.id.courtReviewsFragment -> lockOrientationAndShowNav()
+
+                    // Reservations
                     R.id.reservationsFragment -> {
-                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+                        requestedOrientation = SCREEN_ORIENTATION_LOCKED
                         bottomNav.setCheckedMenuItem(R.id.reservations)
                     }
 
+                    R.id.reservationDetailsFragment -> lockOrientationAndShowNav()
+
+                    R.id.modifyReservationDetailsFragment -> lockOrientationAndHideNav()
+
+                    // Profile
                     R.id.showProfileFragment -> {
-                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                        requestedOrientation = SCREEN_ORIENTATION_UNSPECIFIED
                         bottomNav.setCheckedMenuItem(R.id.profile)
                     }
-                    // Sub Views: the bottom navigation should not be visible
-                    R.id.searchCourtActionFragment -> {
-                        lockOrientationAndBottomNavMakeGone()
-                    }
 
-                    R.id.searchCourtResultsFragment -> {
-                        lockOrientationAndBottomNavMakeGone()
-                    }
-
-                    R.id.reservationDetailsFragment -> {
-                        lockOrientationAndBottomNavMakeGone()
-                    }
-
-                    R.id.editProfileFragment -> {
-                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-                        bottomNav.makeGone()
-                    }
+                    R.id.editProfileFragment -> setOrientationAndVisibility(
+                        SCREEN_ORIENTATION_UNSPECIFIED,
+                        false
+                    )
                 }
             }
         }
@@ -93,8 +97,22 @@ class MainActivity : AppCompatActivity() {
         getColor(R.color.grey_light).also { window.navigationBarColor = it }
     }
 
-    private fun lockOrientationAndBottomNavMakeGone() {
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+    private fun lockOrientationAndShowNav() {
+        setOrientationAndVisibility(SCREEN_ORIENTATION_LOCKED, true)
+    }
+
+    private fun lockOrientationAndHideNav() {
+        setOrientationAndVisibility(SCREEN_ORIENTATION_LOCKED, false)
+    }
+
+    // This method is thought to be called by subViews
+    private fun setOrientationAndVisibility(orientation: Int, isBottomNavVisible: Boolean) {
+        requestedOrientation = orientation
+        if (isBottomNavVisible) {
+            bottomNav.makeVisible()
+            uncheckAllMenuItems()
+            return
+        }
         bottomNav.makeGone()
     }
 
@@ -104,6 +122,14 @@ class MainActivity : AppCompatActivity() {
             return
         }
         navController.navigate(destinationId)
+    }
+
+    private fun uncheckAllMenuItems() {
+        bottomNav.menu.setGroupCheckable(0, true, false)
+        for (i in 0 until bottomNav.menu.size()) {
+            bottomNav.menu.getItem(i).isChecked = false
+        }
+        bottomNav.menu.setGroupCheckable(0, true, true)
     }
 
 }
