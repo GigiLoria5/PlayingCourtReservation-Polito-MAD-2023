@@ -27,11 +27,9 @@ class ReservationWithDetailsRepository(application: Application) {
     fun getAllServices(): LiveData<List<Service>> =
         repoService.findAll()
 
-    //i have to cancel from the reservationWithDetails dao?
     fun deleteReservationById(id: Int): Unit =
         reservationDao.deleteReservationById(id)
 
-    //change management
     fun updateDateAndHourAndAmount(date: String, hour: String, id: Int, amount: Float): Boolean {
         reservationDao.updateReservationDateAndHourAndAmount(date, hour, id, amount)
         return true

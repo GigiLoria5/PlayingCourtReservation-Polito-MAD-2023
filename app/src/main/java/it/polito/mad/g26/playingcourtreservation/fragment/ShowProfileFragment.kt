@@ -103,7 +103,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
                 guide.setGuidelineBegin(pixelsLimit)
                 //set the image
                 pixelsLimit=(pixelsLimit*70)/100
-                avatarImage=requireView().findViewById<ShapeableImageView>(R.id.avatar)
+                avatarImage=requireView().findViewById(R.id.avatar)
                 avatarImage.layoutParams.width=pixelsLimit
                 avatarImage.layoutParams.height=pixelsLimit
             } else {
@@ -113,7 +113,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
                 guide.setGuidelineBegin(pixelsLimit)
                 //set the image
                 pixelsLimit=(pixelsLimit*70)/100
-                avatarImage=requireView().findViewById<ShapeableImageView>(R.id.avatar)
+                avatarImage=requireView().findViewById(R.id.avatar)
                 avatarImage.layoutParams.width=pixelsLimit
                 avatarImage.layoutParams.height=pixelsLimit
             }

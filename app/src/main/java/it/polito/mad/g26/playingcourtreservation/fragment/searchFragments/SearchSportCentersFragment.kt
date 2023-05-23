@@ -251,7 +251,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     servicesShimmerView.stopShimmer()
                     sportCentersShimmerView.stopShimmer()
                     showExistingReservationCL()
-                    navigateToReservationBTN.setOnClickListener { _ ->
+                    navigateToReservationBTN.setOnClickListener {
                         findNavController().navigate(
                             SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
                                 vm.existingReservationIdByDateAndTime.value!!

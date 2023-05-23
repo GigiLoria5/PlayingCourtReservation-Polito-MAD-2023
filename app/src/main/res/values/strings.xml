@@ -17,7 +17,6 @@
     <string name="available_services">Available services</string>
     <string name="no_services_available">No available services for this sport center</string>
     <string name="reserve_a_court">Reserve a court</string>
-    <string name="hour_charge_court">Hour charge: €%1$s</string>
     <string name="hour_charge_court_short">€%1$s</string>
     <string name="sport_center_hours">%1$s - %2$s</string>
     <string name="court_available">Available</string>
@@ -45,26 +44,20 @@
     <string name="too_late_for_time_slot">Unfortunately, it\'s too late to make a reservation for this time slot</string>
     <string name="available_services_count_info">%1$d service%2$s available</string>
     <string name="no_available_services_found">There are no available services for this sport center</string>
-    <string name="reserve_this_court">Reserve this court</string>
-    <string name="selected_services">Selected services:\n\n</string>
-    <string name="no_selected_services">No services selected</string>
     <string name="total_amount">Total amount</string>
     <string name="just_total_reservation_price">€%1$s</string>
     <string name="confirm_reservation">Confirm Reservation</string>
     <string name="confirm_reservation_message">Reservation at %1$s confirmed!</string>
-    <string name="confirm_reservation_message_service_field">-%1$s: €%2$s\n</string>
-    <string name="reserve_button">Reserve</string>
     <!-- Reservations -->
-    <string name="calendarPrevious">Go Previous</string>
-    <string name="calendarNext">Go Next</string>
-    <string name="calendarExpand">Expand</string>
+    <string name="calendar_previous">Go Previous</string>
+    <string name="calendar_next">Go Next</string>
     <string name="has_reservation">Has Reservation</string>
     <string name="no_reservations">No reservations for this day</string>
     <string name="reservation_info_concatenation">%1$s, %2$s</string>
     <string name="reservation_info_amount">€%1$s</string>
     <string name="no_services_chosen">No service chosen</string>
     <!-- Show Profile -->
-    <string name="full_name_title">Fullname</string>
+    <string name="full_name_title">Full name</string>
     <string name="username_title">Username</string>
     <string name="age_title">Age</string>
     <string name="gender_title">Gender</string>
@@ -84,17 +77,13 @@
     <string name="warning_icon_tooltip">Warning: player was late or missed one of the last 10 games</string>
     <string name="danger_icon_description">Danger Icon</string>
     <string name="danger_icon_tooltip">Unreliable player: arrived late or missed more than 5 games in the last 10</string>
-    <string name="required">Required</string>
     <string name="set_profile_image">set profile image</string>
     <string name="required_helper">Required</string>
     <string name="invalid_field_helper">Invalid field</string>
-    <string name="edit_profile_ok_update_dialog_title">Profile updated</string>
     <string name="edit_profile_ok_update_dialog_message">Profile successfully updated</string>
-    <string name="edit_profile_no_ok_update_dialog_title">Invalid data</string>
     <string name="edit_profile_no_ok_update_dialog_message">Unable to update the profile. Some field are wrong</string>
     <string name="camera">Camera</string>
     <string name="galley">Gallery</string>
-    <string name="default_profile">Default profile</string>
     <string name="default_date">14–04–2002</string>
     <string name="username_min_length">Username min length is 8 characters</string>
     <string name="username_max_length">Username max length is 30 characters</string>
@@ -135,14 +124,6 @@
         <item>Male</item>
         <item>Female</item>
         <item>Other</item>
-    </string-array>
-
-    <string-array name="services_array">
-        <item>Bathroom</item>
-        <item>Var Usage</item>
-        <item>First Aid Kit</item>
-        <item>Supporters</item>
-        <item>MiniBar</item>
     </string-array>
 
     <!-- Reviews-->

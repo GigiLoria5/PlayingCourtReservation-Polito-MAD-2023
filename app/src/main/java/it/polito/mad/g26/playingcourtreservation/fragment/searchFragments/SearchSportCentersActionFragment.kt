@@ -56,8 +56,8 @@ class SearchSportCentersActionFragment : Fragment(R.layout.search_cities_fragmen
         citiesResultRV = view.findViewById(R.id.citiesResultRV)
 
         val cityResultAdapter = CityResultAdapter(vm.cities.value ?: listOf()) {
-            //comingFrom: result - arrivi da results page
-            //comingFrom: home - arrivi dalla home page
+            //comingFrom: result - coming from da results page
+            //comingFrom: home - coming from home page
             closeKeyboard()
             when (bornFrom) {
                 "result" -> {

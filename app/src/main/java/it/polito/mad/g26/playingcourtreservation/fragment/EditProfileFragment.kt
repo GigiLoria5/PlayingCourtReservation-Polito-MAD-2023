@@ -161,14 +161,14 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
 
         usernameEditText = view.findViewById(R.id.username_et)
         autoCompletePosition = view.findViewById(R.id.position_autocomplete)
-        fullNameEditText = view.findViewById(R.id.fullname_et)
+        fullNameEditText = view.findViewById(R.id.full_name_et)
         dateOfBirthEditText = view.findViewById(R.id.dob_et)
         autoCompleteGender = view.findViewById(R.id.gender_autocomplete)
         locationEditText = view.findViewById(R.id.location_et)
         avatarImage = view.findViewById(R.id.avatar)
 
         usernameContainer = view.findViewById(R.id.username_container)
-        fullNameContainer = view.findViewById(R.id.fullname_container)
+        fullNameContainer = view.findViewById(R.id.full_name_container)
         locationContainer = view.findViewById(R.id.location_container)
         sportRecycleView= view.findViewById(R.id.edit_profile_recycler_view)
         sportList=resources.getStringArray(R.array.sport_array).toList()

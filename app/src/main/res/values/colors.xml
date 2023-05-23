@@ -18,11 +18,11 @@
     <color name="red">#FF4F37</color>
     <color name="red_dark">#B00020</color>
     <!-- Sport Colors -->
-    <color name="sport5asidefootball">#006400</color>
-    <color name="sport8asidefootball">#8B0000</color>
-    <color name="sport11asidefootball">#800080</color>
-    <color name="sportbeachsoccer">#1E2D5A</color>
-    <color name="sportfutsal">#333333</color>
+    <color name="sport_5_aside_football">#006400</color>
+    <color name="sport_8_aside_football">#8B0000</color>
+    <color name="sport_11_aside_football">#800080</color>
+    <color name="sport_beach_soccer">#1E2D5A</color>
+    <color name="sport_futsal">#333333</color>
     <!-- Profile Colors -->
     <color name="border_grey_light">#AAABAE</color>
 </resources>

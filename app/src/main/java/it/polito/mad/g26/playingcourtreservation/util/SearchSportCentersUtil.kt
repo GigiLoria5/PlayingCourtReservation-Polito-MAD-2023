@@ -222,7 +222,8 @@ object SearchSportCentersUtil {
         currentHour: Int = 0,
         selectedHourTasks: (Int) -> Unit
     ) {
-        val linearLayout = LayoutInflater.from(viewContext).inflate(R.layout.search_sport_centers_hour_picker, null)
+        val linearLayout = LayoutInflater.from(viewContext)
+            .inflate(R.layout.search_sport_centers_hour_picker, null)
         val numberPicker = linearLayout.findViewById<NumberPicker>(R.id.hourPicker)
         numberPicker.wrapSelectorWheel = false
 
@@ -252,74 +253,4 @@ object SearchSportCentersUtil {
         val dialog = builder.create()
         dialog.show()
     }
-
-    /* RESERVATION CONFIRM */
-    /*
- fun showConfirmReservationDialog(
-     viewContext: Context,
-     courtWithDetails: CourtWithDetails,
-     vm: SearchCourtResultsVM
- ) {
-     val timeInMillis = vm.selectedDateTimeMillis.value ?: 0
-     var total: Float = courtWithDetails.court.hourCharge
-     var selectedServicesString = viewContext.getString(
-         R.string.selected_services
-     )
-     val selectedServicesIds: MutableList<Int> = mutableListOf()
-     vm.getSelectedServicesAndFees(courtWithDetails.sportCenter.id).forEach {
-         total += it.fee
-         selectedServicesIds.add(it.service.id)
-         selectedServicesString += viewContext.getString(
-             R.string.confirm_reservation_message_service_field,
-             it.service.name,
-             String.format("%.2f", it.fee)
-         )
-     }
-     if (selectedServicesIds.isEmpty())
-         selectedServicesString = viewContext.getString(
-             R.string.no_selected_services
-         )
-     val reservationConfirmationText = viewContext.getString(
-         R.string.confirm_reservation_message,
-         courtWithDetails.court.name,
-         courtWithDetails.sport.name,
-         courtWithDetails.sportCenter.name,
-         courtWithDetails.sportCenter.city,
-         getDateTimeFormatted(timeInMillis, viewContext.getString(R.string.hourFormat)),
-         getDateTimeFormatted(timeInMillis, viewContext.getString(R.string.dateExtendedFormat)),
-         selectedServicesString,
-         String.format("%.2f", courtWithDetails.court.hourCharge),
-         String.format("%.2f", total),
-     )
-
-
-     val builder: AlertDialog.Builder =
-         AlertDialog.Builder(viewContext)
-             .setTitle(
-                 viewContext.getString(
-                     R.string.reserve_this_court
-                 )
-             )
-             .setMessage(reservationConfirmationText)
-             .setPositiveButton(
-                 viewContext.getString(
-                     R.string.reserve_button
-                 )
-             ) { _, _ ->
-                 vm.reserveCourt(
-                     courtWithDetails.court.id,
-                     total,
-                     selectedServicesIds
-                 )
-             }.setNegativeButton(
-                 viewContext.getString(
-                     R.string.cancel_button
-                 )
-             ) { _, _ -> }
-             .setOnCancelListener { }
-     val dialog = builder.create()
-     dialog.show()
- }
-*/
-
 }

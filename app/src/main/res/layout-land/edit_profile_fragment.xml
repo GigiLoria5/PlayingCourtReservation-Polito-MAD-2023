@@ -132,14 +132,14 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fullname_container"
+                    android:id="@+id/full_name_container"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:helperTextTextColor="@color/red">
 
                     <EditText
-                        android:id="@+id/fullname_et"
+                        android:id="@+id/full_name_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autofillHints="name"
