@@ -11,10 +11,6 @@ import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterReviews
 @Dao
 interface ReviewDao {
 
-    @Query("SELECT * from review")
-    fun findAll(): LiveData<List<Review>>
-
-
     @Query(
         "Select COUNT(*) as count, AVG(rating) as avg, court.id as courtId " +
                 "from review, reservation,court " +

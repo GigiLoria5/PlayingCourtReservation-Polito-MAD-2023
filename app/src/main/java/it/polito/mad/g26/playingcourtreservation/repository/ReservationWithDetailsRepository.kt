@@ -8,7 +8,7 @@ import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.SportCenterServices
 
 class ReservationWithDetailsRepository(application: Application) {
-    private val reservationWithDetailsDaoDao =
+    private val reservationWithDetailsDao =
         CourtReservationDatabase.getDatabase(application).reservationWithDetailsDao()
     private val repoSportCenterServices =
         CourtReservationDatabase.getDatabase(application).sportCenterServiceDao()
@@ -16,10 +16,10 @@ class ReservationWithDetailsRepository(application: Application) {
     private val reservationDao = CourtReservationDatabase.getDatabase(application).reservationDao()
 
     fun reservationsWithDetails(): LiveData<List<ReservationWithDetails>> =
-        reservationWithDetailsDaoDao.getReservationsWithDetails()
+        reservationWithDetailsDao.getReservationsWithDetails()
 
     fun reservationWithDetails(id: Int): LiveData<ReservationWithDetails> =
-        reservationWithDetailsDaoDao.getReservationWithDetailsById(id)
+        reservationWithDetailsDao.getReservationWithDetailsById(id)
 
     fun getAllServicesWithFee(id: Int): LiveData<List<SportCenterServices>> =
         repoSportCenterServices.getAllServicesWithFee(id)
@@ -39,7 +39,7 @@ class ReservationWithDetailsRepository(application: Application) {
         reservationDao.findDataAndHour(date, hour)
 
     fun deleteServices(id: Int) {
-        reservationWithDetailsDaoDao.deleteServices(id)
+        reservationWithDetailsDao.deleteServices(id)
     }
 
 }

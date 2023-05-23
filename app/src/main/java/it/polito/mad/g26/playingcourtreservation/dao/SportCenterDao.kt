@@ -10,9 +10,6 @@ import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDet
 @Dao
 interface SportCenterDao {
 
-    @Query("SELECT * from sport_center")
-    fun findAll(): LiveData<List<SportCenter>>
-
     @Query("SELECT DISTINCT city FROM sport_center ORDER BY city ASC")
     fun findAllCities(): LiveData<List<String>>
 

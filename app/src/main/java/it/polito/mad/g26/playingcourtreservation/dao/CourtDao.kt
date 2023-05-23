@@ -8,9 +8,6 @@ import it.polito.mad.g26.playingcourtreservation.model.*
 @Dao
 interface CourtDao {
 
-    @Query("SELECT * from court")
-    fun findAllCourt(): LiveData<List<Court>>
-
     @Query("SELECT * from court WHERE id=:courtId")
     fun findCourt(courtId: Int): LiveData<Court>
 
