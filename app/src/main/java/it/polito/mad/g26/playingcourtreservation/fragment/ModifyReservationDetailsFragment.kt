@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -173,15 +173,6 @@ class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_
                             }
                     }
             }
-
-        /*ALERT DIALOG FOR SUCCESSFUL UPDATE*/
-        val builderUpdated = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-        builderUpdated.setMessage("The reservation has been update successfully")
-        builderUpdated.setPositiveButton("Ok") { _, _ ->
-            // User clicked OK button
-        }
-
-
         /* CONFIRM BUTTON */
         customConfirmIconIV.setOnClickListener {
             //Take Ids of services
@@ -196,8 +187,11 @@ class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_
                 idsServices,
                 amount[0]
             )
-            builderUpdated.show()
-            //navigate back because id will be the same
+            Toast.makeText(
+                context,
+                R.string.reservation_success_update,
+                Toast.LENGTH_SHORT
+            ).show()               //navigate back because id will be the same
             findNavController().popBackStack()
         }
 
