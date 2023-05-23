@@ -22,8 +22,8 @@
     <style name="MyNegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textColor">@color/green_700</item>
     </style>
-    
-  <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+
+    <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>
     </style>
 
@@ -33,4 +33,14 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
+    <!-- Search sport_centers/courts fragments -->
+    <style name="custom_chip_choice" parent="@style/Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
+        <item name="android:textColor">@color/text_color_chip_state_list</item>
+        <item name="closeIconEnabled">true</item>
+    </style>
+
+    <style name="custom_number_picker" parent="">
+        <item name="colorControlNormal">@android:color/transparent</item>
+    </style>
 </resources>

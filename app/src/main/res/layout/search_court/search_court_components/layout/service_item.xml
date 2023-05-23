@@ -6,7 +6,7 @@
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip"
-        style="@style/CustomChipChoice"
+        style="@style/custom_chip_choice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="1dp"
