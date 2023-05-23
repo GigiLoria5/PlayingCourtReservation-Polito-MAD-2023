@@ -49,7 +49,6 @@ android {
                     [
                             'src/main/res/layout/search_court/search_court_fragments',
                             'src/main/res/layout/search_court/search_court_components',
-                            'src/main/res/values/search_court',
                             'src/main/res/color/search_court',
                             'src/main/res'
                     ]

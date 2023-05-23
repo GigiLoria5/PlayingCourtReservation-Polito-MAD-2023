@@ -74,7 +74,7 @@
                 app:layout_constraintStart_toEndOf="@id/horizontal_guideline"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/grey"
-                android:contentDescription="@string/selectCityIcon"
+                android:contentDescription="@string/select_city_icon"
                 android:src="@drawable/baseline_arrow_forward_ios_24" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

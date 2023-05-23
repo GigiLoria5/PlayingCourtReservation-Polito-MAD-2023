@@ -110,11 +110,11 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
             R.string.selected_date_time_res,
             SearchSportCentersUtil.getDateTimeFormatted(
                 dateTime,
-                getString(R.string.hourFormat)
+                getString(R.string.hour_format)
             ),
             SearchSportCentersUtil.getDateTimeFormatted(
                 dateTime,
-                getString(R.string.dateExtendedFormat)
+                getString(R.string.date_extended_format)
             )
         )
         selectedCourtTV.text = courtName
@@ -140,7 +140,7 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
 
         vm.totalAmountLiveData.observe(viewLifecycleOwner) {
             totalPriceTV.text = getString(
-                R.string.just_price,
+                R.string.just_total_reservation_price,
                 String.format("%.2f", it)
             )
         }

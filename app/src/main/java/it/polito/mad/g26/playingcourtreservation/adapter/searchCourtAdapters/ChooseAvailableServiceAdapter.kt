@@ -91,7 +91,7 @@ class ChooseAvailableServiceAdapter(
             serviceNameTV.text = service.name
             servicePriceTV.text =
                 itemView.context.getString(
-                    R.string.just_price,
+                    R.string.just_total_reservation_price,
                     String.format("%.2f", fee)
                 )
 

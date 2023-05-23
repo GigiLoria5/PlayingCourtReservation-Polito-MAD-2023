@@ -247,8 +247,8 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
             c.timeInMillis = reservationWithDetailsVM.selectedDateTimeMillis.value!!
             reservationDetailsUtil.setDateTimeTextViews(
                 reservationWithDetailsVM.selectedDateTimeMillis.value ?: 0,
-                getString(R.string.dateFormat),
-                getString(R.string.hourFormat),
+                getString(R.string.date_format),
+                getString(R.string.hour_format),
                 dateTV,
                 hourTV,
                 timeNew

@@ -26,7 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/page_external_space"
-        android:text="@string/searchBoxInfoText"
+        android:text="@string/search_box_info_text"
         android:textColor="@color/custom_black"
         android:textSize="@dimen/search_info_text_size"
         android:textStyle="bold"
@@ -110,7 +110,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="@string/searchIcon"
+                    android:contentDescription="@string/search_icon"
                     android:src="@drawable/baseline_search_24"
                     app:tint="@color/grey" />
             </com.google.android.material.card.MaterialCardView>

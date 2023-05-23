@@ -23,7 +23,7 @@
     <dimen name="edit_padding_inside_card">8dp</dimen>
     <dimen name="edit_default_margin_double">16dp</dimen>
 
-    <!-- Search sport_centers/courts fragments -->
+    <!-- Search sport_centers/courts -->
     <dimen name="search_info_text_size">20sp</dimen>
     <dimen name="search_city_text_size">18sp</dimen>
     <dimen name="date_type_internal_margin">4dp</dimen>

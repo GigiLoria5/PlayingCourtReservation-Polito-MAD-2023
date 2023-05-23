@@ -101,11 +101,11 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
             R.string.selected_date_time_res,
             SearchSportCentersUtil.getDateTimeFormatted(
                 dateTime,
-                getString(R.string.hourFormat)
+                getString(R.string.hour_format)
             ),
             SearchSportCentersUtil.getDateTimeFormatted(
                 dateTime,
-                getString(R.string.dateExtendedFormat)
+                getString(R.string.date_extended_format)
             )
         )
         selectedSportTV.text = sportName

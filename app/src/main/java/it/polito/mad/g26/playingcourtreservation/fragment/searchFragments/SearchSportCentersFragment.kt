@@ -158,8 +158,8 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
             searchSportCentersUtil.setDateTimeTextViews(
                 vm.selectedDateTimeMillis.value ?: 0,
-                getString(R.string.dateFormat),
-                getString(R.string.hourFormat),
+                getString(R.string.date_format),
+                getString(R.string.hour_format),
                 dateTV,
                 hourTV
             )
@@ -298,7 +298,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                     val numberOfSportCentersFound =
                         sportCentersWithDetailsFormatted.size
                     numberOfSportCentersFoundTV.text = getString(
-                        R.string.searchSportCenterResultsInfo,
+                        R.string.search_sport_center_results_info,
                         numberOfSportCentersFound,
                         if (numberOfSportCentersFound != 1) "s" else ""
                     )
