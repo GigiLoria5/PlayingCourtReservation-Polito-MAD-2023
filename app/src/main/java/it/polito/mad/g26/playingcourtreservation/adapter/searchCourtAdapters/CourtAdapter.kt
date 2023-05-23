@@ -23,7 +23,7 @@ class CourtAdapter(
     RecyclerView.Adapter<CourtAdapter.CourtViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourtViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.court_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.search_courts_court_item, parent, false)
         return CourtViewHolder(view)
     }
 

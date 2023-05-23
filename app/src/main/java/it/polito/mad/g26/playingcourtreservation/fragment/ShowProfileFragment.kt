@@ -26,7 +26,7 @@ import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import org.json.JSONObject
 
-class ShowProfileFragment : Fragment(R.layout.activity_show_profile) {
+class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
 
     private lateinit var sportList : List<String>
     private lateinit var ratingList: MutableList<Float>

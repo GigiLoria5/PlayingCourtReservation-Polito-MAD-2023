@@ -222,7 +222,7 @@ object SearchSportCentersUtil {
         currentHour: Int = 0,
         selectedHourTasks: (Int) -> Unit
     ) {
-        val linearLayout = LayoutInflater.from(viewContext).inflate(R.layout.hour_picker, null)
+        val linearLayout = LayoutInflater.from(viewContext).inflate(R.layout.search_sport_centers_hour_picker, null)
         val numberPicker = linearLayout.findViewById<NumberPicker>(R.id.hourPicker)
         numberPicker.wrapSelectorWheel = false
 

@@ -11,7 +11,7 @@ import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import org.json.JSONObject
 
-class SearchSportCentersHomeFragment : Fragment(R.layout.fragment_search_sport_centers_home) {
+class SearchSportCentersHomeFragment : Fragment(R.layout.home_page_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

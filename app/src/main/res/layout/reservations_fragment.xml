@@ -139,11 +139,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <include layout="@layout/reservation_item_view_placeholder" />
+                    <include layout="@layout/reservations_reservation_item_view_placeholder" />
 
-                    <include layout="@layout/reservation_item_view_placeholder" />
+                    <include layout="@layout/reservations_reservation_item_view_placeholder" />
 
-                    <include layout="@layout/reservation_item_view_placeholder" />
+                    <include layout="@layout/reservations_reservation_item_view_placeholder" />
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>
         </RelativeLayout>

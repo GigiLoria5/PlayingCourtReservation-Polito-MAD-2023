@@ -38,7 +38,7 @@ class CustomDialogAlertAddReview: DialogFragment() {
 
             val idReservation = arguments?.getInt("idReservation")
             val idUser = arguments?.getInt("idUser")
-            val view: View = layoutInflater.inflate(R.layout.custom_dialog_add_review, null)
+            val view: View = layoutInflater.inflate(R.layout.reservation_details_add_review_dialog, null)
             val builder = AlertDialog.Builder(it!!)
             builder.setView(view)
             rating = view.findViewById(R.id.rating)

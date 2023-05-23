@@ -30,7 +30,7 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.CompleteReservationVM
 
-class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservation) {
+class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragment) {
 
     private val args: CompleteReservationFragmentArgs by navArgs()
     private val vm by viewModels<CompleteReservationVM>()

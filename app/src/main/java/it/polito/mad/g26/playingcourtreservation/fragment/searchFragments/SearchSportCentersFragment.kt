@@ -34,7 +34,7 @@ import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersVM
 
-class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_centers) {
+class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragment) {
 
     private val args: SearchSportCentersFragmentArgs by navArgs()
     private val vm by viewModels<SearchSportCentersVM>()

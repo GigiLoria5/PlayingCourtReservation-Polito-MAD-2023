@@ -9,7 +9,7 @@
         android:id="@+id/showProfileFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ShowProfileFragment"
         android:label="activity_show_profile"
-        tools:layout="@layout/activity_show_profile">
+        tools:layout="@layout/show_profile_fragment">
         <action
             android:id="@+id/action_showProfileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment"
@@ -22,12 +22,12 @@
         android:id="@+id/editProfileFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.EditProfileFragment"
         android:label="activity_edit_profile"
-        tools:layout="@layout/activity_edit_profile" />
+        tools:layout="@layout/edit_profile_fragment" />
     <fragment
         android:id="@+id/searchSportCentersHomeFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersHomeFragment"
         android:label="fragment_search_court"
-        tools:layout="@layout/fragment_search_sport_centers_home">
+        tools:layout="@layout/home_page_fragment">
         <action
             android:id="@+id/action_home_to_sportCentersAction"
             app:destination="@id/searchSportCentersActionFragment"
@@ -60,7 +60,7 @@
         android:id="@+id/reservationDetailsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ReservationDetailsFragment"
         android:label="reservationDetailsFragment"
-        tools:layout="@layout/fragment_reservation_details">
+        tools:layout="@layout/reservation_details_fragment">
         <argument
             android:name="reservationId"
             app:argType="integer" />
@@ -75,7 +75,7 @@
         android:id="@+id/modifyReservationDetailsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.ModifyReservationXFragment"
         android:label="modifyReservationDetailsFragment"
-        tools:layout="@layout/fragment_modify_reservation_details">
+        tools:layout="@layout/modify_reservation_details_fragment">
         <argument
             android:name="reservationId"
             app:argType="integer" />
@@ -84,7 +84,7 @@
         android:id="@+id/searchSportCentersActionFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersActionFragment"
         android:label="fragment_search_court_action"
-        tools:layout="@layout/fragment_search_sport_centers_action">
+        tools:layout="@layout/search_cities_fragment">
         <argument
             android:name="city"
             app:argType="string" />
@@ -114,7 +114,7 @@
         android:id="@+id/searchSportCentersFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersFragment"
         android:label="fragment_search_court_results"
-        tools:layout="@layout/fragment_search_sport_centers">
+        tools:layout="@layout/search_sport_centers_fragment">
         <argument
             android:name="city"
             app:argType="string" />

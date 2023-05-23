@@ -221,7 +221,7 @@
                     android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/page_external_space"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/service_item" />
+                    tools:listitem="@layout/chip_service_item" />
 
                 <!-- Placeholder -->
                 <com.facebook.shimmer.ShimmerFrameLayout
@@ -238,11 +238,11 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <include layout="@layout/service_item_placeholder" />
+                        <include layout="@layout/chip_service_item_placeholder" />
 
-                        <include layout="@layout/service_item_placeholder" />
+                        <include layout="@layout/chip_service_item_placeholder" />
 
-                        <include layout="@layout/service_item_placeholder" />
+                        <include layout="@layout/chip_service_item_placeholder" />
 
 
                     </LinearLayout>
@@ -302,7 +302,7 @@
                 android:clipToPadding="false"
                 android:paddingVertical="@dimen/page_external_space"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/sport_center_item" />
+                tools:listitem="@layout/search_sport_centers_sport_center_item" />
 
             <!-- Placeholder -->
             <com.facebook.shimmer.ShimmerFrameLayout
@@ -317,7 +317,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <include layout="@layout/sport_center_item_placeholder" />
+                    <include layout="@layout/search_sport_centers_sport_center_item_placeholder" />
 
 
                 </LinearLayout>

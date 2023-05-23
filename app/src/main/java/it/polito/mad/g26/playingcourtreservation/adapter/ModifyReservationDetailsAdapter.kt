@@ -21,7 +21,7 @@ class ModifyReservationDetailsAdapter(
         viewType: Int
     ): ModifyReservationDetailsViewHolder {
         val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.reservation_chip, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.chip_service_item, parent, false)
         return ModifyReservationDetailsViewHolder(v)
     }
 

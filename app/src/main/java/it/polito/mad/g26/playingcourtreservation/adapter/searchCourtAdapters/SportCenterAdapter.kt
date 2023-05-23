@@ -22,7 +22,7 @@ class SportCenterAdapter(
     RecyclerView.Adapter<SportCenterAdapter.SportCenterViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportCenterViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.sport_center_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.search_sport_centers_sport_center_item, parent, false)
         return SportCenterViewHolder(view)
     }
 

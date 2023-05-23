@@ -25,7 +25,7 @@ class ChooseAvailableServiceAdapter(
         viewType: Int
     ): ChooseAvailableServiceViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.choose_available_service_item, parent, false)
+            .inflate(R.layout.complete_reservation_available_service_item, parent, false)
         return ChooseAvailableServiceViewHolder(view)
     }
 

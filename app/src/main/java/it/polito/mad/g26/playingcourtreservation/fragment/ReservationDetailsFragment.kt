@@ -31,7 +31,7 @@ import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 
 
-class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_details) {
+class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragment) {
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
     private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
@@ -127,7 +127,7 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                 if (today <= calendarRes) {
                     // Inflate the new layout with two buttons of reservation
                     val inflater = LayoutInflater.from(requireContext())
-                    val viewDeleteAndEdit = inflater.inflate(R.layout.delete_and_edit_buttons, viewReservationButtons, false)
+                    val viewDeleteAndEdit = inflater.inflate(R.layout.reservation_details_delete_and_edit_buttons, viewReservationButtons, false)
                     val deleteButton = viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
                     val editButton = viewDeleteAndEdit.findViewById<MaterialButton>(R.id.modify_reservation_button)
                     viewReservationButtons.addView(viewDeleteAndEdit)
@@ -148,7 +148,7 @@ class ReservationDetailsFragment : Fragment(R.layout.fragment_reservation_detail
                             reservationReviewMCV.makeInvisible()
                             viewReservationButtons.removeAllViews()
                             val inflater = LayoutInflater.from(requireContext())
-                            val viewAddReview = inflater.inflate(R.layout.add_review_button, viewReservationButtons, false)
+                            val viewAddReview = inflater.inflate(R.layout.reservation_details_add_review_button, viewReservationButtons, false)
                             val reviewAddButton= viewAddReview.findViewById<MaterialButton>(R.id.add_review_button)
                             viewReservationButtons.addView(viewAddReview)
                             reviewAddButton.setOnClickListener {

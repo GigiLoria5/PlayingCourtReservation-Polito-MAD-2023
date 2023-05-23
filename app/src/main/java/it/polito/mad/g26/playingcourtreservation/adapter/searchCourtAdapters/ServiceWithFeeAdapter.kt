@@ -20,7 +20,7 @@ class ServiceWithFeeAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceWithFeeViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.service_item, parent, false)
+            .inflate(R.layout.chip_service_item, parent, false)
         return ServiceWithFeeViewHolder(view)
     }
 

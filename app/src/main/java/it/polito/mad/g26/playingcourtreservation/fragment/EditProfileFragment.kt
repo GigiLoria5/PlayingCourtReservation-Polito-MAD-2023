@@ -52,7 +52,7 @@ import java.io.FileDescriptor
 import java.io.IOException
 import java.util.*
 
-class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
+class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
 
     private lateinit var usernameEditText: EditText
     private lateinit var usernameContainer: TextInputLayout
@@ -258,7 +258,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         val editBtn = view.findViewById<ImageButton>(R.id.imageButton)
 
         profilePictureAlertDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
-        profilePictureAlertDialog.setContentView(R.layout.custom_dialog_photo)
+        profilePictureAlertDialog.setContentView(R.layout.edit_profile_custom_dialog_photo)
         profilePictureAlertDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         val galleryBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.gallery)
         val cameraBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.camera)
