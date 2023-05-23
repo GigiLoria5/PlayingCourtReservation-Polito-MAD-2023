@@ -25,7 +25,7 @@ class ChooseAvailableServiceAdapter(
         viewType: Int
     ): ChooseAvailableServiceViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.choose_available_service_item, parent, false)
+            .inflate(R.layout.complete_reservation_available_service_item, parent, false)
         return ChooseAvailableServiceViewHolder(view)
     }
 
@@ -91,7 +91,7 @@ class ChooseAvailableServiceAdapter(
             serviceNameTV.text = service.name
             servicePriceTV.text =
                 itemView.context.getString(
-                    R.string.just_price,
+                    R.string.just_total_reservation_price,
                     String.format("%.2f", fee)
                 )
 

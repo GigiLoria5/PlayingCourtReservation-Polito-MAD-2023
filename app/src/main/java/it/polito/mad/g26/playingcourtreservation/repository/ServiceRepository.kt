@@ -7,8 +7,6 @@ import it.polito.mad.g26.playingcourtreservation.model.*
 
 class ServiceRepository(application: Application) {
     private val serviceDao = CourtReservationDatabase.getDatabase(application).serviceDao()
-    private val sportCenterDao = CourtReservationDatabase.getDatabase(application).sportCenterDao()
-
     fun services(): LiveData<List<Service>> = serviceDao.findAll()
 
 }

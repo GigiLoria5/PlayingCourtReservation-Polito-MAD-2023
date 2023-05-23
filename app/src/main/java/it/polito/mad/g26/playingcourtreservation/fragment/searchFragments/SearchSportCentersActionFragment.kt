@@ -16,7 +16,7 @@ import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.Cit
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersActionVM
 
-class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport_centers_action) {
+class SearchSportCentersActionFragment : Fragment(R.layout.search_cities_fragment) {
 
     private val args: SearchSportCentersActionFragmentArgs by navArgs()
     private val vm by viewModels<SearchSportCentersActionVM>()
@@ -56,8 +56,8 @@ class SearchSportCentersActionFragment : Fragment(R.layout.fragment_search_sport
         citiesResultRV = view.findViewById(R.id.citiesResultRV)
 
         val cityResultAdapter = CityResultAdapter(vm.cities.value ?: listOf()) {
-            //comingFrom: result - arrivi da results page
-            //comingFrom: home - arrivi dalla home page
+            //comingFrom: result - coming from da results page
+            //comingFrom: home - coming from home page
             closeKeyboard()
             when (bornFrom) {
                 "result" -> {

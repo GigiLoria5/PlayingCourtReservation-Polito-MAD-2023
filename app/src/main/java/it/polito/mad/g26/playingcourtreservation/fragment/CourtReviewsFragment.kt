@@ -25,7 +25,7 @@ import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtReviewsVM
 
-class CourtReviewsFragment : Fragment(R.layout.fragment_court_reviews) {
+class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
 
     private val args: CourtReviewsFragmentArgs by navArgs()
     private val vm by viewModels<CourtReviewsVM>()

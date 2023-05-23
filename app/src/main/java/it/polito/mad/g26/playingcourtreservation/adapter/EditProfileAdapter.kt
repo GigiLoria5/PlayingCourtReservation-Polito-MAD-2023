@@ -15,7 +15,7 @@ class EditProfileAdapter ( val list: List<String>, private var rating : MutableL
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditProfileViewHolder {
         val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.edit_profile_sport_recycler_view, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.edit_profile_sport_item, parent, false)
         return EditProfileViewHolder(v)
     }
 

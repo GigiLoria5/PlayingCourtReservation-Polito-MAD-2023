@@ -30,7 +30,7 @@ import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtsVM
 
-class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
+class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
 
     private val args: SearchCourtsFragmentArgs by navArgs()
     private val vm by viewModels<SearchCourtsVM>()
@@ -101,11 +101,11 @@ class SearchCourtsFragment : Fragment(R.layout.fragment_search_courts) {
             R.string.selected_date_time_res,
             SearchSportCentersUtil.getDateTimeFormatted(
                 dateTime,
-                getString(R.string.hourFormat)
+                getString(R.string.hour_format)
             ),
             SearchSportCentersUtil.getDateTimeFormatted(
                 dateTime,
-                getString(R.string.dateExtendedFormat)
+                getString(R.string.date_extended_format)
             )
         )
         selectedSportTV.text = sportName

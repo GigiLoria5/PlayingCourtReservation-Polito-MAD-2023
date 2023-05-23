@@ -30,7 +30,7 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.CompleteReservationVM
 
-class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservation) {
+class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragment) {
 
     private val args: CompleteReservationFragmentArgs by navArgs()
     private val vm by viewModels<CompleteReservationVM>()
@@ -110,11 +110,11 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
             R.string.selected_date_time_res,
             SearchSportCentersUtil.getDateTimeFormatted(
                 dateTime,
-                getString(R.string.hourFormat)
+                getString(R.string.hour_format)
             ),
             SearchSportCentersUtil.getDateTimeFormatted(
                 dateTime,
-                getString(R.string.dateExtendedFormat)
+                getString(R.string.date_extended_format)
             )
         )
         selectedCourtTV.text = courtName
@@ -140,7 +140,7 @@ class CompleteReservationFragment : Fragment(R.layout.fragment_complete_reservat
 
         vm.totalAmountLiveData.observe(viewLifecycleOwner) {
             totalPriceTV.text = getString(
-                R.string.just_price,
+                R.string.just_total_reservation_price,
                 String.format("%.2f", it)
             )
         }

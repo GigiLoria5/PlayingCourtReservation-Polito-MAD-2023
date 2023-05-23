@@ -1,16 +1,63 @@
 <resources>
     <string name="app_name">Playing Court Reservation</string>
+
+    <!-- Search sport_centers/courts -->
+    <string name="default_city">Torino</string>
+    <string name="hour_format">kk:mm</string>
+    <string name="date_format">MMM dd</string>
+    <string name="date_extended_format">EEEE, MMMM dd, yyyy</string>
+    <string name="search_box_info_text">Where do you want to play?</string>
+    <string name="search_icon">search icon</string>
+    <string name="search_sport_center_results_info">%1$d sport center%2$s found</string>
+    <string name="select_city_icon">select city icon</string>
+    <string name="search_box_hint">Search your city</string>
+    <string name="select_hour">Search hour</string>
+    <string name="select_hour_description">You can reserve a court no later than 30 minutes before the match</string>
+    <string name="all_sports">All sports</string>
+    <string name="available_services">Available services</string>
+    <string name="no_services_available">No available services for this sport center</string>
+    <string name="reserve_a_court">Reserve a court</string>
+    <string name="hour_charge_court_short">€%1$s</string>
+    <string name="sport_center_hours">%1$s - %2$s</string>
+    <string name="court_available">Available</string>
+    <string name="court_not_available">Unavailable</string>
+    <string name="you_already_have_a_reservation">You already have a reservation in this date and time</string>
+    <string name="no_sport_centers_found">There are no available sport centers with these search criteria</string>
+    <string name="service_with_fee">%1$s €%2$s</string>
+    <string name="go_to_reservation">Open reservation</string>
+    <string name="court_name">Court name</string>
+    <string name="court_type">Court type</string>
+    <string name="court_price">Court price</string>
+    <string name="court_availability">Court availability</string>
+    <string name="service_name">Service name</string>
+    <string name="service_price">Service price</string>
+    <string name="sport_center_name">Sport center name</string>
+    <string name="sport_center_address">Sport center address</string>
+    <string name="sport_center_address_res">%1$s, %2$s</string>
+    <string name="sport_center_opening_hours">00:00 – 15:00</string>
+    <string name="reviews_summary">%1$s/5 (%2$s)</string>
+    <string name="call_sport_center">call sport center</string>
+    <string name="star_vector">star vector</string>
+    <string name="selected_date_time">hh:mm, MMM dd</string>
+    <string name="selected_date_time_res">%1$s, %2$s</string>
+    <string name="search_courts_results_info">%1$d court%2$s available</string>
+    <string name="too_late_for_time_slot">Unfortunately, it\'s too late to make a reservation for this time slot</string>
+    <string name="available_services_count_info">%1$d service%2$s available</string>
+    <string name="no_available_services_found">There are no available services for this sport center</string>
+    <string name="total_amount">Total amount</string>
+    <string name="just_total_reservation_price">€%1$s</string>
+    <string name="confirm_reservation">Confirm Reservation</string>
+    <string name="confirm_reservation_message">Reservation at %1$s confirmed!</string>
     <!-- Reservations -->
-    <string name="calendarPrevious">Go Previous</string>
-    <string name="calendarNext">Go Next</string>
-    <string name="calendarExpand">Expand</string>
+    <string name="calendar_previous">Go Previous</string>
+    <string name="calendar_next">Go Next</string>
     <string name="has_reservation">Has Reservation</string>
     <string name="no_reservations">No reservations for this day</string>
     <string name="reservation_info_concatenation">%1$s, %2$s</string>
     <string name="reservation_info_amount">€%1$s</string>
     <string name="no_services_chosen">No service chosen</string>
     <!-- Show Profile -->
-    <string name="full_name_title">Fullname</string>
+    <string name="full_name_title">Full name</string>
     <string name="username_title">Username</string>
     <string name="age_title">Age</string>
     <string name="gender_title">Gender</string>
@@ -30,17 +77,13 @@
     <string name="warning_icon_tooltip">Warning: player was late or missed one of the last 10 games</string>
     <string name="danger_icon_description">Danger Icon</string>
     <string name="danger_icon_tooltip">Unreliable player: arrived late or missed more than 5 games in the last 10</string>
-    <string name="required">Required</string>
     <string name="set_profile_image">set profile image</string>
     <string name="required_helper">Required</string>
     <string name="invalid_field_helper">Invalid field</string>
-    <string name="edit_profile_ok_update_dialog_title">Profile updated</string>
     <string name="edit_profile_ok_update_dialog_message">Profile successfully updated</string>
-    <string name="edit_profile_no_ok_update_dialog_title">Invalid data</string>
     <string name="edit_profile_no_ok_update_dialog_message">Unable to update the profile. Some field are wrong</string>
     <string name="camera">Camera</string>
     <string name="galley">Gallery</string>
-    <string name="default_profile">Default profile</string>
     <string name="default_date">14–04–2002</string>
     <string name="username_min_length">Username min length is 8 characters</string>
     <string name="username_max_length">Username max length is 30 characters</string>
@@ -81,14 +124,6 @@
         <item>Male</item>
         <item>Female</item>
         <item>Other</item>
-    </string-array>
-
-    <string-array name="services_array">
-        <item>Bathroom</item>
-        <item>Var Usage</item>
-        <item>First Aid Kit</item>
-        <item>Supporters</item>
-        <item>MiniBar</item>
     </string-array>
 
     <!-- Reviews-->

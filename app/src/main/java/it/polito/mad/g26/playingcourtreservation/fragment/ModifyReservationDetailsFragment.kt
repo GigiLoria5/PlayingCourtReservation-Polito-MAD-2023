@@ -31,7 +31,7 @@ import it.polito.mad.g26.playingcourtreservation.util.takeIntCenterTime
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 
 
-class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation_details) {
+class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_fragment) {
 
     /*   VISUAL COMPONENTS       */
     private lateinit var dateMCV: MaterialCardView
@@ -247,8 +247,8 @@ class ModifyReservationXFragment : Fragment(R.layout.fragment_modify_reservation
             c.timeInMillis = reservationWithDetailsVM.selectedDateTimeMillis.value!!
             reservationDetailsUtil.setDateTimeTextViews(
                 reservationWithDetailsVM.selectedDateTimeMillis.value ?: 0,
-                getString(R.string.dateFormat),
-                getString(R.string.hourFormat),
+                getString(R.string.date_format),
+                getString(R.string.hour_format),
                 dateTV,
                 hourTV,
                 timeNew

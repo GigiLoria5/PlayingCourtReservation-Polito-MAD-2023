@@ -18,7 +18,7 @@ class ReservationsAdapter : RecyclerView.Adapter<ReservationsAdapter.Reservation
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReservationsViewHolder {
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.reservation_item_view, parent, false)
+            .inflate(R.layout.reservations_reservation_item_view, parent, false)
         return ReservationsViewHolder(v)
     }
 

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/page_external_space"
+    tools:context=".fragment.searchFragments.SearchSportCentersHomeFragment">
+
+    <ImageView
+        android:id="@+id/homeBackgroundLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:scaleX="@fraction/logo_background_scale"
+        android:scaleY="@fraction/logo_background_scale"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintBottom_toTopOf="@id/searchInfoTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/searchInfoTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/page_external_space"
+        android:text="@string/search_box_info_text"
+        android:textColor="@color/custom_black"
+        android:textSize="@dimen/search_info_text_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/cityNameMCV"
+        app:layout_constraintStart_toStartOf="@+id/cityNameMCV"
+        app:layout_constraintEnd_toEndOf="@id/cityNameMCV"
+        />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cityNameMCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/page_external_space"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/grey"
+        app:cardCornerRadius="@dimen/corner_radius"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
+        app:cardPreventCornerOverlap="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="TouchTargetSizeCheck">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/citySearchMCV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardElevation="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/horizontal_guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeWidth="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/page_external_space">
+
+                    <TextView
+                        android:id="@+id/cityNameTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text=""
+                        android:textColor="@color/grey"
+                        android:textSize="@dimen/search_city_text_size"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/horizontal_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.8" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/searchMCV"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:cardElevation="0dp"
+                app:contentPadding="@dimen/page_external_space"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/horizontal_guideline"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeWidth="0dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/search_icon"
+                    android:src="@drawable/baseline_search_24"
+                    app:tint="@color/grey" />
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

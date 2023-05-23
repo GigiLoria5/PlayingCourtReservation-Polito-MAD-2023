@@ -10,9 +10,6 @@ import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterService
 @Dao
 interface SportCenterServicesDao {
 
-    @Query("SELECT * from sport_center_services")
-    fun findAllSportCenterServices(): LiveData<List<SportCenterServices>>
-
     @Transaction
     @Query("SELECT * FROM sport_center_services WHERE id_sport_center = :idSportCenter")
     fun getAllServicesWithFee(idSportCenter: Int): LiveData<List<SportCenterServices>>

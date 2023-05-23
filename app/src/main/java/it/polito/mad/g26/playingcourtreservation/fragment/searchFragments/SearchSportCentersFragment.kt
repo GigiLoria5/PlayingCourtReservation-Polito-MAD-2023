@@ -34,7 +34,7 @@ import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersVM
 
-class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_centers) {
+class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragment) {
 
     private val args: SearchSportCentersFragmentArgs by navArgs()
     private val vm by viewModels<SearchSportCentersVM>()
@@ -158,8 +158,8 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         vm.selectedDateTimeMillis.observe(viewLifecycleOwner) {
             searchSportCentersUtil.setDateTimeTextViews(
                 vm.selectedDateTimeMillis.value ?: 0,
-                getString(R.string.dateFormat),
-                getString(R.string.hourFormat),
+                getString(R.string.date_format),
+                getString(R.string.hour_format),
                 dateTV,
                 hourTV
             )
@@ -170,7 +170,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
         servicesAdapter = createServiceAdapter()
         servicesRV.adapter = servicesAdapter
         val itemDecoration =
-            HorizontalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.chipDistance))
+            HorizontalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.chip_distance))
         servicesRV.addItemDecoration(itemDecoration)
 
         /* servicesShimmerView INITIALIZER */
@@ -251,7 +251,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                     servicesShimmerView.stopShimmer()
                     sportCentersShimmerView.stopShimmer()
                     showExistingReservationCL()
-                    navigateToReservationBTN.setOnClickListener { _ ->
+                    navigateToReservationBTN.setOnClickListener {
                         findNavController().navigate(
                             SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
                                 vm.existingReservationIdByDateAndTime.value!!
@@ -298,7 +298,7 @@ class SearchSportCentersFragment : Fragment(R.layout.fragment_search_sport_cente
                     val numberOfSportCentersFound =
                         sportCentersWithDetailsFormatted.size
                     numberOfSportCentersFoundTV.text = getString(
-                        R.string.searchSportCenterResultsInfo,
+                        R.string.search_sport_center_results_info,
                         numberOfSportCentersFound,
                         if (numberOfSportCentersFound != 1) "s" else ""
                     )

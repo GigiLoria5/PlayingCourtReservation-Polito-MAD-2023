@@ -13,7 +13,7 @@ class ShowProfileAdapter (private val list: List<String>, private var rating : L
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowProfileViewHolder {
         val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.show_profile_sport_recycler_view, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.show_profile_sport_item, parent, false)
         return ShowProfileViewHolder(v)
     }
 

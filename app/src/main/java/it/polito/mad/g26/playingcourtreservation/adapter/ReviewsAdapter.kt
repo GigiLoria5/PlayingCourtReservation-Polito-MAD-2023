@@ -16,7 +16,7 @@ class ReviewsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewsViewHolder {
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.review_item, parent, false)
+            .inflate(R.layout.court_reviews_review_item, parent, false)
         return ReviewsViewHolder(v)
     }
 

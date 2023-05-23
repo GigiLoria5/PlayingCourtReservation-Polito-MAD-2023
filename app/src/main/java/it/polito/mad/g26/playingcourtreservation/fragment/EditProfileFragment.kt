@@ -52,7 +52,7 @@ import java.io.FileDescriptor
 import java.io.IOException
 import java.util.*
 
-class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
+class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
 
     private lateinit var usernameEditText: EditText
     private lateinit var usernameContainer: TextInputLayout
@@ -161,14 +161,14 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
 
         usernameEditText = view.findViewById(R.id.username_et)
         autoCompletePosition = view.findViewById(R.id.position_autocomplete)
-        fullNameEditText = view.findViewById(R.id.fullname_et)
+        fullNameEditText = view.findViewById(R.id.full_name_et)
         dateOfBirthEditText = view.findViewById(R.id.dob_et)
         autoCompleteGender = view.findViewById(R.id.gender_autocomplete)
         locationEditText = view.findViewById(R.id.location_et)
         avatarImage = view.findViewById(R.id.avatar)
 
         usernameContainer = view.findViewById(R.id.username_container)
-        fullNameContainer = view.findViewById(R.id.fullname_container)
+        fullNameContainer = view.findViewById(R.id.full_name_container)
         locationContainer = view.findViewById(R.id.location_container)
         sportRecycleView= view.findViewById(R.id.edit_profile_recycler_view)
         sportList=resources.getStringArray(R.array.sport_array).toList()
@@ -258,7 +258,7 @@ class EditProfileFragment : Fragment(R.layout.activity_edit_profile) {
         val editBtn = view.findViewById<ImageButton>(R.id.imageButton)
 
         profilePictureAlertDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
-        profilePictureAlertDialog.setContentView(R.layout.custom_dialog_photo)
+        profilePictureAlertDialog.setContentView(R.layout.edit_profile_custom_dialog_photo)
         profilePictureAlertDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         val galleryBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.gallery)
         val cameraBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.camera)
