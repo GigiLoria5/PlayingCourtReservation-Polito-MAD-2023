@@ -148,7 +148,7 @@
 
     <!-- Invite users -->
     <string name="invite_users">Invite users</string>
-    <string name="user_search_box_hint">Search by username</string>
+    <string name="user_search_box_hint">Filter by username</string>
     <string name="filter_by_age">Filter by age (%1$s-%2$s)</string>
     <array name="initial_age_slider_values">
         <item>25</item>
