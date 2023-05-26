@@ -145,4 +145,20 @@
     <string name="edit_review_button">Edit review</string>
     <string name="delete_review_button">Delete review</string>
     <string name="court_reviews">Court Reviews</string>
+
+    <!-- Invite users -->
+    <string name="invite_users">Invite users</string>
+    <string name="user_search_box_hint">Search by username</string>
+    <string name="filter_by_age">Filter by age (%1$s-%2$s)</string>
+    <array name="initial_age_slider_values">
+        <item>25</item>
+        <item>70</item>
+    </array>
+    <string name="filter_by_skills">Filter by skills (%1$s-%2$s)</string>
+    <array name="initial_skills_slider_values">
+        <item>2</item>
+        <item>4</item>
+    </array>
+    <string name="found_users_results_info">%1$d user%2$s found</string>
+
 </resources>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/inviteUsersABL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/usersRL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/customToolBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/searchFiltersCL"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:navigationIcon="@drawable/baseline_arrow_back_24"
+                app:title="@string/invite_users"
+                app:titleTextColor="@color/white" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/searchFiltersCL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/page_external_space"
+                app:layout_constraintBottom_toTopOf="@id/numberOfFoundUsersTV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/customToolBar">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/userNameMCV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/page_external_space"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardCornerRadius="@dimen/corner_radius"
+                    app:cardElevation="0dp"
+                    app:cardMaxElevation="0dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:layout_constraintBottom_toTopOf="@id/filterByAgeTV"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingVertical="2dp">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/searchUserTextMCV"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:cardElevation="0dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/horizontal_guideline"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:strokeWidth="0dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingHorizontal="@dimen/page_external_space">
+
+                                <EditText
+                                    android:id="@+id/searchInputET"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:autofillHints="name"
+                                    android:backgroundTint="@color/white"
+                                    android:hint="@string/user_search_box_hint"
+                                    android:inputType="text"
+                                    android:textColor="@color/grey"
+                                    android:textSize="@dimen/search_city_text_size"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/horizontal_guideline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_percent="0.8" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:contentDescription="@string/search_icon"
+                            android:padding="@dimen/page_external_space"
+                            android:src="@drawable/baseline_search_24"
+                            app:cardElevation="0dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/horizontal_guideline"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/grey" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/filterByAgeTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/page_external_space"
+                    android:text="@string/filter_by_age"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/user_filter_info"
+                    app:layout_constraintBottom_toTopOf="@id/ageRS"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/userNameMCV"
+                    tools:ignore="TextContrastCheck" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/ageRS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stepSize="1.0"
+                    android:valueFrom="18"
+                    android:valueTo="80"
+                    app:layout_constraintBottom_toTopOf="@id/filterBySkillsTV"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/filterByAgeTV"
+                    app:thumbColor="@color/white"
+                    app:thumbStrokeColor="@color/green_700"
+                    app:tickVisible="false"
+                    app:trackColorActive="@color/white"
+                    app:trackColorInactive="@color/green_700"
+                    app:values="@array/initial_age_slider_values" />
+
+                <TextView
+                    android:id="@+id/filterBySkillsTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/page_external_space"
+                    android:text="@string/filter_by_skills"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/user_filter_info"
+                    app:layout_constraintBottom_toTopOf="@id/skillRS"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ageRS"
+                    tools:ignore="TextContrastCheck" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/skillRS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stepSize="1.0"
+                    android:valueFrom="1"
+                    android:valueTo="5"
+                    app:layout_constraintBottom_toTopOf="@id/roleTypeMCV"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/filterBySkillsTV"
+                    app:thumbColor="@color/white"
+                    app:thumbStrokeColor="@color/green_700"
+                    app:tickVisible="false"
+                    app:trackColorActive="@color/white"
+                    app:trackColorInactive="@color/green_700"
+                    app:values="@array/initial_skills_slider_values" />
+
+<!--
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/roleTypeMCV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="@dimen/corner_radius"
+                    android:layout_marginBottom="@dimen/page_external_space"
+                    app:cardElevation="@dimen/standard_elevation"
+                    app:cardMaxElevation="@dimen/standard_elevation"
+                    app:cardPreventCornerOverlap="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/skillRS">
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/courtTypeTIL"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:boxBackgroundColor="@color/white"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
+                        app:endIconTint="@color/grey">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/courtTypeACTV"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/white"
+                            android:ellipsize="end"
+                            android:inputType="none"
+                            android:maxLines="1"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            android:singleLine="true"
+                            android:textColor="@color/grey"
+                            android:textSize="@dimen/date_type_buttons_text_size"
+                            android:textStyle="normal"
+                            tools:ignore="LabelFor,TextContrastCheck,VisualLintTextFieldSize"
+                            tools:text="All roles" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+-->
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/roleTypeMCV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/skillRS"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/chip_service_item" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/numberOfFoundUsersTV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/page_external_space"
+                android:paddingBottom="@dimen/page_external_space"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/user_filter_info"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchFiltersCL"
+                tools:ignore="TextContrastCheck"
+                tools:text="1 user found" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/usersRL"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:animateLayoutChanges="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inviteUsersABL">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/usersRV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingVertical="@dimen/page_external_space"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/invite_users_user_item" />
+
+        <!-- Placeholder -->
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/usersShimmerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shimmer_repeat_mode="restart"
+            app:shimmer_shape="radial">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/search_courts_court_item_placeholder" />
+
+
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

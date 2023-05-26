@@ -14,7 +14,6 @@
         app:cardCornerRadius="@dimen/corner_radius"
         app:cardElevation="@dimen/standard_elevation"
         app:cardUseCompatPadding="true"
-        
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -96,10 +95,36 @@
                     android:text="@string/sport_center_opening_hours"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/grey"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/availableCourtsTV"
                     app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/sportCenterAddressTV" />
+
+                <!-- TODO DECIDI COSA FARE CON STA TEXTVIEW -->
+                <TextView
+                    android:id="@+id/availableCourtsTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    tools:text="1 court available to reserve"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey"
+                    app:layout_constraintBottom_toTopOf="@id/joinableMatchTV"
+                    app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sportCenterHoursTV" />
+
+                <!-- TODO DECIDI COSA FARE CON STA TEXTVIEW -->
+                <TextView
+                    android:id="@+id/joinableMatchTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    tools:text="1 court available to join a match"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/availableCourtsTV" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
