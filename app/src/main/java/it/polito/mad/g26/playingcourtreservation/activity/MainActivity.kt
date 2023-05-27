@@ -9,14 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.isItemChecked
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setCheckedMenuItem
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     private lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,5 +132,4 @@ class MainActivity : AppCompatActivity() {
         }
         bottomNav.menu.setGroupCheckable(0, true, true)
     }
-
 }

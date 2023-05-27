@@ -21,6 +21,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.SportCenterAdapter
@@ -33,11 +34,14 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersVM
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersViewModel
 
+@AndroidEntryPoint
 class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragment) {
 
     private val args: SearchSportCentersFragmentArgs by navArgs()
     private val vm by viewModels<SearchSportCentersVM>()
+    private val viewModel: SearchSportCentersViewModel by viewModels()
     private val loadTime: Long = 500
 
     /*   VISUAL COMPONENTS       */
@@ -82,6 +86,13 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
         /* VM INITIALIZATIONS */
         vm.initialize(city, dateTime, sportId, selectedServicesIds)
+
+        viewModel.getSportCenters()
+        viewModel.sportCenters.observe(viewLifecycleOwner) { sportCenters ->
+            sportCenters.forEach {
+                println(it)
+            }
+        }
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -361,6 +372,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                 override fun onAnimationRepeat(animation: Animation) {
                     //unuseful
                 }
+
                 override fun onAnimationEnd(animation: Animation) {
                     initialLoading()
                     loadExistingReservation()
