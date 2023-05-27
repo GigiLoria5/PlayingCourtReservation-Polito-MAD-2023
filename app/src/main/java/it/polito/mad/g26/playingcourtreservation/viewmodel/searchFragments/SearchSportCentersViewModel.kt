@@ -1,14 +1,15 @@
 package it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
 import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.util.UiState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,14 +20,9 @@ class SearchSportCentersViewModel @Inject constructor(
     val sportCenters: LiveData<UiState<List<SportCenter>>>
         get() = _sportCenters
 
-    fun getSportCenters() {
+    fun getSportCenters() = viewModelScope.launch {
         _sportCenters.value = UiState.Loading
-        Handler(Looper.getMainLooper()).postDelayed({
-            _sportCenters.value = sportCenterRepository.getSportCenters()
-        }, 2000)
-    }
-
-    fun getSportCentersCities(): UiState<List<String>> {
-        return sportCenterRepository.getSportCentersCities()
+        delay(2000)
+        _sportCenters.value = sportCenterRepository.getSportCenters()
     }
 }

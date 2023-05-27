@@ -42,7 +42,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
     private val args: SearchSportCentersFragmentArgs by navArgs()
     private val vm by viewModels<SearchSportCentersVM>()
-    private val viewModel: SearchSportCentersViewModel by viewModels()
+    private val viewModel by viewModels<SearchSportCentersViewModel>()
     private val loadTime: Long = 500
 
     /*   VISUAL COMPONENTS       */
