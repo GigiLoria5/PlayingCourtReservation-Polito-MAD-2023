@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt' apply true
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -14,7 +15,7 @@ android {
         minSdk 24
         targetSdk 33
         versionCode 1
-        versionName "0.3"
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -67,6 +68,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     // Material Design
     implementation 'com.google.android.material:material:1.9.0'
+    // Google Firebase
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.1'
     // Third-party Libraries
     implementation 'com.kizitonwose.calendar:view:2.3.0' // The view calendar library
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
