@@ -16,13 +16,23 @@ import javax.inject.Inject
 class SearchSportCentersViewModel @Inject constructor(
     private val sportCenterRepository: SportCenterRepository
 ) : ViewModel() {
+
     private val _sportCenters = MutableLiveData<UiState<List<SportCenter>>>()
     val sportCenters: LiveData<UiState<List<SportCenter>>>
         get() = _sportCenters
+
+    fun addSportCenters(sportCenters: List<SportCenter>): LiveData<UiState<String>> {
+        val result = MutableLiveData<UiState<String>>()
+        viewModelScope.launch {
+            result.value = sportCenterRepository.addSportCenters(sportCenters)
+        }
+        return result
+    }
 
     fun getSportCenters() = viewModelScope.launch {
         _sportCenters.value = UiState.Loading
         delay(2000)
         _sportCenters.value = sportCenterRepository.getSportCenters()
     }
+    
 }

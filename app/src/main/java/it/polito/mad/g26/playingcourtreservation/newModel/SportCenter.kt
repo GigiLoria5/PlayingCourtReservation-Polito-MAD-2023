@@ -1,7 +1,9 @@
 package it.polito.mad.g26.playingcourtreservation.newModel
 
+import java.util.UUID
+
 data class SportCenter(
-    val id: String = "",
+    var id: String = "",
     val name: String = "",
     val address: String = "",
     val city: String = "",
@@ -18,7 +20,7 @@ data class Service(
 )
 
 data class Court(
-    val id: String = "",
+    val id: String = UUID.randomUUID().toString(),
     val name: String = "",
     val sport: String = "",
     val hourCharge: Double = 0.0

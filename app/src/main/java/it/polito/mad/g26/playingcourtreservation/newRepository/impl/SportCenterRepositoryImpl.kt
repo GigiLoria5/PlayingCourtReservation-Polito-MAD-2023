@@ -8,10 +8,17 @@ import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.await
 
 class SportCenterRepositoryImpl(private val db: FirebaseFirestore) : SportCenterRepository {
-    override suspend fun addSportCenter(sportCenter: SportCenter): UiState<String> {
+
+    override suspend fun addSportCenters(sportCenters: List<SportCenter>): UiState<String> {
         return try {
-            val result = db.collection(FirestoreTables.SPORT_CENTERS).add(sportCenter).await()
-            UiState.Success(result.id)
+            val batch = db.batch()
+            sportCenters.forEach { sportCenter ->
+                val docRef = db.collection(FirestoreTables.SPORT_CENTERS).document()
+                sportCenter.id = docRef.id
+                batch[docRef] = sportCenter
+            }
+            batch.commit().await()
+            UiState.Success("Sport centers added successfully")
         } catch (e: Exception) {
             e.printStackTrace()
             UiState.Failure(e.localizedMessage)
@@ -24,8 +31,10 @@ class SportCenterRepositoryImpl(private val db: FirebaseFirestore) : SportCenter
             val sportCenters = arrayListOf<SportCenter>()
             for (document in result) {
                 val sportCenter = document.toObject(SportCenter::class.java)
+                sportCenter.id = document.id
                 sportCenters.add(sportCenter)
             }
+            sportCenters.sortBy { list -> list.name }
             UiState.Success(sportCenters)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -43,4 +52,5 @@ class SportCenterRepositoryImpl(private val db: FirebaseFirestore) : SportCenter
             UiState.Failure(e.message)
         }
     }
+
 }
