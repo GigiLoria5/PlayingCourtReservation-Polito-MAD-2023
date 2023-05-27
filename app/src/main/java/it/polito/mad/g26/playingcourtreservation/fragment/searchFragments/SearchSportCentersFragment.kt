@@ -27,6 +27,7 @@ import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.Ser
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.SportCenterAdapter
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
@@ -88,9 +89,22 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         vm.initialize(city, dateTime, sportId, selectedServicesIds)
 
         viewModel.getSportCenters()
-        viewModel.sportCenters.observe(viewLifecycleOwner) { sportCenters ->
-            sportCenters.forEach {
-                println(it)
+        viewModel.sportCenters.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    // Activate Loading Effect
+                    println("Loading")
+                }
+
+                is UiState.Failure -> {
+                    println("Error: ${state.error}")
+                }
+
+                is UiState.Success -> {
+                    state.data.forEach {
+                        println(it)
+                    }
+                }
             }
         }
 
