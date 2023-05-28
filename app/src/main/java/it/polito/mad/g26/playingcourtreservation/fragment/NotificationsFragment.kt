@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -8,12 +9,14 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
@@ -22,6 +25,8 @@ import it.polito.mad.g26.playingcourtreservation.model.Notification
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+
 
 class NotificationsFragment : Fragment(R.layout.notification_fragment) {
 
@@ -29,6 +34,8 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
     private lateinit var notificationsRV: RecyclerView
     private lateinit var noNotificationMCV: MaterialCardView
     private lateinit var deleteAllNotificationMCV: MaterialCardView
+    private lateinit var notificationsAdapter: NotificationsAdapter
+    private var deleteData: Notification? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         /* CUSTOM TOOLBAR MANAGEMENT*/
@@ -41,7 +48,7 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().popBackStack()
         }
-        var notifications = listOf<Notification>()
+        val notifications = mutableListOf<Notification>()
 
         noNotificationMCV = view.findViewById(R.id.noNotificationsFoundMCV)
         deleteAllNotificationMCV = view.findViewById(R.id.deleteNotificationsMCV)
@@ -49,21 +56,21 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
         /*Set-up recycle view */
         notificationsRV = view.findViewById(R.id.notificationsRV)
 
-        var n0 = Notification()
+        val n0 = Notification()
         n0.id = 0
         n0.isRead = true
         n0.timestamp = "28-05-2023 18:32:05"
         n0.message = "Filippo invited you to play"
         n0.idReservation = 1
 
-        var n1 = Notification()
+        val n1 = Notification()
         n1.id = 1
         n1.isRead = false
         n1.timestamp = "28-05-2023 18:32:20"
         n1.message = "Marco invited you to play"
         n1.idReservation = 1
 
-        var n2 = Notification()
+        val n2 = Notification()
         n2.id = 2
         n2.isRead = false
         n2.timestamp = "28-05-2023 18:32:40"
@@ -74,7 +81,8 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
         notifications += n1
         notifications += n2
 
-        notificationsRV.adapter = NotificationsAdapter(notifications)
+        notificationsAdapter = NotificationsAdapter(notifications)
+        notificationsRV.adapter = notificationsAdapter
         notificationsRV.addItemDecoration(DividerItemDecoration(this.activity, LinearLayout.VERTICAL))
 
         if (notifications.isNotEmpty()){
@@ -104,8 +112,49 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(notificationsRV)
     }
 
+    private var simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return true
+        }
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val position = viewHolder.absoluteAdapterPosition
+            when(direction){
+                ItemTouchHelper.LEFT ->{
+                    deleteData = notificationsAdapter.removeItem(position)
+                    notificationsAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+        override fun onChildDraw(
+            c: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
+                .addSwipeLeftActionIcon(android.R.drawable.ic_menu_delete)
+                .addSwipeLeftLabel("Delete")
+                .setSwipeLeftLabelColor(ContextCompat.getColor(requireContext(), R.color.white))
+                .create()
+                .decorate()
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+        }
+
+    }
     override fun onResume() {
         super.onResume()
         hideActionBar(activity)

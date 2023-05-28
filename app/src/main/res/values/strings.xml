@@ -151,6 +151,7 @@
     <string name="no_notifications_found">There are no notifications</string>
     <string name="notification_timestamp">dd-MM-yyyy HH:mm:ss</string>
     <string name="notification_message">Notification message</string>
-    <string name="delete_all_notification">Delete all notifications</string>
+    <string name="delete_all_notifications">Delete all notifications</string>
+    <string name="delete_notification">Delete notification</string>
     <string name="number_one">1</string>
 </resources>

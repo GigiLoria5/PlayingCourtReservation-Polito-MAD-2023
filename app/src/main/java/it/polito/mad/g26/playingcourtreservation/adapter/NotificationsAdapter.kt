@@ -10,9 +10,8 @@ import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.Notification
 
 class NotificationsAdapter(
-    private var notifications: List<Notification>
+    private var notifications: MutableList<Notification>
 ) : RecyclerView.Adapter<NotificationsAdapter.NotificationsViewHolder>() {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationsViewHolder {
         val v = LayoutInflater.from(parent.context)
             .inflate(viewType, parent, false)
@@ -24,7 +23,7 @@ class NotificationsAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateNotifications(updatedCollection: List<Notification>) {
+    fun updateNotifications(updatedCollection: MutableList<Notification>) {
         this.notifications = updatedCollection
         notifyDataSetChanged()
     }
@@ -36,6 +35,13 @@ class NotificationsAdapter(
             return R.layout.notification_item_isread
         }
         return R.layout.notification_item
+    }
+
+    fun removeItem(position: Int): Notification {
+        val deleteNotification = notifications[position]
+        notifications.removeAt(position)
+        notifyItemRemoved(position)
+        return deleteNotification
     }
 
     inner class NotificationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {

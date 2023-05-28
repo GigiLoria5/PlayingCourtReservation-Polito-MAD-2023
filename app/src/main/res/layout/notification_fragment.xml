@@ -66,7 +66,7 @@
                 android:background="@color/green_500"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:text="@string/delete_all_notification"
+                android:text="@string/delete_all_notifications"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/white"
                 android:textStyle="normal"
