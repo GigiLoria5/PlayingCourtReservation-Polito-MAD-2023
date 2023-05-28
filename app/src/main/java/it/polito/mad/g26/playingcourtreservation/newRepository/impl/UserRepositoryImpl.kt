@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.g26.playingcourtreservation.newModel.User
 import it.polito.mad.g26.playingcourtreservation.newRepository.UserRepository
+import it.polito.mad.g26.playingcourtreservation.util.FirestoreCollections
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.await
 import it.polito.mad.g26.playingcourtreservation.util.generateUsername
@@ -28,7 +29,7 @@ class UserRepositoryImpl @Inject constructor(
             val uid = result.user!!.uid
             val username = generateUsername(uid)
             val user = User(id = uid, username = username)
-            db.collection("users")
+            db.collection(FirestoreCollections.USERS)
                 .document(uid)
                 .set(user)
                 .await()

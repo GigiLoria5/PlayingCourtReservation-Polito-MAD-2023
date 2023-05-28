@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.polito.mad.g26.playingcourtreservation.newRepository.UserRepository
 import it.polito.mad.g26.playingcourtreservation.util.UiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,6 +33,7 @@ class HomePageViewModel @Inject constructor(
     fun login() = viewModelScope.launch {
         _loginState.value = UiState.Loading
         val result = userRepository.login()
+        delay(1000)
         _loginState.value = result
     }
 

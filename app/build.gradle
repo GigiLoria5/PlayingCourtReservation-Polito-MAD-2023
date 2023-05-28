@@ -84,6 +84,7 @@ dependencies {
     // Third-party Libraries
     implementation 'com.kizitonwose.calendar:view:2.3.0' // The view calendar library
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
     // Desugaring Library needed to support Calendar view for sdk below 25
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
 

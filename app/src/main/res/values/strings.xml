@@ -126,6 +126,10 @@
         <item>Other</item>
     </string-array>
 
+    <!-- Dialogs-->
+    <string name="dialog_generic_title">A problem occurred</string>
+    <string name="dialog_try_again_title">Try again</string>
+
     <!-- Reviews-->
     <string name="tv_rating">Rating</string>
     <string name="tv_review">Write a text review</string>

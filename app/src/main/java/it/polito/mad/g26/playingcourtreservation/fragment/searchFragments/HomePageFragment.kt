@@ -8,23 +8,30 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
+import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.HomePageViewModel
 import org.json.JSONObject
+import pl.droidsonroids.gif.GifImageView
 
 @AndroidEntryPoint
 class HomePageFragment : Fragment(R.layout.home_page_fragment) {
 
     private val viewModel by viewModels<HomePageViewModel>()
 
+    private lateinit var loaderImage: GifImageView
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         hideActionBar(activity)
 
-        println("HomePageFragment, at start the current user is: ${viewModel.currentUser?.uid ?: "null"}")
+        // Setup late init variables
+        loaderImage = requireActivity().findViewById(R.id.loaderImage)
 
         val cityNameTV = view.findViewById<TextView>(R.id.cityNameTV)
         val selectCityMCV = view.findViewById<MaterialCardView>(R.id.citySearchMCV)
@@ -49,25 +56,28 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
 
     override fun onStart() {
         super.onStart()
-        if (viewModel.currentUser != null)
-            return
-        viewModel.login()
+        if (viewModel.currentUser == null)
+            viewModel.login()
         viewModel.loginState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    // Activate Loading Effect
-                    println("HomePage Login Loading")
-                }
-
-                is UiState.Failure -> {
-                    println("HomePage Login Error: ${state.error}")
+                    loaderImage.setFreezesAnimation(false)
+                    loaderImage.makeVisible()
                 }
 
                 is UiState.Success -> {
-                    println("HomePage Login Success")
+                    loaderImage.makeGone()
                 }
 
-                else -> println("HomePage Login Strange Error")
+                is UiState.Failure -> {
+                    loaderImage.setFreezesAnimation(true)
+                    showLoginErrorDialog(state.error)
+                }
+
+                else -> {
+                    loaderImage.setFreezesAnimation(true)
+                    showLoginErrorDialog("")
+                }
             }
         }
     }
@@ -75,6 +85,19 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
     override fun onResume() {
         super.onResume()
         hideActionBar(activity)
+    }
+
+    private fun showLoginErrorDialog(error: String?) {
+        val defaultMessage = "An error occurred while performing the login"
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.dialog_generic_title))
+            .setMessage(error ?: defaultMessage)
+            .setPositiveButton(resources.getString(R.string.dialog_try_again_title)) { dialog, _ ->
+                viewModel.login()
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun getUserCity(): String? {
