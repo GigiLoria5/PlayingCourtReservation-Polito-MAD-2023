@@ -30,7 +30,7 @@
         tools:layout="@layout/home_page_fragment">
         <action
             android:id="@+id/action_home_to_sportCentersAction"
-            app:destination="@id/searchSportCentersActionFragment"
+            app:destination="@id/searchCitiesFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
@@ -81,8 +81,8 @@
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/searchSportCentersActionFragment"
-        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersActionFragment"
+        android:id="@+id/searchCitiesFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCitiesFragment"
         android:label="fragment_search_court_action"
         tools:layout="@layout/search_cities_fragment">
         <argument
@@ -137,7 +137,7 @@
             app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_searchSportCenters_to_sportCentersAction"
-            app:destination="@id/searchSportCentersActionFragment"
+            app:destination="@id/searchCitiesFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"

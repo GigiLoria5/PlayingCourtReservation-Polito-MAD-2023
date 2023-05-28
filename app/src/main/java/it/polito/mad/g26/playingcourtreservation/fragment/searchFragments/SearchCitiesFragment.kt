@@ -14,14 +14,17 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CityResultAdapter
+import it.polito.mad.g26.playingcourtreservation.util.Debouncer
+import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
-import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersActionVM
+import it.polito.mad.g26.playingcourtreservation.util.toast
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCitiesViewModel
 
 @AndroidEntryPoint
-class SearchSportCentersActionFragment : Fragment(R.layout.search_cities_fragment) {
+class SearchCitiesFragment : Fragment(R.layout.search_cities_fragment) {
 
-    private val args: SearchSportCentersActionFragmentArgs by navArgs()
-    private val vm by viewModels<SearchSportCentersActionVM>()
+    private val args: SearchCitiesFragmentArgs by navArgs()
+    private val viewModel by viewModels<SearchCitiesViewModel>()
 
     private lateinit var searchInputET: EditText
     private lateinit var citiesResultRV: RecyclerView
@@ -41,7 +44,6 @@ class SearchSportCentersActionFragment : Fragment(R.layout.search_cities_fragmen
         sportId = args.sportId
         selectedServicesIds = args.selectedServicesIds
 
-
         /* CUSTOM TOOLBAR BACK MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
         customToolBar.setNavigationOnClickListener {
@@ -49,15 +51,19 @@ class SearchSportCentersActionFragment : Fragment(R.layout.search_cities_fragmen
         }
         customToolBar.title = "Find your Sport Center"
         searchInputET = view.findViewById(R.id.searchInputET)
+        val searchDebouncer = Debouncer(500)
         searchInputET.doOnTextChanged { text, _, _, _ ->
-            vm.searchNameChanged(text.toString())
+            searchDebouncer.submit {
+                viewModel.getCities(text.toString())
+            }
         }
         searchInputET.requestFocus()
         openKeyboard()
+        searchInputET.setText(city)
+
         /* CITIES RESULTS RECYCLE VIEW INITIALIZER*/
         citiesResultRV = view.findViewById(R.id.citiesResultRV)
-
-        val cityResultAdapter = CityResultAdapter(vm.cities.value ?: listOf()) {
+        val cityResultAdapter = CityResultAdapter {
             //comingFrom: result - coming from da results page
             //comingFrom: home - coming from home page
             closeKeyboard()
@@ -81,13 +87,28 @@ class SearchSportCentersActionFragment : Fragment(R.layout.search_cities_fragmen
                 )
             )
         }
-
         citiesResultRV.adapter = cityResultAdapter
 
-        vm.cities.observe(viewLifecycleOwner) {
-            cityResultAdapter.updateCollection(vm.cities.value ?: listOf())
+        // Get Cities
+        viewModel.cities.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    // TODO: Start Shimmer Loading
+                    println("SearchCitiesFragment Loading")
+                }
+
+                is UiState.Failure -> {
+                    // TODO: Stop Shimmer Loading
+                    toast(state.error ?: "Unable to get cities")
+                }
+
+                is UiState.Success -> {
+                    // TODO: Stop Shimmer Loading
+                    cityResultAdapter.updateCollection(state.result)
+                }
+            }
         }
-        searchInputET.setText(city)
+
     }
 
     private fun openKeyboard() {
@@ -109,4 +130,5 @@ class SearchSportCentersActionFragment : Fragment(R.layout.search_cities_fragmen
         super.onResume()
         hideActionBar(activity)
     }
+
 }

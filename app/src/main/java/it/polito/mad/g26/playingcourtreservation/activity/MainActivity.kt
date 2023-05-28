@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                         bottomNav.setCheckedMenuItem(R.id.home)
                     }
 
-                    R.id.searchSportCentersActionFragment -> lockOrientationAndHideNav()
+                    R.id.searchCitiesFragment -> lockOrientationAndHideNav()
 
                     R.id.searchSportCentersFragment -> lockOrientationAndShowNav()
 
