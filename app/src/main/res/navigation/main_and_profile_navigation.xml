@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profile_navigation"
-    app:startDestination="@id/searchSportCentersHomeFragment">
+    app:startDestination="@id/homePageFragment">
 
     <fragment
         android:id="@+id/showProfileFragment"
@@ -24,8 +24,8 @@
         android:label="activity_edit_profile"
         tools:layout="@layout/edit_profile_fragment" />
     <fragment
-        android:id="@+id/searchSportCentersHomeFragment"
-        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersHomeFragment"
+        android:id="@+id/homePageFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.HomePageFragment"
         android:label="fragment_search_court"
         tools:layout="@layout/home_page_fragment">
         <action

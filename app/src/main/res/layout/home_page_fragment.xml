@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/page_external_space"
-    tools:context=".fragment.searchFragments.SearchSportCentersHomeFragment">
+    tools:context=".fragment.searchFragments.HomePageFragment">
 
     <ImageView
         android:id="@+id/homeBackgroundLogo"
@@ -31,8 +31,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/cityNameMCV"
         app:layout_constraintStart_toStartOf="@+id/cityNameMCV"
-        app:layout_constraintEnd_toEndOf="@id/cityNameMCV"
-        />
+        app:layout_constraintEnd_toEndOf="@id/cityNameMCV" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cityNameMCV"

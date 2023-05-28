@@ -2,7 +2,7 @@ package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.view.*
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.widget.doOnTextChanged
@@ -11,11 +11,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CityResultAdapter
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersActionVM
 
+@AndroidEntryPoint
 class SearchSportCentersActionFragment : Fragment(R.layout.search_cities_fragment) {
 
     private val args: SearchSportCentersActionFragmentArgs by navArgs()
@@ -70,7 +72,7 @@ class SearchSportCentersActionFragment : Fragment(R.layout.search_cities_fragmen
                 }
             }
             findNavController().navigate(
-                SearchSportCentersHomeFragmentDirections.actionHomeToSearchSportCenters(
+                HomePageFragmentDirections.actionHomeToSearchSportCenters(
                     "actionSearch",
                     it,
                     dateTime,

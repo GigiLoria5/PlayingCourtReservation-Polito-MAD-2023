@@ -14,8 +14,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.HomePageFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersFragmentDirections
-import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersHomeFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.model.Sport
 import java.util.Locale
 
@@ -169,7 +169,7 @@ object SearchSportCentersUtil {
         else {
             navController.popBackStack()
             val direction =
-                SearchSportCentersHomeFragmentDirections.actionHomeToSportCentersAction(
+                HomePageFragmentDirections.actionHomeToSportCentersAction(
                     "home", city, 0, 0, intArrayOf()
                 )
             val options = NavOptions.Builder()

@@ -18,23 +18,26 @@ import it.polito.mad.g26.playingcourtreservation.util.setCheckedMenuItem
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
     private lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Setup late init variables
         bottomNav = findViewById(R.id.bottomNavigationView)
-        val navController = (supportFragmentManager.findFragmentById(R.id.frame_layout)
-                as NavHostFragment).navController
 
         // Handle Navigation between main fragments
+        val navController = (supportFragmentManager
+            .findFragmentById(R.id.frame_layout) as NavHostFragment)
+            .navController
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> navigateToFragment(
                     navController,
                     R.id.home,
-                    R.id.searchSportCentersHomeFragment
+                    R.id.homePageFragment
                 )
 
                 R.id.reservations -> navigateToFragment(
@@ -57,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             Handler(Looper.getMainLooper()).post {
                 when (destination.id) {
                     // Home
-                    R.id.searchSportCentersHomeFragment -> {
+                    R.id.homePageFragment -> {
                         requestedOrientation = SCREEN_ORIENTATION_LOCKED
                         bottomNav.setCheckedMenuItem(R.id.home)
                     }
@@ -132,4 +135,5 @@ class MainActivity : AppCompatActivity() {
         }
         bottomNav.menu.setGroupCheckable(0, true, true)
     }
+
 }

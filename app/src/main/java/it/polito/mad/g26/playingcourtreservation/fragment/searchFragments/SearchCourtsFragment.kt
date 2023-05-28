@@ -10,8 +10,8 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.activity.addCallback
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,6 +19,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CourtAdapter
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
@@ -30,11 +31,12 @@ import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtsVM
 
+@AndroidEntryPoint
 class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
 
     private val args: SearchCourtsFragmentArgs by navArgs()
     private val vm by viewModels<SearchCourtsVM>()
-    private val loadTime:Long=500
+    private val loadTime: Long = 500
 
     /*   VISUAL COMPONENTS       */
     private lateinit var customToolBar: Toolbar
@@ -73,7 +75,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
         dateTime = args.dateTime
 
         /* VM INITIALIZATIONS */
-        vm.initialize(sportCenterId,sportId,dateTime)
+        vm.initialize(sportCenterId, sportId, dateTime)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)

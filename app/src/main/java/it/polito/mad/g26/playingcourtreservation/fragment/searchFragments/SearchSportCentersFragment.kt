@@ -101,7 +101,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                 }
 
                 is UiState.Success -> {
-                    state.data.forEach {
+                    state.result.forEach {
                         println(it)
                     }
                 }

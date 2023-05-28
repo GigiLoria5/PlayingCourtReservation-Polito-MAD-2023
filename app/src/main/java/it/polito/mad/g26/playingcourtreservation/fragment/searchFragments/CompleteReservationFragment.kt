@@ -11,8 +11,8 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.activity.addCallback
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -20,6 +20,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ChooseAvailableServiceAdapter
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
@@ -30,6 +31,7 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.CompleteReservationVM
 
+@AndroidEntryPoint
 class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragment) {
 
     private val args: CompleteReservationFragmentArgs by navArgs()

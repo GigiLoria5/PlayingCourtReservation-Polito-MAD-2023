@@ -6,24 +6,11 @@ import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterReposi
 import it.polito.mad.g26.playingcourtreservation.util.FirestoreTables
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.await
+import javax.inject.Inject
 
-class SportCenterRepositoryImpl(private val db: FirebaseFirestore) : SportCenterRepository {
-
-    override suspend fun addSportCenters(sportCenters: List<SportCenter>): UiState<String> {
-        return try {
-            val batch = db.batch()
-            sportCenters.forEach { sportCenter ->
-                val docRef = db.collection(FirestoreTables.SPORT_CENTERS).document()
-                sportCenter.id = docRef.id
-                batch[docRef] = sportCenter
-            }
-            batch.commit().await()
-            UiState.Success("Sport centers added successfully")
-        } catch (e: Exception) {
-            e.printStackTrace()
-            UiState.Failure(e.localizedMessage)
-        }
-    }
+class SportCenterRepositoryImpl @Inject constructor(
+    private val db: FirebaseFirestore
+) : SportCenterRepository {
 
     override suspend fun getSportCenters(): UiState<List<SportCenter>> {
         return try {

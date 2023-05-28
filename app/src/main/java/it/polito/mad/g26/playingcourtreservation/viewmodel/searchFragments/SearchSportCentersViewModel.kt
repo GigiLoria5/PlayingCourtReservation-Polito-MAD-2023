@@ -21,18 +21,10 @@ class SearchSportCentersViewModel @Inject constructor(
     val sportCenters: LiveData<UiState<List<SportCenter>>>
         get() = _sportCenters
 
-    fun addSportCenters(sportCenters: List<SportCenter>): LiveData<UiState<String>> {
-        val result = MutableLiveData<UiState<String>>()
-        viewModelScope.launch {
-            result.value = sportCenterRepository.addSportCenters(sportCenters)
-        }
-        return result
-    }
-
     fun getSportCenters() = viewModelScope.launch {
         _sportCenters.value = UiState.Loading
-        delay(2000)
+        delay(500)
         _sportCenters.value = sportCenterRepository.getSportCenters()
     }
-    
+
 }
