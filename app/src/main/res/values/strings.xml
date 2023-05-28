@@ -152,4 +152,5 @@
     <string name="notification_type">Notification type</string>
     <string name="notification_text">Notification text</string>
     <string name="delete_all_notification">Delete all notifications</string>
+    <string name="number_one">1</string>
 </resources>
