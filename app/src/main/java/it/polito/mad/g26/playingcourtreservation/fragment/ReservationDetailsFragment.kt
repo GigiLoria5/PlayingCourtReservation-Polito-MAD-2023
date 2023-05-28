@@ -5,7 +5,11 @@ import android.content.Intent
 import android.icu.util.Calendar
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
@@ -19,10 +23,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.adapter.ReservationDetailsAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceWithFeeAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
@@ -61,6 +67,15 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         customToolBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
+        val privateList = listOf(
+            "profilo1",
+            "profilo2",
+            "profilo3",
+            "profilo4",
+            "profilo5",
+            "profilo6",
+            "profilo7"
+        )
 
         /*BACK BUTTON MANAGEMENT*/
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -280,6 +295,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             }
                     }
             }
+
+        val partiRecyclerView = view.findViewById<RecyclerView>(R.id.participant_list)
+        val adapter = ReservationDetailsAdapter(privateList)
+        partiRecyclerView.adapter = adapter
+        partiRecyclerView.layoutManager = GridLayoutManager(context, 2)
 
 
         /*MENU ITEM*/
