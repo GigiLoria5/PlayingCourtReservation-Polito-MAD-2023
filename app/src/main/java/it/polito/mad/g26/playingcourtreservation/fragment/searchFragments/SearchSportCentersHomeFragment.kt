@@ -3,6 +3,7 @@ package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -35,6 +36,11 @@ class SearchSportCentersHomeFragment : Fragment(R.layout.home_page_fragment) {
                     "home", cityNameTV.text.toString(),0,0, intArrayOf()
                 )
             findNavController().navigate(direction)
+        }
+
+        val notificationBell = view.findViewById<ImageView>(R.id.bellIV)
+        notificationBell.setOnClickListener {
+            findNavController().navigate(R.id.notificationFragment)
         }
     }
 

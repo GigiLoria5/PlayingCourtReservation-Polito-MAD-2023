@@ -18,7 +18,6 @@ import it.polito.mad.g26.playingcourtreservation.util.setCheckedMenuItem
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNav: BottomNavigationView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -89,6 +88,9 @@ class MainActivity : AppCompatActivity() {
                         SCREEN_ORIENTATION_UNSPECIFIED,
                         false
                     )
+
+                    // Notifications
+                    R.id.notificationFragment -> lockOrientationAndShowNav()
                 }
             }
         }
