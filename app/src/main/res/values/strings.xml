@@ -145,4 +145,11 @@
     <string name="edit_review_button">Edit review</string>
     <string name="delete_review_button">Delete review</string>
     <string name="court_reviews">Court Reviews</string>
+
+    <!-- Notification-->
+    <string name="notifications">Notifications</string>
+    <string name="no_notifications_found">There are no notifications</string>
+    <string name="notification_type">Notification type</string>
+    <string name="notification_text">Notification text</string>
+    <string name="delete_all_notification">Delete all notifications</string>
 </resources>
