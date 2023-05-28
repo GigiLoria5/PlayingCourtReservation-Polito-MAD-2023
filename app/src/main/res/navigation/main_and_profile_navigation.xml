@@ -234,7 +234,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
-        android:name="it.polito.mad.g26.playingcourtreservation.fragment.NotificationFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.NotificationsFragment"
         android:label="notification_fragment"
         tools:layout="@layout/notification_fragment" />
 </navigation>
