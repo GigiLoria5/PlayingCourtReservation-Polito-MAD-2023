@@ -16,7 +16,6 @@ import androidx.navigation.NavOptions
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.HomePageFragmentDirections
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersFragmentDirections
-import it.polito.mad.g26.playingcourtreservation.model.Sport
 import java.util.Locale
 
 object SearchSportCentersUtil {
@@ -79,20 +78,19 @@ object SearchSportCentersUtil {
 
     fun setAutoCompleteTextViewSport(
         viewContext: Context,
-        sports: List<Sport>?,
+        sports: List<String>,
         courtTypeACTV: AutoCompleteTextView,
-        selectedSport: Int
+        selectedSport: String
     ) {
         val courtsType = mutableListOf(
             viewContext.getString(
                 R.string.all_sports
             )
         )
-        sports?.sortedBy { it.name }?.forEach { courtsType.add(it.name) }
-        val adapterCourt =
-            ArrayAdapter(viewContext, R.layout.list_item, courtsType)
+        sports.sortedBy { it }.forEach { courtsType.add(it) }
+        val adapterCourt = ArrayAdapter(viewContext, R.layout.list_item, courtsType)
         courtTypeACTV.setText(
-            sports?.find { it.id == selectedSport }?.name ?: viewContext.getString(
+            sports.find { it == selectedSport } ?: viewContext.getString(
                 R.string.all_sports
             )
         )
@@ -153,12 +151,12 @@ object SearchSportCentersUtil {
         navController: NavController,
         city: String,
         dateTime: Long,
-        sportId: Int,
-        selectedServicesIds: IntArray
+        sportName: String,
+        selectedServicesNames: Array<String>
     ) {
         val direction =
             SearchSportCentersFragmentDirections.actionSearchSportCentersToSportCentersAction(
-                city, "result", dateTime, sportId, selectedServicesIds
+                city, "result", dateTime, sportName, selectedServicesNames
             )
         navController.navigate(direction)
     }
@@ -170,7 +168,7 @@ object SearchSportCentersUtil {
             navController.popBackStack()
             val direction =
                 HomePageFragmentDirections.actionHomeToSportCentersAction(
-                    "home", city, 0, 0, intArrayOf()
+                    "home", city, 0, "", arrayOf()
                 )
             val options = NavOptions.Builder()
                 .setEnterAnim(R.anim.from_left)
@@ -253,4 +251,5 @@ object SearchSportCentersUtil {
         val dialog = builder.create()
         dialog.show()
     }
+
 }
