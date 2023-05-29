@@ -296,7 +296,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     }
             }
 
-        val partiRecyclerView = view.findViewById<RecyclerView>(R.id.participant_list)
+        val partiRecyclerView = view.findViewById<RecyclerView>(R.id.player_list)
         val adapter = ReservationDetailsAdapter(privateList)
         partiRecyclerView.adapter = adapter
         partiRecyclerView.layoutManager = GridLayoutManager(context, 2)

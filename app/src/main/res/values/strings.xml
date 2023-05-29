@@ -96,6 +96,7 @@
     <string name="edit_reservation_button">Edit</string>
     <string name="add_review_button">Add review</string>
     <string name="reservation_no_services_chosen">No services chosen</string>
+    <string name="default_players_title">Players 7/22</string>
     <!-- Edit reservations details-->
     <string name="edit_reservation_details">Edit Reservation</string>
     <string name="edit_date_time">Edit Date/time</string>
