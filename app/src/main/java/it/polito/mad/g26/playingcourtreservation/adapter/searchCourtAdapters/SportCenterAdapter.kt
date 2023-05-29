@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.newModel.Review
-import it.polito.mad.g26.playingcourtreservation.newModel.Service
 import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
 import it.polito.mad.g26.playingcourtreservation.newModel.avg
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
@@ -31,12 +30,7 @@ class SportCenterAdapter(
     override fun onBindViewHolder(holder: SportCenterViewHolder, position: Int) {
         val sportCenter = collection[position]
         val sportCenterReviews = reviews[sportCenter.id]!!
-        val sportCenterServices = sportCenter.services
-        holder.bind(
-            sportCenter,
-            sportCenterReviews,
-            sportCenterServices,
-        )
+        holder.bind(sportCenter, sportCenterReviews)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -72,12 +66,8 @@ class SportCenterAdapter(
             sportCenterServicesRV.addItemDecoration(itemDecoration)
         }
 
-        fun bind(
-            sportCenter: SportCenter,
-            sportCenterReviews: List<Review>,
-            sportCenterServices: List<Service>,
-        ) {
-            println(sportCenterReviews.avg())
+        fun bind(sportCenter: SportCenter, sportCenterReviews: List<Review>) {
+            val sportCenterServices = sportCenter.services
             sportCenterNameTV.text = sportCenter.name
             sportCenterReviewsTV.text = itemView.context.getString(
                 R.string.reviews_summary,
@@ -90,8 +80,11 @@ class SportCenterAdapter(
                 sportCenter.openTime,
                 sportCenter.closeTime
             )
-            if (sportCenterServices.isEmpty()) availableServicesTV.text =
+            availableServicesTV.text = if (sportCenterServices.isEmpty()) {
                 itemView.context.getString(R.string.no_services_available)
+            } else {
+                itemView.context.getString(R.string.available_services)
+            }
 
             sportCenterServicesRV.adapter = ServiceWithFeeAdapter(
                 sportCenterServices,
