@@ -33,16 +33,16 @@ class SearchCitiesFragment : Fragment(R.layout.search_cities_fragment) {
     private var city: String = ""
     private var bornFrom: String = ""
     private var dateTime: Long = 0
-    private var sportId: Int = 0
-    private var selectedServicesIds: IntArray = intArrayOf()
+    private var sportId: String = ""
+    private var selectedServicesIds: Array<String> = arrayOf()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         city = args.city
         bornFrom = args.bornFrom
         dateTime = args.dateTime
-        sportId = args.sportId
-        selectedServicesIds = args.selectedServicesIds
+        sportId = args.sportName
+        selectedServicesIds = args.selectedServicesNames
 
         /* CUSTOM TOOLBAR BACK MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)

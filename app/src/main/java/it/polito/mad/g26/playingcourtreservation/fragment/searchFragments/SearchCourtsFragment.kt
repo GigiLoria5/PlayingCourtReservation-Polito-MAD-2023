@@ -56,26 +56,27 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
     private var goingToCourtReviews = false
 
     /* ARGS */
-    private var sportCenterId: Int = 0
+    private var sportCenterId: String = ""
     private var sportCenterName: String = ""
     private var sportCenterAddress: String = ""
     private var sportCenterPhoneNumber: String = ""
-    private var sportId: Int = 0
     private var sportName: String = ""
     private var dateTime: Long = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sportCenterId = args.sportCenterId
+        // TODO: resolve this
+        // sportCenterId = args.sportCenterId
+        sportCenterId = "1"
         sportCenterName = args.sportCenterName
         sportCenterAddress = args.sportCenterAddress
         sportCenterPhoneNumber = args.sportCenterPhoneNumber
-        sportId = args.sportId
-        sportId = args.sportId
+        // sportId = args.sportId
+        sportName = "1"
         sportName = args.sportName
         dateTime = args.dateTime
 
         /* VM INITIALIZATIONS */
-        vm.initialize(sportCenterId, sportId, dateTime)
+        vm.initialize(1, 1, dateTime)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)
@@ -138,7 +139,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
                 goingToCourtReviews = true
                 val direction =
                     SearchCourtsFragmentDirections.actionSearchCourtsToCourtReviews(
-                        courtId
+                        "1"
                     )
                 findNavController().navigate(direction)
             }
@@ -158,7 +159,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
                         sportCenterName,
                         sportCenterAddress,
                         sportCenterPhoneNumber,
-                        courtId,
+                        "1",
                         courtName,
                         courtHourCharge,
                         sportName,

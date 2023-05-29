@@ -43,7 +43,9 @@ class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val courtId = args.courtId
+        // TODO: resolve this
+        // val courtId = args.courtId
+        val courtId = 1
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)

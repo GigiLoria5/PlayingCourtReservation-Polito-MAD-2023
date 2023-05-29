@@ -41,14 +41,14 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
         selectCityMCV.setOnClickListener {
             val direction =
                 HomePageFragmentDirections.actionHomeToSportCentersAction(
-                    "home", cityNameTV.text.toString(), 0, 0, intArrayOf()
+                    "home", cityNameTV.text.toString(), 0, "", arrayOf()
                 )
             findNavController().navigate(direction)
         }
         searchMCV.setOnClickListener {
             val direction =
                 HomePageFragmentDirections.actionHomeToSearchSportCenters(
-                    "home", cityNameTV.text.toString(), 0, 0, intArrayOf()
+                    "home", cityNameTV.text.toString(), 0, "", arrayOf()
                 )
             findNavController().navigate(direction)
         }

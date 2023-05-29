@@ -63,7 +63,7 @@
         tools:layout="@layout/reservation_details_fragment">
         <argument
             android:name="reservationId"
-            app:argType="integer" />
+            app:argType="string" />
         <action
             android:id="@+id/openReservationEdit"
             app:destination="@id/modifyReservationDetailsFragment" />
@@ -104,11 +104,11 @@
             android:name="dateTime"
             app:argType="long" />
         <argument
-            android:name="sportId"
-            app:argType="integer" />
+            android:name="sportName"
+            app:argType="string" />
         <argument
-            android:name="selectedServicesIds"
-            app:argType="integer[]" />
+            android:name="selectedServicesNames"
+            app:argType="string[]" />
     </fragment>
     <fragment
         android:id="@+id/searchSportCentersFragment"
@@ -146,11 +146,11 @@
             android:name="dateTime"
             app:argType="long" />
         <argument
-            android:name="sportId"
-            app:argType="integer" />
+            android:name="sportName"
+            app:argType="string" />
         <argument
-            android:name="selectedServicesIds"
-            app:argType="integer[]" />
+            android:name="selectedServicesNames"
+            app:argType="string[]" />
     </fragment>
     <fragment
         android:id="@+id/searchCourtsFragment"
@@ -165,7 +165,7 @@
             app:popExitAnim="@anim/to_right" />
         <argument
             android:name="sportCenterId"
-            app:argType="integer" />
+            app:argType="string" />
         <argument
             android:name="sportCenterName"
             app:argType="string" />
@@ -175,9 +175,6 @@
         <argument
             android:name="sportCenterPhoneNumber"
             app:argType="string" />
-        <argument
-            android:name="sportId"
-            app:argType="integer" />
         <argument
             android:name="sportName"
             app:argType="string" />
@@ -198,7 +195,7 @@
         android:label="CourtReviewsFragment">
         <argument
             android:name="courtId"
-            app:argType="integer" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/completeReservationFragment"
@@ -206,7 +203,7 @@
         android:label="CompleteReservationFragment">
         <argument
             android:name="sportCenterId"
-            app:argType="integer" />
+            app:argType="string" />
         <argument
             android:name="sportCenterName"
             app:argType="string" />
@@ -218,7 +215,7 @@
             app:argType="string" />
         <argument
             android:name="courtId"
-            app:argType="integer" />
+            app:argType="string" />
         <argument
             android:name="courtName"
             app:argType="string" />

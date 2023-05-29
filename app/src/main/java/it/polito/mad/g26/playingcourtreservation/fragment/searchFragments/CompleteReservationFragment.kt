@@ -68,11 +68,14 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sportCenterId = args.sportCenterId
+        // TODO: pass correct values
+        // sportCenterId = args.sportCenterId
+        sportCenterId = 1
         sportCenterName = args.sportCenterName
         sportCenterAddress = args.sportCenterAddress
         sportCenterPhoneNumber = args.sportCenterPhoneNumber
-        courtId = args.courtId
+        // courtId = args.courtId
+        courtId = 1
         courtName = args.courtName
         courtHourCharge = args.courtHourCharge
         sportName = args.sportName

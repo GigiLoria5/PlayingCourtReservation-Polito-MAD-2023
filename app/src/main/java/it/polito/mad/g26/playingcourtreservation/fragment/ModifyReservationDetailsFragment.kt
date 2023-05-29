@@ -58,7 +58,7 @@ class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_
         //List of text
         val centerName = view.findViewById<CustomTextView>(R.id.sportCenter_name)
             .findViewById<TextView>(R.id.value)
-        val centerTime=view.findViewById<CustomTextView>(R.id.sportCenter_time)
+        val centerTime = view.findViewById<CustomTextView>(R.id.sportCenter_time)
             .findViewById<TextView>(R.id.value)
         val field = view.findViewById<CustomTextView>(R.id.court_name)
             .findViewById<TextView>(R.id.value)
@@ -84,13 +84,15 @@ class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_
             .findViewById<TextView>(R.id.value)
 
         // Retrieve Reservation Details
-        val reservationId = args.reservationId
+        // TODO: resolve this
+        // val reservationId = args.reservationId
+        val reservationId = 1
         reservationWithDetailsVM
             .getReservationWithDetailsById(reservationId)
             .observe(viewLifecycleOwner) { reservation ->
                 //Compile TextView
                 centerName.text = reservation.courtWithDetails.sportCenter.name
-                centerTime.text=view.context.getString(
+                centerTime.text = view.context.getString(
                     R.string.set_opening_hours,
                     reservation.courtWithDetails.sportCenter.openTime,
                     reservation.courtWithDetails.sportCenter.closeTime
@@ -255,6 +257,7 @@ class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_
             )
         }
     }
+
     override fun onResume() {
         super.onResume()
         showActionBar(activity)
