@@ -7,13 +7,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
+import it.polito.mad.g26.playingcourtreservation.newModel.Service
 
 class ServiceWithFeeAdapter(
-    private var collection: List<ServiceWithFee>,
-    private val addServiceIdToList: ((Int) -> Unit)? = null,
-    private val removeServiceIdFromList: ((Int) -> Unit)? = null,
-    private val isServiceIdInList: (Int) -> Boolean,
+    private var collection: List<Service>,
+    private val addServiceNameToList: ((String) -> Unit)? = null,
+    private val removeServiceNameFromList: ((String) -> Unit)? = null,
+    private val isServiceNameInList: (String) -> Boolean,
     private val isClickable: Boolean
 ) :
     RecyclerView.Adapter<ServiceWithFeeAdapter.ServiceWithFeeViewHolder>() {
@@ -39,26 +39,25 @@ class ServiceWithFeeAdapter(
         private val chip = itemView.findViewById<Chip>(R.id.chip)
 
         fun bind(
-            collection: ServiceWithFee
+            service: Service
         ) {
-            val service = collection.service
-            val fee = collection.fee
+            val fee = service.fee
             chip.text = itemView.context.getString(
                 R.string.service_with_fee,
                 service.name,
                 String.format("%.2f", fee)
             )
 
-            chip.isChecked = isServiceIdInList(service.id)
+            chip.isChecked = isServiceNameInList(service.name)
             chip.isClickable = isClickable
             chip.isCloseIconVisible = chip.isChecked && isClickable
             when (isClickable) {
                 true -> chip.setOnClickListener {
                     chip.isCloseIconVisible = chip.isChecked
                     if (chip.isChecked)
-                        addServiceIdToList?.let { it(service.id) }
+                        addServiceNameToList?.let { it(service.name) }
                     else
-                        removeServiceIdFromList?.let { it(service.id) }
+                        removeServiceNameFromList?.let { it(service.name) }
                 }
 
                 false -> {

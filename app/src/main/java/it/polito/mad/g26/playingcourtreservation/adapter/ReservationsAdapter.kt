@@ -69,8 +69,9 @@ class ReservationsAdapter : RecyclerView.Adapter<ReservationsAdapter.Reservation
             )
 
             super.itemView.setOnClickListener {
+                // TODO: send right value
                 val action = ReservationsFragmentDirections
-                    .openReservationDetails(reservationWithDetails.reservation.id)
+                    .openReservationDetails("")
                 super.itemView.findNavController().navigate(action)
             }
         }

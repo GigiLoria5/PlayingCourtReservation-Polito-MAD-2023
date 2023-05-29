@@ -8,37 +8,39 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.SportCenter
-import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterReviewsSummary
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithMoreDetailsFormatted
+import it.polito.mad.g26.playingcourtreservation.newModel.Review
+import it.polito.mad.g26.playingcourtreservation.newModel.Service
+import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
+import it.polito.mad.g26.playingcourtreservation.newModel.avg
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 
 class SportCenterAdapter(
-    private var collection: List<SportCenterWithMoreDetailsFormatted>,
-    private val isServiceIdInList: (Int) -> Boolean,
-    private val navigateToSearchCourtFragment: (Int, String, String, String) -> Unit,
+    private var collection: List<SportCenter>,
+    private val reviews: HashMap<String, List<Review>>,
+    private val isServiceNameInList: (String) -> Boolean,
+    private val navigateToSearchCourtFragment: (String, String, String, String) -> Unit,
 ) :
     RecyclerView.Adapter<SportCenterAdapter.SportCenterViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportCenterViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.search_sport_centers_sport_center_item, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.search_sport_centers_sport_center_item, parent, false)
         return SportCenterViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: SportCenterViewHolder, position: Int) {
-        val sportCenter = collection[position].sportCenter
-        val reviewsSummary = collection[position].sportCenterReviewsSummary
-        val servicesWithFee = collection[position].servicesWithFee
+        val sportCenter = collection[position]
+        val sportCenterReviews = reviews[sportCenter.id]!!
+        val sportCenterServices = sportCenter.services
         holder.bind(
             sportCenter,
-            reviewsSummary,
-            servicesWithFee,
+            sportCenterReviews,
+            sportCenterServices,
         )
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateCollection(updatedCollection: List<SportCenterWithMoreDetailsFormatted>) {
+    fun updateCollection(updatedCollection: List<SportCenter>) {
         this.collection = updatedCollection
         notifyDataSetChanged()
     }
@@ -49,18 +51,20 @@ class SportCenterAdapter(
 
     override fun getItemCount() = collection.size
     inner class SportCenterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val sportCenterInfoMCV =
-            itemView.findViewById<MaterialCardView>(R.id.sportCenterInfoMCV)
-        private val sportCenterNameTV = itemView.findViewById<TextView>(R.id.sportCenterNameTV)
-        private val sportCenterReviewsTV =
-            itemView.findViewById<TextView>(R.id.sportCenterReviewsTV)
-        private val sportCenterAddressTV =
-            itemView.findViewById<TextView>(R.id.sportCenterAddressTV)
-        private val sportCenterHoursTV = itemView.findViewById<TextView>(R.id.sportCenterHoursTV)
-        private val availableServicesTV =
-            itemView.findViewById<TextView>(R.id.availableServicesTV)
-        private val sportCenterServicesRV =
-            itemView.findViewById<RecyclerView>(R.id.sportCenterServicesRV)
+        private val sportCenterInfoMCV = itemView
+            .findViewById<MaterialCardView>(R.id.sportCenterInfoMCV)
+        private val sportCenterNameTV = itemView
+            .findViewById<TextView>(R.id.sportCenterNameTV)
+        private val sportCenterReviewsTV = itemView
+            .findViewById<TextView>(R.id.sportCenterReviewsTV)
+        private val sportCenterAddressTV = itemView
+            .findViewById<TextView>(R.id.sportCenterAddressTV)
+        private val sportCenterHoursTV = itemView
+            .findViewById<TextView>(R.id.sportCenterHoursTV)
+        private val availableServicesTV = itemView
+            .findViewById<TextView>(R.id.availableServicesTV)
+        private val sportCenterServicesRV = itemView
+            .findViewById<RecyclerView>(R.id.sportCenterServicesRV)
 
         init {
             val itemDecoration =
@@ -70,14 +74,14 @@ class SportCenterAdapter(
 
         fun bind(
             sportCenter: SportCenter,
-            reviewsSummary: SportCenterReviewsSummary,
-            servicesWithFee: List<ServiceWithFee>,
+            sportCenterReviews: List<Review>,
+            sportCenterServices: List<Service>,
         ) {
             sportCenterNameTV.text = sportCenter.name
             sportCenterReviewsTV.text = itemView.context.getString(
                 R.string.reviews_summary,
-                String.format("%.2f", reviewsSummary.avg),
-                reviewsSummary.count.toString()
+                String.format("%.2f", sportCenterReviews.avg()),
+                sportCenterReviews.size.toString()
             )
             sportCenterAddressTV.text = sportCenter.address
             sportCenterHoursTV.text = itemView.context.getString(
@@ -85,13 +89,13 @@ class SportCenterAdapter(
                 sportCenter.openTime,
                 sportCenter.closeTime
             )
-            if (servicesWithFee.isEmpty()) availableServicesTV.text =
+            if (sportCenterServices.isEmpty()) availableServicesTV.text =
                 itemView.context.getString(R.string.no_services_available)
 
             sportCenterServicesRV.adapter = ServiceWithFeeAdapter(
-                servicesWithFee,
-                isServiceIdInList = {
-                    isServiceIdInList(it)
+                sportCenterServices,
+                isServiceNameInList = {
+                    isServiceNameInList(it)
                 },
                 isClickable = false
             )
