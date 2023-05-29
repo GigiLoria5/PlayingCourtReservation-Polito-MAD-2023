@@ -153,11 +153,12 @@ class SearchSportCentersViewModel @Inject constructor(
     *                                                              -> sportCenters
     * */
 
-
     /*SERVICES MANAGEMENT*/
     private var _selectedServices = MutableLiveData<MutableSet<String>>().also {
         it.value = mutableSetOf()
     }
+
+    fun getSelectedServices(): Array<String> = _selectedServices.value?.toTypedArray() ?: arrayOf()
 
     fun addServiceIdToFilters(serviceName: String) {
         val s = _selectedServices.value
@@ -175,8 +176,6 @@ class SearchSportCentersViewModel @Inject constructor(
         return _selectedServices.value?.contains(serviceName) ?: false
     }
 
-    fun getSelectedServices(): Array<String> = _selectedServices.value?.toTypedArray() ?: arrayOf()
-
     /*SPORT CENTERS MANAGEMENT*/
     init {
         _selectedSport.observeForever {
@@ -184,6 +183,10 @@ class SearchSportCentersViewModel @Inject constructor(
         }
 
         _selectedServices.observeForever {
+            updateSportCentersUI()
+        }
+
+        _selectedDateTimeMillis.observeForever {
             updateSportCentersUI()
         }
     }
@@ -198,46 +201,23 @@ class SearchSportCentersViewModel @Inject constructor(
         _loadingState.value = UiState.Success(Unit)
     }
 
-    fun getSportCentersWithDetailsFormatted(): List<SportCenter> {
-        val selectedServices = _selectedServices.value?.toSet() ?: setOf()
-        val sportName = _selectedSport.value ?: ""
+    fun getFilteredSportCenters(): List<SportCenter> {
+        val selectedTime = getDateTimeFormatted(timeFormat)
+        val selectedServices = _selectedServices.value.orEmpty().toSet()
+        val selectedSport = _selectedSport.value.orEmpty()
 
-        val filterBySportName = { sportCenter: SportCenter ->
-            sportCenter.courts.any { court ->
-                court.sport == sportName
+        return sportCenters
+            .filter { sportCenter ->
+                sportCenter.openTime <= selectedTime && selectedTime < sportCenter.closeTime
             }
-        }
-        val filterBySelectedServices = { sportCenter: SportCenter ->
-            selectedServices.all { selectedService ->
-                sportCenter.services.any { service ->
-                    service.name == selectedService
+            .filter { sportCenter ->
+                selectedSport.isEmpty() || sportCenter.courts.any { it.sport == selectedSport }
+            }
+            .filter { sportCenter ->
+                selectedServices.isEmpty() || selectedServices.all { selectedService ->
+                    sportCenter.services.any { it.name == selectedService }
                 }
             }
-        }
-        return when {
-            sportCenters.isEmpty() -> sportCenters
-
-            /* FILTERING BY SPORT, SERVICES AND BASE (DATE,TIME,CITY)*/
-            (sportName != "" && selectedServices.isNotEmpty()) ->
-                sportCenters.filter { sportCenter ->
-                    filterBySportName(sportCenter) && filterBySelectedServices(sportCenter)
-                }
-
-            /* FILTERING BY SPORT AND BASE (DATE,TIME,CITY)*/
-            (sportName != "") ->
-                sportCenters.filter { sportCenter ->
-                    filterBySportName(sportCenter)
-                }
-
-            /* FILTERING BY SERVICES AND BASE (DATE,TIME,CITY)*/
-            (selectedServices.isNotEmpty()) ->
-                sportCenters.filter { sportCenter ->
-                    filterBySelectedServices(sportCenter)
-                }
-
-            /* BASE FILTERING (DATE,TIME,CITY) */
-            else -> sportCenters
-        }
     }
 
 }

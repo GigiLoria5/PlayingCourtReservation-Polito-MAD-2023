@@ -196,7 +196,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
     private fun createSportCenterAdapter(): SportCenterAdapter {
         return SportCenterAdapter(
-            viewModel.getSportCentersWithDetailsFormatted(),
+            viewModel.getFilteredSportCenters(),
             viewModel.reviews,
             { serviceName ->
                 viewModel.isServiceNameInList(serviceName)
@@ -301,7 +301,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         numberOfSportCentersFoundTV.makeVisible()
 
                         val sportCentersWithDetailsFormatted =
-                            viewModel.getSportCentersWithDetailsFormatted()
+                            viewModel.getFilteredSportCenters()
                         val numberOfSportCentersFound = sportCentersWithDetailsFormatted.size
                         numberOfSportCentersFoundTV.text = getString(
                             R.string.search_sport_center_results_info,
