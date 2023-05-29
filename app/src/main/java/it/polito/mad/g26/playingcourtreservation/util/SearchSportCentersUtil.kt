@@ -169,7 +169,7 @@ object SearchSportCentersUtil {
             navController.popBackStack()
             val direction =
                 HomePageFragmentDirections.actionHomeToSportCentersAction(
-                    "home", city, 0, "", arrayOf()
+                    "home", city, 0, "All sports", arrayOf()
                 )
             val options = NavOptions.Builder()
                 .setEnterAnim(R.anim.from_left)

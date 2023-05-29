@@ -38,17 +38,18 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
         val searchMCV = view.findViewById<MaterialCardView>(R.id.searchMCV)
 
         cityNameTV.text = getUserCity() ?: getString(R.string.default_city)
+        val allSportName = requireContext().getString(R.string.all_sports)
         selectCityMCV.setOnClickListener {
             val direction =
                 HomePageFragmentDirections.actionHomeToSportCentersAction(
-                    "home", cityNameTV.text.toString(), 0, "", arrayOf()
+                    "home", cityNameTV.text.toString(), 0, allSportName, arrayOf()
                 )
             findNavController().navigate(direction)
         }
         searchMCV.setOnClickListener {
             val direction =
                 HomePageFragmentDirections.actionHomeToSearchSportCenters(
-                    "home", cityNameTV.text.toString(), 0, "", arrayOf()
+                    "home", cityNameTV.text.toString(), 0, allSportName, arrayOf()
                 )
             findNavController().navigate(direction)
         }

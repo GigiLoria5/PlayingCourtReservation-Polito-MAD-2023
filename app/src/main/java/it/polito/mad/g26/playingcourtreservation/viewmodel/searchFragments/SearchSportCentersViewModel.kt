@@ -86,7 +86,7 @@ class SearchSportCentersViewModel @Inject constructor(
         // Filter sport centers based on current city selected
         sportCenters = allSportCenters.filter { it.city == selectedCity }.sortedBy { it.name }
         // Get all reviews for each sport center
-        val deferredReviews = allSportCenters.map { sportCenter ->
+        val deferredReviews = sportCenters.map { sportCenter ->
             async {
                 reservationRepository.getAllSportCenterReviews(sportCenter)
             }
@@ -95,7 +95,7 @@ class SearchSportCentersViewModel @Inject constructor(
         for ((index, state) in reviewsResults.withIndex()) {
             when (state) {
                 is UiState.Success -> {
-                    reviews[allSportCenters[index].id] = state.result
+                    reviews[sportCenters[index].id] = state.result
                 }
 
                 is UiState.Failure -> {
@@ -205,15 +205,13 @@ class SearchSportCentersViewModel @Inject constructor(
         val selectedTime = getDateTimeFormatted(timeFormat)
         val selectedServices = _selectedServices.value.orEmpty().toSet()
         val selectedSport = _selectedSport.value.orEmpty()
-        println(selectedSport)
-        println(selectedServices)
 
         return sportCenters
             .filter { sportCenter ->
                 sportCenter.openTime <= selectedTime && selectedTime < sportCenter.closeTime
             }
             .filter { sportCenter ->
-                selectedSport.isEmpty() || sportCenter.courts.any { it.sport == selectedSport }
+                selectedSport == "All sports" || selectedSport.isEmpty() || sportCenter.courts.any { it.sport == selectedSport }
             }
             .filter { sportCenter ->
                 selectedServices.isEmpty() || selectedServices.all { selectedService ->

@@ -50,8 +50,8 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
     private lateinit var courtsRV: RecyclerView
     private lateinit var courtsShimmerView: ShimmerFrameLayout
     private lateinit var courtsAdapter: CourtAdapter
-    /* SUPPORT VARIABLES */
 
+    /* SUPPORT VARIABLES */
     private var goingToCompleteReservation = false
     private var goingToCourtReviews = false
 
@@ -64,14 +64,10 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
     private var dateTime: Long = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // TODO: resolve this
-        // sportCenterId = args.sportCenterId
-        sportCenterId = "1"
+        sportCenterId = args.sportCenterId
         sportCenterName = args.sportCenterName
         sportCenterAddress = args.sportCenterAddress
         sportCenterPhoneNumber = args.sportCenterPhoneNumber
-        // sportId = args.sportId
-        sportName = "1"
         sportName = args.sportName
         dateTime = args.dateTime
 

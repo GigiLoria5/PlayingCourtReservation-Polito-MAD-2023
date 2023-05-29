@@ -123,11 +123,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         courtTypeACTV = view.findViewById(R.id.courtTypeACTV)
         courtTypeMCV = view.findViewById(R.id.courtTypeMCV)
         courtTypeACTV.setOnItemClickListener { _, _, _, _ ->
-            val newSportSelected = courtTypeACTV.text.toString()
-            val allSportName = requireContext().getString(R.string.all_sports)
-            viewModel.changeSelectedSport(
-                if (newSportSelected == allSportName) "" else newSportSelected
-            )
+            viewModel.changeSelectedSport(courtTypeACTV.text.toString())
         }
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
@@ -265,6 +261,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     } else {
                         hideExistingReservationCL()
                         viewModel.fetchSportCentersData()
+                        loadSportCenters()
                     }
                 }
             }
@@ -370,7 +367,6 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                 override fun onAnimationEnd(animation: Animation) {
                     initialLoading()
                     loadExistingReservation()
-                    loadSportCenters()
                     numberOfSportCentersFoundCL.layoutTransition = LayoutTransition()
                 }
             })
@@ -379,7 +375,6 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
             if (enter) {
                 initialLoading()
                 loadExistingReservation()
-                loadSportCenters()
                 numberOfSportCentersFoundCL.layoutTransition = LayoutTransition()
             }
             null

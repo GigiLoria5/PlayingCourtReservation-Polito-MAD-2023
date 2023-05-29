@@ -33,16 +33,16 @@ class SearchCitiesFragment : Fragment(R.layout.search_cities_fragment) {
     private var city: String = ""
     private var bornFrom: String = ""
     private var dateTime: Long = 0
-    private var sportId: String = ""
-    private var selectedServicesIds: Array<String> = arrayOf()
+    private var sportName: String = ""
+    private var selectedServicesNames: Array<String> = arrayOf()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         city = args.city
         bornFrom = args.bornFrom
         dateTime = args.dateTime
-        sportId = args.sportName
-        selectedServicesIds = args.selectedServicesNames
+        sportName = args.sportName
+        selectedServicesNames = args.selectedServicesNames
 
         /* CUSTOM TOOLBAR BACK MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -82,8 +82,8 @@ class SearchCitiesFragment : Fragment(R.layout.search_cities_fragment) {
                     "actionSearch",
                     it,
                     dateTime,
-                    sportId,
-                    selectedServicesIds
+                    sportName,
+                    selectedServicesNames
                 )
             )
         }
@@ -94,7 +94,6 @@ class SearchCitiesFragment : Fragment(R.layout.search_cities_fragment) {
             when (state) {
                 is UiState.Loading -> {
                     // TODO: Start Shimmer Loading
-                    println("SearchCitiesFragment Loading")
                 }
 
                 is UiState.Failure -> {
