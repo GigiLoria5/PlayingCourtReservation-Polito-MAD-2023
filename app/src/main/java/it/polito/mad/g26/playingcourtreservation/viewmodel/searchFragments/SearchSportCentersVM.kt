@@ -93,7 +93,6 @@ class SearchSportCentersVM(application: Application) : AndroidViewModel(applicat
         )
     }
 
-
     /*SERVICES MANAGEMENT*/
     val services: LiveData<List<Service>> = existingReservationIdByDateAndTime.switchMap {
         if (it == null)
