@@ -77,6 +77,7 @@ class SportCenterAdapter(
             sportCenterReviews: List<Review>,
             sportCenterServices: List<Service>,
         ) {
+            println(sportCenterReviews.avg())
             sportCenterNameTV.text = sportCenter.name
             sportCenterReviewsTV.text = itemView.context.getString(
                 R.string.reviews_summary,

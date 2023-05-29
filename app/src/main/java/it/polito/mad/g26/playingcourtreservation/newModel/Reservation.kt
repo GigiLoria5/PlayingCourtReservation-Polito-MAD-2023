@@ -37,4 +37,7 @@ data class Review(
     val date: String = ""
 )
 
-fun List<Review>.avg(): Double = this.map { it.rating }.average()
+fun List<Review>.avg(): Double {
+    val ratings = this.filter { !it.rating.isNaN() }.map { it.rating }
+    return if (ratings.isEmpty()) 0.0 else ratings.average()
+}

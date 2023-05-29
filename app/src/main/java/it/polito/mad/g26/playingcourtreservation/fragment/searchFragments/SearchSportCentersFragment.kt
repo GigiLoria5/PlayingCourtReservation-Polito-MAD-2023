@@ -247,7 +247,6 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                 }
 
                 is UiState.Success -> {
-                    println("existingReservationIdByDateAndTime.observe success with result: ${state.result}")
                     if (state.result != null) {
                         servicesShimmerView.stopShimmer()
                         sportCentersShimmerView.stopShimmer()
@@ -273,11 +272,11 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             val existingReservationId =
                 (viewModel.existingReservationIdByDateAndTime.value as UiState.Success).result
-            println("loadingState.observe: $state and viewModel.existingReservationIdByDateAndTime.value: $existingReservationId")
             if (existingReservationId == null) {
                 when (state) {
                     is UiState.Loading -> {
                         sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
+                        servicesShimmerView.startShimmer()
                         numberOfSportCentersFoundTV.makeGone()
                         noSportCentersFoundTV.makeGone()
                     }
@@ -323,7 +322,6 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
             }
         }
     }
-
 
     private fun showExistingReservationCL() {
         servicesRV.makeGone()

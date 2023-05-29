@@ -15,6 +15,7 @@ import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -140,12 +141,12 @@ class SearchSportCentersViewModel @Inject constructor(
     }
 
     /*SPORT MANAGEMENT*/
-    private val selectedSport = MutableLiveData("")
+    private val _selectedSport = MutableLiveData("")
     fun changeSelectedSport(sportName: String) {
-        selectedSport.value = sportName
+        _selectedSport.value = sportName
     }
 
-    fun getSelectedSportName(): String = selectedSport.value ?: ""
+    fun getSelectedSportName(): String = _selectedSport.value ?: ""
 
     /* VM LIVE DATA CHAIN:
     * selectedDateTimeMillis -> existingReservationIdByDateAndTime -> services
@@ -154,32 +155,52 @@ class SearchSportCentersViewModel @Inject constructor(
 
 
     /*SERVICES MANAGEMENT*/
-    private var selectedServices = MutableLiveData<MutableSet<String>>().also {
+    private var _selectedServices = MutableLiveData<MutableSet<String>>().also {
         it.value = mutableSetOf()
     }
 
     fun addServiceIdToFilters(serviceName: String) {
-        val s = selectedServices.value
+        val s = _selectedServices.value
         s?.add(serviceName)
-        selectedServices.value = s
+        _selectedServices.value = s
     }
 
     fun removeServiceIdFromFilters(serviceName: String) {
-        val s = selectedServices.value
+        val s = _selectedServices.value
         s?.remove(serviceName)
-        selectedServices.value = s
+        _selectedServices.value = s
     }
 
     fun isServiceNameInList(serviceName: String): Boolean {
-        return selectedServices.value?.contains(serviceName) ?: false
+        return _selectedServices.value?.contains(serviceName) ?: false
     }
 
-    fun getSelectedServices(): Array<String> = selectedServices.value?.toTypedArray() ?: arrayOf()
+    fun getSelectedServices(): Array<String> = _selectedServices.value?.toTypedArray() ?: arrayOf()
 
     /*SPORT CENTERS MANAGEMENT*/
+    init {
+        _selectedSport.observeForever {
+            updateSportCentersUI()
+        }
+
+        _selectedServices.observeForever {
+            updateSportCentersUI()
+        }
+    }
+
+    private fun updateSportCentersUI() = viewModelScope.launch {
+        // If is not in Success state it means we are still processing the data
+        if (_loadingState.value !is UiState.Success) {
+            return@launch
+        }
+        _loadingState.value = UiState.Loading
+        delay(500)
+        _loadingState.value = UiState.Success(Unit)
+    }
+
     fun getSportCentersWithDetailsFormatted(): List<SportCenter> {
-        val selectedServices = selectedServices.value?.toSet() ?: setOf()
-        val sportName = selectedSport.value ?: ""
+        val selectedServices = _selectedServices.value?.toSet() ?: setOf()
+        val sportName = _selectedSport.value ?: ""
 
         val filterBySportName = { sportCenter: SportCenter ->
             sportCenter.courts.any { court ->
