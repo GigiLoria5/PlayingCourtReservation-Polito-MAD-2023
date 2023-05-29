@@ -13,11 +13,13 @@ class SportCenterRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : SportCenterRepository {
 
-    override suspend fun getSportCenters(): UiState<List<SportCenter>> {
+    override suspend fun getAllSportCenters(): UiState<List<SportCenter>> {
         return try {
+            Log.d(TAG, "Performing getSportCenters")
             val result = db.collection(FirestoreCollections.SPORT_CENTERS)
                 .orderBy("name")
                 .get().await()
+            Log.d(TAG, "getSportCenters: ${result.documents.size} results")
             val sportCenters = arrayListOf<SportCenter>()
             for (document in result) {
                 val sportCenter = document.toObject(SportCenter::class.java)
@@ -34,9 +36,11 @@ class SportCenterRepositoryImpl @Inject constructor(
 
     override suspend fun getAllSportCentersCities(): UiState<List<String>> {
         return try {
+            Log.d(TAG, "Performing getAllSportCentersCities")
             val result = db.collection(FirestoreCollections.SPORT_CENTERS)
                 .orderBy("city")
                 .get().await()
+            Log.d(TAG, "getAllSportCentersCities: ${result.documents.size} results")
             val cities = result.mapNotNull { it.getString("city") }.distinct()
             UiState.Success(cities)
         } catch (e: Exception) {
@@ -48,11 +52,16 @@ class SportCenterRepositoryImpl @Inject constructor(
     override suspend fun getFilteredSportCentersCities(cityNamePrefix: String): UiState<List<String>> {
         return try {
             val capitalizedPrefix = cityNamePrefix.lowercase().replaceFirstChar(Char::titlecase)
+            Log.d(
+                TAG,
+                "Performing getFilteredSportCentersCities with cityNamePrefix: $capitalizedPrefix"
+            )
             val result = db.collection(FirestoreCollections.SPORT_CENTERS)
                 .orderBy("city")
                 .startAt(capitalizedPrefix)
                 .endAt("${capitalizedPrefix}\uf8ff")
                 .get().await()
+            Log.d(TAG, "getFilteredSportCentersCities: ${result.documents.size} results")
             val cities = result.mapNotNull { it.getString("city") }.distinct()
             UiState.Success(cities)
         } catch (e: Exception) {
