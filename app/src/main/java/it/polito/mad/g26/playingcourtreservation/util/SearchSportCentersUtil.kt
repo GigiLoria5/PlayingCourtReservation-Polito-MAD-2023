@@ -95,6 +95,7 @@ object SearchSportCentersUtil {
             )
         )
         courtTypeACTV.setAdapter(adapterCourt)
+        courtTypeACTV.dismissDropDown()
     }
 
     /* OPERATIONS WITH SearchSportCentersFragment DIALOG COMPONENTS*/

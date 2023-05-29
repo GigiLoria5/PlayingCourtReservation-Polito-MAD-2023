@@ -123,7 +123,11 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         courtTypeACTV = view.findViewById(R.id.courtTypeACTV)
         courtTypeMCV = view.findViewById(R.id.courtTypeMCV)
         courtTypeACTV.setOnItemClickListener { _, _, _, _ ->
-            viewModel.changeSelectedSport(courtTypeACTV.text.toString())
+            val newSportSelected = courtTypeACTV.text.toString()
+            val allSportName = requireContext().getString(R.string.all_sports)
+            viewModel.changeSelectedSport(
+                if (newSportSelected == allSportName) "" else newSportSelected
+            )
         }
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/

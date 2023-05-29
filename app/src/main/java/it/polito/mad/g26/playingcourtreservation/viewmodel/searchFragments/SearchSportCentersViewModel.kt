@@ -205,6 +205,8 @@ class SearchSportCentersViewModel @Inject constructor(
         val selectedTime = getDateTimeFormatted(timeFormat)
         val selectedServices = _selectedServices.value.orEmpty().toSet()
         val selectedSport = _selectedSport.value.orEmpty()
+        println(selectedSport)
+        println(selectedServices)
 
         return sportCenters
             .filter { sportCenter ->
