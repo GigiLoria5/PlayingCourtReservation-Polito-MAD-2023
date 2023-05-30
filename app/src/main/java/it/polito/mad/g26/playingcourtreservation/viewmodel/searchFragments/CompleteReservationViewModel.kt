@@ -97,7 +97,7 @@ class CompleteReservationViewModel @Inject constructor(
             services = selectedServices.value!!.toList()
         )
         val result = reservationRepository.saveReservation(reservation)
-        delay(500)
+        delay(750)
         _reserveCourtState.value = result
     }
 }

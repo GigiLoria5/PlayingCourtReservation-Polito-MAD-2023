@@ -30,6 +30,7 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.CompleteReservationViewModel
+import pl.droidsonroids.gif.GifImageView
 
 @AndroidEntryPoint
 class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragment) {
@@ -53,6 +54,7 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
     private lateinit var chooseAvailableServicesAdapter: ChooseAvailableServiceAdapter
     private lateinit var noAvailableServicesFoundTV: TextView
     private lateinit var confirmBTN: Button
+    private lateinit var loaderImage: GifImageView
 
     /* ARGS */
     private var sportCenterId: String = ""
@@ -103,7 +105,7 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
         totalPriceTV = view.findViewById(R.id.totalPriceTV)
         noAvailableServicesFoundTV = view.findViewById(R.id.noAvailableServicesFoundTV)
         confirmBTN = view.findViewById(R.id.confirmBTN)
-
+        loaderImage = requireActivity().findViewById(R.id.loaderImage)
 
         sportCenterNameTV.text = sportCenterName
         sportCenterAddressTV.text = sportCenterAddress
@@ -162,15 +164,19 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
         viewModel.reserveCourtState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    // TODO: Add loading animation
-                    println("Reserving court...")
+                    loaderImage.setFreezesAnimation(false)
+                    loaderImage.makeVisible()
                 }
 
                 is UiState.Failure -> {
+                    loaderImage.setFreezesAnimation(true)
+                    loaderImage.makeGone()
                     toast(state.error ?: "Unable to reserve court")
                 }
 
                 is UiState.Success -> {
+                    loaderImage.setFreezesAnimation(true)
+                    loaderImage.makeGone()
                     findNavController().popBackStack()
                     findNavController().popBackStack()
                     Toast.makeText(
