@@ -25,4 +25,5 @@
     <color name="sport_futsal">#333333</color>
     <!-- Profile Colors -->
     <color name="border_grey_light">#AAABAE</color>
+    <color name="custom_blue">#6200ee</color>
 </resources>

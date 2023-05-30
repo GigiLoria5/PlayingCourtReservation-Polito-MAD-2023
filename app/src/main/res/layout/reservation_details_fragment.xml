@@ -252,20 +252,36 @@
                     android:text="@string/default_players_title"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toTopOf="@id/player_list"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintBottom_toTopOf="@id/search_players_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/search_players_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:backgroundTint="#249BEA"
+                    android:text="@string/search_player_button"
+                    app:cornerRadius="16dp"
+                    app:layout_constraintBottom_toTopOf="@id/player_list"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/player_title" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/player_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/player_title"
+                    app:layout_constraintTop_toBottomOf="@id/search_players_button"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:clipToPadding="false">
+                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false">
 
                 </androidx.recyclerview.widget.RecyclerView>
 

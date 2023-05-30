@@ -106,6 +106,7 @@
     <string name="set_text_with_euro">€%1$s</string>
     <string name="set_opening_hours">%1$s-%2$s</string>
     <string name="reservation_details_concatenation">%1$s, €%2$s</string>
+    <string name="search_player_button">Add Player</string>
     <!-- Edit profile-->
     <string name="sport_default">Beach soccer</string>
     <string name="delete_button_rating">x</string>

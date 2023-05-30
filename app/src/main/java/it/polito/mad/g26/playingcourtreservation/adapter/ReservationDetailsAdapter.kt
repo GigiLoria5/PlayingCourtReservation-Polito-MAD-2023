@@ -17,7 +17,7 @@ class ReservationDetailsAdapter(private val l: List<String>) :
     ): ReservationDetailsViewHolder {
         val v =
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.reservation_details_profile, parent, false)
+                .inflate(R.layout.reservation_details_profile_2, parent, false)
         return ReservationDetailsViewHolder(v)
     }
 
