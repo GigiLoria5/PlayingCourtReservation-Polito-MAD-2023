@@ -23,7 +23,7 @@ class ReservationRepositoryImpl @Inject constructor(
                 "Performing getAllSportCenterReviews for the sportCenter ${sportCenter.id} with the following courts: ${sportCenter.courts}"
             )
             val result = db.collection(FirestoreCollections.RESERVATIONS)
-                .whereIn("idCourt", courtsIds)
+                .whereIn("courtId", courtsIds)
                 .get().await()
             Log.d(TAG, "getAllSportCenterReviews: ${result.documents.size} results")
             val reviews = arrayListOf<Review>()
@@ -39,6 +39,27 @@ class ReservationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getCourtReviews(courtId: String): UiState<List<Review>> {
+        return try {
+            Log.d(TAG, "Performing getCourtReviews for the court with id: $courtId")
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .whereEqualTo("courtId", courtId)
+                .get().await()
+            Log.d(TAG, "getCourtReviews $courtId: ${result.documents.size} results")
+            val reviews = arrayListOf<Review>()
+            for (document in result) {
+                val reservation = document.toObject(Reservation::class.java)
+                reservation.id = document.id
+                reservation.reviews.forEach { reviews.add(it) }
+            }
+            UiState.Success(reviews)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while performing $courtId: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    // TODO: return Reservation? instead of String?
     override suspend fun getUserReservationAt(
         userId: String,
         date: String,
@@ -57,6 +78,28 @@ class ReservationRepositoryImpl @Inject constructor(
             UiState.Success(reservationId)
         } catch (e: Exception) {
             Log.e(TAG, "Error while performing getUserReservationAt: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun getCourtReservationAt(
+        courtId: String,
+        date: String,
+        time: String
+    ): UiState<Reservation?> {
+        return try {
+            Log.d(TAG, "getCourtReservationAt -> court id: $courtId, date: $date and time: $time")
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .whereEqualTo("courtId", courtId)
+                .whereEqualTo("date", date)
+                .whereEqualTo("time", time)
+                .get().await()
+            Log.d(TAG, "getCourtReservationAt: ${result.documents.size} result")
+            val reservation =
+                if (result.isEmpty) null else result.documents[0].toObject(Reservation::class.java)!!
+            UiState.Success(reservation)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while performing getCourtReservationAt: ${e.message}", e)
             UiState.Failure(e.localizedMessage)
         }
     }

@@ -10,38 +10,35 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails
-import it.polito.mad.g26.playingcourtreservation.model.custom.CourtReviewsSummary
+import it.polito.mad.g26.playingcourtreservation.newModel.Court
+import it.polito.mad.g26.playingcourtreservation.newModel.Review
+import it.polito.mad.g26.playingcourtreservation.newModel.avg
 
 class CourtAdapter(
-    private var collection: List<CourtWithDetails>,
-    private var reviews: List<CourtReviewsSummary>,
-    private val isCourtAvailable: (Int) -> Boolean,
-    private val navigateToReviews: (Int) -> Unit,
-    private val navigateToChooseServices: (Int, String, Float, String) -> Unit
+    private var collection: List<Court>,
+    private var reviews: HashMap<String, List<Review>>,
+    private val isCourtAvailable: (String) -> Boolean,
+    private val navigateToReviews: (String) -> Unit,
+    private val navigateToChooseServices: (String, String, Double, String) -> Unit
 ) :
     RecyclerView.Adapter<CourtAdapter.CourtViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourtViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.search_courts_court_item, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.search_courts_court_item, parent, false)
         return CourtViewHolder(view)
     }
 
-
     override fun onBindViewHolder(holder: CourtViewHolder, position: Int) {
         val court = collection[position]
-        val courtReviews = reviews.find { it.courtId == court.court.id } ?: CourtReviewsSummary(
-            court.court.id,
-            0.0,
-            0
-        )
+        val courtReviews = reviews[court.id]!! // Each court has been added to the map
         holder.bind(collection[position], courtReviews)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateCollection(
-        updatedCollection: List<CourtWithDetails>,
-        updatedReviews: List<CourtReviewsSummary>
+        updatedCollection: List<Court>,
+        updatedReviews: HashMap<String, List<Review>>
     ) {
         this.collection = updatedCollection
         this.reviews = updatedReviews
@@ -96,38 +93,37 @@ class CourtAdapter(
             }
         }
 
-        fun bind(courtWithDetails: CourtWithDetails, courtReviews: CourtReviewsSummary) {
+        fun bind(court: Court, courtReviews: List<Review>) {
             courtReviewsTV.text = itemView.context.getString(
                 R.string.reviews_summary,
-                String.format("%.2f", courtReviews.avg),
-                courtReviews.count.toString()
+                String.format("%.2f", courtReviews.avg()),
+                courtReviews.size.toString()
             )
-            courtName.text = courtWithDetails.court.name
-            courtType.text = courtWithDetails.sport.name
+            courtName.text = court.name
+            courtType.text = court.sport
             courtPrice.text = itemView.context.getString(
                 R.string.hour_charge_court_short,
-                String.format("%.2f", courtWithDetails.court.hourCharge)
+                String.format("%.2f", court.hourCharge)
             )
 
-            if (courtReviews.count > 0) {
+            if (courtReviews.isNotEmpty()) {
                 courtReviewsMCV.setOnClickListener {
-                    navigateToReviews(courtWithDetails.court.id)
+                    navigateToReviews(court.id)
                 }
             } else {
                 courtReviewsMCV.isClickable = false
                 courtReviewsMCV.alpha = 0.7f
             }
 
-            when (isCourtAvailable(courtWithDetails.court.id)) {
+            when (isCourtAvailable(court.id)) {
                 true -> {
                     setColors(R.color.grey_light_2, R.color.custom_black, R.color.grey, 1f)
                     courtAvailability.text =
                         itemView.context.getString(R.string.court_available)
                     courtMCV.setOnClickListener {
-                        val court = courtWithDetails.court
-                        val sport = courtWithDetails.sport
+                        val sport = court.sport
                         navigateToChooseServices(
-                            court.id, court.name, court.hourCharge, sport.name
+                            court.id, court.name, court.hourCharge, sport
                         )
                     }
                 }

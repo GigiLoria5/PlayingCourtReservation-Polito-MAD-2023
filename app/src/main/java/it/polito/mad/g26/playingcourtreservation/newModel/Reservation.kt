@@ -4,8 +4,8 @@ import com.google.firebase.firestore.ServerTimestamp
 
 data class Reservation(
     var id: String = "",
-    val idUser: String = "",
-    val idCourt: String = "",
+    val userId: String = "",
+    val courtId: String = "",
     val date: String = "",
     val time: String = "",
     val amount: Double = 0.0,
@@ -30,7 +30,7 @@ data class Reservation(
 }
 
 data class Review(
-    val idUser: String = "",
+    val userId: String = "",
     val rating: Double = 0.0,
     val text: String? = null,
     @ServerTimestamp

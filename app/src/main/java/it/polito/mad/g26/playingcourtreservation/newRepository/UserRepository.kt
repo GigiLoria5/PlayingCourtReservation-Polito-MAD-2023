@@ -5,5 +5,6 @@ import it.polito.mad.g26.playingcourtreservation.util.UiState
 
 interface UserRepository {
     val currentUser: FirebaseUser?
+
     suspend fun login(): UiState<FirebaseUser>
 }

@@ -3,8 +3,6 @@ package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -23,20 +21,21 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CourtAdapter
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtsVM
+import it.polito.mad.g26.playingcourtreservation.util.toast
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtsViewModel
 
 @AndroidEntryPoint
 class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
 
     private val args: SearchCourtsFragmentArgs by navArgs()
-    private val vm by viewModels<SearchCourtsVM>()
-    private val loadTime: Long = 500
+    private val viewModel by viewModels<SearchCourtsViewModel>()
 
     /*   VISUAL COMPONENTS       */
     private lateinit var customToolBar: Toolbar
@@ -62,6 +61,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
     private var sportCenterPhoneNumber: String = ""
     private var sportName: String = ""
     private var dateTime: Long = 0
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sportCenterId = args.sportCenterId
@@ -72,7 +72,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
         dateTime = args.dateTime
 
         /* VM INITIALIZATIONS */
-        vm.initialize(1, 1, dateTime)
+        viewModel.initialize(sportCenterId, sportName, dateTime)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)
@@ -109,7 +109,6 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
         )
         selectedSportTV.text = sportName
 
-
         sportCenterPhoneNumberMCV.setOnClickListener {
             val intent = Intent(Intent.ACTION_DIAL)
             intent.data = Uri.parse("tel:$sportCenterPhoneNumber")
@@ -123,19 +122,18 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
 
         /* shimmerFrameLayout INITIALIZER */
         courtsShimmerView = view.findViewById(R.id.courtsShimmerView)
-
     }
 
     private fun createCourtAdapter(): CourtAdapter {
         return CourtAdapter(
-            vm.getCourtsBySelectedSport(),
-            vm.reviews.value ?: listOf(),
-            { vm.isCourtAvailable(it) },
+            viewModel.courts,
+            viewModel.reviews,
+            { viewModel.isCourtAvailable(it) },
             { courtId ->
                 goingToCourtReviews = true
                 val direction =
                     SearchCourtsFragmentDirections.actionSearchCourtsToCourtReviews(
-                        "1"
+                        courtId
                     )
                 findNavController().navigate(direction)
             }
@@ -155,9 +153,9 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
                         sportCenterName,
                         sportCenterAddress,
                         sportCenterPhoneNumber,
-                        "1",
+                        courtId,
                         courtName,
-                        courtHourCharge,
+                        courtHourCharge.toFloat(),
                         sportName,
                         dateTime
                     )
@@ -167,25 +165,32 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
     }
 
     private fun loadCourts() {
-
         /* COURTS LOADING */
-        vm.reviews.observe(viewLifecycleOwner) {
-            courtsShimmerView.startShimmerAnimation(courtsRV)
-            numberOfAvailableCourtsTV.makeGone()
+        viewModel.fetchCourtsData()
+        viewModel.loadingState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    courtsShimmerView.startShimmerAnimation(courtsRV)
+                    numberOfAvailableCourtsTV.makeGone()
+                }
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                courtsShimmerView.stopShimmerAnimation(courtsRV)
-                val numberOfAvailableCourts = vm.getTotAvailableCourts()
-                numberOfAvailableCourtsTV.text = getString(
-                    R.string.search_courts_results_info,
-                    numberOfAvailableCourts,
-                    if (numberOfAvailableCourts != 1) "s" else ""
-                )
-                numberOfAvailableCourtsTV.makeVisible()
+                is UiState.Failure -> {
+                    courtsShimmerView.stopShimmerAnimation(courtsRV)
+                    toast(state.error ?: "Unable to get courts")
+                }
 
-                //HERE THERE ARE NO ISSUE IN THE USAGE OF it, BECAUSE COURTS SHOULD NOT CHANGE AFTER loadTime
-                courtsAdapter.updateCollection(vm.getCourtsBySelectedSport(), it)
-            }, loadTime)
+                is UiState.Success -> {
+                    courtsShimmerView.stopShimmerAnimation(courtsRV)
+                    val numberOfAvailableCourts = viewModel.getTotAvailableCourts()
+                    numberOfAvailableCourtsTV.text = getString(
+                        R.string.search_courts_results_info,
+                        numberOfAvailableCourts,
+                        if (numberOfAvailableCourts > 1) "s" else ""
+                    )
+                    numberOfAvailableCourtsTV.makeVisible()
+                    courtsAdapter.updateCollection(viewModel.courts, viewModel.reviews)
+                }
+            }
         }
     }
 

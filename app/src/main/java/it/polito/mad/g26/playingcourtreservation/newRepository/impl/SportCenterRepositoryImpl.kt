@@ -2,6 +2,7 @@ package it.polito.mad.g26.playingcourtreservation.newRepository.impl
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import it.polito.mad.g26.playingcourtreservation.newModel.Court
 import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
 import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.util.FirestoreCollections
@@ -15,21 +16,20 @@ class SportCenterRepositoryImpl @Inject constructor(
 
     override suspend fun getAllSportCenters(): UiState<List<SportCenter>> {
         return try {
-            Log.d(TAG, "Performing getSportCenters")
+            Log.d(TAG, "Performing getAllSportCenters")
             val result = db.collection(FirestoreCollections.SPORT_CENTERS)
                 .orderBy("name")
                 .get().await()
-            Log.d(TAG, "getSportCenters: ${result.documents.size} results")
+            Log.d(TAG, "getAllSportCenters: ${result.documents.size} results")
             val sportCenters = arrayListOf<SportCenter>()
             for (document in result) {
                 val sportCenter = document.toObject(SportCenter::class.java)
                 sportCenter.id = document.id
                 sportCenters.add(sportCenter)
             }
-            sportCenters.sortBy { list -> list.name }
             UiState.Success(sportCenters)
         } catch (e: Exception) {
-            Log.e(TAG, "Error while performing getSportCenters: ${e.message}", e)
+            Log.e(TAG, "Error while performing getAllSportCenters: ${e.message}", e)
             UiState.Failure(e.localizedMessage)
         }
     }
@@ -65,7 +65,51 @@ class SportCenterRepositoryImpl @Inject constructor(
             val cities = result.mapNotNull { it.getString("city") }.distinct()
             UiState.Success(cities)
         } catch (e: Exception) {
-            Log.e(TAG, "Error while performing getSportCentersCities: ${e.message}", e)
+            Log.e(TAG, "Error while performing getFilteredSportCentersCities: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun getAllSportCenterCourts(sportCenterId: String): UiState<List<Court>> {
+        return try {
+            Log.d(TAG, "Performing getAllSportCenterCourts with sportCenterId: $sportCenterId")
+            val result = db.collection((FirestoreCollections.SPORT_CENTERS))
+                .whereEqualTo("id", sportCenterId)
+                .get().await()
+            Log.d(TAG, "getAllSportCenterCourts: ${result.documents.size} results")
+            assert(result.documents.size == 1) // Sport Center Id must be unique and existing
+            val courts = result
+                .documents[0].toObject(SportCenter::class.java)!!
+                .courts.sortedBy { it.name }
+            UiState.Success(courts)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while performing getAllSportCenterCourts: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun getAllSportCenterCourtsBySport(
+        sportCenterId: String,
+        sportName: String
+    ): UiState<List<Court>> {
+        return try {
+            Log.d(
+                TAG,
+                "Performing getAllSportCenterCourtsBySport with sportCenterId: $sportCenterId and sportName: $sportName"
+            )
+            val result = db.collection((FirestoreCollections.SPORT_CENTERS))
+                .whereEqualTo("id", sportCenterId)
+                .get().await()
+            Log.d(TAG, "getAllSportCenterCourtsBySport: ${result.documents.size} results")
+            assert(result.documents.size == 1) // Sport Center Id must be unique and existing
+            val courts = result
+                .documents[0].toObject(SportCenter::class.java)!!
+                .courts
+                .filter { it.sport == sportName }
+                .sortedBy { it.name }
+            UiState.Success(courts)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while performing getAllSportCenterCourtsBySport: ${e.message}", e)
             UiState.Failure(e.localizedMessage)
         }
     }
