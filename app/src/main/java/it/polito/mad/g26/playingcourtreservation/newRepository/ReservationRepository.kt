@@ -10,7 +10,11 @@ interface ReservationRepository {
 
     suspend fun getCourtReviews(courtId: String): UiState<List<Review>>
 
-    suspend fun getUserReservationAt(userId: String, date: String, time: String): UiState<String?>
+    suspend fun getUserReservationAt(
+        userId: String,
+        date: String,
+        time: String
+    ): UiState<Reservation?>
 
     suspend fun getCourtReservationAt(
         courtId: String,

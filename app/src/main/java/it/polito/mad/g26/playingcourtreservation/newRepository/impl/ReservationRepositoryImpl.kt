@@ -59,12 +59,11 @@ class ReservationRepositoryImpl @Inject constructor(
         }
     }
 
-    // TODO: return Reservation? instead of String?
     override suspend fun getUserReservationAt(
         userId: String,
         date: String,
         time: String
-    ): UiState<String?> {
+    ): UiState<Reservation?> {
         return try {
             Log.d(TAG, "getUserReservationAt -> user id: $userId, date: $date and time: $time")
             val result = db.collection(FirestoreCollections.RESERVATIONS)
@@ -73,9 +72,9 @@ class ReservationRepositoryImpl @Inject constructor(
                 .whereEqualTo("time", time)
                 .get().await()
             Log.d(TAG, "getUserReservationAt: ${result.documents.size} result")
-            val reservationId =
-                if (result.isEmpty) null else result.documents[0].toObject(Reservation::class.java)!!.id
-            UiState.Success(reservationId)
+            val reservation =
+                if (result.isEmpty) null else result.documents[0].toObject(Reservation::class.java)!!
+            UiState.Success(reservation)
         } catch (e: Exception) {
             Log.e(TAG, "Error while performing getUserReservationAt: ${e.message}", e)
             UiState.Failure(e.localizedMessage)

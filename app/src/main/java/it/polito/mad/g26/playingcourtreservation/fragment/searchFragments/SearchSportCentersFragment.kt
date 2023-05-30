@@ -233,7 +233,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
     private fun loadExistingReservation() {
         /* EXISTING RESERVATION LOADING*/
         viewModel.checkExistingReservation()
-        viewModel.existingReservationIdByDateAndTime.observe(viewLifecycleOwner) { state ->
+        viewModel.existingReservationByDateAndTime.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
                     servicesShimmerView.startShimmer()
@@ -254,7 +254,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         navigateToReservationBTN.setOnClickListener {
                             findNavController().navigate(
                                 SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
-                                    state.result
+                                    state.result.id
                                 )
                             )
                         }
@@ -272,7 +272,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         /* SPORT CENTERS LOADING */
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             val existingReservationId =
-                (viewModel.existingReservationIdByDateAndTime.value as UiState.Success).result
+                (viewModel.existingReservationByDateAndTime.value as UiState.Success).result
             if (existingReservationId == null) {
                 when (state) {
                     is UiState.Loading -> {

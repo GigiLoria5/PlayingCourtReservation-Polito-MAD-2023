@@ -44,18 +44,18 @@ class SearchSportCentersViewModel @Inject constructor(
     }
 
     /* EXISTING RESERVATION MANAGEMENT */
-    private val _existingReservationIdByDateAndTime = MutableLiveData<UiState<String?>>()
-    val existingReservationIdByDateAndTime: LiveData<UiState<String?>>
-        get() = _existingReservationIdByDateAndTime
+    private val _existingReservationByDateAndTime = MutableLiveData<UiState<Reservation?>>()
+    val existingReservationByDateAndTime: LiveData<UiState<Reservation?>>
+        get() = _existingReservationByDateAndTime
 
     fun checkExistingReservation() = viewModelScope.launch {
-        _existingReservationIdByDateAndTime.value = UiState.Loading
+        _existingReservationByDateAndTime.value = UiState.Loading
         val result = reservationRepository.getUserReservationAt(
             userRepository.currentUser!!.uid,
             getDateTimeFormatted(dateFormat),
             getDateTimeFormatted(timeFormat)
         )
-        _existingReservationIdByDateAndTime.value = result
+        _existingReservationByDateAndTime.value = result
     }
 
     // Load every information needed
