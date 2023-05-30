@@ -35,6 +35,27 @@ class SportCenterRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getSportCenterById(sportCenterId: String): UiState<SportCenter> {
+        return try {
+            Log.d(TAG, "Performing getSportCenterById with courtId: $sportCenterId")
+            val result = db.collection(FirestoreCollections.SPORT_CENTERS)
+                .whereEqualTo("id", sportCenterId)
+                .get().await()
+            Log.d(TAG, "getSportCenterById $sportCenterId: ${result.documents.size} results")
+            if (result.documents.size == 1) // Court Id must be unique and existing
+                UiState.Failure(null)
+            val sportCenter = result.documents[0].toObject(SportCenter::class.java)!!
+            UiState.Success(sportCenter)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing getSportCenterById $sportCenterId: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     override suspend fun getAllSportCentersCities(): UiState<List<String>> {
         return try {
             Log.d(TAG, "Performing getAllSportCentersCities")
@@ -51,8 +72,8 @@ class SportCenterRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getFilteredSportCentersCities(cityNamePrefix: String): UiState<List<String>> {
+        val capitalizedPrefix = cityNamePrefix.lowercase().replaceFirstChar(Char::titlecase)
         return try {
-            val capitalizedPrefix = cityNamePrefix.lowercase().replaceFirstChar(Char::titlecase)
             Log.d(
                 TAG,
                 "Performing getFilteredSportCentersCities with cityNamePrefix: $capitalizedPrefix"
@@ -62,11 +83,18 @@ class SportCenterRepositoryImpl @Inject constructor(
                 .startAt(capitalizedPrefix)
                 .endAt("${capitalizedPrefix}\uf8ff")
                 .get().await()
-            Log.d(TAG, "getFilteredSportCentersCities: ${result.documents.size} results")
+            Log.d(
+                TAG,
+                "getFilteredSportCentersCities $capitalizedPrefix: ${result.documents.size} results"
+            )
             val cities = result.mapNotNull { it.getString("city") }.distinct()
             UiState.Success(cities)
         } catch (e: Exception) {
-            Log.e(TAG, "Error while performing getFilteredSportCentersCities: ${e.message}", e)
+            Log.e(
+                TAG,
+                "Error while performing getFilteredSportCentersCities $capitalizedPrefix: ${e.message}",
+                e
+            )
             UiState.Failure(e.localizedMessage)
         }
     }
@@ -74,17 +102,22 @@ class SportCenterRepositoryImpl @Inject constructor(
     override suspend fun getAllSportCenterCourts(sportCenterId: String): UiState<List<Court>> {
         return try {
             Log.d(TAG, "Performing getAllSportCenterCourts with sportCenterId: $sportCenterId")
-            val result = db.collection((FirestoreCollections.SPORT_CENTERS))
+            val result = db.collection(FirestoreCollections.SPORT_CENTERS)
                 .whereEqualTo("id", sportCenterId)
                 .get().await()
-            Log.d(TAG, "getAllSportCenterCourts: ${result.documents.size} results")
-            assert(result.documents.size == 1) // Sport Center Id must be unique and existing
+            Log.d(TAG, "getAllSportCenterCourts $sportCenterId: ${result.documents.size} results")
+            if (result.documents.size == 1) // Sport Center Id must be unique and existing
+                UiState.Failure(null)
             val courts = result
                 .documents[0].toObject(SportCenter::class.java)!!
                 .courts.sortedBy { it.name }
             UiState.Success(courts)
         } catch (e: Exception) {
-            Log.e(TAG, "Error while performing getAllSportCenterCourts: ${e.message}", e)
+            Log.e(
+                TAG,
+                "Error while performing getAllSportCenterCourts $sportCenterId: ${e.message}",
+                e
+            )
             UiState.Failure(e.localizedMessage)
         }
     }
@@ -98,11 +131,15 @@ class SportCenterRepositoryImpl @Inject constructor(
                 TAG,
                 "Performing getAllSportCenterCourtsBySport with sportCenterId: $sportCenterId and sportName: $sportName"
             )
-            val result = db.collection((FirestoreCollections.SPORT_CENTERS))
+            val result = db.collection(FirestoreCollections.SPORT_CENTERS)
                 .whereEqualTo("id", sportCenterId)
                 .get().await()
-            Log.d(TAG, "getAllSportCenterCourtsBySport: ${result.documents.size} results")
-            assert(result.documents.size == 1) // Sport Center Id must be unique and existing
+            Log.d(
+                TAG,
+                "getAllSportCenterCourtsBySport with sportCenterId: $sportCenterId and sportName: $sportName: ${result.documents.size} results"
+            )
+            if (result.documents.size == 1) // Sport Center Id must be unique and existing
+                UiState.Failure(null)
             val courts = result
                 .documents[0].toObject(SportCenter::class.java)!!
                 .courts
@@ -110,7 +147,11 @@ class SportCenterRepositoryImpl @Inject constructor(
                 .sortedBy { it.name }
             UiState.Success(courts)
         } catch (e: Exception) {
-            Log.e(TAG, "Error while performing getAllSportCenterCourtsBySport: ${e.message}", e)
+            Log.e(
+                TAG,
+                "Error while performing getAllSportCenterCourtsBySport with sportCenterId: $sportCenterId and sportName: $sportName: ${e.message}",
+                e
+            )
             UiState.Failure(e.localizedMessage)
         }
     }
@@ -118,17 +159,22 @@ class SportCenterRepositoryImpl @Inject constructor(
     override suspend fun getSportCenterServices(sportCenterId: String): UiState<List<Service>> {
         return try {
             Log.d(TAG, "Performing getSportCenterServices with sportCenterId: $sportCenterId")
-            val result = db.collection((FirestoreCollections.SPORT_CENTERS))
+            val result = db.collection(FirestoreCollections.SPORT_CENTERS)
                 .whereEqualTo("id", sportCenterId)
                 .get().await()
-            Log.d(TAG, "getSportCenterServices: ${result.documents.size} results")
-            assert(result.documents.size == 1) // Sport Center Id must be unique and existing
+            Log.d(TAG, "getSportCenterServices $sportCenterId: ${result.documents.size} results")
+            if (result.documents.size == 1) // Sport Center Id must be unique and existing
+                UiState.Failure(null)
             val services = result
                 .documents[0].toObject(SportCenter::class.java)!!
                 .services.sortedBy { it.name }
             UiState.Success(services)
         } catch (e: Exception) {
-            Log.e(TAG, "Error while performing getSportCenterServices: ${e.message}", e)
+            Log.e(
+                TAG,
+                "Error while performing getSportCenterServices $sportCenterId: ${e.message}",
+                e
+            )
             UiState.Failure(e.localizedMessage)
         }
     }
