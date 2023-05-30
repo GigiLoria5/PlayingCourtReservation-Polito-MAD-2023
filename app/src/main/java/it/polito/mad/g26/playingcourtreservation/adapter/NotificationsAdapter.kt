@@ -12,10 +12,18 @@ import it.polito.mad.g26.playingcourtreservation.model.Notification
 class NotificationsAdapter(
     private var notifications: MutableList<Notification>
 ) : RecyclerView.Adapter<NotificationsAdapter.NotificationsViewHolder>() {
+
+    private lateinit var mListener: onItemClickListener
+    interface onItemClickListener{
+        fun onItemClick(position: Int)
+    }
+    fun setOnItemClickListener(listener: onItemClickListener){
+        mListener = listener
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationsViewHolder {
         val v = LayoutInflater.from(parent.context)
             .inflate(viewType, parent, false)
-        return NotificationsViewHolder(v)
+        return NotificationsViewHolder(v, mListener)
     }
 
     override fun onBindViewHolder(holder: NotificationsViewHolder, position: Int) {
@@ -44,10 +52,15 @@ class NotificationsAdapter(
         return deleteNotification
     }
 
-    inner class NotificationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class NotificationsViewHolder(view: View, listener: onItemClickListener) : RecyclerView.ViewHolder(view) {
         private val timestamp = view.findViewById<TextView>(R.id.notificationTimestampTV)
         private val message = view.findViewById<TextView>(R.id.notificationMessageTV)
 
+        init {
+            itemView.setOnClickListener{
+                listener.onItemClick(absoluteAdapterPosition)
+            }
+        }
         fun bind(notification: Notification) {
             timestamp.text = notification.timestamp
             message.text = notification.message

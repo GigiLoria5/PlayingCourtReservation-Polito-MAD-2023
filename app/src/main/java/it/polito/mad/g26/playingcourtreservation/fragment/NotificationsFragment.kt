@@ -75,7 +75,7 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
         n2.isRead = false
         n2.timestamp = "28-05-2023 18:32:40"
         n2.message = "Luca invited you to play"
-        n2.idReservation = 2
+        n2.idReservation = 20
 
         notifications += n0
         notifications += n1
@@ -83,6 +83,14 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
 
         notificationsAdapter = NotificationsAdapter(notifications)
         notificationsRV.adapter = notificationsAdapter
+        notificationsAdapter.setOnItemClickListener(object : NotificationsAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                val action = NotificationsFragmentDirections
+                    .actionNotificationFragmentToReservationDetailsFragment2(notifications[position].idReservation)
+                findNavController().navigate(action)
+            }
+
+        })
         notificationsRV.addItemDecoration(DividerItemDecoration(this.activity, LinearLayout.VERTICAL))
 
         if (notifications.isNotEmpty()){
@@ -130,7 +138,6 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
             when(direction){
                 ItemTouchHelper.LEFT ->{
                     deleteData = notificationsAdapter.removeItem(position)
-                    notificationsAdapter.notifyDataSetChanged()
                 }
             }
         }
