@@ -106,9 +106,15 @@ class ReservationRepositoryImpl @Inject constructor(
     override suspend fun saveReservation(reservation: Reservation): UiState<Unit> {
         return try {
             assert(reservation.id != "") // Must be set before saveReservation
-            db.collection(FirestoreCollections.RESERVATIONS)
+            val reservationRef = db.collection(FirestoreCollections.RESERVATIONS)
                 .document(reservation.id)
-                .set(reservation).await()
+            db.runTransaction { transaction ->
+                val snapshot = transaction[reservationRef]
+                if (snapshot.exists()) {
+                    throw IllegalStateException("Unfortunately, the court is no longer available")
+                }
+                transaction[reservationRef] = reservation
+            }.await()
             UiState.Success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Error while performing saveReservation: ${e.message}", e)
