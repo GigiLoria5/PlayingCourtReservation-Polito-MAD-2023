@@ -71,6 +71,8 @@ class ReservationRepositoryImpl @Inject constructor(
             Log.d(TAG, "getUserReservation for user with id: $userId")
             val result = db.collection(FirestoreCollections.RESERVATIONS)
                 .whereEqualTo("userId", userId)
+                .orderBy("date")
+                .orderBy("time")
                 .get().await()
             Log.d(TAG, "getUserReservation $userId: ${result.documents.size} result")
             val reservations = arrayListOf<Reservation>()
