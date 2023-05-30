@@ -57,14 +57,24 @@
             tools:text="Via Roma, Torino" />
 
         <TextView
-            android:id="@+id/itemReservationSportCenterFieldSportText"
+            android:id="@+id/itemReservationSportCenterField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
             android:gravity="start"
             android:textColor="@color/custom_black"
             android:textSize="18sp"
-            tools:text="Field1, 11-a-side football" />
+            tools:text="Field1" />
+
+        <TextView
+            android:id="@+id/itemReservationSportNameField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:gravity="start"
+            android:textColor="@color/custom_black"
+            android:textSize="18sp"
+            tools:text="8-a-side football" />
     </LinearLayout>
 
     <TextView
@@ -78,6 +88,7 @@
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemReservationLayout"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_default="percent"
         app:layout_constraintWidth_percent="0.143"

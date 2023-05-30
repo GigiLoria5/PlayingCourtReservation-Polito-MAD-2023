@@ -42,8 +42,10 @@ class ReservationsAdapter : RecyclerView.Adapter<ReservationsAdapter.Reservation
             view.findViewById<TextView>(R.id.itemReservationSportCenterNameText)
         private val sportCenterAddressView =
             view.findViewById<TextView>(R.id.itemReservationSportCenterAddressText)
-        private val sportCenterFieldSportView =
-            view.findViewById<TextView>(R.id.itemReservationSportCenterFieldSportText)
+        private val courtNameView =
+            view.findViewById<TextView>(R.id.itemReservationSportCenterField)
+        private val courtSportView =
+            view.findViewById<TextView>(R.id.itemReservationSportNameField)
         private val reservationAmount = view.findViewById<TextView>(R.id.itemReservationAmountText)
 
         fun bind(reservation: Reservation) {
@@ -60,11 +62,8 @@ class ReservationsAdapter : RecyclerView.Adapter<ReservationsAdapter.Reservation
                 sportCenter.address,
                 sportCenter.city
             )
-            sportCenterFieldSportView.text = super.itemView.context.getString(
-                R.string.reservation_info_concatenation,
-                court.name,
-                sportName
-            )
+            courtNameView.text = court.name
+            courtSportView.text = court.sport
             reservationAmount.text = super.itemView.context.getString(
                 R.string.reservation_info_amount,
                 String.format("%.1f", reservation.amount)
