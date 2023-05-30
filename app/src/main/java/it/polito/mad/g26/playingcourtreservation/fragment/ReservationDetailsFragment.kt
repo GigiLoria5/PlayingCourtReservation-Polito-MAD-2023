@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MenuHost
@@ -23,14 +24,12 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.adapter.ReservationDetailsAdapter
-import it.polito.mad.g26.playingcourtreservation.newModel.Service
-import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceWithFeeAdapter
+import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.UiState
+import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
-import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationDetailsViewModel
 
@@ -42,11 +41,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
     // Visual Components
     private lateinit var reservationReviewMCV: MaterialCardView
+    private lateinit var sportCenterPhoneNumberMCV: MaterialCardView
     private lateinit var viewReservationButtons: ConstraintLayout // View to be inflated with buttons
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupActionBar(activity, "Reservation Details", true)
 
         // VM Initialization
         val reservationId = args.reservationId
@@ -54,26 +53,28 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
         // Setup late init variables and visual components
         reservationReviewMCV = view.findViewById(R.id.reservationReviewMCV)
+        sportCenterPhoneNumberMCV = view.findViewById(R.id.sportCenterPhoneNumberMCV)
         viewReservationButtons = view.findViewById(R.id.reservation_buttons)
-        val centerName = view.findViewById<CustomTextView>(R.id.sportCenter_name)
-            .findViewById<TextView>(R.id.value)
-        val centerTime = view.findViewById<CustomTextView>(R.id.sportCenter_time)
-            .findViewById<TextView>(R.id.value)
-        val field = view.findViewById<CustomTextView>(R.id.court_name)
-            .findViewById<TextView>(R.id.value)
-        val sport = view.findViewById<CustomTextView>(R.id.sport)
-            .findViewById<TextView>(R.id.value)
-        val city = view.findViewById<CustomTextView>(R.id.city)
-            .findViewById<TextView>(R.id.value)
-        val address = view.findViewById<CustomTextView>(R.id.address)
-            .findViewById<TextView>(R.id.value)
-        val price = view.findViewById<CustomTextView>(R.id.price)
-            .findViewById<TextView>(R.id.value)
-        val date = view.findViewById<CustomTextView>(R.id.date)
-            .findViewById<TextView>(R.id.value)
-        val time = view.findViewById<CustomTextView>(R.id.time)
-            .findViewById<TextView>(R.id.value)
+        val centerName = view.findViewById<TextView>(R.id.sportCenter_name)
+        val centerTime = view.findViewById<TextView>(R.id.sportCenter_time)
+        val field = view.findViewById<TextView>(R.id.court_name)
+        val sport = view.findViewById<TextView>(R.id.sport)
+        val address = view.findViewById<TextView>(R.id.address)
+        val price = view.findViewById<TextView>(R.id.price)
+        val date = view.findViewById<TextView>(R.id.date)
+        val serviceTitle = view.findViewById<TextView>(R.id.service_title)
         val serviceRV = view.findViewById<RecyclerView>(R.id.service_list)
+
+        /* CUSTOM TOOLBAR MANAGEMENT*/
+        val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
+        customToolBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        /*BACK BUTTON MANAGEMENT*/
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().popBackStack()
+        }
 
         // Alert Dialog
         val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
@@ -83,6 +84,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             findNavController().popBackStack()
         }
         builder.setNegativeButton("Cancel") { _, _ ->
+        }
+
+        /*BACK BUTTON MANAGEMENT*/
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().popBackStack()
         }
 
         // Retrieve Reservation Details
@@ -107,11 +113,24 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         .filter { it.id == reservation.courtId }[0]
                     val reservationServicesWithFee = reservationSportCenter.services
                         .filter { reservation.services.contains(it.name) }
-                    serviceRV.adapter =
-                        if (reservationServicesWithFee.isEmpty())
-                            ReservationDetailsAdapter(listOf(Service()), true)
-                        else
-                            ReservationDetailsAdapter(reservationServicesWithFee, false)
+                    if (reservationServicesWithFee.isEmpty())
+                        serviceTitle.text =
+                            getString(R.string.reservation_no_services_chosen)
+                    else {
+                        val adapter = ServiceWithFeeAdapter(
+                            reservationServicesWithFee,
+                            isServiceNameInList = { false },
+                            isClickable = false
+                        )
+                        val itemDecoration =
+                            HorizontalSpaceItemDecoration(
+                                resources.getDimensionPixelSize(
+                                    R.dimen.chip_distance
+                                )
+                            )
+                        serviceRV.addItemDecoration(itemDecoration)
+                        serviceRV.adapter = adapter
+                    }
                     centerName.text = reservationSportCenter.name
                     centerTime.text = view.context.getString(
                         R.string.set_opening_hours,
@@ -120,10 +139,17 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     )
                     field.text = reservationCourt.name
                     sport.text = reservationCourt.sport
-                    city.text = reservationSportCenter.city
-                    address.text = reservationSportCenter.address
-                    date.text = reservation.date
-                    time.text = reservation.time
+                    address.text =
+                        getString(
+                            R.string.sport_center_address_res,
+                            reservationSportCenter.address,
+                            reservationSportCenter.city
+                        )
+                    date.text = getString(
+                        R.string.selected_date_time_res,
+                        reservation.time,
+                        reservation.date
+                    )
                     price.text = view.context.getString(
                         R.string.set_text_with_euro,
                         reservation.amount.toString()
@@ -247,6 +273,6 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
     override fun onResume() {
         super.onResume()
-        showActionBar(activity)
+        hideActionBar(activity)
     }
 }

@@ -2,20 +2,15 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,10 +19,10 @@ import it.polito.mad.g26.playingcourtreservation.adapter.ModifyReservationDetail
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.ReservationWithDetailsUtil
 import it.polito.mad.g26.playingcourtreservation.util.createCalendarObject
-import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
-import it.polito.mad.g26.playingcourtreservation.util.showActionBar
+import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.takeIntCenterTime
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 
@@ -50,7 +45,19 @@ class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupActionBar(activity, "Edit Reservation Details", true)
+
+        /* CUSTOM TOOLBAR MANAGEMENT*/
+        val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
+        customToolBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        /*BACK BUTTON MANAGEMENT*/
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().popBackStack()
+        }
+
+        val customConfirmIconIV = view.findViewById<ImageView>(R.id.customConfirmIconIV)
 
         var amount = mutableListOf(0.0f)
         var centerOpenTime = 16
@@ -65,15 +72,11 @@ class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_
             .findViewById<TextView>(R.id.value)
         val sport = view.findViewById<CustomTextView>(R.id.sport)
             .findViewById<TextView>(R.id.value)
-        val city = view.findViewById<CustomTextView>(R.id.city)
-            .findViewById<TextView>(R.id.value)
         val address = view.findViewById<CustomTextView>(R.id.address)
             .findViewById<TextView>(R.id.value)
         val price = view.findViewById<CustomTextView>(R.id.price)
             .findViewById<TextView>(R.id.value)
         val date = view.findViewById<CustomTextView>(R.id.date)
-            .findViewById<TextView>(R.id.value)
-        val time = view.findViewById<CustomTextView>(R.id.time)
             .findViewById<TextView>(R.id.value)
         dateTV = view.findViewById(R.id.dateTV)
         hourTV = view.findViewById(R.id.hourTV)
@@ -100,10 +103,17 @@ class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_
                 )
                 field.text = reservation.courtWithDetails.court.name
                 sport.text = reservation.courtWithDetails.sport.name
-                city.text = reservation.courtWithDetails.sportCenter.city
-                address.text = reservation.courtWithDetails.sportCenter.address
-                date.text = reservation.reservation.date
-                time.text = reservation.reservation.time
+                address.text =
+                    getString(
+                        R.string.sport_center_address_res,
+                        reservation.courtWithDetails.sportCenter.address,
+                        reservation.courtWithDetails.sportCenter.city
+                    )
+                date.text = getString(
+                    R.string.selected_date_time_res,
+                    reservation.reservation.time,
+                    reservation.reservation.date
+                )
                 price.text = view.context.getString(
                     R.string.set_text_with_euro,
                     reservation.reservation.amount.toString()
@@ -154,65 +164,46 @@ class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_
                                 //Recycler view of services
                                 val recyclerView =
                                     view.findViewById<RecyclerView>(R.id.recyclerView_chip)
-                                recyclerView.adapter =
+                                val adapter =
                                     ModifyReservationDetailsAdapter(
                                         servicesAll,
                                         servicesChosen,
                                         priceNew,
                                         amount
                                     )
-                                recyclerView.layoutManager = GridLayoutManager(context, 2)
+                                val itemDecoration =
+                                    HorizontalSpaceItemDecoration(
+                                        resources.getDimensionPixelSize(
+                                            R.dimen.chip_distance
+                                        )
+                                    )
+                                recyclerView.addItemDecoration(itemDecoration)
+                                recyclerView.adapter = adapter
                             }
                     }
             }
-
-        /*ALERT DIALOG FOR SUCCESSFUL UPDATE*/
-        val builderUpdated = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-        builderUpdated.setMessage("The reservation has been update successfully")
-        builderUpdated.setPositiveButton("Ok") { _, _ ->
-            // User clicked OK button
+        /* CONFIRM BUTTON */
+        customConfirmIconIV.setOnClickListener {
+            //Take Ids of services
+            val idsServices =
+                reservationWithDetailsVM.getListOfIdService(servicesChosen)
+            //Date changes
+            val newDate = dateNew.text.toString()
+            reservationWithDetailsVM.updateReservation(
+                newDate,
+                hourTV.text.toString(),
+                reservationId,
+                idsServices,
+                amount[0]
+            )
+            Toast.makeText(
+                context,
+                R.string.reservation_success_update,
+                Toast.LENGTH_SHORT
+            ).show()               //navigate back because id will be the same
+            findNavController().popBackStack()
         }
 
-        /*MENU CUSTOMIZATION*/
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
-                menuInflater.inflate(R.menu.edit_profile_menu, menu)
-            }
-
-            override fun onMenuItemSelected(item: MenuItem): Boolean {
-                // Handle the menu selection
-                return when (item.itemId) {
-                    // Back
-                    android.R.id.home -> {
-                        findNavController().popBackStack()
-                        true
-                    }
-                    // Confirm Changes
-                    R.id.confirm_menu_item -> {
-                        //Take Ids of services
-                        val idsServices =
-                            reservationWithDetailsVM.getListOfIdService(servicesChosen)
-                        //Date changes
-                        val newDate = dateNew.text.toString()
-                        reservationWithDetailsVM.updateReservation(
-                            newDate,
-                            hourTV.text.toString(),
-                            reservationId,
-                            idsServices,
-                            amount[0]
-                        )
-                        builderUpdated.show()
-                        //navigate back because id will be the same
-                        findNavController().popBackStack()
-                        true
-                    }
-
-                    else -> false
-                }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
         dateMCV = view.findViewById(R.id.dateMCV)
@@ -261,6 +252,6 @@ class ModifyReservationXFragment : Fragment(R.layout.modify_reservation_details_
 
     override fun onResume() {
         super.onResume()
-        showActionBar(activity)
+        hideActionBar(activity)
     }
 }
