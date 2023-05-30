@@ -49,6 +49,8 @@ class SearchSportCentersViewModel @Inject constructor(
         get() = _existingReservationByDateAndTime
 
     fun checkExistingReservation() = viewModelScope.launch {
+        if (_existingReservationByDateAndTime.value is UiState.Loading)
+            return@launch // Avoid multiple calls
         _existingReservationByDateAndTime.value = UiState.Loading
         val result = reservationRepository.getUserReservationAt(
             userRepository.currentUser!!.uid,
@@ -119,10 +121,10 @@ class SearchSportCentersViewModel @Inject constructor(
     /*DATE TIME MANAGEMENT*/
     private val dateFormat = Reservation.getDatePattern()
     private val timeFormat = Reservation.getTimePattern()
+
     private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
         it.value = 0
     }
-
     val selectedDateTimeMillis: LiveData<Long> = _selectedDateTimeMillis
 
     fun changeSelectedDateTimeMillis(newTimeInMillis: Long) {

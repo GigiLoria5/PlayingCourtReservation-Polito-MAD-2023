@@ -9,7 +9,6 @@ import it.polito.mad.g26.playingcourtreservation.newRepository.UserRepository
 import it.polito.mad.g26.playingcourtreservation.util.FirestoreCollections
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.await
-import it.polito.mad.g26.playingcourtreservation.util.generateUsername
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -27,8 +26,7 @@ class UserRepositoryImpl @Inject constructor(
             Log.d(TAG, "signInAnonymously: success")
             // Add user information to Firestore's collection
             val uid = result.user!!.uid
-            val username = generateUsername(uid)
-            val user = User(id = uid, username = username)
+            val user = User(id = uid, username = User.generateUsername(uid))
             db.collection(FirestoreCollections.USERS)
                 .document(uid)
                 .set(user)

@@ -1,6 +1,7 @@
 package it.polito.mad.g26.playingcourtreservation.newRepository
 
 import it.polito.mad.g26.playingcourtreservation.newModel.Court
+import it.polito.mad.g26.playingcourtreservation.newModel.Service
 import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 
@@ -17,4 +18,6 @@ interface SportCenterRepository {
         sportCenterId: String,
         sportName: String
     ): UiState<List<Court>>
+
+    suspend fun getSportCenterServices(sportCenterId: String): UiState<List<Service>>
 }

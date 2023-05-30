@@ -154,6 +154,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                 dateTV,
                 hourTV
             )
+            loadExistingReservation() // When the date/time changes, it is necessary to check again whether a reservation exists
         }
 
         /* SERVICES RECYCLE VIEW INITIALIZER*/

@@ -155,7 +155,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
                         sportCenterPhoneNumber,
                         courtId,
                         courtName,
-                        courtHourCharge.toFloat(),
+                        courtHourCharge,
                         sportName,
                         dateTime
                     )

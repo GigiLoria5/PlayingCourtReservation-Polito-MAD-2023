@@ -21,4 +21,6 @@ interface ReservationRepository {
         date: String,
         time: String
     ): UiState<Reservation?>
+
+    suspend fun saveReservation(reservation: Reservation): UiState<Unit>
 }

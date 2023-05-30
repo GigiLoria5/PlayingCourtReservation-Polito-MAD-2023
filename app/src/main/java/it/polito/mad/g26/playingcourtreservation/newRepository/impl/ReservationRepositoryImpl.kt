@@ -103,6 +103,19 @@ class ReservationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun saveReservation(reservation: Reservation): UiState<Unit> {
+        return try {
+            assert(reservation.id != "") // Must be set before saveReservation
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservation.id)
+                .set(reservation).await()
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while performing saveReservation: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     companion object {
         private const val TAG = "ReservationRepository"
     }

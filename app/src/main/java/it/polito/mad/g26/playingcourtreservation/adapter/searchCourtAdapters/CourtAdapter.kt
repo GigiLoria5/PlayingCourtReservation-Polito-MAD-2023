@@ -19,7 +19,7 @@ class CourtAdapter(
     private var reviews: HashMap<String, List<Review>>,
     private val isCourtAvailable: (String) -> Boolean,
     private val navigateToReviews: (String) -> Unit,
-    private val navigateToChooseServices: (String, String, Double, String) -> Unit
+    private val navigateToChooseServices: (String, String, Float, String) -> Unit
 ) :
     RecyclerView.Adapter<CourtAdapter.CourtViewHolder>() {
 

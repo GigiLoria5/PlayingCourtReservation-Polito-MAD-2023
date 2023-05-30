@@ -3,6 +3,7 @@ package it.polito.mad.g26.playingcourtreservation.newRepository.impl
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.g26.playingcourtreservation.newModel.Court
+import it.polito.mad.g26.playingcourtreservation.newModel.Service
 import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
 import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.util.FirestoreCollections
@@ -110,6 +111,24 @@ class SportCenterRepositoryImpl @Inject constructor(
             UiState.Success(courts)
         } catch (e: Exception) {
             Log.e(TAG, "Error while performing getAllSportCenterCourtsBySport: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun getSportCenterServices(sportCenterId: String): UiState<List<Service>> {
+        return try {
+            Log.d(TAG, "Performing getSportCenterServices with sportCenterId: $sportCenterId")
+            val result = db.collection((FirestoreCollections.SPORT_CENTERS))
+                .whereEqualTo("id", sportCenterId)
+                .get().await()
+            Log.d(TAG, "getSportCenterServices: ${result.documents.size} results")
+            assert(result.documents.size == 1) // Sport Center Id must be unique and existing
+            val services = result
+                .documents[0].toObject(SportCenter::class.java)!!
+                .services.sortedBy { it.name }
+            UiState.Success(services)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while performing getSportCenterServices: ${e.message}", e)
             UiState.Failure(e.localizedMessage)
         }
     }

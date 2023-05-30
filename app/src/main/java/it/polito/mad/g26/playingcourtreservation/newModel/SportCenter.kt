@@ -16,12 +16,12 @@ data class SportCenter(
 
 data class Service(
     val name: String = "",
-    val fee: Double = 0.0
+    val fee: Float = 0.0F
 )
 
 data class Court(
     val id: String = UUID.randomUUID().toString(),
     val name: String = "",
     val sport: String = "",
-    val hourCharge: Double = 0.0
+    val hourCharge: Float = 0.0F
 )
