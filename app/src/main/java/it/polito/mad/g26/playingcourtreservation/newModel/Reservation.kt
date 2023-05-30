@@ -6,6 +6,7 @@ import it.polito.mad.g26.playingcourtreservation.util.getDigest
 data class Reservation(
     var id: String = "",
     val userId: String = "",
+    val sportCenterId: String = "",
     val courtId: String = "",
     val date: String = "",
     val time: String = "",

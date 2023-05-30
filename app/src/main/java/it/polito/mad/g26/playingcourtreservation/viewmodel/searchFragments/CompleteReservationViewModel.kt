@@ -90,9 +90,10 @@ class CompleteReservationViewModel @Inject constructor(
         val reservation = Reservation(
             id = Reservation.generateId(courtId, date, time),
             userId = userRepository.currentUser!!.uid,
-            courtId,
-            date,
-            time,
+            sportCenterId = sportCenterId,
+            courtId = courtId,
+            date = date,
+            time = time,
             amount = totalAmount.value!!,
             services = selectedServices.value!!.toList()
         )
