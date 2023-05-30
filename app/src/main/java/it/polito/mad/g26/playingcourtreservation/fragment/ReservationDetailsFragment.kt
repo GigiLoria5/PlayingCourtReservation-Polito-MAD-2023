@@ -1,7 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
 
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -10,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.RatingBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.MenuHost
@@ -26,34 +24,37 @@ import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReservationDetailsAdapter
-import it.polito.mad.g26.playingcourtreservation.model.Service
-import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
+import it.polito.mad.g26.playingcourtreservation.newModel.Service
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
-import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
+import it.polito.mad.g26.playingcourtreservation.util.toast
+import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationDetailsViewModel
 
 @AndroidEntryPoint
 class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragment) {
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
-    private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
-    private lateinit var servicesAll: List<ServiceWithFee>
-    private lateinit var servicesUsed: List<Service>
-    private lateinit var servicesChosen: List<ServiceWithFee>
-    private val dummyService = Service()
-    private val dummyServiceWithFee = ServiceWithFee(dummyService, 0.0f)
-    private val dummyListServiceWithFee = listOf(dummyServiceWithFee)
-    private val today = Calendar.getInstance()
+    private val viewModel by viewModels<ReservationDetailsViewModel>()
+
+    // Visual Components
     private lateinit var reservationReviewMCV: MaterialCardView
+    private lateinit var viewReservationButtons: ConstraintLayout // View to be inflated with buttons
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBar(activity, "Reservation Details", true)
 
-        //List of text
+        // VM Initialization
+        val reservationId = args.reservationId
+        viewModel.initialize(reservationId)
+
+        // Setup late init variables and visual components
+        reservationReviewMCV = view.findViewById(R.id.reservationReviewMCV)
+        viewReservationButtons = view.findViewById(R.id.reservation_buttons)
         val centerName = view.findViewById<CustomTextView>(R.id.sportCenter_name)
             .findViewById<TextView>(R.id.value)
         val centerTime = view.findViewById<CustomTextView>(R.id.sportCenter_time)
@@ -72,193 +73,92 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             .findViewById<TextView>(R.id.value)
         val time = view.findViewById<CustomTextView>(R.id.time)
             .findViewById<TextView>(R.id.value)
+        val serviceRV = view.findViewById<RecyclerView>(R.id.service_list)
+
+        // Alert Dialog
+        val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+        builder.setMessage("Are you sure you want to delete the reservation?")
+        builder.setPositiveButton("Confirm") { _, _ ->
+            viewModel.deleteReservation()
+            findNavController().popBackStack()
+        }
+        builder.setNegativeButton("Cancel") { _, _ ->
+        }
 
         // Retrieve Reservation Details
-        // TODO: Resolve this
-        // val reservationId = args.reservationId
-        val reservationId = 1
-        reservationReviewMCV = view.findViewById(R.id.reservationReviewMCV)
-
-        reservationWithDetailsVM
-            .getReservationWithDetailsById(reservationId)
-            .observe(viewLifecycleOwner) { reservation ->
-                servicesUsed = reservation.services
-                centerName.text = reservation.courtWithDetails.sportCenter.name
-                centerTime.text = view.context.getString(
-                    R.string.set_opening_hours,
-                    reservation.courtWithDetails.sportCenter.openTime,
-                    reservation.courtWithDetails.sportCenter.closeTime
-                )
-                field.text = reservation.courtWithDetails.court.name
-                sport.text = reservation.courtWithDetails.sport.name
-                city.text = reservation.courtWithDetails.sportCenter.city
-                address.text = reservation.courtWithDetails.sportCenter.address
-                date.text = reservation.reservation.date
-                time.text = reservation.reservation.time
-                price.text = view.context.getString(
-                    R.string.set_text_with_euro,
-                    reservation.reservation.amount.toString()
-                )
-
-                //List of variable
-                val dateList = reservation.reservation.date.split("-")
-                val yearRes = dateList[2].toInt()
-                val monthRes = dateList[1].toInt()
-                val dayRes = dateList[0].toInt()
-                val timeList = reservation.reservation.time.split(":")
-                val hourRes = timeList[0].toInt()
-                val calendarRes = Calendar.getInstance().apply {
-                    set(Calendar.YEAR, yearRes)
-                    set(Calendar.MONTH, monthRes - 1)
-                    set(Calendar.DAY_OF_MONTH, dayRes)
-                    set(Calendar.HOUR_OF_DAY, hourRes - 1)
-                    set(Calendar.MINUTE, 30)
+        viewModel.getReservationAndAllSportCenterServices()
+        viewModel.loadingState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    // TODO: Start Animation
                 }
 
-                //Alert Dialog
-                val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
-                builder.setMessage("Are you sure you want to delete the reservation?")
-                builder.setPositiveButton("Yes") { _, _ ->
-                    // User clicked OK button
-                    reservationWithDetailsVM.deleteReservationById(reservationId)
-                    findNavController().popBackStack()
-                }
-                builder.setNegativeButton("No") { _, _ ->
-                    // User cancelled the dialog
+                is UiState.Failure -> {
+                    // TODO: Stop Animation
+                    toast(state.error ?: "Unable to get reservation details")
                 }
 
-                //View to be inflated with buttons
-                val viewReservationButtons =
-                    view.findViewById<ConstraintLayout>(R.id.reservation_buttons)
-
-                //Show reservation buttons if future or review button if past
-                if (today <= calendarRes) {
-                    // Inflate the new layout with two buttons of reservation
-                    val inflater = LayoutInflater.from(requireContext())
-                    val viewDeleteAndEdit = inflater.inflate(
-                        R.layout.reservation_details_delete_and_edit_buttons,
-                        viewReservationButtons,
-                        false
+                is UiState.Success -> {
+                    // TODO: Stop Animation
+                    // Update UI with Reservation Details
+                    val reservation = viewModel.reservation
+                    val reservationSportCenter = viewModel.sportCenter
+                    val reservationCourt = reservationSportCenter.courts
+                        .filter { it.id == reservation.courtId }[0]
+                    val reservationServicesWithFee = reservationSportCenter.services
+                        .filter { reservation.services.contains(it.name) }
+                    serviceRV.adapter =
+                        if (reservationServicesWithFee.isEmpty())
+                            ReservationDetailsAdapter(listOf(Service()), true)
+                        else
+                            ReservationDetailsAdapter(reservationServicesWithFee, false)
+                    centerName.text = reservationSportCenter.name
+                    centerTime.text = view.context.getString(
+                        R.string.set_opening_hours,
+                        reservationSportCenter.openTime,
+                        reservationSportCenter.closeTime
                     )
-                    val deleteButton =
-                        viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
-                    val editButton =
-                        viewDeleteAndEdit.findViewById<MaterialButton>(R.id.modify_reservation_button)
-                    viewReservationButtons.addView(viewDeleteAndEdit)
+                    field.text = reservationCourt.name
+                    sport.text = reservationCourt.sport
+                    city.text = reservationSportCenter.city
+                    address.text = reservationSportCenter.address
+                    date.text = reservation.date
+                    time.text = reservation.time
+                    price.text = view.context.getString(
+                        R.string.set_text_with_euro,
+                        reservation.amount.toString()
+                    )
+                    // Show reservation buttons if future or review button is past
+                    if (viewModel.nowIsBeforeReservationDateTime()) {
+                        // Inflate the new layout with two buttons of reservation
+                        val inflater = LayoutInflater.from(requireContext())
+                        val viewDeleteAndEdit = inflater.inflate(
+                            R.layout.reservation_details_delete_and_edit_buttons,
+                            viewReservationButtons,
+                            false
+                        )
+                        val deleteButton =
+                            viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
+                        val editButton =
+                            viewDeleteAndEdit.findViewById<MaterialButton>(R.id.modify_reservation_button)
+                        viewReservationButtons.addView(viewDeleteAndEdit)
 
-                    deleteButton.setOnClickListener {
-                        builder.show()
-                    }
-                    editButton.setOnClickListener {
-                        val action =
-                            ReservationDetailsFragmentDirections.openReservationEdit(reservationId)
-                        findNavController().navigate(action)
-                    }
-
-                } else {
-                    //Inflate with button of review
-                    reservationWithDetailsVM.findReservationReview(reservationId, 1)
-                        .observe(viewLifecycleOwner) { review ->
-                            if (review == null) {
-                                reservationReviewMCV.makeInvisible()
-                                viewReservationButtons.removeAllViews()
-                                val inflater = LayoutInflater.from(requireContext())
-                                val viewAddReview = inflater.inflate(
-                                    R.layout.reservation_details_add_review_button,
-                                    viewReservationButtons,
-                                    false
-                                )
-                                val reviewAddButton =
-                                    viewAddReview.findViewById<MaterialButton>(R.id.add_review_button)
-                                viewReservationButtons.addView(viewAddReview)
-                                reviewAddButton.setOnClickListener {
-                                    val addReviewDialog =
-                                        CustomDialogAlertAddReview.newInstance(reservationId, 1)
-                                    addReviewDialog.show(
-                                        parentFragmentManager,
-                                        CustomDialogAlertAddReview.TAG
-                                    )
-                                }
-                            } else {
-                                viewReservationButtons.removeAllViews()
-                                val reviewEditButton =
-                                    view.findViewById<MaterialButton>(R.id.modifyReviewButton)
-                                val reviewDeleteButton =
-                                    view.findViewById<MaterialButton>(R.id.deleteReviewButton)
-                                reservationReviewMCV.makeVisible()
-                                val rating = view.findViewById<RatingBar>(R.id.rating)
-                                val reviewDate = view.findViewById<TextView>(R.id.reviewDateTV)
-                                val reviewText = view.findViewById<TextView>(R.id.reviewTextTV)
-                                rating.rating = review.rating
-                                reviewDate.text = review.date
-                                reviewText.text = review.text
-                                reviewDeleteButton.setOnClickListener {
-                                    //Alert Dialog
-                                    val builderDeleteReview = AlertDialog.Builder(
-                                        requireContext(),
-                                        R.style.MyAlertDialogStyle
-                                    )
-                                    builderDeleteReview.setMessage("Are you sure you want to delete the review?")
-                                    builderDeleteReview.setPositiveButton("Yes") { _, _ ->
-                                        // User clicked OK button
-                                        reservationWithDetailsVM.deleteReviewById(reservationId, 1)
-                                        Toast.makeText(
-                                            context,
-                                            "Review deleted successfully",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                    builderDeleteReview.setNegativeButton("No") { _, _ ->
-                                        // User cancelled the dialog
-                                    }
-                                    builderDeleteReview.show()
-                                }
-                                reviewEditButton.setOnClickListener {
-                                    val addReviewDialog =
-                                        CustomDialogAlertAddReview.newInstance(reservationId, 1)
-                                    addReviewDialog.show(
-                                        parentFragmentManager,
-                                        CustomDialogAlertAddReview.TAG
-                                    )
-                                }
-                            }
+                        deleteButton.setOnClickListener {
+                            builder.show()
                         }
-
-                }
-
-                reservationWithDetailsVM.getAllServicesWithFee(reservation.courtWithDetails.sportCenter.id)
-                    .observe(viewLifecycleOwner) { listOfServicesWithSportCenter ->
-                        //List of services with fee of the sport center
-
-                        reservationWithDetailsVM.getAllServices()
-                            .observe(viewLifecycleOwner) { listService ->
-                                //List of all services
-
-                                //List of ServiceWithFee of that Sport center
-                                servicesAll = reservationWithDetailsVM.allServiceWithoutSport(
-                                    listOfServicesWithSportCenter,
-                                    listService
+                        editButton.setOnClickListener {
+                            val action =
+                                ReservationDetailsFragmentDirections.openReservationEdit(
+                                    1 // TODO: pass correct value
                                 )
-
-                                //Filter service to take only chosen
-                                servicesChosen = reservationWithDetailsVM.filterServicesWithFee(
-                                    servicesAll,
-                                    servicesUsed
-                                )
-
-                                //Recycler view of services
-                                val recyclerView =
-                                    view.findViewById<RecyclerView>(R.id.service_list)
-                                if (servicesChosen.isEmpty())
-                                    recyclerView.adapter =
-                                        ReservationDetailsAdapter(dummyListServiceWithFee, true)
-                                else
-                                    recyclerView.adapter =
-                                        ReservationDetailsAdapter(servicesChosen, false)
-                            }
+                            findNavController().navigate(action)
+                        }
+                        return@observe
                     }
+                    loadReview()
+                }
             }
-
+        }
 
         /*MENU ITEM*/
         val menuHost: MenuHost = requireActivity()
@@ -278,8 +178,71 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     else -> false
                 }
             }
-
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun loadReview() {
+        val review = viewModel.review
+        if (review == null) {
+            reservationReviewMCV.makeInvisible()
+            viewReservationButtons.removeAllViews()
+            val inflater = LayoutInflater.from(requireContext())
+            val viewAddReview = inflater.inflate(
+                R.layout.reservation_details_add_review_button,
+                viewReservationButtons,
+                false
+            )
+            val reviewAddButton =
+                viewAddReview.findViewById<MaterialButton>(R.id.add_review_button)
+            viewReservationButtons.addView(viewAddReview)
+            reviewAddButton.setOnClickListener {
+                val addReviewDialog =
+                    CustomDialogAlertAddReview.newInstance("1", "1") // TODO: fix this
+                addReviewDialog.show(
+                    parentFragmentManager,
+                    CustomDialogAlertAddReview.TAG
+                )
+            }
+            return
+        }
+        // Review found
+        viewReservationButtons.removeAllViews()
+        val reviewEditButton =
+            requireView().findViewById<MaterialButton>(R.id.modifyReviewButton)
+        val reviewDeleteButton =
+            requireView().findViewById<MaterialButton>(R.id.deleteReviewButton)
+        reservationReviewMCV.makeVisible()
+        val rating = requireView().findViewById<RatingBar>(R.id.rating)
+        val reviewDate = requireView().findViewById<TextView>(R.id.reviewDateTV)
+        val reviewText = requireView().findViewById<TextView>(R.id.reviewTextTV)
+        rating.rating = review.rating
+        reviewDate.text = review.date
+        reviewText.text = review.text
+        reviewDeleteButton.setOnClickListener {
+            //Alert Dialog
+            val builderDeleteReview = AlertDialog.Builder(
+                requireContext(),
+                R.style.MyAlertDialogStyle
+            )
+            builderDeleteReview.setMessage("Are you sure you want to delete the review?")
+            builderDeleteReview.setPositiveButton("Confirm") { _, _ ->
+                // User clicked OK button
+                viewModel.deleteUserReview()
+                toast("Review deleted successfully")
+            }
+            builderDeleteReview.setNegativeButton("Cancel") { _, _ ->
+                // User cancelled the dialog
+            }
+            builderDeleteReview.show()
+        }
+        reviewEditButton.setOnClickListener {
+            val addReviewDialog =
+                CustomDialogAlertAddReview.newInstance("1", "1") // TODO: fix this
+            addReviewDialog.show(
+                parentFragmentManager,
+                CustomDialogAlertAddReview.TAG
+            )
+        }
     }
 
     override fun onResume() {

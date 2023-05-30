@@ -11,11 +11,11 @@ data class Reservation(
     val date: String = "",
     val time: String = "",
     val amount: Float = 0.0f,
-    val services: List<String> = listOf(),
-    val participants: List<String> = listOf(),
-    val requests: List<String> = listOf(),
-    val invitees: List<String> = listOf(),
-    val reviews: List<Review> = listOf()
+    var services: List<String> = listOf(),
+    var participants: List<String> = listOf(),
+    var requests: List<String> = listOf(),
+    var invitees: List<String> = listOf(),
+    var reviews: List<Review> = listOf()
 ) {
     companion object {
         private const val DATE_PATTERN = "dd-MM-yyyy"

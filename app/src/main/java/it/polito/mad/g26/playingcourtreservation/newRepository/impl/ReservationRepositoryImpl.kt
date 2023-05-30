@@ -66,6 +66,38 @@ class ReservationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteUserReview(reservationId: String, userId: String): UiState<Unit> {
+        return try {
+            Log.d(TAG, "deleteUserReview with reservation id: $reservationId and userId: $userId")
+            // Get the reservation
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .whereEqualTo("id", reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "deleteUserReview get reservation id: $reservationId: ${result.documents.size} result"
+            )
+            if (result.documents.size != 1) // Reservation Id must be unique and existing
+                UiState.Failure("No existing reservation")
+            // Remove the user review
+            val reservation = result.documents[0].toObject(Reservation::class.java)!!
+            reservation.reviews = reservation.reviews.filter { it.userId != userId }
+            // Save changes
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .set(reservation).await()
+            Log.d(TAG, "deleteUserReview: review deleted")
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing deleteUserReview with reservation id: $reservationId and userId: $userId: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     override suspend fun getUserReservations(userId: String): UiState<List<Reservation>> {
         return try {
             Log.d(TAG, "getUserReservation for user with id: $userId")
@@ -83,6 +115,30 @@ class ReservationRepositoryImpl @Inject constructor(
             UiState.Success(reservations)
         } catch (e: Exception) {
             Log.e(TAG, "Error while performing getUserReservation $userId: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun getReservationById(reservationId: String): UiState<Reservation> {
+        return try {
+            Log.d(TAG, "getReservationById with id: $reservationId")
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .whereEqualTo("id", reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "getReservationById with id: $reservationId: ${result.documents.size} result"
+            )
+            if (result.documents.size != 1) // Reservation Id must be unique and existing
+                UiState.Failure(null)
+            val reservation = result.documents[0].toObject(Reservation::class.java)!!
+            UiState.Success(reservation)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing getReservationById with id: $reservationId: ${e.message}",
+                e
+            )
             UiState.Failure(e.localizedMessage)
         }
     }
@@ -165,6 +221,22 @@ class ReservationRepositoryImpl @Inject constructor(
             UiState.Success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Error while performing saveReservation: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun deleteReservation(reservationId: String): UiState<Unit> {
+        return try {
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .delete().await()
+            Log.d(
+                TAG,
+                "Reservation document with ID $reservationId deleted in Firestore collection"
+            )
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while performing deleteReservation: ${e.message}", e)
             UiState.Failure(e.localizedMessage)
         }
     }

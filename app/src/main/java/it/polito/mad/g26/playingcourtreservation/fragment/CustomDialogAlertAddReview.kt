@@ -24,22 +24,20 @@ class CustomDialogAlertAddReview : DialogFragment() {
     private lateinit var ratingError: MaterialCardView
 
     companion object {
-
         const val TAG = "Review Dialog"
         fun newInstance(
-            idReservation: Int,
-            idUser: Int
+            idReservation: String,
+            idUser: String
         ): CustomDialogAlertAddReview = CustomDialogAlertAddReview().apply {
             arguments = Bundle().apply {
-                putInt("idReservation", idReservation)
-                putInt("idUser", idUser)
+                putString("idReservation", idReservation)
+                putString("idUser", idUser)
             }
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return context.let {
-
             val idReservation = arguments?.getInt("idReservation")
             val idUser = arguments?.getInt("idUser")
             val view: View =

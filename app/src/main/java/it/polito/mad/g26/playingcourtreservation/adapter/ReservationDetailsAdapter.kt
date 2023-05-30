@@ -6,40 +6,41 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
+import it.polito.mad.g26.playingcourtreservation.newModel.Service
 
-class ReservationDetailsAdapter(private val l: List<ServiceWithFee>, private val empty: Boolean) :
+class ReservationDetailsAdapter(private val services: List<Service>, private val isEmpty: Boolean) :
     RecyclerView.Adapter<ReservationDetailsAdapter.ReservationDetailsViewHolder>() {
 
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReservationDetailsViewHolder {
-        val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.service_recycler, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ReservationDetailsViewHolder {
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.service_recycler, parent, false)
         return ReservationDetailsViewHolder(v)
     }
 
     //Need to know the max value of position
     override fun getItemCount(): Int {
-        return l.size
+        return services.size
     }
 
     //called after viewHolder are created, to put data into them
     override fun onBindViewHolder(holder: ReservationDetailsViewHolder, position: Int) {
-        holder.bind(l[position], empty)
+        holder.bind(services[position])
     }
 
     inner class ReservationDetailsViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-
         private val cBox = v.findViewById<MaterialButton>(R.id.material_button)
-
-        fun bind(s: ServiceWithFee, empty: Boolean) {
-            if (empty)
+        fun bind(service: Service) {
+            if (isEmpty)
                 cBox.text = super.itemView.context.getString(R.string.no_services_chosen)
             else
                 cBox.text = super.itemView.context.getString(
                     R.string.reservation_details_concatenation,
-                    s.service.name,
-                    s.fee.toString()
+                    service.name,
+                    service.fee.toString()
                 )
         }
     }

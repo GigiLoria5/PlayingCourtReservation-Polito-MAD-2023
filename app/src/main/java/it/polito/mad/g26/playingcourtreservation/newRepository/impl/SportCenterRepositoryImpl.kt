@@ -15,6 +15,8 @@ class SportCenterRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : SportCenterRepository {
 
+    private val sportCenterNotFoundMsg = "Sport Center not found"
+
     override suspend fun getAllSportCenters(): UiState<List<SportCenter>> {
         return try {
             Log.d(TAG, "Performing getAllSportCenters")
@@ -42,8 +44,8 @@ class SportCenterRepositoryImpl @Inject constructor(
                 .whereEqualTo("id", sportCenterId)
                 .get().await()
             Log.d(TAG, "getSportCenterById $sportCenterId: ${result.documents.size} results")
-            if (result.documents.size == 1) // Court Id must be unique and existing
-                UiState.Failure(null)
+            if (result.documents.size != 1) // Court Id must be unique and existing
+                UiState.Failure(sportCenterNotFoundMsg)
             val sportCenter = result.documents[0].toObject(SportCenter::class.java)!!
             UiState.Success(sportCenter)
         } catch (e: Exception) {
@@ -106,8 +108,8 @@ class SportCenterRepositoryImpl @Inject constructor(
                 .whereEqualTo("id", sportCenterId)
                 .get().await()
             Log.d(TAG, "getAllSportCenterCourts $sportCenterId: ${result.documents.size} results")
-            if (result.documents.size == 1) // Sport Center Id must be unique and existing
-                UiState.Failure(null)
+            if (result.documents.size != 1) // Sport Center Id must be unique and existing
+                UiState.Failure(sportCenterNotFoundMsg)
             val courts = result
                 .documents[0].toObject(SportCenter::class.java)!!
                 .courts.sortedBy { it.name }
@@ -138,8 +140,8 @@ class SportCenterRepositoryImpl @Inject constructor(
                 TAG,
                 "getAllSportCenterCourtsBySport with sportCenterId: $sportCenterId and sportName: $sportName: ${result.documents.size} results"
             )
-            if (result.documents.size == 1) // Sport Center Id must be unique and existing
-                UiState.Failure(null)
+            if (result.documents.size != 1) // Sport Center Id must be unique and existing
+                UiState.Failure(sportCenterNotFoundMsg)
             val courts = result
                 .documents[0].toObject(SportCenter::class.java)!!
                 .courts
@@ -163,8 +165,8 @@ class SportCenterRepositoryImpl @Inject constructor(
                 .whereEqualTo("id", sportCenterId)
                 .get().await()
             Log.d(TAG, "getSportCenterServices $sportCenterId: ${result.documents.size} results")
-            if (result.documents.size == 1) // Sport Center Id must be unique and existing
-                UiState.Failure(null)
+            if (result.documents.size != 1) // Sport Center Id must be unique and existing
+                UiState.Failure(sportCenterNotFoundMsg)
             val services = result
                 .documents[0].toObject(SportCenter::class.java)!!
                 .services.sortedBy { it.name }
