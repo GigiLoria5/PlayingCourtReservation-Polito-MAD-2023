@@ -23,6 +23,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReservationDetailsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Service
@@ -34,7 +35,7 @@ import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
 
-
+@AndroidEntryPoint
 class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragment) {
 
     private val args: ReservationDetailsFragmentArgs by navArgs()

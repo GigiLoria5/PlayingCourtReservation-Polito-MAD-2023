@@ -41,6 +41,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputLayout
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.EditProfileAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
@@ -52,6 +53,7 @@ import java.io.FileDescriptor
 import java.io.IOException
 import java.util.*
 
+@AndroidEntryPoint
 class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
 
     private lateinit var usernameEditText: EditText
@@ -78,7 +80,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
     private lateinit var profilePictureAlertDialog: BottomSheetDialog
 
     private lateinit var sportRecycleView: RecyclerView
-    private lateinit var sportList : List<String>
+    private lateinit var sportList: List<String>
     private lateinit var sportRating: MutableList<Float>
     private lateinit var guide: Guideline
     private lateinit var configuration: Configuration
@@ -151,8 +153,8 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
             outState.putBoolean("confirmAlertDialogShowing", false)
 
         //save rating
-        if(::sportRating.isInitialized)
-            outState.putFloatArray("rating",sportRating.toFloatArray())
+        if (::sportRating.isInitialized)
+            outState.putFloatArray("rating", sportRating.toFloatArray())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -170,18 +172,18 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
         usernameContainer = view.findViewById(R.id.username_container)
         fullNameContainer = view.findViewById(R.id.full_name_container)
         locationContainer = view.findViewById(R.id.location_container)
-        sportRecycleView= view.findViewById(R.id.edit_profile_recycler_view)
-        sportList=resources.getStringArray(R.array.sport_array).toList()
+        sportRecycleView = view.findViewById(R.id.edit_profile_recycler_view)
+        sportList = resources.getStringArray(R.array.sport_array).toList()
 
-        guide=requireView().findViewById(R.id.guideline)
-        metrics= requireContext().resources.displayMetrics
+        guide = requireView().findViewById(R.id.guideline)
+        metrics = requireContext().resources.displayMetrics
         // Get the current configuration
-        configuration= resources.configuration
+        configuration = resources.configuration
         // Check if the orientation is landscape
         if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
             // The layout is in portrait mode
-            val height=metrics.heightPixels
-            val pixelsLimit=(height/100)*33
+            val height = metrics.heightPixels
+            val pixelsLimit = (height / 100) * 33
             guide.setGuidelineBegin(pixelsLimit)
         }
 
@@ -199,15 +201,15 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
             json?.getInt("year")?.let { myCalendar[Calendar.YEAR] = it }
             json?.getInt("month")?.let { myCalendar[Calendar.MONTH] = it }
             json?.getInt("day")?.let { myCalendar[Calendar.DAY_OF_MONTH] = it }
-            if(json?.getString("rating")!=null){
+            if (json?.getString("rating") != null) {
                 //retrieve rating from json
-                val sublist= json.getString("rating").split(",")
+                val sublist = json.getString("rating").split(",")
                 //transform in float
-                sportRating= mutableListOf()
-                for(string in sublist)
+                sportRating = mutableListOf()
+                for (string in sublist)
                     sportRating.add(string.toFloat())
-                sportRecycleView.adapter= EditProfileAdapter(sportList, sportRating)
-                sportRecycleView.layoutManager=
+                sportRecycleView.adapter = EditProfileAdapter(sportList, sportRating)
+                sportRecycleView.layoutManager =
                     LinearLayoutManager(context)
             }
         } else {//put the default value
@@ -219,9 +221,9 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
             locationEditText.setText(getString(R.string.default_location))
             myCalendar.add(Calendar.YEAR, -21)
             //RecyclerView Management
-            sportRating= MutableList(sportList.size){0f}
-            sportRecycleView.adapter=EditProfileAdapter(sportList,sportRating)
-            sportRecycleView.layoutManager=
+            sportRating = MutableList(sportList.size) { 0f }
+            sportRecycleView.adapter = EditProfileAdapter(sportList, sportRating)
+            sportRecycleView.layoutManager =
                 LinearLayoutManager(context)
         }
         //position dropdown management
@@ -304,8 +306,8 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
             if (confirmAlertOn)
                 submitForm()
 
-            sportRating=savedInstanceState.getFloatArray("rating")!!.toMutableList()
-            sportRecycleView.adapter= EditProfileAdapter(sportList, sportRating)
+            sportRating = savedInstanceState.getFloatArray("rating")!!.toMutableList()
+            sportRecycleView.adapter = EditProfileAdapter(sportList, sportRating)
         }
 
 
@@ -426,11 +428,11 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
                         json.put("day", myCalendar[Calendar.DAY_OF_MONTH])
 
                         //save rating
-                        var rating=""
-                        for(i in sportRating)
-                            rating= "$rating,$i"
-                        val finalRating=rating.substring(1)
-                        json.put("rating",finalRating)
+                        var rating = ""
+                        for (i in sportRating)
+                            rating = "$rating,$i"
+                        val finalRating = rating.substring(1)
+                        json.put("rating", finalRating)
 
                         //Calculate and save age
                         val year = myCalendar[Calendar.YEAR]

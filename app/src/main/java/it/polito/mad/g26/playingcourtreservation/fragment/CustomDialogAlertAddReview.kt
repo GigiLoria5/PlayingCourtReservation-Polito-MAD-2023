@@ -11,15 +11,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.card.MaterialCardView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.viewmodel.CustomDialogAlertAddReviewVM
 
-class CustomDialogAlertAddReview: DialogFragment() {
+@AndroidEntryPoint
+class CustomDialogAlertAddReview : DialogFragment() {
     private lateinit var rating: RatingBar
     private lateinit var textReview: EditText
     private lateinit var ratingError: MaterialCardView
+
     companion object {
 
         const val TAG = "Review Dialog"
@@ -33,12 +36,14 @@ class CustomDialogAlertAddReview: DialogFragment() {
             }
         }
     }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return context.let {
 
             val idReservation = arguments?.getInt("idReservation")
             val idUser = arguments?.getInt("idUser")
-            val view: View = layoutInflater.inflate(R.layout.reservation_details_add_review_dialog, null)
+            val view: View =
+                layoutInflater.inflate(R.layout.reservation_details_add_review_dialog, null)
             val builder = AlertDialog.Builder(it!!)
             builder.setView(view)
             rating = view.findViewById(R.id.rating)
@@ -53,29 +58,42 @@ class CustomDialogAlertAddReview: DialogFragment() {
 
             var update = false
 
-            rating.setOnRatingBarChangeListener { _, _, _ ->  ratingError.makeInvisible()}
+            rating.setOnRatingBarChangeListener { _, _, _ -> ratingError.makeInvisible() }
 
             parentFragment?.let { it1 ->
-                reviewVM.findReservationReview(idReservation!!, idUser!!).observe(it1.viewLifecycleOwner){ review->
-                    if (review != null){
-                        update = true
-                        rating.rating = review.rating
-                        textReview.setText(review.text)
+                reviewVM.findReservationReview(idReservation!!, idUser!!)
+                    .observe(it1.viewLifecycleOwner) { review ->
+                        if (review != null) {
+                            update = true
+                            rating.rating = review.rating
+                            textReview.setText(review.text)
+                        }
                     }
-                }
             }
             submit.setOnClickListener {
                 val error = checkReviewValidity()
-                if (!error && !update){
-                    reviewVM.addReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString().trim() )
+                if (!error && !update) {
+                    reviewVM.addReview(
+                        idReservation!!,
+                        idUser!!,
+                        rating.rating,
+                        textReview.text.toString().trim()
+                    )
                     this.dismiss()
-                    Toast.makeText(context, "Review added successfully", Toast.LENGTH_SHORT
+                    Toast.makeText(
+                        context, "Review added successfully", Toast.LENGTH_SHORT
                     ).show()
                 }
-                if (!error && update){
-                    reviewVM.updateReview(idReservation!!, idUser!!, rating.rating, textReview.text.toString().trim() )
+                if (!error && update) {
+                    reviewVM.updateReview(
+                        idReservation!!,
+                        idUser!!,
+                        rating.rating,
+                        textReview.text.toString().trim()
+                    )
                     this.dismiss()
-                    Toast.makeText(context, "Review added successfully", Toast.LENGTH_SHORT
+                    Toast.makeText(
+                        context, "Review added successfully", Toast.LENGTH_SHORT
                     ).show()
                 }
             }
@@ -86,15 +104,14 @@ class CustomDialogAlertAddReview: DialogFragment() {
             builder.create()
         }
     }
-    private fun checkReviewValidity(): Boolean{
+
+    private fun checkReviewValidity(): Boolean {
         var error = false
-        if (textReview.text.toString().trim().length < 10)
-        {
+        if (textReview.text.toString().trim().length < 10) {
             textReview.error = "Review size should be at least 10 characters long"
             error = true
         }
-        if (rating.rating == 0.0f)
-        {
+        if (rating.rating == 0.0f) {
             ratingError.makeVisible()
             error = true
         }

@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReviewsAdapter
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
@@ -25,6 +26,7 @@ import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtReviewsVM
 
+@AndroidEntryPoint
 class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
 
     private val args: CourtReviewsFragmentArgs by navArgs()

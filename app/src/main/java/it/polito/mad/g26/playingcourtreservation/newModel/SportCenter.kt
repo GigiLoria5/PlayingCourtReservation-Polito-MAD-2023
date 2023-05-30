@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.newModel
 
+import it.polito.mad.g26.playingcourtreservation.R
 import java.util.UUID
 
 data class SportCenter(
@@ -24,4 +25,17 @@ data class Court(
     val name: String = "",
     val sport: String = "",
     val hourCharge: Float = 0.0F
-)
+) {
+    companion object {
+        fun getSportColor(sportName: String): Int {
+            return when (sportName) {
+                "5-a-side Football" -> R.color.sport_5_aside_football
+                "8-a-side Football" -> R.color.sport_8_aside_football
+                "11-a-side Football" -> R.color.sport_11_aside_football
+                "Beach Soccer" -> R.color.sport_beach_soccer
+                "Futsal" -> R.color.sport_futsal
+                else -> R.color.custom_black
+            }
+        }
+    }
+}
