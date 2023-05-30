@@ -26,10 +26,14 @@ class ReservationDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     /* INITIALIZATION */
-    private var reservationId: String = ""
+    private var _reservationId: String = ""
+    val reservationId: String
+        get() = _reservationId
+    val userId: String
+        get() = userRepository.currentUser!!.uid
 
     fun initialize(reservationId: String) {
-        this.reservationId = reservationId
+        this._reservationId = reservationId
     }
 
     // Load reservation data
@@ -52,7 +56,7 @@ class ReservationDetailsViewModel @Inject constructor(
     fun getReservationAndAllSportCenterServices() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
         // Get reservation details
-        val reservationState = reservationRepository.getReservationById(reservationId)
+        val reservationState = reservationRepository.getReservationById(_reservationId)
         if (reservationState is UiState.Failure) {
             _loadingState.value = reservationState
             return@launch
@@ -71,14 +75,14 @@ class ReservationDetailsViewModel @Inject constructor(
     // Other functions
     fun deleteUserReview() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
-        reservationRepository.deleteUserReview(reservationId, userRepository.currentUser!!.uid)
+        reservationRepository.deleteUserReview(_reservationId, userId)
         delay(500)
         _loadingState.value = UiState.Success(Unit)
     }
 
     fun deleteReservation() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
-        reservationRepository.deleteReservation(reservationId)
+        reservationRepository.deleteReservation(_reservationId)
         delay(500)
     }
 

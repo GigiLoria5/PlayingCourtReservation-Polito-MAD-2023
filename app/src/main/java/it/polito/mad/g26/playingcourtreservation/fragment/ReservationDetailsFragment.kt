@@ -175,7 +175,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         editButton.setOnClickListener {
                             val action =
                                 ReservationDetailsFragmentDirections.openReservationEdit(
-                                    1 // TODO: pass correct value
+                                    viewModel.reservationId
                                 )
                             findNavController().navigate(action)
                         }
@@ -223,7 +223,10 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             viewReservationButtons.addView(viewAddReview)
             reviewAddButton.setOnClickListener {
                 val addReviewDialog =
-                    CustomDialogAlertAddReview.newInstance("1", "1") // TODO: fix this
+                    CustomDialogAlertAddReview.newInstance(
+                        viewModel.reservationId,
+                        viewModel.userId
+                    )
                 addReviewDialog.show(
                     parentFragmentManager,
                     CustomDialogAlertAddReview.TAG
@@ -263,7 +266,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
         reviewEditButton.setOnClickListener {
             val addReviewDialog =
-                CustomDialogAlertAddReview.newInstance("1", "1") // TODO: fix this
+                CustomDialogAlertAddReview.newInstance(viewModel.reservationId, viewModel.userId)
             addReviewDialog.show(
                 parentFragmentManager,
                 CustomDialogAlertAddReview.TAG

@@ -78,7 +78,7 @@
         tools:layout="@layout/modify_reservation_details_fragment">
         <argument
             android:name="reservationId"
-            app:argType="integer" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/searchCitiesFragment"
