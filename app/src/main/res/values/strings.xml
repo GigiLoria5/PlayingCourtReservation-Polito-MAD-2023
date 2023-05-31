@@ -97,6 +97,8 @@
     <string name="add_review_button">Add review</string>
     <string name="reservation_no_services_chosen">No services chosen</string>
     <string name="default_players_title">Players 7/22</string>
+    <string name="search_player_button">Invite Player</string>
+    <string name="applicant_player">Applicants</string>
     <!-- Edit reservations details-->
     <string name="edit_reservation_details">Edit Reservation</string>
     <string name="edit_date_time">Edit Date/time</string>
@@ -106,7 +108,7 @@
     <string name="set_text_with_euro">€%1$s</string>
     <string name="set_opening_hours">%1$s-%2$s</string>
     <string name="reservation_details_concatenation">%1$s, €%2$s</string>
-    <string name="search_player_button">Add Player</string>
+
     <!-- Edit profile-->
     <string name="sport_default">Beach soccer</string>
     <string name="delete_button_rating">x</string>

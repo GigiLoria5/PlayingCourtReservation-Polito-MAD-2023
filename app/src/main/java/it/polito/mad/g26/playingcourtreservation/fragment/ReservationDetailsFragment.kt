@@ -24,6 +24,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
@@ -301,12 +302,18 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             }
 
         val partiRecyclerView = view.findViewById<RecyclerView>(R.id.player_list)
-        val adapter = ReservationDetailsAdapter(privateList)
+        val adapter = ReservationDetailsAdapter(privateList, 1)
         partiRecyclerView.adapter = adapter
         partiRecyclerView.layoutManager = GridLayoutManager(context, 2)
         //to avoid scrolling of recycler
-        partiRecyclerView.setHasFixedSize(true)
 
+
+        //see if work
+        val partiRecyclerView2 = view.findViewById<RecyclerView>(R.id.requester_list)
+        val adapter2 = ReservationDetailsAdapter(privateList, 2)
+        partiRecyclerView2.adapter = adapter2
+        partiRecyclerView2.layoutManager = LinearLayoutManager(context)
+        //to avoid scrolling of recycler
 
         /*MENU ITEM*/
         val menuHost: MenuHost = requireActivity()

@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
 
-class ReservationDetailsAdapter(private val l: List<String>) :
+class ReservationDetailsAdapter(private val l: List<String>, private val mode: Int) :
     RecyclerView.Adapter<ReservationDetailsAdapter.ReservationDetailsViewHolder>() {
 
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
@@ -15,10 +15,17 @@ class ReservationDetailsAdapter(private val l: List<String>) :
         parent: ViewGroup,
         viewType: Int
     ): ReservationDetailsViewHolder {
-        val v =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.reservation_details_profile_2, parent, false)
-        return ReservationDetailsViewHolder(v)
+        return if (mode == 1) {
+            val v =
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.reservation_details_profile_2, parent, false)
+            ReservationDetailsViewHolder(v)
+        } else {
+            val v =
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.reservation_details_applicant_profile2, parent, false)
+            ReservationDetailsViewHolder(v)
+        }
     }
 
     //Need to know the max value of position

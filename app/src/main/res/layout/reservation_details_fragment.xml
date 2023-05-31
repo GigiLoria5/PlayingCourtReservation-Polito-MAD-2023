@@ -155,10 +155,10 @@
                         android:id="@+id/service_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
                         android:text="@string/chosen_services"
-                        android:textSize="@dimen/sport_center_secondary_info"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sport_center_secondary_info"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/price" />
@@ -236,13 +236,13 @@
             android:layout_marginTop="@dimen/margins_reservation_details">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/participant_layout"
+                android:id="@+id/player_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/reviewDataCL">
+                app:layout_constraintBottom_toTopOf="@id/requester_layout">
 
 
                 <TextView
@@ -280,7 +280,44 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:clipToPadding="false"
+                    android:nestedScrollingEnabled="false">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/requester_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/player_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/reviewDataCL">
+
+
+                <TextView
+                    android:id="@+id/requester_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/applicant_player"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="16sp"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintBottom_toTopOf="@id/requester_list"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/requester_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/requester_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:nestedScrollingEnabled="false">
 
                 </androidx.recyclerview.widget.RecyclerView>
@@ -295,7 +332,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/participant_layout">
+                app:layout_constraintTop_toBottomOf="@id/requester_layout">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/reservationReviewMCV"
