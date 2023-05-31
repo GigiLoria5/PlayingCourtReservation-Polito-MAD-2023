@@ -53,14 +53,13 @@ class AddReviewDialogFragment : DialogFragment() {
         return context.let {
             val view: View = layoutInflater
                 .inflate(R.layout.reservation_details_add_review_dialog, null)
-            val builder = AlertDialog.Builder(it!!)
-            builder.setView(view)
             rating = view.findViewById(R.id.rating)
             textReview = view.findViewById(R.id.et_review)
             ratingError = view.findViewById(R.id.errorRatingMCV)
             ratingError.makeInvisible()
 
-            // Button Handling
+            // Alert Builder
+            val builder = AlertDialog.Builder(requireContext()).setView(view)
             val submit = view.findViewById<Button>(R.id.submit_button)
             val cancel = view.findViewById<Button>(R.id.cancel_button)
             submit.setOnClickListener {
@@ -72,9 +71,9 @@ class AddReviewDialogFragment : DialogFragment() {
             rating.setOnRatingBarChangeListener { _, _, _ -> ratingError.makeInvisible() }
 
             // Review Handling
-            parentFragment?.let { fragment ->
+            parentFragment?.let { owner ->
                 viewModel.findReservationReview(reservationId, userId)
-                viewModel.review.observe(fragment.viewLifecycleOwner) { state ->
+                viewModel.review.observe(owner) { state ->
                     when (state) {
                         is UiState.Loading -> {
                             // TODO: Show Loading?
@@ -88,24 +87,23 @@ class AddReviewDialogFragment : DialogFragment() {
                         is UiState.Success -> {
                             // TODO: Stop Loading?
                             val review = state.result
+                            isUpdate = review != null
+                            rating.rating = review?.rating ?: 0.0F
+                            textReview.setText(review?.text ?: "")
                             if (actionLaunched) {
                                 val message =
                                     if (isUpdate) "Review updated successfully"
                                     else "Review added successfully"
                                 this.dismiss()
-                                toast(message)
                                 updateParentFragment()
-                            }
-                            if (review != null) {
-                                isUpdate = true
-                                rating.rating = review.rating
-                                textReview.setText(review.text)
+                                toast(message)
                             }
                         }
                     }
                 }
             }
 
+            // Show Dialog
             builder.create()
         }
     }

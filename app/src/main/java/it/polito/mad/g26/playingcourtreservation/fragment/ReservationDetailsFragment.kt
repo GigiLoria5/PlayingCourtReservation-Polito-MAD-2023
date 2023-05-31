@@ -45,6 +45,9 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     private lateinit var sportCenterPhoneNumberMCV: MaterialCardView
     private lateinit var viewReservationButtons: ConstraintLayout // View to be inflated with buttons
 
+    // Action is performing
+    private var reviewDeleteInProgress = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -107,6 +110,10 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
                 is UiState.Success -> {
                     // TODO: Stop Animation
+                    if (reviewDeleteInProgress) { // It means the delete was successful
+                        reviewDeleteInProgress = false
+                        toast("Review deleted successfully")
+                    }
                     // Update UI with Reservation Details
                     val reservation = viewModel.reservation
                     val reservationSportCenter = viewModel.sportCenter
@@ -258,7 +265,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             builderDeleteReview.setPositiveButton("Confirm") { _, _ ->
                 // User clicked OK button
                 viewModel.deleteUserReview()
-                toast("Review deleted successfully")
+                reviewDeleteInProgress = true
             }
             builderDeleteReview.setNegativeButton("Cancel") { _, _ ->
                 // User cancelled the dialog
