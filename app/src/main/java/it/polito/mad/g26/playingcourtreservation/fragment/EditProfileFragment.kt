@@ -44,7 +44,7 @@ import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.EditProfileAdapter
-import it.polito.mad.g26.playingcourtreservation.model.Reservation
+import it.polito.mad.g26.playingcourtreservation.newModel.Reservation
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import org.json.JSONObject
@@ -536,7 +536,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
 
     //update Date Of Birth Edit Text
     private fun updateDateOfBirthEditText(myCalendar: Calendar) {
-        val myFormat = Reservation.getReservationDatePattern()
+        val myFormat = Reservation.getDatePattern()
         val sdf = SimpleDateFormat(myFormat, Locale.ITALY)
         dateOfBirthEditText.setText(sdf.format(myCalendar.time))
     }
