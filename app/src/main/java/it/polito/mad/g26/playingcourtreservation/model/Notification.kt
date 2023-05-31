@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
 
 data class Notification(
-    val id: String = "",
+    var id: String = "",
     val userId: String = "",
     val reservationId: String = "",
     @ServerTimestamp
