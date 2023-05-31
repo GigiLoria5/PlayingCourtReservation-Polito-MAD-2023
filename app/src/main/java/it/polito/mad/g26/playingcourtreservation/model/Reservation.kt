@@ -42,7 +42,7 @@ data class Review(
     val rating: Float = 0.0F,
     val text: String? = null,
     @ServerTimestamp
-    val date: Timestamp = Timestamp.now()
+    val timestamp: Timestamp = Timestamp.now()
 )
 
 fun List<Review>.avg(): Float {

@@ -262,7 +262,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val reviewDate = requireView().findViewById<TextView>(R.id.reviewDateTV)
         val reviewText = requireView().findViewById<TextView>(R.id.reviewTextTV)
         rating.rating = review.rating
-        reviewDate.text = timestampToDate(review.date)
+        reviewDate.text = timestampToDate(review.timestamp)
         reviewText.text = review.text
         reviewDeleteButton.setOnClickListener {
             //Alert Dialog

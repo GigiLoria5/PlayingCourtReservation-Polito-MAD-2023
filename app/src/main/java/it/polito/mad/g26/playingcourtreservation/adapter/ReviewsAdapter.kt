@@ -42,7 +42,7 @@ class ReviewsAdapter(
         private val text = view.findViewById<TextView>(R.id.reviewTextTV)
 
         fun bind(review: Review) {
-            date.text = timestampToDate(review.date)
+            date.text = timestampToDate(review.timestamp)
             rating.rating = review.rating
             text.text = review.text
             // TODO: add user username
