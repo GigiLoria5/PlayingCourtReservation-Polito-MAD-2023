@@ -1,11 +1,11 @@
-package it.polito.mad.g26.playingcourtreservation.newRepository.impl
+package it.polito.mad.g26.playingcourtreservation.repository.impl
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import it.polito.mad.g26.playingcourtreservation.newModel.Court
-import it.polito.mad.g26.playingcourtreservation.newModel.Service
-import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
-import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
+import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.Service
+import it.polito.mad.g26.playingcourtreservation.model.SportCenter
+import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.util.FirestoreCollections
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.await

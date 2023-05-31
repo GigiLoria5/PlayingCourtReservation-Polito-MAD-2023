@@ -15,7 +15,7 @@ import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ModifyReservationDetailsAdapter
-import it.polito.mad.g26.playingcourtreservation.newModel.Service
+import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.ReservationDetailsUtils

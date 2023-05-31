@@ -8,9 +8,9 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.fragment.ReservationsFragmentDirections
-import it.polito.mad.g26.playingcourtreservation.newModel.Court
-import it.polito.mad.g26.playingcourtreservation.newModel.Reservation
-import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
+import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
+import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.util.getColorCompat
 
 class ReservationsAdapter : RecyclerView.Adapter<ReservationsAdapter.ReservationsViewHolder>() {

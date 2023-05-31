@@ -1,4 +1,4 @@
-package it.polito.mad.g26.playingcourtreservation.newModel
+package it.polito.mad.g26.playingcourtreservation.model
 
 import it.polito.mad.g26.playingcourtreservation.util.getDigest
 

@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.widget.NumberPicker
 import androidx.appcompat.app.AlertDialog
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
+import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils.adjustDateTimeCombination
 import java.time.LocalTime
 import kotlin.math.max

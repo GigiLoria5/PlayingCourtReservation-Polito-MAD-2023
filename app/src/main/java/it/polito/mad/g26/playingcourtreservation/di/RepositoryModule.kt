@@ -4,12 +4,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import it.polito.mad.g26.playingcourtreservation.newRepository.ReservationRepository
-import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
-import it.polito.mad.g26.playingcourtreservation.newRepository.UserRepository
-import it.polito.mad.g26.playingcourtreservation.newRepository.impl.ReservationRepositoryImpl
-import it.polito.mad.g26.playingcourtreservation.newRepository.impl.SportCenterRepositoryImpl
-import it.polito.mad.g26.playingcourtreservation.newRepository.impl.UserRepositoryImpl
+import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
+import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
+import it.polito.mad.g26.playingcourtreservation.repository.UserRepository
+import it.polito.mad.g26.playingcourtreservation.repository.impl.ReservationRepositoryImpl
+import it.polito.mad.g26.playingcourtreservation.repository.impl.SportCenterRepositoryImpl
+import it.polito.mad.g26.playingcourtreservation.repository.impl.UserRepositoryImpl
 import javax.inject.Singleton
 
 @Module

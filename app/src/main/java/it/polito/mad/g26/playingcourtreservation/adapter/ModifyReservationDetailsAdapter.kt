@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.newModel.Service
+import it.polito.mad.g26.playingcourtreservation.model.Service
 
 class ModifyReservationDetailsAdapter(
     private val l: List<Service>,

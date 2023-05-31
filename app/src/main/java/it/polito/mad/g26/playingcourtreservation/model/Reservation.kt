@@ -1,4 +1,4 @@
-package it.polito.mad.g26.playingcourtreservation.newModel
+package it.polito.mad.g26.playingcourtreservation.model
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp

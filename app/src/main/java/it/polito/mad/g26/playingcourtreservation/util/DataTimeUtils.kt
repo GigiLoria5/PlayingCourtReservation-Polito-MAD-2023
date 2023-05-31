@@ -1,7 +1,7 @@
 package it.polito.mad.g26.playingcourtreservation.util
 
 
-import it.polito.mad.g26.playingcourtreservation.newModel.Reservation
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date

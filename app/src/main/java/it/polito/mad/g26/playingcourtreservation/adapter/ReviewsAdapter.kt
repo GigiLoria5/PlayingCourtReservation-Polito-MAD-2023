@@ -8,9 +8,9 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.newModel.Review
-import it.polito.mad.g26.playingcourtreservation.newModel.User
-import it.polito.mad.g26.playingcourtreservation.newModel.timestampToDate
+import it.polito.mad.g26.playingcourtreservation.model.Review
+import it.polito.mad.g26.playingcourtreservation.model.User
+import it.polito.mad.g26.playingcourtreservation.model.timestampToDate
 
 class ReviewsAdapter(
     private var reviews: List<Review>,

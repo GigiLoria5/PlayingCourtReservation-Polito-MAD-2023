@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.polito.mad.g26.playingcourtreservation.newModel.Court
-import it.polito.mad.g26.playingcourtreservation.newModel.Reservation
-import it.polito.mad.g26.playingcourtreservation.newModel.Review
-import it.polito.mad.g26.playingcourtreservation.newRepository.ReservationRepository
-import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
+import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
+import it.polito.mad.g26.playingcourtreservation.model.Review
+import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
+import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.async

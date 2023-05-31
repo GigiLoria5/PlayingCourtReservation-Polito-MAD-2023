@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.newModel.Service
+import it.polito.mad.g26.playingcourtreservation.model.Service
 
 class ChooseAvailableServiceAdapter(
     private var collection: List<Service>,

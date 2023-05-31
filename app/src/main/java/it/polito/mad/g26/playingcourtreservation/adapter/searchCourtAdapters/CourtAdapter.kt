@@ -10,9 +10,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.newModel.Court
-import it.polito.mad.g26.playingcourtreservation.newModel.Review
-import it.polito.mad.g26.playingcourtreservation.newModel.avg
+import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.Review
+import it.polito.mad.g26.playingcourtreservation.model.avg
 
 class CourtAdapter(
     private var collection: List<Court>,

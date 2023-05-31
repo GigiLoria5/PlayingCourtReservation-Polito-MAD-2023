@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.newModel.Review
-import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
-import it.polito.mad.g26.playingcourtreservation.newModel.avg
+import it.polito.mad.g26.playingcourtreservation.model.Review
+import it.polito.mad.g26.playingcourtreservation.model.SportCenter
+import it.polito.mad.g26.playingcourtreservation.model.avg
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 
 class SportCenterAdapter(

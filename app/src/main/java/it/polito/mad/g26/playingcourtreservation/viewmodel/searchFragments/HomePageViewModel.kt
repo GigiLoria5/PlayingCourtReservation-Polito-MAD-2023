@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import it.polito.mad.g26.playingcourtreservation.newRepository.UserRepository
+import it.polito.mad.g26.playingcourtreservation.repository.UserRepository
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

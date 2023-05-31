@@ -1,8 +1,8 @@
-package it.polito.mad.g26.playingcourtreservation.newRepository
+package it.polito.mad.g26.playingcourtreservation.repository
 
-import it.polito.mad.g26.playingcourtreservation.newModel.Court
-import it.polito.mad.g26.playingcourtreservation.newModel.Service
-import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
+import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.Service
+import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 
 interface SportCenterRepository {

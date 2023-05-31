@@ -1,7 +1,7 @@
-package it.polito.mad.g26.playingcourtreservation.newRepository
+package it.polito.mad.g26.playingcourtreservation.repository
 
 import com.google.firebase.auth.FirebaseUser
-import it.polito.mad.g26.playingcourtreservation.newModel.User
+import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 
 interface UserRepository {

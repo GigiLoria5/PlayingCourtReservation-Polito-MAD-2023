@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.newModel.Service
+import it.polito.mad.g26.playingcourtreservation.model.Service
 
 class ReservationDetailsAdapter(private val services: List<Service>, private val isEmpty: Boolean) :
     RecyclerView.Adapter<ReservationDetailsAdapter.ReservationDetailsViewHolder>() {

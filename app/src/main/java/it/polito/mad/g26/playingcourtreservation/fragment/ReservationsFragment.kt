@@ -34,7 +34,7 @@ import com.kizitonwose.calendar.view.WeekDayBinder
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReservationsAdapter
-import it.polito.mad.g26.playingcourtreservation.newModel.Reservation
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.VerticalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
