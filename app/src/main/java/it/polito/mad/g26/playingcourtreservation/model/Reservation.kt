@@ -3,8 +3,6 @@ package it.polito.mad.g26.playingcourtreservation.model
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
 import it.polito.mad.g26.playingcourtreservation.util.getDigest
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 data class Reservation(
     var id: String = "",
@@ -48,12 +46,4 @@ data class Review(
 fun List<Review>.avg(): Float {
     val ratings = this.filter { !it.rating.isNaN() }.map { it.rating }
     return if (ratings.isEmpty()) 0.0f else ratings.average().toFloat()
-}
-
-fun timestampToDate(timestamp: Timestamp): String {
-    val dateFormat = SimpleDateFormat(
-        "${Reservation.getDatePattern()}, ${Reservation.getTimePattern()}",
-        Locale.getDefault()
-    )
-    return dateFormat.format(timestamp.toDate())
 }

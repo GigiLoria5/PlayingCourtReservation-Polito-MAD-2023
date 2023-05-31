@@ -41,8 +41,13 @@ data class Notification(
             return Notification(userId = userId, reservationId = reservationId, message = message)
         }
 
-        fun matchCancelled(userId: String, reservationId: String): Notification {
-            val message = "The match you registered for has been cancelled."
+        fun matchCancelled(
+            userId: String,
+            reservationId: String,
+            date: String,
+            time: String
+        ): Notification {
+            val message = "The match you registered for on $date at $time has been cancelled."
             return Notification(userId = userId, reservationId = reservationId, message = message)
         }
 

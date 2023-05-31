@@ -5,13 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.polito.mad.g26.playingcourtreservation.model.Notification
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.model.Review
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
+import it.polito.mad.g26.playingcourtreservation.repository.NotificationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.repository.UserRepository
 import it.polito.mad.g26.playingcourtreservation.util.UiState
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -22,7 +26,8 @@ import javax.inject.Inject
 class ReservationDetailsViewModel @Inject constructor(
     private val sportCenterRepository: SportCenterRepository,
     private val reservationRepository: ReservationRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val notificationRepository: NotificationRepository
 ) : ViewModel() {
 
     /* INITIALIZATION */
@@ -92,8 +97,29 @@ class ReservationDetailsViewModel @Inject constructor(
 
     fun deleteReservation() = viewModelScope.launch {
         _deleteState.value = UiState.Loading
+        // Delete Reservation
         val state = reservationRepository.deleteReservation(_reservationId)
-        delay(500)
+        if (state is UiState.Failure) {
+            _deleteState.value = state
+            return@launch
+        }
+        // Send notification to participants
+        val participants = reservation.participants
+        val deferredNotifications = participants.map { participantId ->
+            async {
+                val notification = Notification.matchCancelled(
+                    participantId,
+                    reservationId,
+                    reservation.date,
+                    reservation.time
+                )
+                notificationRepository.saveNotification(notification)
+            }
+        }
+        deferredNotifications.awaitAll()
+        /* since the reservation has already been cancelled at this point,
+           it is not worth checking whether the notifications have been sent correctly or not
+         */
         _deleteState.value = state
     }
 
