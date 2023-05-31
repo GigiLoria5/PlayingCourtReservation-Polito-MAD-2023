@@ -15,6 +15,8 @@ class ReservationRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : ReservationRepository {
 
+    private val noReservationFound = "No existing reservation"
+
     override suspend fun getAllSportCenterReviews(sportCenter: SportCenter): UiState<List<Review>> {
         return try {
             val courtsIds = sportCenter.courts.map { it.id }
@@ -61,7 +63,104 @@ class ReservationRepositoryImpl @Inject constructor(
             }
             UiState.Success(reviews)
         } catch (e: Exception) {
-            Log.e(TAG, "Error while performing $courtId: ${e.message}", e)
+            Log.e(TAG, "Error while performing getCourtReviews $courtId: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun getReservationReviewByUserId(
+        reservationId: String,
+        userId: String
+    ): UiState<Review?> {
+        return try {
+            Log.d(
+                TAG,
+                "Performing getReservationReviewByUserId with reservationId: $reservationId and userId: $userId"
+            )
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "getReservationReviewByUserId with reservationId: $reservationId and userId: $userId: reservation found=${result.exists()}"
+            )
+            val review = result.toObject(Reservation::class.java)!!
+                .reviews.firstOrNull { it.userId == userId }
+            UiState.Success(review)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing getReservationReviewByUserId with reservationId: $reservationId and userId: $userId: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun saveReview(reservationId: String, review: Review): UiState<Unit> {
+        return try {
+            Log.d(TAG, "saveReview for reservation: $reservationId and review: $review")
+            // Get the reservation
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "saveReview reservation: $reservationId found=${result.exists()}"
+            )
+            if (!result.exists()) // Reservation Id must be unique and existing
+                UiState.Failure(noReservationFound)
+            val reservation = result.toObject(Reservation::class.java)!!
+            // Add the review
+            reservation.reviews = reservation.reviews.plus(review)
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .set(reservation).await()
+            Log.d(TAG, "saveReview the review for the reservation: $reservationId has been added}")
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing saveReview for reservation: $reservationId and review: $review: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun updateReview(reservationId: String, review: Review): UiState<Unit> {
+        return try {
+            Log.d(TAG, "updateReview for reservation: $reservationId and review: $review")
+            // Get the reservation
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "updateReview reservation: $reservationId found=${result.exists()}"
+            )
+            if (!result.exists()) // Reservation Id must be unique and existing
+                UiState.Failure(noReservationFound)
+            val reservation = result.toObject(Reservation::class.java)!!
+            // Update the review
+            reservation.reviews = reservation.reviews.map {
+                if (it.userId == review.userId) review
+                else it
+            }
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .set(reservation).await()
+            Log.d(
+                TAG,
+                "updateReview the review for the reservation: $reservationId has been added}"
+            )
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing updateReview for reservation: $reservationId and review: $review: ${e.message}",
+                e
+            )
             UiState.Failure(e.localizedMessage)
         }
     }
@@ -71,16 +170,16 @@ class ReservationRepositoryImpl @Inject constructor(
             Log.d(TAG, "deleteUserReview with reservation id: $reservationId and userId: $userId")
             // Get the reservation
             val result = db.collection(FirestoreCollections.RESERVATIONS)
-                .whereEqualTo("id", reservationId)
+                .document(reservationId)
                 .get().await()
             Log.d(
                 TAG,
-                "deleteUserReview get reservation id: $reservationId: ${result.documents.size} result"
+                "deleteUserReview get reservation id: $reservationId: found=${result.exists()}"
             )
-            if (result.documents.size != 1) // Reservation Id must be unique and existing
-                UiState.Failure("No existing reservation")
+            if (!result.exists()) // Reservation Id must be unique and existing
+                UiState.Failure(noReservationFound)
             // Remove the user review
-            val reservation = result.documents[0].toObject(Reservation::class.java)!!
+            val reservation = result.toObject(Reservation::class.java)!!
             reservation.reviews = reservation.reviews.filter { it.userId != userId }
             // Save changes
             db.collection(FirestoreCollections.RESERVATIONS)
@@ -123,15 +222,15 @@ class ReservationRepositoryImpl @Inject constructor(
         return try {
             Log.d(TAG, "getReservationById with id: $reservationId")
             val result = db.collection(FirestoreCollections.RESERVATIONS)
-                .whereEqualTo("id", reservationId)
+                .document(reservationId)
                 .get().await()
             Log.d(
                 TAG,
-                "getReservationById with id: $reservationId: ${result.documents.size} result"
+                "getReservationById with id: $reservationId: found=${result.exists()}"
             )
-            if (result.documents.size != 1) // Reservation Id must be unique and existing
+            if (!result.exists()) // Reservation Id must be unique and existing
                 UiState.Failure(null)
-            val reservation = result.documents[0].toObject(Reservation::class.java)!!
+            val reservation = result.toObject(Reservation::class.java)!!
             UiState.Success(reservation)
         } catch (e: Exception) {
             Log.e(
@@ -220,7 +319,50 @@ class ReservationRepositoryImpl @Inject constructor(
             )
             UiState.Success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error while performing saveReservation: ${e.message}", e)
+            Log.e(TAG, "Error while performing saveReservation ${reservation.id}: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun updateReservation(
+        reservationId: String,
+        updatedReservation: Reservation
+    ): UiState<Unit> {
+        return try {
+            if (updatedReservation.id != "") // Must be set before updateReservation
+                UiState.Failure(null)
+            Log.d(TAG, "Performing updateReservation of reservation with id: $reservationId")
+            if (reservationId == updatedReservation.id) {
+                // Just update the reservation document
+                db.collection(FirestoreCollections.RESERVATIONS)
+                    .document(reservationId)
+                    .set(updatedReservation).await()
+                Log.d(
+                    TAG,
+                    "updateReservation of reservation with id: $reservationId completed successfully"
+                )
+                UiState.Success(Unit)
+            }
+            // Otherwise add the new document and delete the old one
+            val oldReservationRef = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+            val newReservationRef = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(updatedReservation.id)
+            db.runTransaction { transaction ->
+                val newSnapshot = transaction[newReservationRef]
+                if (newSnapshot.exists()) {
+                    throw IllegalStateException("Unfortunately, the new date/time is no longer available")
+                }
+                transaction[newReservationRef] = updatedReservation
+                transaction.delete(oldReservationRef)
+            }.await()
+            Log.d(
+                TAG,
+                "updateReservation of reservation with id: $reservationId completed successfully by deleting the old document and creating the new one"
+            )
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while performing updateReservation $reservationId: ${e.message}", e)
             UiState.Failure(e.localizedMessage)
         }
     }
@@ -236,7 +378,7 @@ class ReservationRepositoryImpl @Inject constructor(
             )
             UiState.Success(Unit)
         } catch (e: Exception) {
-            Log.e(TAG, "Error while performing deleteReservation: ${e.message}", e)
+            Log.e(TAG, "Error while performing deleteReservation $reservationId: ${e.message}", e)
             UiState.Failure(e.localizedMessage)
         }
     }

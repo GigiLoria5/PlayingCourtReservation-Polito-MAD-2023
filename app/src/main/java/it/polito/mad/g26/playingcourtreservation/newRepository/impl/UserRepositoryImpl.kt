@@ -29,8 +29,7 @@ class UserRepositoryImpl @Inject constructor(
             val user = User(id = uid, username = User.generateUsername(uid))
             db.collection(FirestoreCollections.USERS)
                 .document(uid)
-                .set(user)
-                .await()
+                .set(user).await()
             Log.d(TAG, "User document added to Firestore collection with ID $uid")
             UiState.Success(result.user!!)
         } catch (e: Exception) {

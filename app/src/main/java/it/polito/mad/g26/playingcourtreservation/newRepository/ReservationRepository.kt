@@ -10,6 +10,15 @@ interface ReservationRepository {
 
     suspend fun getCourtReviews(courtId: String): UiState<List<Review>>
 
+    suspend fun getReservationReviewByUserId(
+        reservationId: String,
+        userId: String
+    ): UiState<Review?>
+
+    suspend fun saveReview(reservationId: String, review: Review): UiState<Unit>
+
+    suspend fun updateReview(reservationId: String, review: Review): UiState<Unit>
+
     suspend fun deleteUserReview(reservationId: String, userId: String): UiState<Unit>
 
     suspend fun getUserReservations(userId: String): UiState<List<Reservation>>
@@ -29,6 +38,11 @@ interface ReservationRepository {
     ): UiState<Reservation?>
 
     suspend fun saveReservation(reservation: Reservation): UiState<Unit>
+
+    suspend fun updateReservation(
+        reservationId: String,
+        updatedReservation: Reservation
+    ): UiState<Unit>
 
     suspend fun deleteReservation(reservationId: String): UiState<Unit>
 }

@@ -25,6 +25,7 @@ import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceWithFeeAdapter
+import it.polito.mad.g26.playingcourtreservation.newModel.timestampToDate
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
@@ -218,18 +219,18 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                 viewReservationButtons,
                 false
             )
-            val reviewAddButton =
-                viewAddReview.findViewById<MaterialButton>(R.id.add_review_button)
+            val reviewAddButton = viewAddReview
+                .findViewById<MaterialButton>(R.id.add_review_button)
             viewReservationButtons.addView(viewAddReview)
             reviewAddButton.setOnClickListener {
                 val addReviewDialog =
-                    CustomDialogAlertAddReview.newInstance(
+                    AddReviewDialogFragment.newInstance(
                         viewModel.reservationId,
                         viewModel.userId
-                    )
+                    ) { viewModel.getReservationAndAllSportCenterServices() }
                 addReviewDialog.show(
                     parentFragmentManager,
-                    CustomDialogAlertAddReview.TAG
+                    AddReviewDialogFragment.TAG
                 )
             }
             return
@@ -245,7 +246,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val reviewDate = requireView().findViewById<TextView>(R.id.reviewDateTV)
         val reviewText = requireView().findViewById<TextView>(R.id.reviewTextTV)
         rating.rating = review.rating
-        reviewDate.text = review.date
+        reviewDate.text = timestampToDate(review.date)
         reviewText.text = review.text
         reviewDeleteButton.setOnClickListener {
             //Alert Dialog
@@ -266,10 +267,13 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
         reviewEditButton.setOnClickListener {
             val addReviewDialog =
-                CustomDialogAlertAddReview.newInstance(viewModel.reservationId, viewModel.userId)
+                AddReviewDialogFragment.newInstance(
+                    viewModel.reservationId,
+                    viewModel.userId
+                ) { viewModel.getReservationAndAllSportCenterServices() }
             addReviewDialog.show(
                 parentFragmentManager,
-                CustomDialogAlertAddReview.TAG
+                AddReviewDialogFragment.TAG
             )
         }
     }

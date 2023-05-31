@@ -1,7 +1,10 @@
 package it.polito.mad.g26.playingcourtreservation.newModel
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ServerTimestamp
 import it.polito.mad.g26.playingcourtreservation.util.getDigest
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 data class Reservation(
     var id: String = "",
@@ -11,11 +14,11 @@ data class Reservation(
     val date: String = "",
     val time: String = "",
     val amount: Float = 0.0f,
-    var services: List<String> = listOf(),
-    var participants: List<String> = listOf(),
-    var requests: List<String> = listOf(),
-    var invitees: List<String> = listOf(),
-    var reviews: List<Review> = listOf()
+    var services: List<String> = arrayListOf(),
+    var participants: List<String> = arrayListOf(),
+    var requests: List<String> = arrayListOf(),
+    var invitees: List<String> = arrayListOf(),
+    var reviews: List<Review> = arrayListOf()
 ) {
     companion object {
         private const val DATE_PATTERN = "dd-MM-yyyy"
@@ -39,10 +42,15 @@ data class Review(
     val rating: Float = 0.0F,
     val text: String? = null,
     @ServerTimestamp
-    val date: String = ""
+    val date: Timestamp = Timestamp.now()
 )
 
 fun List<Review>.avg(): Float {
     val ratings = this.filter { !it.rating.isNaN() }.map { it.rating }
     return if (ratings.isEmpty()) 0.0f else ratings.average().toFloat()
+}
+
+fun timestampToDate(timestamp: Timestamp): String {
+    val dateFormat = SimpleDateFormat("dd-MM-yyyy, HH:mm", Locale.getDefault())
+    return dateFormat.format(timestamp.toDate())
 }

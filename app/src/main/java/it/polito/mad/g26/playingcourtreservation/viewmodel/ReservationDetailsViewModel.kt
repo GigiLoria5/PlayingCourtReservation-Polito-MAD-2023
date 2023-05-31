@@ -62,6 +62,8 @@ class ReservationDetailsViewModel @Inject constructor(
             return@launch
         }
         _reservation = (reservationState as UiState.Success).result
+        // Get review (if any)
+        _review = _reservation.reviews.firstOrNull { it.userId == userId }
         // Get all services offered by the sport center where the reservation has been made
         val servicesState = sportCenterRepository.getSportCenterById(_reservation.sportCenterId)
         if (servicesState is UiState.Failure) {
@@ -77,7 +79,7 @@ class ReservationDetailsViewModel @Inject constructor(
         _loadingState.value = UiState.Loading
         reservationRepository.deleteUserReview(_reservationId, userId)
         delay(500)
-        _loadingState.value = UiState.Success(Unit)
+        getReservationAndAllSportCenterServices() // To update the UI
     }
 
     fun deleteReservation() = viewModelScope.launch {
