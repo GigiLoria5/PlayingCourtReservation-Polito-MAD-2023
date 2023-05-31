@@ -20,7 +20,7 @@ import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CourtAdapter
-import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
@@ -98,11 +98,11 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
         sportCenterAddressTV.text = sportCenterAddress
         selectedDateTimeTV.text = getString(
             R.string.selected_date_time_res,
-            SearchSportCentersUtil.getDateTimeFormatted(
+            SearchSportCentersUtils.getDateTimeFormatted(
                 dateTime,
                 getString(R.string.hour_format)
             ),
-            SearchSportCentersUtil.getDateTimeFormatted(
+            SearchSportCentersUtils.getDateTimeFormatted(
                 dateTime,
                 getString(R.string.date_extended_format)
             )
@@ -139,7 +139,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
                 findNavController().navigate(direction)
             }
         ) { courtId, courtName, courtHourCharge, sportName ->
-            if (dateTime < SearchSportCentersUtil.getMockInitialDateTime()) {
+            if (dateTime < SearchSportCentersUtils.getMockInitialDateTime()) {
                 findNavController().popBackStack()
                 Toast.makeText(
                     context,

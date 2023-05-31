@@ -21,7 +21,7 @@ import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ChooseAvailableServiceAdapter
-import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
@@ -111,11 +111,11 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
         sportCenterAddressTV.text = sportCenterAddress
         selectedDateTimeTV.text = getString(
             R.string.selected_date_time_res,
-            SearchSportCentersUtil.getDateTimeFormatted(
+            SearchSportCentersUtils.getDateTimeFormatted(
                 dateTime,
                 getString(R.string.hour_format)
             ),
-            SearchSportCentersUtil.getDateTimeFormatted(
+            SearchSportCentersUtils.getDateTimeFormatted(
                 dateTime,
                 getString(R.string.date_extended_format)
             )
@@ -149,7 +149,7 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
 
         // Confirm Button
         confirmBTN.setOnClickListener {
-            if (dateTime < SearchSportCentersUtil.getMockInitialDateTime()) {
+            if (dateTime < SearchSportCentersUtils.getMockInitialDateTime()) {
                 Toast.makeText(
                     context,
                     R.string.too_late_for_time_slot,

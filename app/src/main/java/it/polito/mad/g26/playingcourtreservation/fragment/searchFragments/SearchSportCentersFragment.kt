@@ -24,7 +24,7 @@ import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.SportCenterAdapter
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
-import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
@@ -63,7 +63,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
     private lateinit var navigateToReservationBTN: Button
 
     /* LOGIC OBJECT OF THIS FRAGMENT */
-    private val searchSportCentersUtil = SearchSportCentersUtil
+    private val searchSportCentersUtil = SearchSportCentersUtils
     private var goingToSearchCourt = false
 
     /* ARGS */
@@ -386,7 +386,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         super.onResume()
         goingToSearchCourt = false
         hideActionBar(activity)
-        val minDateTime = SearchSportCentersUtil.getMockInitialDateTime()
+        val minDateTime = SearchSportCentersUtils.getMockInitialDateTime()
         if (viewModel.selectedDateTimeMillis.value!! < minDateTime) {
             viewModel.changeSelectedDateTimeMillis(minDateTime)
         }

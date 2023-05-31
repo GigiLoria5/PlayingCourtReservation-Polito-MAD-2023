@@ -18,11 +18,11 @@ import it.polito.mad.g26.playingcourtreservation.adapter.ModifyReservationDetail
 import it.polito.mad.g26.playingcourtreservation.newModel.Service
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
-import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.ReservationDetailsUtils
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.createCalendarObject
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
-import it.polito.mad.g26.playingcourtreservation.util.takeIntCenterTime
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.EditReservationDetailsViewModel
 
@@ -36,7 +36,8 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
     private lateinit var hourTV: TextView
 
     /* LOGIC OBJECT OF THIS FRAGMENT */
-    private val searchSportCentersUtil = SearchSportCentersUtil
+    private val searchSportCentersUtils = SearchSportCentersUtils
+    private val reservationDetailsUtils = ReservationDetailsUtils
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
     private val viewModel by viewModels<EditReservationDetailsViewModel>()
@@ -48,53 +49,6 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
         super.onViewCreated(view, savedInstanceState)
         val reservationId = args.reservationId
         viewModel.initialize(reservationId)
-
-        /* CUSTOM TOOLBAR MANAGEMENT*/
-        val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
-        customToolBar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        /*BACK BUTTON MANAGEMENT*/
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().popBackStack()
-        }
-
-        val customConfirmIconIV = view.findViewById<ImageView>(R.id.customConfirmIconIV)
-
-        // TODO: update new time and new date
-        // TODO: check open time and close time
-        // TODO: check if user has already a reservation for that time
-
-        /* DATE MATERIAL CARD VIEW MANAGEMENT*/
-        dateMCV = view.findViewById(R.id.dateMCV)
-        dateTV = view.findViewById(R.id.dateTV)
-        dateMCV.setOnClickListener {
-            searchSportCentersUtil.showAndManageBehaviorDatePickerDialog(
-                requireContext(),
-                viewModel.selectedDateTimeMillis.value!!
-            ) { viewModel.changeSelectedDateTimeMillis(it) }
-        }
-
-        /* HOUR MATERIAL CARD VIEW MANAGEMENT*/
-        hourMCV = view.findViewById(R.id.hourMCV)
-        hourTV = view.findViewById(R.id.hourTV)
-        hourMCV.setOnClickListener {
-            searchSportCentersUtil.showAndManageBehaviorTimePickerDialog(
-                requireContext(),
-                viewModel.selectedDateTimeMillis.value!!,
-            ) { viewModel.changeSelectedDateTimeMillis(it) }
-        }
-
-        viewModel.selectedDateTimeMillis.observe(viewLifecycleOwner) {
-            searchSportCentersUtil.setDateTimeTextViews(
-                viewModel.selectedDateTimeMillis.value ?: 0,
-                getString(R.string.date_format),
-                getString(R.string.hour_format),
-                dateTV,
-                hourTV
-            )
-        }
 
         //List of text
         val centerName = view.findViewById<TextView>(R.id.sportCenter_name)
@@ -112,6 +66,46 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
             .findViewById<TextView>(R.id.value)
         val timeNew = view.findViewById<CustomTextView>(R.id.time_new)
             .findViewById<TextView>(R.id.value)
+
+        /* CUSTOM TOOLBAR MANAGEMENT*/
+        val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
+        customToolBar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        /*BACK BUTTON MANAGEMENT*/
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().popBackStack()
+        }
+
+        val customConfirmIconIV = view.findViewById<ImageView>(R.id.customConfirmIconIV)
+
+        /* DATE MATERIAL CARD VIEW MANAGEMENT*/
+        dateMCV = view.findViewById(R.id.dateMCV)
+        dateTV = view.findViewById(R.id.dateTV)
+        dateMCV.setOnClickListener {
+            searchSportCentersUtils.showAndManageBehaviorDatePickerDialog(
+                requireContext(),
+                viewModel.selectedDateTimeMillis.value!!
+            ) {
+                viewModel.changeSelectedDateTimeMillis(it)
+                dateNew.text = viewModel.getDateTimeFormatted(viewModel.dateFormat)
+            }
+        }
+
+        /* HOUR MATERIAL CARD VIEW MANAGEMENT*/
+        hourMCV = view.findViewById(R.id.hourMCV)
+        hourTV = view.findViewById(R.id.hourTV)
+
+        viewModel.selectedDateTimeMillis.observe(viewLifecycleOwner) {
+            searchSportCentersUtils.setDateTimeTextViews(
+                viewModel.selectedDateTimeMillis.value ?: 0,
+                getString(R.string.date_format),
+                getString(R.string.hour_format),
+                dateTV,
+                hourTV
+            )
+        }
 
         // Retrieve Reservation Details
         viewModel.loadReservationAndSportCenterInformation()
@@ -167,10 +161,16 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
                         reservation.date,
                         reservation.time
                     )
-                    val centerOpenTime =
-                        takeIntCenterTime(reservationSportCenter.openTime)
-                    val centerCloseTime =
-                        takeIntCenterTime(reservationSportCenter.closeTime)
+                    hourMCV.setOnClickListener {
+                        reservationDetailsUtils.showAndManageBehaviorTimePickerDialog(
+                            requireContext(),
+                            viewModel.selectedDateTimeMillis.value!!,
+                            viewModel.sportCenter,
+                        ) {
+                            viewModel.changeSelectedDateTimeMillis(it)
+                            timeNew.text = viewModel.getDateTimeFormatted(viewModel.timeFormat)
+                        }
+                    }
 
                     // Select date of reservation as initial date
                     viewModel.changeSelectedDateTimeMillis(dateDayReservation.timeInMillis)
@@ -212,6 +212,14 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
         customConfirmIconIV.setOnClickListener {
             val newReservation = viewModel.reservation
                 .copy(services = servicesChosen.map { it.name })
+            if (viewModel.selectedDateTimeMillis.value!! < SearchSportCentersUtils.getMockInitialDateTime()) {
+                Toast.makeText(
+                    context,
+                    R.string.too_late_for_time_slot,
+                    Toast.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
+            }
             viewModel.updateReservation(newReservation)
         }
 

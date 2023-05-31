@@ -10,8 +10,8 @@ import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
 import it.polito.mad.g26.playingcourtreservation.newRepository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.newRepository.UserRepository
-import it.polito.mad.g26.playingcourtreservation.util.ReservationWithDetailsUtil
-import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.ReservationDetailsUtils
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -36,16 +36,16 @@ class EditReservationDetailsViewModel @Inject constructor(
     }
 
     // DateTime management
-    private val dateFormat = Reservation.getDatePattern()
-    private val timeFormat = Reservation.getTimePattern()
+    val dateFormat = Reservation.getDatePattern()
+    val timeFormat = Reservation.getTimePattern()
 
     private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
-        it.value = ReservationWithDetailsUtil.getMockInitialDateTime().timeInMillis
+        it.value = ReservationDetailsUtils.getMockInitialDateTime().timeInMillis
     }
     val selectedDateTimeMillis: LiveData<Long> = _selectedDateTimeMillis
 
-    private fun getDateTimeFormatted(format: String): String {
-        return SearchSportCentersUtil.getDateTimeFormatted(
+    fun getDateTimeFormatted(format: String): String {
+        return SearchSportCentersUtils.getDateTimeFormatted(
             selectedDateTimeMillis.value ?: 0,
             format
         )
@@ -94,9 +94,23 @@ class EditReservationDetailsViewModel @Inject constructor(
 
     fun updateReservation(updatedReservation: Reservation) = viewModelScope.launch {
         _updateState.value = UiState.Loading
-        // Update date, time and id (eventually)
+        // Check if user is free
         val newDate = getDateTimeFormatted(dateFormat)
         val newTime = getDateTimeFormatted(timeFormat)
+        val existingReservationState = reservationRepository.getUserReservationAt(
+            userId, newDate, newTime
+        )
+        if (existingReservationState is UiState.Failure) {
+            _updateState.value = existingReservationState
+            return@launch
+        }
+        val existingReservation = (existingReservationState as UiState.Success).result
+        if (existingReservation != null && existingReservation.id != updatedReservation.id) {
+            _updateState.value =
+                UiState.Failure("You already have reservation for this date and time")
+            return@launch
+        }
+        // Update date, time and id (eventually)
         updatedReservation.date = newDate
         updatedReservation.time = newTime
         updatedReservation.id = Reservation.generateId(

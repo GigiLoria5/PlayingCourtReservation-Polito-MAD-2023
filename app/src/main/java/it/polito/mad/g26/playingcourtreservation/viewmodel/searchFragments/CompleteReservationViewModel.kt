@@ -10,7 +10,7 @@ import it.polito.mad.g26.playingcourtreservation.newModel.Service
 import it.polito.mad.g26.playingcourtreservation.newRepository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.newRepository.UserRepository
-import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -79,11 +79,11 @@ class CompleteReservationViewModel @Inject constructor(
 
     fun reserveCourt() = viewModelScope.launch {
         _reserveCourtState.value = UiState.Loading
-        val date = SearchSportCentersUtil.getDateTimeFormatted(
+        val date = SearchSportCentersUtils.getDateTimeFormatted(
             dateTime,
             dateFormat
         )
-        val time = SearchSportCentersUtil.getDateTimeFormatted(
+        val time = SearchSportCentersUtils.getDateTimeFormatted(
             dateTime,
             timeFormat
         )

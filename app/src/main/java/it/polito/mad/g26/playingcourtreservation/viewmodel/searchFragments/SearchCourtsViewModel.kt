@@ -10,7 +10,7 @@ import it.polito.mad.g26.playingcourtreservation.newModel.Reservation
 import it.polito.mad.g26.playingcourtreservation.newModel.Review
 import it.polito.mad.g26.playingcourtreservation.newRepository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
-import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -119,7 +119,7 @@ class SearchCourtsViewModel @Inject constructor(
     private val timeFormat = Reservation.getTimePattern()
 
     private fun getDateTimeFormatted(format: String): String {
-        return SearchSportCentersUtil.getDateTimeFormatted(
+        return SearchSportCentersUtils.getDateTimeFormatted(
             dateTime,
             format
         )

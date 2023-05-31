@@ -11,7 +11,7 @@ import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
 import it.polito.mad.g26.playingcourtreservation.newRepository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.newRepository.UserRepository
-import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -129,14 +129,14 @@ class SearchSportCentersViewModel @Inject constructor(
 
     fun changeSelectedDateTimeMillis(newTimeInMillis: Long) {
         _selectedDateTimeMillis.value =
-            if (newTimeInMillis >= SearchSportCentersUtil.getMockInitialDateTime())
+            if (newTimeInMillis >= SearchSportCentersUtils.getMockInitialDateTime())
                 newTimeInMillis
             else
-                SearchSportCentersUtil.getMockInitialDateTime()
+                SearchSportCentersUtils.getMockInitialDateTime()
     }
 
     private fun getDateTimeFormatted(format: String): String {
-        return SearchSportCentersUtil.getDateTimeFormatted(
+        return SearchSportCentersUtils.getDateTimeFormatted(
             selectedDateTimeMillis.value ?: 0,
             format
         )

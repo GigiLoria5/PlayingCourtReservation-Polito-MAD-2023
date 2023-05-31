@@ -18,10 +18,9 @@ import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.HomePa
 import it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchSportCentersFragmentDirections
 import java.util.Locale
 
-object SearchSportCentersUtil {
+object SearchSportCentersUtils {
 
     /* OPERATIONS WITH CALENDAR OBJECTS */
-
     fun getMockInitialDateTime(): Long {
         val calendar = getDelayedCalendar()
         calendar[Calendar.MINUTE] = 0
@@ -37,7 +36,7 @@ object SearchSportCentersUtil {
         return calendar
     }
 
-    private fun adjustDateTimeCombination(mySelectionCalendar: Calendar) {
+    fun adjustDateTimeCombination(mySelectionCalendar: Calendar) {
         val calendar = getDelayedCalendar()
         if (mySelectionCalendar.timeInMillis < calendar.timeInMillis) {
             mySelectionCalendar.apply {
@@ -51,7 +50,6 @@ object SearchSportCentersUtil {
     }
 
     /* SUPPORT FUNCTIONS */
-
     fun getDateTimeFormatted(
         timeInMillis: Long,
         format: String,
@@ -64,7 +62,6 @@ object SearchSportCentersUtil {
     }
 
     /* OPERATIONS WITH SearchSportCentersFragment VISUAL COMPONENTS */
-
     fun setDateTimeTextViews(
         timeInMillis: Long,
         dateFormat: String,
@@ -99,7 +96,6 @@ object SearchSportCentersUtil {
     }
 
     /* OPERATIONS WITH SearchSportCentersFragment DIALOG COMPONENTS*/
-
     fun showAndManageBehaviorDatePickerDialog(
         viewContext: Context,
         currentTimeMillis: Long,
@@ -146,7 +142,6 @@ object SearchSportCentersUtil {
     }
 
     /* OPERATIONS WITH SearchSportCentersFragment NAVIGATION  */
-
     fun navigateToAction(
         navController: NavController,
         city: String,
@@ -181,7 +176,6 @@ object SearchSportCentersUtil {
     }
 
     /* GUI CALENDAR AND TIME PICKER COMPONENTS */
-
     private fun showDatePickerDialog(
         viewContext: Context,
         calendar: Calendar,
