@@ -38,6 +38,49 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getCurrentUserInformation(): UiState<User> {
+        val userId = currentUser!!.uid
+        return try {
+            Log.d(TAG, "Performing getCurrentUserInformation for user with id $userId")
+            val document = db.collection(FirestoreCollections.USERS)
+                .document(userId).get().await()
+            Log.d(
+                TAG,
+                "getCurrentUserInformation for user with id $userId found? ${document.exists()}"
+            )
+            val user = document.toObject(User::class.java)!!
+            UiState.Success(user)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error performing getCurrentUserInformation for user with id $userId: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun getUserInformationById(userId: String): UiState<User> {
+        return try {
+            Log.d(TAG, "Performing getUserInformationById for user with id $userId")
+            val document = db.collection(FirestoreCollections.USERS)
+                .document(userId).get().await()
+            Log.d(
+                TAG,
+                "getUserInformationById for user with id $userId found? ${document.exists()}"
+            )
+            val user = document.toObject(User::class.java)!!
+            UiState.Success(user)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error performing getUserInformationById for user with id $userId: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     companion object {
         private const val TAG = "UserRepository"
     }

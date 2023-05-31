@@ -67,9 +67,6 @@
         <action
             android:id="@+id/openReservationEdit"
             app:destination="@id/modifyReservationDetailsFragment" />
-        <action
-            android:id="@+id/openReview"
-            app:destination="@id/courtReviewsFragment" />
     </fragment>
     <fragment
         android:id="@+id/modifyReservationDetailsFragment"
@@ -195,6 +192,9 @@
         android:label="CourtReviewsFragment">
         <argument
             android:name="courtId"
+            app:argType="string" />
+        <argument
+            android:name="sportCenterId"
             app:argType="string" />
     </fragment>
     <fragment

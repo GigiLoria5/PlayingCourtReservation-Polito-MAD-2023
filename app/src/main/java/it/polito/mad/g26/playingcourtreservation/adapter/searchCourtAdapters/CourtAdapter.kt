@@ -16,9 +16,10 @@ import it.polito.mad.g26.playingcourtreservation.newModel.avg
 
 class CourtAdapter(
     private var collection: List<Court>,
+    private val sportCenterId: String,
     private var reviews: HashMap<String, List<Review>>,
     private val isCourtAvailable: (String) -> Boolean,
-    private val navigateToReviews: (String) -> Unit,
+    private val navigateToReviews: (String, String) -> Unit,
     private val navigateToChooseServices: (String, String, Float, String) -> Unit
 ) :
     RecyclerView.Adapter<CourtAdapter.CourtViewHolder>() {
@@ -108,7 +109,7 @@ class CourtAdapter(
 
             if (courtReviews.isNotEmpty()) {
                 courtReviewsMCV.setOnClickListener {
-                    navigateToReviews(court.id)
+                    navigateToReviews(court.id, sportCenterId)
                 }
             } else {
                 courtReviewsMCV.isClickable = false

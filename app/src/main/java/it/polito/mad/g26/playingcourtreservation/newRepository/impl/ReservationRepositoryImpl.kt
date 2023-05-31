@@ -259,7 +259,8 @@ class ReservationRepositoryImpl @Inject constructor(
                 "getUserReservationAt with user id: $userId, date: $date and time: $time: ${result.documents.size} result"
             )
             val reservation =
-                if (result.isEmpty) null else result.documents[0].toObject(Reservation::class.java)!!
+                if (result.isEmpty) null else result.documents.first()
+                    .toObject(Reservation::class.java)!!
             UiState.Success(reservation)
         } catch (e: Exception) {
             Log.e(
@@ -288,7 +289,8 @@ class ReservationRepositoryImpl @Inject constructor(
                 "getCourtReservationAt with court id: $courtId, date: $date and time: $time: ${result.documents.size} result"
             )
             val reservation =
-                if (result.isEmpty) null else result.documents[0].toObject(Reservation::class.java)!!
+                if (result.isEmpty) null else result.documents.first()
+                    .toObject(Reservation::class.java)!!
             UiState.Success(reservation)
         } catch (e: Exception) {
             Log.e(

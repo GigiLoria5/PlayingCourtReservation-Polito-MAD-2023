@@ -127,13 +127,14 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
     private fun createCourtAdapter(): CourtAdapter {
         return CourtAdapter(
             viewModel.courts,
+            sportCenterId,
             viewModel.reviews,
             { viewModel.isCourtAvailable(it) },
-            { courtId ->
+            { courtId, sportCenterId ->
                 goingToCourtReviews = true
                 val direction =
                     SearchCourtsFragmentDirections.actionSearchCourtsToCourtReviews(
-                        courtId
+                        courtId, sportCenterId
                     )
                 findNavController().navigate(direction)
             }
