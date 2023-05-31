@@ -51,6 +51,9 @@ fun List<Review>.avg(): Float {
 }
 
 fun timestampToDate(timestamp: Timestamp): String {
-    val dateFormat = SimpleDateFormat("dd-MM-yyyy, HH:mm", Locale.getDefault())
+    val dateFormat = SimpleDateFormat(
+        "${Reservation.getDatePattern()}, ${Reservation.getTimePattern()}",
+        Locale.getDefault()
+    )
     return dateFormat.format(timestamp.toDate())
 }

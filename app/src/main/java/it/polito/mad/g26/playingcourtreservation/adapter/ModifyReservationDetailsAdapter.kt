@@ -13,7 +13,7 @@ class ModifyReservationDetailsAdapter(
     private val l: List<Service>,
     private var lUsed: MutableList<Service>,
     private var price: TextView,
-    var amount: MutableList<Float>
+    private var amount: MutableList<Float>
 ) : RecyclerView.Adapter<ModifyReservationDetailsAdapter.ModifyReservationDetailsViewHolder>() {
     //Inflater of the parent transform the xml of a row of the recyclerView into a view
     override fun onCreateViewHolder(

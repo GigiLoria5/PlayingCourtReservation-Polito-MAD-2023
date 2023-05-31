@@ -43,7 +43,8 @@ class UserRepositoryImpl @Inject constructor(
         return try {
             Log.d(TAG, "Performing getCurrentUserInformation for user with id $userId")
             val document = db.collection(FirestoreCollections.USERS)
-                .document(userId).get().await()
+                .document(userId)
+                .get().await()
             Log.d(
                 TAG,
                 "getCurrentUserInformation for user with id $userId found? ${document.exists()}"
@@ -64,7 +65,8 @@ class UserRepositoryImpl @Inject constructor(
         return try {
             Log.d(TAG, "Performing getUserInformationById for user with id $userId")
             val document = db.collection(FirestoreCollections.USERS)
-                .document(userId).get().await()
+                .document(userId)
+                .get().await()
             Log.d(
                 TAG,
                 "getUserInformationById for user with id $userId found? ${document.exists()}"
