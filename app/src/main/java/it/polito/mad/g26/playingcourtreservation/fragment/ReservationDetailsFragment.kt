@@ -50,9 +50,9 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val reservationId = args.reservationId
 
         // VM Initialization
-        val reservationId = args.reservationId
         val navController = findNavController()
         val navigationArg =
             navController.currentBackStackEntry?.savedStateHandle?.getLiveData<String>("key")
@@ -90,15 +90,15 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             findNavController().popBackStack()
         }
 
-        // Alert Dialog
+        // Delete Alert Dialog
         val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
         builder.setMessage("Are you sure you want to delete the reservation?")
         builder.setPositiveButton("Confirm") { _, _ ->
             viewModel.deleteReservation()
-            findNavController().popBackStack()
         }
         builder.setNegativeButton("Cancel") { _, _ ->
         }
+        handleDeleteReservation()
 
         /*BACK BUTTON MANAGEMENT*/
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -222,6 +222,27 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun handleDeleteReservation() {
+        viewModel.deleteState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    // TODO: Start Animation
+                }
+
+                is UiState.Failure -> {
+                    // TODO: Stop Animation
+                    toast(state.error ?: "Unable to delete reservation")
+                }
+
+                is UiState.Success -> {
+                    // TODO: Stop Animation
+                    findNavController().popBackStack()
+                    toast("Reservation was successfully deleted")
+                }
+            }
+        }
     }
 
     private fun loadReview() {

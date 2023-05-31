@@ -54,7 +54,6 @@ class ReservationDetailsViewModel @Inject constructor(
         get() = _sportCenter
 
     fun loadReservationAndSportCenterInformation() = viewModelScope.launch {
-        println("Loading... with reservationId: $reservationId")
         _loadingState.value = UiState.Loading
         // Get reservation details
         val reservationState = reservationRepository.getReservationById(_reservationId)
@@ -75,18 +74,27 @@ class ReservationDetailsViewModel @Inject constructor(
         _loadingState.value = UiState.Success(Unit)
     }
 
-    // Other functions
     fun deleteUserReview() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
-        reservationRepository.deleteUserReview(_reservationId, userId)
+        val state = reservationRepository.deleteUserReview(_reservationId, userId)
+        if (state is UiState.Failure) {
+            _loadingState.value = state
+            return@launch
+        }
         delay(500)
         loadReservationAndSportCenterInformation() // To update the UI
     }
 
+    // Handle Reservation Delete
+    private val _deleteState = MutableLiveData<UiState<Unit>>()
+    val deleteState: LiveData<UiState<Unit>>
+        get() = _deleteState
+
     fun deleteReservation() = viewModelScope.launch {
-        _loadingState.value = UiState.Loading
-        reservationRepository.deleteReservation(_reservationId)
+        _deleteState.value = UiState.Loading
+        val state = reservationRepository.deleteReservation(_reservationId)
         delay(500)
+        _deleteState.value = state
     }
 
     // Utils
