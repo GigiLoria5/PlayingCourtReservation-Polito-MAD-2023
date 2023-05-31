@@ -353,7 +353,7 @@ class ReservationRepositoryImpl @Inject constructor(
             db.runTransaction { transaction ->
                 val newSnapshot = transaction[newReservationRef]
                 if (newSnapshot.exists()) {
-                    throw IllegalStateException("Unfortunately, the new date/time is no longer available")
+                    throw IllegalStateException("Unfortunately, the court is not available at this date and time")
                 }
                 transaction[newReservationRef] = updatedReservation
                 transaction.delete(oldReservationRef)

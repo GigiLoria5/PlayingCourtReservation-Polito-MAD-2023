@@ -318,8 +318,6 @@
                     android:orientation="vertical">
 
                     <include layout="@layout/search_sport_centers_sport_center_item_placeholder" />
-
-
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>
         </RelativeLayout>

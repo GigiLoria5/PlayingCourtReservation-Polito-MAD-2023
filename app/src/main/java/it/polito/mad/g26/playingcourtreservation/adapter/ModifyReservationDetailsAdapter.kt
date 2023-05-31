@@ -7,11 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
+import it.polito.mad.g26.playingcourtreservation.newModel.Service
 
 class ModifyReservationDetailsAdapter(
-    private val l: List<ServiceWithFee>,
-    private var lUsed: MutableList<ServiceWithFee>,
+    private val l: List<Service>,
+    private var lUsed: MutableList<Service>,
     private var price: TextView,
     var amount: MutableList<Float>
 ) : RecyclerView.Adapter<ModifyReservationDetailsAdapter.ModifyReservationDetailsViewHolder>() {
@@ -38,14 +38,14 @@ class ModifyReservationDetailsAdapter(
     inner class ModifyReservationDetailsViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private val chip = v.findViewById<Chip>(R.id.chip)
         fun bind(
-            s: ServiceWithFee,
-            lUsed: MutableList<ServiceWithFee>,
+            s: Service,
+            lUsed: MutableList<Service>,
             price: TextView,
             amount: MutableList<Float>
         ) {
             chip.text = super.itemView.context.getString(
                 R.string.reservation_info_concatenation,
-                s.service.name,
+                s.name,
                 s.fee.toString()
             )
             chip.isChecked = s in lUsed
@@ -62,7 +62,7 @@ class ModifyReservationDetailsAdapter(
                 } else {
                     lUsed.remove(s)
                     amount[0] -= s.fee
-                    price.text =super.itemView.context.getString(
+                    price.text = super.itemView.context.getString(
                         R.string.set_text_with_euro,
                         amount[0].toString()
                     )

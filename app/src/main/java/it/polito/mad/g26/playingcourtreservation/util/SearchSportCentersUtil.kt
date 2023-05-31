@@ -108,7 +108,6 @@ object SearchSportCentersUtil {
         val currentCalendar = Calendar.getInstance()
         currentCalendar.timeInMillis = currentTimeMillis
 
-
         showDatePickerDialog(
             viewContext,
             currentCalendar,

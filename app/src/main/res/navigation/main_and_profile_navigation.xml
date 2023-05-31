@@ -70,9 +70,9 @@
     </fragment>
     <fragment
         android:id="@+id/modifyReservationDetailsFragment"
-        android:name="it.polito.mad.g26.playingcourtreservation.fragment.ModifyReservationXFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.EditReservationDetailsFragment"
         android:label="modifyReservationDetailsFragment"
-        tools:layout="@layout/modify_reservation_details_fragment">
+        tools:layout="@layout/edit_reservation_details_fragment">
         <argument
             android:name="reservationId"
             app:argType="string" />

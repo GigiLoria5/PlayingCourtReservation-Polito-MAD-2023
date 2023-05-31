@@ -6,20 +6,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.polito.mad.g26.playingcourtreservation.newModel.Reservation
-import it.polito.mad.g26.playingcourtreservation.newModel.Review
 import it.polito.mad.g26.playingcourtreservation.newModel.SportCenter
 import it.polito.mad.g26.playingcourtreservation.newRepository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.newRepository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.newRepository.UserRepository
+import it.polito.mad.g26.playingcourtreservation.util.ReservationWithDetailsUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
-class ReservationDetailsViewModel @Inject constructor(
+class EditReservationDetailsViewModel @Inject constructor(
     private val sportCenterRepository: SportCenterRepository,
     private val reservationRepository: ReservationRepository,
     private val userRepository: UserRepository
@@ -36,6 +35,26 @@ class ReservationDetailsViewModel @Inject constructor(
         this._reservationId = reservationId
     }
 
+    // DateTime management
+    private val dateFormat = Reservation.getDatePattern()
+    private val timeFormat = Reservation.getTimePattern()
+
+    private val _selectedDateTimeMillis = MutableLiveData<Long>().also {
+        it.value = ReservationWithDetailsUtil.getMockInitialDateTime().timeInMillis
+    }
+    val selectedDateTimeMillis: LiveData<Long> = _selectedDateTimeMillis
+
+    private fun getDateTimeFormatted(format: String): String {
+        return SearchSportCentersUtil.getDateTimeFormatted(
+            selectedDateTimeMillis.value ?: 0,
+            format
+        )
+    }
+
+    fun changeSelectedDateTimeMillis(newTimeInMillis: Long) {
+        _selectedDateTimeMillis.value = newTimeInMillis
+    }
+
     // Load reservation data
     private val _loadingState = MutableLiveData<UiState<Unit>>()
     val loadingState: LiveData<UiState<Unit>>
@@ -45,16 +64,11 @@ class ReservationDetailsViewModel @Inject constructor(
     val reservation: Reservation
         get() = _reservation
 
-    private var _review: Review? = null
-    val review: Review?
-        get() = _review
-
     private var _sportCenter: SportCenter = SportCenter()
     val sportCenter: SportCenter
         get() = _sportCenter
 
     fun loadReservationAndSportCenterInformation() = viewModelScope.launch {
-        println("Loading... with reservationId: $reservationId")
         _loadingState.value = UiState.Loading
         // Get reservation details
         val reservationState = reservationRepository.getReservationById(_reservationId)
@@ -63,8 +77,6 @@ class ReservationDetailsViewModel @Inject constructor(
             return@launch
         }
         _reservation = (reservationState as UiState.Success).result
-        // Get review (if any)
-        _review = _reservation.reviews.firstOrNull { it.userId == userId }
         // Get sport center information where the reservation has been made
         val sportCenterState = sportCenterRepository.getSportCenterById(_reservation.sportCenterId)
         if (sportCenterState is UiState.Failure) {
@@ -75,28 +87,31 @@ class ReservationDetailsViewModel @Inject constructor(
         _loadingState.value = UiState.Success(Unit)
     }
 
-    // Other functions
-    fun deleteUserReview() = viewModelScope.launch {
-        _loadingState.value = UiState.Loading
-        reservationRepository.deleteUserReview(_reservationId, userId)
-        delay(500)
-        loadReservationAndSportCenterInformation() // To update the UI
-    }
+    // Update Reservation
+    private val _updateState = MutableLiveData<UiState<Unit>>()
+    val updateState: LiveData<UiState<Unit>>
+        get() = _updateState
 
-    fun deleteReservation() = viewModelScope.launch {
-        _loadingState.value = UiState.Loading
-        reservationRepository.deleteReservation(_reservationId)
-        delay(500)
-    }
-
-    // Utils
-    fun nowIsBeforeReservationDateTime(): Boolean {
-        val reservationDate = LocalDateTime.parse(
-            "${reservation.date} ${reservation.time}",
-            DateTimeFormatter.ofPattern("${Reservation.getDatePattern()} ${Reservation.getTimePattern()}")
+    fun updateReservation(updatedReservation: Reservation) = viewModelScope.launch {
+        _updateState.value = UiState.Loading
+        // Update date, time and id (eventually)
+        val newDate = getDateTimeFormatted(dateFormat)
+        val newTime = getDateTimeFormatted(timeFormat)
+        updatedReservation.date = newDate
+        updatedReservation.time = newTime
+        updatedReservation.id = Reservation.generateId(
+            updatedReservation.courtId,
+            newDate,
+            newTime
         )
-        val now = LocalDateTime.now()
-        return now.isBefore(reservationDate)
+        // Update Reservation
+        val resultState = reservationRepository.updateReservation(reservationId, updatedReservation)
+        delay(500)
+        if (resultState is UiState.Success) {
+            _reservation = updatedReservation
+            _reservationId = updatedReservation.id
+        }
+        _updateState.value = resultState
     }
 
 }

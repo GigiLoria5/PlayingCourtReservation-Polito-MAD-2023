@@ -53,7 +53,17 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
         // VM Initialization
         val reservationId = args.reservationId
-        viewModel.initialize(reservationId)
+        val navController = findNavController()
+        val navigationArg =
+            navController.currentBackStackEntry?.savedStateHandle?.getLiveData<String>("key")
+        navigationArg?.observe(viewLifecycleOwner) {
+            viewModel.initialize(it)
+            viewModel.loadReservationAndSportCenterInformation()
+        }
+        if (navigationArg?.value == null) {
+            viewModel.initialize(reservationId)
+            viewModel.loadReservationAndSportCenterInformation()
+        }
 
         // Setup late init variables and visual components
         reservationReviewMCV = view.findViewById(R.id.reservationReviewMCV)
@@ -96,7 +106,6 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
 
         // Retrieve Reservation Details
-        viewModel.getReservationAndAllSportCenterServices()
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
@@ -234,7 +243,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     AddReviewDialogFragment.newInstance(
                         viewModel.reservationId,
                         viewModel.userId
-                    ) { viewModel.getReservationAndAllSportCenterServices() }
+                    ) { viewModel.loadReservationAndSportCenterInformation() }
                 addReviewDialog.show(
                     parentFragmentManager,
                     AddReviewDialogFragment.TAG
@@ -277,7 +286,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                 AddReviewDialogFragment.newInstance(
                     viewModel.reservationId,
                     viewModel.userId
-                ) { viewModel.getReservationAndAllSportCenterServices() }
+                ) { viewModel.loadReservationAndSportCenterInformation() }
             addReviewDialog.show(
                 parentFragmentManager,
                 AddReviewDialogFragment.TAG
