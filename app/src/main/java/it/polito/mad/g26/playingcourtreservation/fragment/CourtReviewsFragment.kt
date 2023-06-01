@@ -110,7 +110,9 @@ class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
                         noReviewMCV.makeInvisible()
                         meanRatingMCV.makeVisible()
                         meanRatingTV.text =
-                            getString(R.string.mean_rating_text, courtReviews.size.toString())
+                            getString(R.string.mean_rating_text, courtReviews.size.toString(),
+                                if (courtReviews.size != 1) "s" else ""
+                            )
                         val meanRating = courtReviews.avg()
                         meanRatingBar.rating = meanRating
                         meanRatingValueTV.text =
