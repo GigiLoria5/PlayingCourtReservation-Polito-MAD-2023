@@ -50,6 +50,8 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
     private lateinit var courtTypeACTV: AutoCompleteTextView
     private lateinit var courtTypeMCV: MaterialCardView
+    private lateinit var selectedSportShimmerView: ShimmerFrameLayout
+
     private lateinit var servicesRV: RecyclerView
     private lateinit var sportCentersRV: RecyclerView
     private lateinit var sportCentersShimmerView: ShimmerFrameLayout
@@ -124,6 +126,10 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         courtTypeACTV.setOnItemClickListener { _, _, _, _ ->
             viewModel.changeSelectedSport(courtTypeACTV.text.toString())
         }
+
+        /* selectedSportShimmerView INITIALIZER */
+        selectedSportShimmerView = view.findViewById(R.id.selectedSportShimmerView)
+
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
         dateMCV = view.findViewById(R.id.dateMCV)
@@ -226,6 +232,9 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     existingReservationCL.makeGone()
                     sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
                     servicesShimmerView.startShimmerAnimation(servicesRV)
+                    courtTypeACTV.makeInvisible()
+                    courtTypeMCV.makeInvisible()
+                    selectedSportShimmerView.startShimmer()
                     numberOfSportCentersFoundTV.makeGone()
                     noSportCentersFoundTV.makeGone()
                 }
@@ -235,6 +244,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     servicesShimmerView.stopShimmer()
                     sportCentersShimmerView.stopShimmer()
                     sportCentersShimmerView.makeInvisible()
+                    selectedSportShimmerView.stopShimmer()
                     numberOfSportCentersFoundTV.makeVisible()
                     toast(state.error ?: "Unable to load requested information")
                 }
@@ -244,6 +254,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     if (reservationFound != null) {
                         servicesShimmerView.stopShimmer()
                         sportCentersShimmerView.stopShimmer()
+                        selectedSportShimmerView.stopShimmer()
                         // The user already has a reservation for this date/time
                         showExistingReservationCL()
                         navigateToReservationBTN.setOnClickListener {
@@ -256,7 +267,9 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         return@observe
                     }
                     // The user is free for this date/time
-                    hideExistingReservationCL()
+                    courtTypeACTV.makeVisible()
+                    courtTypeMCV.makeVisible()
+                    existingReservationCL.makeGone()
                     servicesShimmerView.stopShimmerAnimation(servicesRV)
                     servicesAdapter.updateCollection(viewModel.allServices)
                     searchSportCentersUtil.setAutoCompleteTextViewSport(
@@ -267,6 +280,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     )
                     servicesShimmerView.stopShimmer()
                     sportCentersShimmerView.stopShimmer()
+                    selectedSportShimmerView.stopShimmer()
                     sportCentersShimmerView.makeInvisible()
                     numberOfSportCentersFoundTV.makeVisible()
 
@@ -298,17 +312,12 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
         courtTypeACTV.makeInvisible()
         courtTypeMCV.makeInvisible()
+        selectedSportShimmerView.stopShimmer()
 
         numberOfSportCentersFoundTV.makeGone()
         noSportCentersFoundTV.makeGone()
 
         existingReservationCL.makeVisible()
-    }
-
-    private fun hideExistingReservationCL() {
-        courtTypeACTV.makeVisible()
-        courtTypeMCV.makeVisible()
-        existingReservationCL.makeGone()
     }
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
@@ -322,9 +331,9 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         existingReservationCL.makeGone()
                         courtTypeACTV.makeInvisible()
                         courtTypeMCV.makeInvisible()
-                        servicesRV.makeInvisible()
                         servicesShimmerView.startShimmerAnimation(servicesRV)
                         sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
+                        selectedSportShimmerView.startShimmer()
                     }
                 }
 
