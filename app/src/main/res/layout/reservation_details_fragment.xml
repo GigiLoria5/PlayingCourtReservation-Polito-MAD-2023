@@ -9,10 +9,10 @@
         android:id="@+id/reservationDetailsABL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/reservation_details_scrollview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -40,11 +40,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/customToolBar">
 
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/sportCenterDataCL"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/service_list"
                     app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -163,18 +164,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/price" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/service_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clipToPadding="false"
-                        android:orientation="horizontal"
-                        android:paddingVertical="5dp"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/service_title"
-                        tools:listitem="@layout/chip_service_item" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -212,6 +201,20 @@
                         app:tint="@color/green_500" />
                 </com.google.android.material.card.MaterialCardView>
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/service_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingVertical="5dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sportCenterDataCL"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:listitem="@layout/chip_service_item" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -227,7 +230,9 @@
         app:layout_constraintTop_toBottomOf="@id/reservationDetailsABL"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:isScrollContainer="true"
+        android:measureAllChildren="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/reservation_details_scroll_container"

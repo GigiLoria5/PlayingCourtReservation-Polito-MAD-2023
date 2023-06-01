@@ -69,7 +69,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             findNavController().popBackStack()
         }
         val privateList = listOf(
-            "profile1",
+            "profile11111111111111111111",
             "profile2",
             "profile3",
             "profile4",
@@ -314,6 +314,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         partiRecyclerView2.adapter = adapter2
         partiRecyclerView2.layoutManager = LinearLayoutManager(context)
         //to avoid scrolling of recycler
+        partiRecyclerView2.isNestedScrollingEnabled = false
 
         /*MENU ITEM*/
         val menuHost: MenuHost = requireActivity()
