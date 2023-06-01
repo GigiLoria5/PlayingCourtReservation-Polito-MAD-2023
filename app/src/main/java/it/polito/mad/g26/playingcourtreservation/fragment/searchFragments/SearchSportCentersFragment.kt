@@ -64,7 +64,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
     /* LOGIC OBJECT OF THIS FRAGMENT */
     private val searchSportCentersUtil = SearchSportCentersUtils
-    private var goingToSearchCourt = false
+    private var aReservationExists = false
 
     /* ARGS */
     private var city: String = ""
@@ -203,7 +203,6 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                 viewModel.isServiceNameInList(serviceName)
             },
             { sportCenterId, sportCenterName, sportCenterAddress, sportCenterPhoneNumber ->
-                goingToSearchCourt = true
                 val direction =
                     SearchSportCentersFragmentDirections.actionSearchSportCentersToSearchCourts(
                         sportCenterId,
@@ -218,18 +217,6 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         )
     }
 
-    private fun initialLoading() {
-        /* INITIAL LOADING */
-        viewModel.selectedDateTimeMillis.observe(viewLifecycleOwner) {
-            courtTypeACTV.makeVisible()
-            courtTypeMCV.makeVisible()
-            numberOfSportCentersFoundTV.makeGone()
-            noSportCentersFoundTV.makeGone()
-            existingReservationCL.makeGone()
-            servicesShimmerView.startShimmerAnimation(servicesRV)
-            sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
-        }
-    }
 
     private fun loadExistingReservation() {
         /* EXISTING RESERVATION LOADING*/
@@ -237,6 +224,9 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         viewModel.existingReservationByDateAndTime.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
+                    numberOfSportCentersFoundTV.makeGone()
+                    noSportCentersFoundTV.makeGone()
+                    existingReservationCL.makeGone()
                     servicesShimmerView.startShimmer()
                     sportCentersShimmerView.startShimmer()
                 }
@@ -249,6 +239,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
                 is UiState.Success -> {
                     if (state.result != null) {
+                        aReservationExists = true
                         servicesShimmerView.stopShimmer()
                         sportCentersShimmerView.stopShimmer()
                         showExistingReservationCL()
@@ -260,6 +251,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                             )
                         }
                     } else {
+                        aReservationExists = false
                         hideExistingReservationCL()
                         viewModel.fetchSportCentersData()
                         loadSportCenters()
@@ -272,13 +264,11 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
     private fun loadSportCenters() {
         /* SPORT CENTERS LOADING */
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
-            val existingReservationId =
-                (viewModel.existingReservationByDateAndTime.value as UiState.Success).result
-            if (existingReservationId == null) {
+            if (!aReservationExists) { //TODO è CORRETTO SOLO STO IF COSì?
                 when (state) {
                     is UiState.Loading -> {
                         sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
-                        servicesShimmerView.startShimmer()
+                        servicesShimmerView.startShimmerAnimation(servicesRV)
                         numberOfSportCentersFoundTV.makeGone()
                         noSportCentersFoundTV.makeGone()
                     }
@@ -352,12 +342,15 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
             val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
             anim.setAnimationListener(object : AnimationListener {
                 override fun onAnimationStart(animation: Animation) {
-                    if (!goingToSearchCourt) {
+                    if (enter) {
                         numberOfSportCentersFoundTV.makeGone()
                         noSportCentersFoundTV.makeGone()
                         existingReservationCL.makeGone()
+                        courtTypeACTV.makeInvisible()
+                        courtTypeMCV.makeInvisible()
                         servicesRV.makeInvisible()
-                        sportCentersRV.makeInvisible()
+                        servicesShimmerView.startShimmerAnimation(servicesRV)
+                        sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
                     }
                 }
 
@@ -366,16 +359,14 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                 }
 
                 override fun onAnimationEnd(animation: Animation) {
-                    initialLoading()
-                    loadExistingReservation()
-                    numberOfSportCentersFoundCL.layoutTransition = LayoutTransition()
+                    if (enter) {
+                        numberOfSportCentersFoundCL.layoutTransition = LayoutTransition()
+                    }
                 }
             })
             return anim
         } else {
             if (enter) {
-                initialLoading()
-                loadExistingReservation()
                 numberOfSportCentersFoundCL.layoutTransition = LayoutTransition()
             }
             null
@@ -384,7 +375,6 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
     override fun onResume() {
         super.onResume()
-        goingToSearchCourt = false
         hideActionBar(activity)
         val minDateTime = SearchSportCentersUtils.getMockInitialDateTime()
         if (viewModel.selectedDateTimeMillis.value!! < minDateTime) {
