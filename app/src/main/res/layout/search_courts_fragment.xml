@@ -191,6 +191,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:shimmer_repeat_mode="restart"
+            android:paddingVertical="@dimen/page_external_space"
             app:shimmer_shape="radial">
 
             <LinearLayout
