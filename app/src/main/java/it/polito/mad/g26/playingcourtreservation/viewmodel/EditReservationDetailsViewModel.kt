@@ -111,7 +111,6 @@ class EditReservationDetailsViewModel @Inject constructor(
             return@launch
         }
         val existingReservation = (existingReservationState as UiState.Success).result
-        println("Existing reservation: $existingReservation while actual reservation: $updatedReservation")
         if (existingReservation != null && existingReservation.id != updatedReservation.id) {
             _updateState.value =
                 UiState.Failure("You already have reservation for this date and time")

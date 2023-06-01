@@ -15,7 +15,6 @@ import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,63 +40,102 @@ class SearchSportCentersViewModel @Inject constructor(
             changeSelectedSport(sportName)
             selectedServicesNames.forEach { addServiceIdToFilters(it) }
         }
-    }
 
-    /* EXISTING RESERVATION MANAGEMENT */
-    private val _existingReservationByDateAndTime = MutableLiveData<UiState<Reservation?>>()
-    val existingReservationByDateAndTime: LiveData<UiState<Reservation?>>
-        get() = _existingReservationByDateAndTime
+        _selectedSport.observeForever {
+            fetchData()
+        }
 
-    fun checkExistingReservation() = viewModelScope.launch {
-        if (_existingReservationByDateAndTime.value is UiState.Loading)
-            return@launch // Avoid multiple calls
-        _existingReservationByDateAndTime.value = UiState.Loading
-        val result = reservationRepository.getUserReservationAt(
-            userRepository.currentUser!!.uid,
-            getDateTimeFormatted(dateFormat),
-            getDateTimeFormatted(timeFormat)
-        )
-        _existingReservationByDateAndTime.value = result
+        _selectedServices.observeForever {
+            fetchData()
+        }
+
+        _selectedDateTimeMillis.observeForever {
+            fetchData()
+        }
     }
 
     // Load every information needed
     private val _loadingState = MutableLiveData<UiState<Unit>>()
     val loadingState: LiveData<UiState<Unit>>
         get() = _loadingState
-    private var sportCenters: List<SportCenter> = listOf()
-    var sports: List<String> = listOf()
-    var services: List<String> = listOf()
-    var reviews: HashMap<String, List<Review>> = hashMapOf()
 
-    fun fetchSportCentersData() = viewModelScope.launch {
+    private var _reservation: Reservation? = null
+    val reservation: Reservation?
+        get() = _reservation
+
+    private var allCitySportCenters: List<SportCenter> = listOf()
+    // The get method is the function "getFilteredSportCenters"
+
+    private var _allSports: List<String> = listOf()
+    val allSports: List<String>
+        get() = _allSports
+
+    private var _allServices: List<String> = listOf()
+    val allServices: List<String>
+        get() = _allServices
+
+    private var _sportCentersReviews: HashMap<String, List<Review>> = hashMapOf()
+    val sportCenterReviews: HashMap<String, List<Review>>
+        get() = _sportCentersReviews
+
+    fun fetchData() = viewModelScope.launch {
+        if (_loadingState.value is UiState.Loading)
+            return@launch // Avoid multiple calls
         _loadingState.value = UiState.Loading
-        // Get all sport centers
-        val allSportCentersState = sportCenterRepository.getAllSportCenters()
+        // Search actual reservation and sport centers in parallel
+        val reservationSearchDeferred = async {
+            reservationRepository.getUserReservationAt(
+                userRepository.currentUser!!.uid,
+                getDateTimeFormatted(dateFormat),
+                getDateTimeFormatted(timeFormat)
+            )
+        }
+        val sportCentersSearchDeferred = async {
+            sportCenterRepository.getAllSportCenters()
+        }
+        // Wait for reservation search result
+        val reservationSearchState = reservationSearchDeferred.await()
+        // If the reservation search failed or has found one, we don't do any more db call
+        if (reservationSearchState is UiState.Failure) {
+            sportCentersSearchDeferred.cancel()
+            _loadingState.value = reservationSearchState
+            return@launch
+        }
+        if (reservationSearchState is UiState.Success && reservationSearchState.result != null) {
+            sportCentersSearchDeferred.cancel()
+            _reservation = reservationSearchState.result
+            _loadingState.value = UiState.Success(Unit)
+            return@launch
+        }
+        // Otherwise, if there is no already a reservation, we get/wait all the other information needed
+        _reservation = null
+        val allSportCentersState = sportCentersSearchDeferred.await()
         if (allSportCentersState is UiState.Failure) {
             _loadingState.value = allSportCentersState
             return@launch
         }
         val allSportCenters = (allSportCentersState as UiState.Success).result
-        // Find all sports and services available
-        sports = allSportCenters
-            .flatMap { it.courts.map { court -> court.sport } }
-            .distinct()
-        services = allSportCenters
-            .flatMap { it.services.map { service -> service.name } }
-            .distinct()
-        // Filter sport centers based on current city selected
-        sportCenters = allSportCenters.filter { it.city == selectedCity }.sortedBy { it.name }
-        // Get all reviews for each sport center
-        val deferredReviews = sportCenters.map { sportCenter ->
+        allCitySportCenters = allSportCenters
+            .filter { it.city == selectedCity } // Filter sport centers based on current city selected
+            .sortedBy { it.name }
+        val deferredReviews = allCitySportCenters.map { sportCenter ->
             async {
                 reservationRepository.getAllSportCenterReviews(sportCenter)
             }
         }
+        // Find all sports and services available
+        _allSports = allSportCenters
+            .flatMap { it.courts.map { court -> court.sport } }
+            .distinct()
+        _allServices = allSportCenters
+            .flatMap { it.services.map { service -> service.name } }
+            .distinct()
+        // Get all reviews for each sport center
         val reviewsResults = deferredReviews.awaitAll()
         for ((index, state) in reviewsResults.withIndex()) {
             when (state) {
                 is UiState.Success -> {
-                    reviews[sportCenters[index].id] = state.result
+                    _sportCentersReviews[allCitySportCenters[index].id] = state.result
                 }
 
                 is UiState.Failure -> {
@@ -105,7 +143,7 @@ class SearchSportCentersViewModel @Inject constructor(
                 }
 
                 else -> {
-                    _loadingState.value = UiState.Failure(null)
+                    _loadingState.value = UiState.Failure("Unable to fetch data at the moment")
                 }
             }
         }
@@ -179,36 +217,12 @@ class SearchSportCentersViewModel @Inject constructor(
     }
 
     /*SPORT CENTERS MANAGEMENT*/
-    init {
-        _selectedSport.observeForever {
-            updateSportCentersUI()
-        }
-
-        _selectedServices.observeForever {
-            updateSportCentersUI()
-        }
-
-        _selectedDateTimeMillis.observeForever {
-            updateSportCentersUI()
-        }
-    }
-
-    private fun updateSportCentersUI() = viewModelScope.launch {
-        // If is not in Success state it means we are still processing the data
-        if (_loadingState.value !is UiState.Success) {
-            return@launch
-        }
-        _loadingState.value = UiState.Loading
-        delay(500)
-        _loadingState.value = UiState.Success(Unit)
-    }
-
     fun getFilteredSportCenters(): List<SportCenter> {
         val selectedTime = getDateTimeFormatted(timeFormat)
         val selectedServices = _selectedServices.value.orEmpty().toSet()
         val selectedSport = _selectedSport.value.orEmpty()
 
-        return sportCenters
+        return allCitySportCenters
             .filter { sportCenter ->
                 sportCenter.openTime <= selectedTime && selectedTime < sportCenter.closeTime
             }

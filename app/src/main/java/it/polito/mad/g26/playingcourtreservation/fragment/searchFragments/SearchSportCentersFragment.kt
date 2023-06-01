@@ -187,7 +187,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
     private fun createServiceAdapter(): ServiceAdapter {
         return ServiceAdapter(
-            viewModel.services,
+            viewModel.allServices,
             { viewModel.addServiceIdToFilters(it) },
             { viewModel.removeServiceIdFromFilters(it) },
             { viewModel.isServiceNameInList(it) }
@@ -197,7 +197,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
     private fun createSportCenterAdapter(): SportCenterAdapter {
         return SportCenterAdapter(
             viewModel.getFilteredSportCenters(),
-            viewModel.reviews,
+            viewModel.sportCenterReviews,
             { serviceName ->
                 viewModel.isServiceNameInList(serviceName)
             },
@@ -219,54 +219,11 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
     private fun loadExistingReservation() {
         /* EXISTING RESERVATION LOADING*/
-        viewModel.checkExistingReservation()
-        viewModel.existingReservationByDateAndTime.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is UiState.Loading -> {
-                    numberOfSportCentersFoundTV.makeGone()
-                    noSportCentersFoundTV.makeGone()
-                    existingReservationCL.makeGone()
-                    servicesShimmerView.startShimmer()
-                    sportCentersShimmerView.startShimmer()
-                }
-
-                is UiState.Failure -> {
-                    servicesShimmerView.stopShimmer()
-                    sportCentersShimmerView.stopShimmer()
-                    toast(state.error ?: "Unable to get reservation")
-                }
-
-                is UiState.Success -> {
-                    if (state.result != null) {
-                        servicesShimmerView.stopShimmer()
-                        sportCentersShimmerView.stopShimmer()
-                        showExistingReservationCL()
-                        navigateToReservationBTN.setOnClickListener {
-                            findNavController().navigate(
-                                SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
-                                    state.result.id
-                                )
-                            )
-                        }
-                    } else {
-                        hideExistingReservationCL()
-                        viewModel.fetchSportCentersData()
-                        loadSportCenters()
-                    }
-                }
-            }
-        }
-    }
-
-    private fun loadSportCenters() {
-        /* SPORT CENTERS LOADING */
+        viewModel.fetchData()
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
-            val findReservationState = viewModel.existingReservationByDateAndTime.value!!
-            // If the reservation search is not completed or it completed but a reservation has been found, do nothing
-            if (findReservationState !is UiState.Success || findReservationState.result != null)
-                return@observe
             when (state) {
                 is UiState.Loading -> {
+                    existingReservationCL.makeGone()
                     sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
                     servicesShimmerView.startShimmerAnimation(servicesRV)
                     numberOfSportCentersFoundTV.makeGone()
@@ -275,15 +232,36 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
                 is UiState.Failure -> {
                     servicesShimmerView.stopShimmerAnimation(servicesRV)
-                    toast(state.error ?: "Unable to load Sport Centers")
+                    servicesShimmerView.stopShimmer()
+                    sportCentersShimmerView.stopShimmer()
+                    sportCentersShimmerView.makeInvisible()
+                    numberOfSportCentersFoundTV.makeVisible()
+                    toast(state.error ?: "Unable to load requested information")
                 }
 
                 is UiState.Success -> {
+                    val reservationFound = viewModel.reservation
+                    if (reservationFound != null) {
+                        servicesShimmerView.stopShimmer()
+                        sportCentersShimmerView.stopShimmer()
+                        // The user already has a reservation for this date/time
+                        showExistingReservationCL()
+                        navigateToReservationBTN.setOnClickListener {
+                            findNavController().navigate(
+                                SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
+                                    reservationFound.id
+                                )
+                            )
+                        }
+                        return@observe
+                    }
+                    // The user is free for this date/time
+                    hideExistingReservationCL()
                     servicesShimmerView.stopShimmerAnimation(servicesRV)
-                    servicesAdapter.updateCollection(viewModel.services)
+                    servicesAdapter.updateCollection(viewModel.allServices)
                     searchSportCentersUtil.setAutoCompleteTextViewSport(
                         requireContext(),
-                        viewModel.sports,
+                        viewModel.allSports,
                         courtTypeACTV,
                         viewModel.getSelectedSportName()
                     )
@@ -292,17 +270,14 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     sportCentersShimmerView.makeInvisible()
                     numberOfSportCentersFoundTV.makeVisible()
 
-                    val sportCentersWithDetailsFormatted =
-                        viewModel.getFilteredSportCenters()
-                    val numberOfSportCentersFound = sportCentersWithDetailsFormatted.size
+                    val filteredSportCenters = viewModel.getFilteredSportCenters()
+                    val numberOfSportCentersFound = filteredSportCenters.size
                     numberOfSportCentersFoundTV.text = getString(
                         R.string.search_sport_center_results_info,
                         numberOfSportCentersFound,
                         if (numberOfSportCentersFound != 1) "s" else ""
                     )
-                    sportCentersAdapter.updateCollection(
-                        sportCentersWithDetailsFormatted
-                    )
+                    sportCentersAdapter.updateCollection(filteredSportCenters)
                     if (numberOfSportCentersFound > 0) {
                         sportCentersRV.makeVisible()
                     } else {
