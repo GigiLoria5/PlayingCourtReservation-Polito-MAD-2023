@@ -64,7 +64,6 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
     /* LOGIC OBJECT OF THIS FRAGMENT */
     private val searchSportCentersUtil = SearchSportCentersUtils
-    private var aReservationExists = false
 
     /* ARGS */
     private var city: String = ""
@@ -239,7 +238,6 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
                 is UiState.Success -> {
                     if (state.result != null) {
-                        aReservationExists = true
                         servicesShimmerView.stopShimmer()
                         sportCentersShimmerView.stopShimmer()
                         showExistingReservationCL()
@@ -251,7 +249,6 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                             )
                         }
                     } else {
-                        aReservationExists = false
                         hideExistingReservationCL()
                         viewModel.fetchSportCentersData()
                         loadSportCenters()
@@ -264,51 +261,53 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
     private fun loadSportCenters() {
         /* SPORT CENTERS LOADING */
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
-            if (!aReservationExists) { //TODO è CORRETTO SOLO STO IF COSì?
-                when (state) {
-                    is UiState.Loading -> {
-                        sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
-                        servicesShimmerView.startShimmerAnimation(servicesRV)
-                        numberOfSportCentersFoundTV.makeGone()
-                        noSportCentersFoundTV.makeGone()
-                    }
+            val findReservationState = viewModel.existingReservationByDateAndTime.value!!
+            // If the reservation search is not completed or it completed but a reservation has been found, do nothing
+            if (findReservationState !is UiState.Success || findReservationState.result != null)
+                return@observe
+            when (state) {
+                is UiState.Loading -> {
+                    sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
+                    servicesShimmerView.startShimmerAnimation(servicesRV)
+                    numberOfSportCentersFoundTV.makeGone()
+                    noSportCentersFoundTV.makeGone()
+                }
 
-                    is UiState.Failure -> {
-                        servicesShimmerView.stopShimmerAnimation(servicesRV)
-                        toast(state.error ?: "Unable to load Sport Centers")
-                    }
+                is UiState.Failure -> {
+                    servicesShimmerView.stopShimmerAnimation(servicesRV)
+                    toast(state.error ?: "Unable to load Sport Centers")
+                }
 
-                    is UiState.Success -> {
-                        servicesShimmerView.stopShimmerAnimation(servicesRV)
-                        servicesAdapter.updateCollection(viewModel.services)
-                        searchSportCentersUtil.setAutoCompleteTextViewSport(
-                            requireContext(),
-                            viewModel.sports,
-                            courtTypeACTV,
-                            viewModel.getSelectedSportName()
-                        )
-                        servicesShimmerView.stopShimmer()
-                        sportCentersShimmerView.stopShimmer()
-                        sportCentersShimmerView.makeInvisible()
-                        numberOfSportCentersFoundTV.makeVisible()
+                is UiState.Success -> {
+                    servicesShimmerView.stopShimmerAnimation(servicesRV)
+                    servicesAdapter.updateCollection(viewModel.services)
+                    searchSportCentersUtil.setAutoCompleteTextViewSport(
+                        requireContext(),
+                        viewModel.sports,
+                        courtTypeACTV,
+                        viewModel.getSelectedSportName()
+                    )
+                    servicesShimmerView.stopShimmer()
+                    sportCentersShimmerView.stopShimmer()
+                    sportCentersShimmerView.makeInvisible()
+                    numberOfSportCentersFoundTV.makeVisible()
 
-                        val sportCentersWithDetailsFormatted =
-                            viewModel.getFilteredSportCenters()
-                        val numberOfSportCentersFound = sportCentersWithDetailsFormatted.size
-                        numberOfSportCentersFoundTV.text = getString(
-                            R.string.search_sport_center_results_info,
-                            numberOfSportCentersFound,
-                            if (numberOfSportCentersFound != 1) "s" else ""
-                        )
-                        sportCentersAdapter.updateCollection(
-                            sportCentersWithDetailsFormatted
-                        )
-                        if (numberOfSportCentersFound > 0) {
-                            sportCentersRV.makeVisible()
-                        } else {
-                            noSportCentersFoundTV.makeVisible()
-                            sportCentersRV.makeInvisible()
-                        }
+                    val sportCentersWithDetailsFormatted =
+                        viewModel.getFilteredSportCenters()
+                    val numberOfSportCentersFound = sportCentersWithDetailsFormatted.size
+                    numberOfSportCentersFoundTV.text = getString(
+                        R.string.search_sport_center_results_info,
+                        numberOfSportCentersFound,
+                        if (numberOfSportCentersFound != 1) "s" else ""
+                    )
+                    sportCentersAdapter.updateCollection(
+                        sportCentersWithDetailsFormatted
+                    )
+                    if (numberOfSportCentersFound > 0) {
+                        sportCentersRV.makeVisible()
+                    } else {
+                        noSportCentersFoundTV.makeVisible()
+                        sportCentersRV.makeInvisible()
                     }
                 }
             }
