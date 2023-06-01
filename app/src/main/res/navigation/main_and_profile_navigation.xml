@@ -67,6 +67,14 @@
         <action
             android:id="@+id/openReservationEdit"
             app:destination="@id/modifyReservationDetailsFragment" />
+        <action
+            android:id="@+id/action_reservationDetailsFragment_to_inviteUsersFragment"
+            app:destination="@id/inviteUsersFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
+            />
     </fragment>
     <fragment
         android:id="@+id/modifyReservationDetailsFragment"
@@ -236,5 +244,22 @@
         <argument
             android:name="dateTime"
             app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/inviteUsersFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.InviteUsersFragment"
+        android:label="InviteUsersFragment" >
+        <argument
+            android:name="reservationId"
+            app:argType="string" />
+        <argument
+            android:name="date"
+            app:argType="string" />
+        <argument
+            android:name="time"
+            app:argType="string" />
+        <argument
+            android:name="city"
+            app:argType="string" />
     </fragment>
 </navigation>
