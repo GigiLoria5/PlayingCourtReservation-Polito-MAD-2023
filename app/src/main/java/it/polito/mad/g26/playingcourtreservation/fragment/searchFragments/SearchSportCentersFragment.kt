@@ -30,8 +30,8 @@ import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersViewModel
 
@@ -224,14 +224,14 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
             when (state) {
                 is UiState.Loading -> {
                     existingReservationCL.makeGone()
-                    sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
-                    servicesShimmerView.startShimmerAnimation(servicesRV)
+                    sportCentersShimmerView.startShimmerRVAnimation(sportCentersRV)
+                    servicesShimmerView.startShimmerRVAnimation(servicesRV)
                     numberOfSportCentersFoundTV.makeGone()
                     noSportCentersFoundTV.makeGone()
                 }
 
                 is UiState.Failure -> {
-                    servicesShimmerView.stopShimmerAnimation(servicesRV)
+                    servicesShimmerView.stopShimmerRVAnimation(servicesRV)
                     servicesShimmerView.stopShimmer()
                     sportCentersShimmerView.stopShimmer()
                     sportCentersShimmerView.makeInvisible()
@@ -257,7 +257,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     }
                     // The user is free for this date/time
                     hideExistingReservationCL()
-                    servicesShimmerView.stopShimmerAnimation(servicesRV)
+                    servicesShimmerView.stopShimmerRVAnimation(servicesRV)
                     servicesAdapter.updateCollection(viewModel.allServices)
                     searchSportCentersUtil.setAutoCompleteTextViewSport(
                         requireContext(),
@@ -323,8 +323,8 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         courtTypeACTV.makeInvisible()
                         courtTypeMCV.makeInvisible()
                         servicesRV.makeInvisible()
-                        servicesShimmerView.startShimmerAnimation(servicesRV)
-                        sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
+                        servicesShimmerView.startShimmerRVAnimation(servicesRV)
+                        sportCentersShimmerView.startShimmerRVAnimation(sportCentersRV)
                     }
                 }
 

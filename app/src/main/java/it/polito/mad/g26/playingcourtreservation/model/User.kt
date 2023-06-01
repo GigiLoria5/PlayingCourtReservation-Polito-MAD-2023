@@ -10,7 +10,7 @@ data class User(
     val gender: String? = null,
     val location: String? = null,
     val position: String? = null,
-    val skills: List<Pair<String, Double>> = emptyList()
+    val skills: List<Skill> = emptyList()
 ) {
     companion object {
         fun generateUsername(uid: String): String {
@@ -21,3 +21,8 @@ data class User(
         }
     }
 }
+
+data class Skill(
+    val sportName: String = "",
+    val rating: Float = 0.0f
+)
