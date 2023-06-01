@@ -1,6 +1,8 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -171,6 +173,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         R.string.set_text_with_euro,
                         reservation.amount.toString()
                     )
+                    sportCenterPhoneNumberMCV.setOnClickListener {
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        intent.data = Uri.parse("tel:${reservationSportCenter.phoneNumber}")
+                        startActivity(intent)
+                    }
                     // Show reservation buttons if future or review button is past
                     if (viewModel.nowIsBeforeReservationDateTime()) {
                         // Inflate the new layout with two buttons of reservation
