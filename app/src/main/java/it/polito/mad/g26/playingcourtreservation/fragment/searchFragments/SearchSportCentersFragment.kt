@@ -256,7 +256,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         sportCentersShimmerView.stopShimmer()
                         selectedSportShimmerView.stopShimmer()
                         // The user already has a reservation for this date/time
-                        showExistingReservationCL()
+                        visibilityChangesToShowExistingReservation()
                         navigateToReservationBTN.setOnClickListener {
                             findNavController().navigate(
                                 SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
@@ -267,23 +267,13 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         return@observe
                     }
                     // The user is free for this date/time
-                    courtTypeACTV.makeVisible()
-                    courtTypeMCV.makeVisible()
-                    existingReservationCL.makeGone()
-                    servicesShimmerView.stopShimmerAnimation(servicesRV)
-                    servicesAdapter.updateCollection(viewModel.allServices)
+                    visibilityChangesToHideExistingReservation()
                     searchSportCentersUtil.setAutoCompleteTextViewSport(
                         requireContext(),
                         viewModel.allSports,
                         courtTypeACTV,
                         viewModel.getSelectedSportName()
                     )
-                    servicesShimmerView.stopShimmer()
-                    sportCentersShimmerView.stopShimmer()
-                    selectedSportShimmerView.stopShimmer()
-                    sportCentersShimmerView.makeInvisible()
-                    numberOfSportCentersFoundTV.makeVisible()
-
                     val filteredSportCenters = viewModel.getFilteredSportCenters()
                     val numberOfSportCentersFound = filteredSportCenters.size
                     numberOfSportCentersFoundTV.text = getString(
@@ -303,7 +293,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         }
     }
 
-    private fun showExistingReservationCL() {
+    private fun visibilityChangesToShowExistingReservation() {
         servicesRV.makeGone()
         servicesShimmerView.makeGone()
 
@@ -320,6 +310,17 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         existingReservationCL.makeVisible()
     }
 
+    private fun visibilityChangesToHideExistingReservation(){
+        courtTypeACTV.makeVisible()
+        courtTypeMCV.makeVisible()
+        existingReservationCL.makeGone()
+        servicesShimmerView.stopShimmerAnimation(servicesRV)
+        servicesAdapter.updateCollection(viewModel.allServices)
+        sportCentersShimmerView.stopShimmer()
+        selectedSportShimmerView.stopShimmer()
+        sportCentersShimmerView.makeInvisible()
+        numberOfSportCentersFoundTV.makeVisible()
+    }
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         return if (nextAnim != 0) {
             val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
