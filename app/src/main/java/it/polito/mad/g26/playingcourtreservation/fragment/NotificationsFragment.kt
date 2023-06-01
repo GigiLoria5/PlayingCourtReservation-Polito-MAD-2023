@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.snackbar.Snackbar
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.NotificationsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Notification
@@ -36,6 +37,7 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
     private lateinit var deleteAllNotificationMCV: MaterialCardView
     private lateinit var notificationsAdapter: NotificationsAdapter
     private var deleteData: Notification? = null
+    val notifications = mutableListOf<Notification>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         /* CUSTOM TOOLBAR MANAGEMENT*/
@@ -48,7 +50,6 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().popBackStack()
         }
-        val notifications = mutableListOf<Notification>()
 
         noNotificationMCV = view.findViewById(R.id.noNotificationsFoundMCV)
         deleteAllNotificationMCV = view.findViewById(R.id.deleteNotificationsMCV)
@@ -138,6 +139,14 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
             when(direction){
                 ItemTouchHelper.LEFT ->{
                     deleteData = notificationsAdapter.removeItem(position)
+
+                    Snackbar.make(notificationsRV, "Notification deleted", Snackbar.LENGTH_LONG)
+                        .setAction(
+                            "Undo"
+                        ) {
+                            notifications.add(position, deleteData!!)
+                            notificationsAdapter.notifyItemInserted(position)
+                        }.show()
                 }
             }
         }
