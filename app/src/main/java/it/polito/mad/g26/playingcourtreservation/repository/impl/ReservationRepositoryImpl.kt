@@ -311,7 +311,7 @@ class ReservationRepositoryImpl @Inject constructor(
             db.runTransaction { transaction ->
                 val snapshot = transaction[reservationRef]
                 if (snapshot.exists()) {
-                    throw IllegalStateException("Unfortunately, the court is no longer available")
+                    throw IllegalStateException("Unfortunately, the court is no longer available for reservation")
                 }
                 transaction[reservationRef] = reservation
             }.await()
