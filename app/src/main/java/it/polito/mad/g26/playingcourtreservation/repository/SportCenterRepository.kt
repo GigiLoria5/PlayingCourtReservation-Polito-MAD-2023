@@ -1,21 +1,25 @@
 package it.polito.mad.g26.playingcourtreservation.repository
 
-import android.app.Application
-import androidx.lifecycle.LiveData
-import it.polito.mad.g26.playingcourtreservation.database.CourtReservationDatabase
+import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
-import it.polito.mad.g26.playingcourtreservation.model.custom.SportCenterWithDetails
+import it.polito.mad.g26.playingcourtreservation.util.UiState
 
-class SportCenterRepository(application: Application) {
-    private val sportCenterDao = CourtReservationDatabase.getDatabase(application).sportCenterDao()
-    fun findAllCities(): LiveData<List<String>> = sportCenterDao.findAllCities()
-    fun filteredCities(cityNameStartingWith: String): LiveData<List<String>> =
-        sportCenterDao.findFilteredCities(cityNameStartingWith)
+interface SportCenterRepository {
+    suspend fun getAllSportCenters(): UiState<List<SportCenter>>
 
-    fun filterSportCenters(
-        city: String,
-        hour: String
-    ): LiveData<List<SportCenterWithDetails>> = sportCenterDao.findFiltered(city, hour)
+    suspend fun getSportCenterById(sportCenterId: String): UiState<SportCenter>
 
-    fun getSportCenter(sportCenterId: Int): LiveData<SportCenter> = sportCenterDao.getSportCenter(sportCenterId)
+    suspend fun getAllSportCentersCities(): UiState<List<String>>
+
+    suspend fun getFilteredSportCentersCities(cityNamePrefix: String): UiState<List<String>>
+
+    suspend fun getAllSportCenterCourts(sportCenterId: String): UiState<List<Court>>
+
+    suspend fun getAllSportCenterCourtsBySport(
+        sportCenterId: String,
+        sportName: String
+    ): UiState<List<Court>>
+
+    suspend fun getSportCenterServices(sportCenterId: String): UiState<List<Service>>
 }

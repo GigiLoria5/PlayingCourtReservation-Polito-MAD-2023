@@ -10,23 +10,25 @@ import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 
 class CityResultAdapter(
-    private var collection: List<String>,
     private val goToResult: (String) -> Unit
-) :
-    RecyclerView.Adapter<CityResultAdapter.CityResultViewHolder>() {
+) : RecyclerView.Adapter<CityResultAdapter.CityResultViewHolder>() {
+
+    private var cities = mutableListOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityResultViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.search_cities_city_item, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.search_cities_city_item, parent, false)
         return CityResultViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CityResultViewHolder, position: Int) {
-        holder.bind(collection[position])
+        holder.bind(cities[position])
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateCollection(updatedCollection: List<String>) {
-        this.collection = updatedCollection
+        this.cities.clear()
+        this.cities.addAll(updatedCollection)
         notifyDataSetChanged()
     }
 
@@ -34,7 +36,7 @@ class CityResultAdapter(
         holder.unbind()
     }
 
-    override fun getItemCount() = collection.size
+    override fun getItemCount() = cities.size
 
     inner class CityResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val cityName = itemView.findViewById<TextView>(R.id.cityNameTV)

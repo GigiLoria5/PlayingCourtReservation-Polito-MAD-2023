@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "613472185083",
+    "project_id": "playing-court-reservatio-a3646",
+    "storage_bucket": "playing-court-reservatio-a3646.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613472185083:android:cf055a4f279c9f04411e5e",
+        "android_client_info": {
+          "package_name": "it.polito.mad.g26.playingcourtreservation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "613472185083-kf7jnq5sbfuo97qqpjiojbb5dlejq6p0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb_w5sFPh74M1sS8FTvcXuYpjvc7miZtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "613472185083-kf7jnq5sbfuo97qqpjiojbb5dlejq6p0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,16 +3,14 @@ package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.activity.addCallback
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -20,21 +18,25 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ChooseAvailableServiceAdapter
-import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtil
+import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
+import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.CompleteReservationVM
+import it.polito.mad.g26.playingcourtreservation.util.toast
+import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.CompleteReservationViewModel
+import pl.droidsonroids.gif.GifImageView
 
+@AndroidEntryPoint
 class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragment) {
 
     private val args: CompleteReservationFragmentArgs by navArgs()
-    private val vm by viewModels<CompleteReservationVM>()
-    private val loadTime: Long = 500
+    private val viewModel by viewModels<CompleteReservationViewModel>()
 
     /*   VISUAL COMPONENTS       */
     private lateinit var customToolBar: Toolbar
@@ -52,13 +54,14 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
     private lateinit var chooseAvailableServicesAdapter: ChooseAvailableServiceAdapter
     private lateinit var noAvailableServicesFoundTV: TextView
     private lateinit var confirmBTN: Button
-    /* ARGS */
+    private lateinit var loaderImage: GifImageView
 
-    private var sportCenterId: Int = 0
+    /* ARGS */
+    private var sportCenterId: String = ""
     private var sportCenterName: String = ""
     private var sportCenterAddress: String = ""
     private var sportCenterPhoneNumber: String = ""
-    private var courtId: Int = 0
+    private var courtId: String = ""
     private var courtName: String = ""
     private var courtHourCharge: Float = 0f
     private var sportName: String = ""
@@ -77,7 +80,7 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
         dateTime = args.dateTime
 
         /* VM INITIALIZATIONS */
-        vm.initialize(sportCenterId, courtId, courtHourCharge, dateTime)
+        viewModel.initialize(sportCenterId, courtId, courtHourCharge, dateTime)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)
@@ -102,17 +105,17 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
         totalPriceTV = view.findViewById(R.id.totalPriceTV)
         noAvailableServicesFoundTV = view.findViewById(R.id.noAvailableServicesFoundTV)
         confirmBTN = view.findViewById(R.id.confirmBTN)
-
+        loaderImage = requireActivity().findViewById(R.id.loaderImage)
 
         sportCenterNameTV.text = sportCenterName
         sportCenterAddressTV.text = sportCenterAddress
         selectedDateTimeTV.text = getString(
             R.string.selected_date_time_res,
-            SearchSportCentersUtil.getDateTimeFormatted(
+            SearchSportCentersUtils.getDateTimeFormatted(
                 dateTime,
                 getString(R.string.hour_format)
             ),
-            SearchSportCentersUtil.getDateTimeFormatted(
+            SearchSportCentersUtils.getDateTimeFormatted(
                 dateTime,
                 getString(R.string.date_extended_format)
             )
@@ -128,7 +131,6 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
             startActivity(intent)
         }
 
-
         /* COURTS RECYCLE VIEW INITIALIZER*/
         chooseAvailableServicesRV = view.findViewById(R.id.chooseAvailableServicesRV)
         chooseAvailableServicesAdapter = createChooseAvailableServicesAdapter()
@@ -138,74 +140,105 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
         chooseAvailableServicesShimmerView =
             view.findViewById(R.id.chooseAvailableServicesShimmerView)
 
-        vm.totalAmountLiveData.observe(viewLifecycleOwner) {
+        viewModel.totalAmount.observe(viewLifecycleOwner) {
             totalPriceTV.text = getString(
                 R.string.just_total_reservation_price,
                 String.format("%.2f", it)
             )
         }
 
+        // Confirm Button
         confirmBTN.setOnClickListener {
-            if (dateTime < SearchSportCentersUtil.getMockInitialDateTime()) {
+            if (dateTime < SearchSportCentersUtils.getMockInitialDateTime()) {
                 Toast.makeText(
                     context,
                     R.string.too_late_for_time_slot,
                     Toast.LENGTH_LONG
                 ).show()
-            } else {
-                vm.reserveCourt()
-                findNavController().popBackStack()
-                findNavController().popBackStack()
-                Toast.makeText(
-                    context,
-                    getString(
-                        R.string.confirm_reservation_message,
-                        sportCenterName
-                    ),
-                    Toast.LENGTH_LONG
-                ).show()
+                return@setOnClickListener
+            }
+            viewModel.reserveCourt()
+        }
+
+        // Reservation Process Handling
+        viewModel.reserveCourtState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    loaderImage.setFreezesAnimation(false)
+                    loaderImage.makeVisible()
+                }
+
+                is UiState.Failure -> {
+                    loaderImage.setFreezesAnimation(true)
+                    loaderImage.makeGone()
+                    toast(state.error ?: "Unable to reserve court")
+                }
+
+                is UiState.Success -> {
+                    loaderImage.setFreezesAnimation(true)
+                    loaderImage.makeGone()
+                    findNavController().popBackStack()
+                    findNavController().popBackStack()
+                    Toast.makeText(
+                        context,
+                        getString(
+                            R.string.confirm_reservation_message,
+                            sportCenterName
+                        ),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }
 
     private fun createChooseAvailableServicesAdapter(): ChooseAvailableServiceAdapter {
         return ChooseAvailableServiceAdapter(
-            vm.getServicesWithFees(),
-            { vm.addServiceIdToFilters(it) },
-            { vm.removeServiceIdFromFilters(it) },
-            { vm.isServiceIdInList(it) }
+            listOf(),
+            { viewModel.addSelectedService(it) },
+            { viewModel.removeSelectedService(it) },
+            { viewModel.isServiceInList(it) }
         )
     }
 
     private fun loadAvailableServices() {
         /* SERVICES LOADING */
-
-        vm.services.observe(viewLifecycleOwner) { services ->
-            chooseAvailableServicesShimmerView.startShimmerAnimation(chooseAvailableServicesRV)
-            numberOfAvailableServicesTV.makeGone()
-            noAvailableServicesFoundTV.makeGone()
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                chooseAvailableServicesShimmerView.stopShimmer()
-                chooseAvailableServicesShimmerView.makeInvisible()
-                numberOfAvailableServicesTV.makeVisible()
-                //HERE THERE ARE NO ISSUE IN THE USAGE OF it, BECAUSE SERVICES SHOULD NOT CHANGE AFTER loadTime
-                val numberOfAvailableServicesFound =
-                    services.size
-                numberOfAvailableServicesTV.text = getString(
-                    R.string.available_services_count_info,
-                    numberOfAvailableServicesFound,
-                    if (numberOfAvailableServicesFound != 1) "s" else ""
-                )
-                chooseAvailableServicesAdapter.updateCollection(vm.getServicesWithFees())
-                if (numberOfAvailableServicesFound > 0) {
-                    chooseAvailableServicesRV.makeVisible()
-                } else {
-                    noAvailableServicesFoundTV.makeVisible()
-                    chooseAvailableServicesRV.makeInvisible()
+        viewModel.getServices()
+        viewModel.services.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    chooseAvailableServicesShimmerView.startShimmerAnimation(
+                        chooseAvailableServicesRV
+                    )
+                    numberOfAvailableServicesTV.makeGone()
+                    noAvailableServicesFoundTV.makeGone()
                 }
-            }, loadTime)
 
+                is UiState.Failure -> {
+                    chooseAvailableServicesShimmerView.stopShimmer()
+                    chooseAvailableServicesShimmerView.makeInvisible()
+                    toast(state.error ?: "Unable to get services")
+                }
+
+                is UiState.Success -> {
+                    chooseAvailableServicesShimmerView.stopShimmer()
+                    chooseAvailableServicesShimmerView.makeInvisible()
+                    numberOfAvailableServicesTV.makeVisible()
+                    val numberOfAvailableServicesFound = state.result.size
+                    numberOfAvailableServicesTV.text = getString(
+                        R.string.available_services_count_info,
+                        numberOfAvailableServicesFound,
+                        if (numberOfAvailableServicesFound != 1) "s" else ""
+                    )
+                    chooseAvailableServicesAdapter.updateCollection(state.result)
+                    if (numberOfAvailableServicesFound > 0) {
+                        chooseAvailableServicesRV.makeVisible()
+                    } else {
+                        noAvailableServicesFoundTV.makeVisible()
+                        chooseAvailableServicesRV.makeInvisible()
+                    }
+                }
+            }
         }
     }
 
