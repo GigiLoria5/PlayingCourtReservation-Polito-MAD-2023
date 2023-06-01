@@ -37,5 +37,17 @@ data class Court(
                 else -> R.color.custom_black
             }
         }
+
+        fun getSportTotParticipants(sportName: String): Int {
+            return when (sportName) {
+                "5-a-side Football" -> 10
+                "8-a-side Football" -> 16
+                "11-a-side Football" -> 22
+                "Beach Soccer" -> 10
+                "Futsal" -> 10
+                else -> 0
+            }
+        }
+
     }
 }
