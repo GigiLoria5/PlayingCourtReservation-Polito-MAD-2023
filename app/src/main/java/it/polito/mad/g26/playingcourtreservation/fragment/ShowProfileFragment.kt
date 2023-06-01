@@ -11,6 +11,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +35,7 @@ import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerTVListAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerTextAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
+import it.polito.mad.g26.playingcourtreservation.viewmodel.SharedProfileViewModel
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ShowProfileViewModel
 
 @AndroidEntryPoint
@@ -41,6 +43,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
 
     private val args: ShowProfileFragmentArgs by navArgs()
     private val viewModel by viewModels<ShowProfileViewModel>()
+    private lateinit var sharedProfileViewModel: SharedProfileViewModel
 
     private lateinit var avatarImage: ShapeableImageView
     private lateinit var username: TextView
@@ -53,6 +56,8 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedProfileViewModel =
+            ViewModelProvider(requireActivity())[SharedProfileViewModel::class.java]
         val userId = args.userId
         setupActionBar(activity, "Profile", userId != null) // if not null is called from somewhere
 
@@ -99,6 +104,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
                 is UiState.Success -> {
                     stopLoadingAnimation()
                     val userInfo = state.result
+                    sharedProfileViewModel.currentUserInfo = userInfo
                     username.text = userInfo.username
                     fullName.text = userInfo.fullname
                     age.text = userInfo.age?.toString() ?: "N/A"
