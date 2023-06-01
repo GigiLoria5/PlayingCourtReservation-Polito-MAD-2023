@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -38,6 +39,7 @@ import it.polito.mad.g26.playingcourtreservation.viewmodel.ShowProfileViewModel
 @AndroidEntryPoint
 class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
 
+    private val args: ShowProfileFragmentArgs by navArgs()
     private val viewModel by viewModels<ShowProfileViewModel>()
 
     private lateinit var avatarImage: ShapeableImageView
@@ -51,10 +53,12 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupActionBar(activity, "Profile", false)
+        val userId = args.userId
+        setupActionBar(activity, "Profile", userId != null) // if not null is called from somewhere
+
         // Handle top menu actions
         val menuHost: MenuHost = requireActivity()
-        handleMenuAction(menuHost)
+        handleMenuAction(menuHost, userId)
 
         // Setup late init variables
         avatarImage = view.findViewById(R.id.avatar)
@@ -80,7 +84,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
 
 
         // Load user information
-        viewModel.loadCurrentUserInformation()
+        viewModel.loadCurrentUserInformation(userId)
         viewModel.userInformationState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
@@ -136,19 +140,26 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
         sportRecycleViewShimmer.stopShimmerRVAnimation(sportRecycleView)
     }
 
-    private fun handleMenuAction(menuHost: MenuHost) {
+    private fun handleMenuAction(menuHost: MenuHost, userId: String?) {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 // Add menu items here
-                menuInflater.inflate(R.menu.show_profile_menu, menu)
+                if (userId == null) // if not is not the current user
+                    menuInflater.inflate(R.menu.show_profile_menu, menu)
             }
 
             override fun onMenuItemSelected(item: MenuItem): Boolean {
                 // Handle the menu selection
                 return when (item.itemId) {
-                    // Edit
+                    // Edit (only for current user)
                     R.id.edit_menu_item -> {
                         findNavController().navigate(R.id.action_showProfileFragment_to_editProfileFragment)
+                        true
+                    }
+
+                    // Back (only available when called from somewhere else)
+                    android.R.id.home -> {
+                        findNavController().popBackStack()
                         true
                     }
 

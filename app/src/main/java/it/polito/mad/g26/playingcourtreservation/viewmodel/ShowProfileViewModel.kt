@@ -21,9 +21,13 @@ class ShowProfileViewModel @Inject constructor(
     val userInformationState: LiveData<UiState<User>>
         get() = _userInformationState
 
-    fun loadCurrentUserInformation() = viewModelScope.launch {
+    fun loadCurrentUserInformation(userId: String?) = viewModelScope.launch {
         _userInformationState.value = UiState.Loading
-        val resultState = userRepository.getCurrentUserInformation()
+        val resultState =
+            if (userId == null)
+                userRepository.getCurrentUserInformation()
+            else
+                userRepository.getUserInformationById(userId)
         delay(500)
         _userInformationState.value = resultState
     }
