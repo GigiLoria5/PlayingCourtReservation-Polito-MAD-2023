@@ -1,6 +1,7 @@
 package it.polito.mad.g26.playingcourtreservation.model
 
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.util.SportNames
 import java.util.UUID
 
 data class SportCenter(
@@ -29,22 +30,22 @@ data class Court(
     companion object {
         fun getSportColor(sportName: String): Int {
             return when (sportName) {
-                "5-a-side Football" -> R.color.sport_5_aside_football
-                "8-a-side Football" -> R.color.sport_8_aside_football
-                "11-a-side Football" -> R.color.sport_11_aside_football
-                "Beach Soccer" -> R.color.sport_beach_soccer
-                "Futsal" -> R.color.sport_futsal
+                SportNames.FIVE_A_SIDE_FOOTBALL -> R.color.sport_5_aside_football
+                SportNames.EIGHT_A_SIDE_FOOTBALL -> R.color.sport_8_aside_football
+                SportNames.ELEVEN_A_SIDE_FOOTBALL -> R.color.sport_11_aside_football
+                SportNames.BEACH_SOCCER -> R.color.sport_beach_soccer
+                SportNames.FUTSAL -> R.color.sport_futsal
                 else -> R.color.custom_black
             }
         }
 
         fun getSportTotParticipants(sportName: String): Int {
             return when (sportName) {
-                "5-a-side Football" -> 10
-                "8-a-side Football" -> 16
-                "11-a-side Football" -> 22
-                "Beach Soccer" -> 10
-                "Futsal" -> 10
+                SportNames.FIVE_A_SIDE_FOOTBALL -> 10
+                SportNames.EIGHT_A_SIDE_FOOTBALL -> 16
+                SportNames.ELEVEN_A_SIDE_FOOTBALL -> 22
+                SportNames.BEACH_SOCCER -> 10
+                SportNames.FUTSAL -> 10
                 else -> 0
             }
         }
