@@ -4,7 +4,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import java.time.LocalDate
 
 fun handleReservationsDateUI(
@@ -12,7 +12,7 @@ fun handleReservationsDateUI(
     actualSelectedDate: LocalDate,
     dateTextView: TextView,
     dotImageView: ImageView,
-    reservations: MutableMap<LocalDate, LiveData<List<ReservationWithDetails>>>,
+    reservations: MutableMap<LocalDate, LiveData<List<Reservation>>>,
     noReservationsTextView: TextView,
     isNoReservationsTextViewInvisible: Boolean
 ) {

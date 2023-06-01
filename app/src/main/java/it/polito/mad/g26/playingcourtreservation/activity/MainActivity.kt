@@ -9,12 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.isItemChecked
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setCheckedMenuItem
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNav: BottomNavigationView
@@ -22,17 +24,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Setup late init variables
         bottomNav = findViewById(R.id.bottomNavigationView)
-        val navController = (supportFragmentManager.findFragmentById(R.id.frame_layout)
-                as NavHostFragment).navController
 
         // Handle Navigation between main fragments
+        val navController = (supportFragmentManager
+            .findFragmentById(R.id.frame_layout) as NavHostFragment)
+            .navController
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> navigateToFragment(
                     navController,
                     R.id.home,
-                    R.id.searchSportCentersHomeFragment
+                    R.id.homePageFragment
                 )
 
                 R.id.reservations -> navigateToFragment(
@@ -55,12 +59,12 @@ class MainActivity : AppCompatActivity() {
             Handler(Looper.getMainLooper()).post {
                 when (destination.id) {
                     // Home
-                    R.id.searchSportCentersHomeFragment -> {
+                    R.id.homePageFragment -> {
                         requestedOrientation = SCREEN_ORIENTATION_LOCKED
                         bottomNav.setCheckedMenuItem(R.id.home)
                     }
 
-                    R.id.searchSportCentersActionFragment -> lockOrientationAndHideNav()
+                    R.id.searchCitiesFragment -> lockOrientationAndHideNav()
 
                     R.id.searchSportCentersFragment -> lockOrientationAndShowNav()
 

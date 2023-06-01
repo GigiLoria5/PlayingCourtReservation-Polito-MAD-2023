@@ -58,7 +58,7 @@
             android:background="@color/loading" />
 
         <TextView
-            android:id="@+id/itemReservationSportCenterFieldSportText"
+            android:id="@+id/itemReservationSportCenterField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
