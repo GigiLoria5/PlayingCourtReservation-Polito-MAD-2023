@@ -153,7 +153,8 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
                 return when (item.itemId) {
                     // Edit (only for current user)
                     R.id.edit_menu_item -> {
-                        findNavController().navigate(R.id.action_showProfileFragment_to_editProfileFragment)
+                        if (viewModel.userInformationState.value is UiState.Success)
+                            findNavController().navigate(R.id.action_showProfileFragment_to_editProfileFragment)
                         true
                     }
 

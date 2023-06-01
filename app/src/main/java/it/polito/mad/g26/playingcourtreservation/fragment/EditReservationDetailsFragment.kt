@@ -23,8 +23,11 @@ import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.createCalendarObject
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
+import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.EditReservationDetailsViewModel
+import pl.droidsonroids.gif.GifImageView
 
 @AndroidEntryPoint
 class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_details_fragment) {
@@ -34,6 +37,7 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
     private lateinit var dateTV: TextView
     private lateinit var hourMCV: MaterialCardView
     private lateinit var hourTV: TextView
+    private lateinit var loaderImage: GifImageView
 
     /* LOGIC OBJECT OF THIS FRAGMENT */
     private val searchSportCentersUtils = SearchSportCentersUtils
@@ -50,7 +54,8 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
         val reservationId = args.reservationId
         viewModel.initialize(reservationId)
 
-        //List of text
+        // Find Components
+        loaderImage = view.findViewById(R.id.loaderImage)
         val centerName = view.findViewById<TextView>(R.id.sportCenter_name)
         val centerTime = view.findViewById<TextView>(R.id.sportCenter_time)
         val field = view.findViewById<TextView>(R.id.court_name)
@@ -225,26 +230,29 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
         viewModel.updateState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    // TODO: Start Animation
+                    loaderImage.setFreezesAnimation(false)
+                    loaderImage.makeVisible()
                 }
 
                 is UiState.Failure -> {
-                    // TODO: Stop Animation
+                    loaderImage.makeGone()
+                    loaderImage.setFreezesAnimation(true)
                     toast(state.error ?: "Unable to update reservation")
                 }
 
                 is UiState.Success -> {
-                    // TODO: Stop Animation
-                    Toast.makeText(
-                        context,
-                        R.string.reservation_success_update,
-                        Toast.LENGTH_SHORT
-                    ).show() //navigate back because id will be the same
                     findNavController().previousBackStackEntry?.savedStateHandle?.set(
                         "key",
                         viewModel.reservationId
                     )
                     findNavController().popBackStack()
+                    loaderImage.makeGone()
+                    loaderImage.setFreezesAnimation(true)
+                    Toast.makeText(
+                        context,
+                        R.string.reservation_success_update,
+                        Toast.LENGTH_SHORT
+                    ).show() //navigate back because id will be the same
                 }
             }
         }
