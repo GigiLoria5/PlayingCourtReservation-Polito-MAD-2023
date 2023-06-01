@@ -75,6 +75,7 @@
                     android:id="@+id/sportCenterDataCL"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +85,6 @@
                         android:id="@+id/sportCenter_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/sport_center_name"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sport_center_name"
@@ -92,13 +92,13 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        tools:text="@string/sport_center_name"
                         tools:ignore="TextContrastCheck" />
 
                     <TextView
                         android:id="@+id/address"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/sport_center_address"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sport_center_secondary_info"
@@ -106,13 +106,13 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sportCenter_name"
+                        tools:text="@string/sport_center_address"
                         tools:ignore="TextContrastCheck" />
 
                     <TextView
                         android:id="@+id/sportCenter_time"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/sport_center_opening_hours"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sport_center_secondary_info"
@@ -120,6 +120,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/address"
+                        tools:text="@string/sport_center_opening_hours"
                         tools:ignore="TextContrastCheck" />
 
 
@@ -128,7 +129,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/page_external_space"
-                        android:text="@string/selected_date_time"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sport_center_secondary_info"
@@ -136,6 +136,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sportCenter_time"
+                        tools:text="@string/selected_date_time"
                         tools:ignore="TextContrastCheck" />
 
                     <TextView
@@ -143,7 +144,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/page_external_space"
-                        android:text="@string/court_name"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sport_center_secondary_info"
@@ -151,13 +151,13 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/date"
+                        tools:text="@string/court_name"
                         tools:ignore="TextContrastCheck" />
 
                     <TextView
                         android:id="@+id/sport"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/all_sports"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sport_center_secondary_info"
@@ -165,6 +165,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/court_name"
+                        tools:text="@string/all_sports"
                         tools:ignore="TextContrastCheck" />
 
                     <TextView
@@ -172,7 +173,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:paddingBottom="@dimen/page_external_space"
-                        android:text="@string/court_price"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sport_center_secondary_info"
@@ -180,6 +180,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sport"
+                        tools:text="@string/court_price"
                         tools:ignore="TextContrastCheck" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -193,6 +194,7 @@
         android:id="@+id/editDataCL"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:animateLayoutChanges="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -205,8 +207,8 @@
             android:orientation="horizontal"
             android:paddingHorizontal="@dimen/page_external_space"
             android:paddingTop="@dimen/page_external_space"
+            android:animateLayoutChanges="true"
             app:layout_constraintEnd_toEndOf="parent"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -232,7 +234,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/page_external_space"
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/time_info_new"
@@ -301,10 +302,10 @@
                                 android:layout_width="106dp"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:text="@string/date_format"
                                 android:textAllCaps="false"
                                 android:textColor="@color/grey"
                                 android:textSize="15sp"
+                                tools:text="@string/date_format"
                                 android:textStyle="normal" />
                         </com.google.android.material.card.MaterialCardView>
 
@@ -334,10 +335,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
-                                android:text="@string/hour_format"
                                 android:textAllCaps="false"
                                 android:textColor="@color/grey"
                                 android:textSize="15sp"
+                                tools:text="@string/hour_format"
                                 android:textStyle="normal" />
                         </com.google.android.material.card.MaterialCardView>
                     </androidx.constraintlayout.widget.ConstraintLayout>
