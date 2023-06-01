@@ -120,7 +120,9 @@ class CourtAdapter(
                 true -> {
                     setColors(R.color.grey_light_2, R.color.custom_black, R.color.grey, 1f)
                     courtAvailability.text =
-                        itemView.context.getString(R.string.court_available)
+                        itemView.context.getString(R.string.court_available_to_reserve)
+
+//                    tools:text=" / Available to join a match / Unavailable"
                     courtMCV.setOnClickListener {
                         val sport = court.sport
                         navigateToChooseServices(

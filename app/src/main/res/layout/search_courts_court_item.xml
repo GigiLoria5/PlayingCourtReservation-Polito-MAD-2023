@@ -110,17 +110,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/courtNameTV" />
 
-                <!-- TODO DECIDI COSA FARE E SE MOSTRARE LE COSE CHE ORA SONO IN TOOLS-->
                 <TextView
                     android:id="@+id/courtAvailabilityTV"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    tools:text="Available to reserve / Available to join a match / Unavailable"
                     android:textColor="@color/grey"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/courtTypeTV" />
+                    app:layout_constraintTop_toBottomOf="@id/courtTypeTV"
+                    tools:text="Available to reserve / Available to join a match / Unavailable" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.Guideline
@@ -128,8 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.67"
-                />
+                app:layout_constraintGuide_percent="0.67" />
 
             <TextView
                 android:id="@+id/courtPriceTV"

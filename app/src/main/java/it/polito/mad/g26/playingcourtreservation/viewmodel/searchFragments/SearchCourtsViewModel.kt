@@ -127,6 +127,7 @@ class SearchCourtsViewModel @Inject constructor(
 
     /*RESERVATIONS MANAGEMENT*/
     fun isCourtAvailable(courtId: String): Boolean {
+        println(reservations[courtId])
         return reservations[courtId] == null
     }
 
