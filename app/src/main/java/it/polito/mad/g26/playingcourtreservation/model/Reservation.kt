@@ -11,7 +11,7 @@ data class Reservation(
     val courtId: String = "",
     var date: String = "",
     var time: String = "",
-    val amount: Float = 0.0f,
+    var amount: Float = 0.0f,
     var services: List<String> = arrayListOf(),
     var participants: List<String> = arrayListOf(),
     var requests: List<String> = arrayListOf(),

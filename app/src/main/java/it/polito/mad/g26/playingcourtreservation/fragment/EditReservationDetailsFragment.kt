@@ -123,8 +123,7 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
                 is UiState.Success -> {
                     val reservation = viewModel.reservation
                     val reservationSportCenter = viewModel.sportCenter
-                    val reservationCourt = reservationSportCenter
-                        .courts.first { it.id == reservation.courtId }
+                    val reservationCourt = viewModel.court
                     // Update UI components
                     centerName.text = reservationSportCenter.name
                     centerTime.text = view.context.getString(

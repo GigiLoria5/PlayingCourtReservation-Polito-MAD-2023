@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.polito.mad.g26.playingcourtreservation.model.Court
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
@@ -68,6 +69,10 @@ class EditReservationDetailsViewModel @Inject constructor(
     val sportCenter: SportCenter
         get() = _sportCenter
 
+    private var _court: Court = Court()
+    val court: Court
+        get() = _court
+
     fun loadReservationAndSportCenterInformation() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
         // Get reservation details
@@ -84,6 +89,7 @@ class EditReservationDetailsViewModel @Inject constructor(
             return@launch
         }
         _sportCenter = (sportCenterState as UiState.Success).result
+        _court = _sportCenter.courts.first { it.id == reservation.courtId }
         _loadingState.value = UiState.Success(Unit)
     }
 
@@ -105,12 +111,13 @@ class EditReservationDetailsViewModel @Inject constructor(
             return@launch
         }
         val existingReservation = (existingReservationState as UiState.Success).result
+        println("Existing reservation: $existingReservation while actual reservation: $updatedReservation")
         if (existingReservation != null && existingReservation.id != updatedReservation.id) {
             _updateState.value =
                 UiState.Failure("You already have reservation for this date and time")
             return@launch
         }
-        // Update date, time and id (eventually)
+        // Update date, time, price and id (eventually)
         updatedReservation.date = newDate
         updatedReservation.time = newTime
         updatedReservation.id = Reservation.generateId(
@@ -118,6 +125,7 @@ class EditReservationDetailsViewModel @Inject constructor(
             newDate,
             newTime
         )
+        updatedReservation.amount = getFinalPrice(updatedReservation)
         // Update Reservation
         val resultState = reservationRepository.updateReservation(reservationId, updatedReservation)
         delay(500)
@@ -126,6 +134,11 @@ class EditReservationDetailsViewModel @Inject constructor(
             _reservationId = updatedReservation.id
         }
         _updateState.value = resultState
+    }
+
+    private fun getFinalPrice(reservation: Reservation): Float {
+        return court.hourCharge + sportCenter.services.filter { reservation.services.contains(it.name) }
+            .map { it.fee }.sum()
     }
 
 }

@@ -343,7 +343,7 @@ class ReservationRepositoryImpl @Inject constructor(
                     TAG,
                     "updateReservation of reservation with id: $reservationId completed successfully"
                 )
-                UiState.Success(Unit)
+                return UiState.Success(Unit)
             }
             // Otherwise add the new document and delete the old one
             val oldReservationRef = db.collection(FirestoreCollections.RESERVATIONS)
