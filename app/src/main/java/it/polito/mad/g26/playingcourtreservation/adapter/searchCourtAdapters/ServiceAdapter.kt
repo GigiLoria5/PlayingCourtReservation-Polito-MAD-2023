@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.Service
 
 class ServiceAdapter(
-    private var collection: List<Service>,
-    private val addServiceIdToFilters: (Int) -> Unit,
-    private val removeServiceIdFromFilters: (Int) -> Unit,
-    private val isServiceIdInList: (Int) -> Boolean,
+    private var collection: List<String>,
+    private val addServiceIdToFilters: (String) -> Unit,
+    private val removeServiceIdFromFilters: (String) -> Unit,
+    private val isServiceIdInList: (String) -> Boolean,
 ) :
     RecyclerView.Adapter<ServiceAdapter.ServiceViewHolder>() {
 
@@ -30,7 +29,7 @@ class ServiceAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateCollection(updatedCollection: List<Service>) {
+    fun updateCollection(updatedCollection: List<String>) {
         this.collection = updatedCollection
         notifyDataSetChanged()
     }
@@ -45,19 +44,17 @@ class ServiceAdapter(
         RecyclerView.ViewHolder(itemView) {
         private val chip = itemView.findViewById<Chip>(R.id.chip)
 
-        fun bind(
-            collection: Service
-        ) {
-            chip.text = collection.name
-            chip.isChecked = isServiceIdInList(collection.id)
+        fun bind(serviceName: String) {
+            chip.text = serviceName
+            chip.isChecked = isServiceIdInList(serviceName)
             chip.isCloseIconVisible = chip.isChecked
 
             chip.setOnClickListener {
                 chip.isCloseIconVisible = chip.isChecked
                 if (chip.isChecked)
-                    addServiceIdToFilters(collection.id)
+                    addServiceIdToFilters(serviceName)
                 else
-                    removeServiceIdFromFilters(collection.id)
+                    removeServiceIdFromFilters(serviceName)
             }
         }
 

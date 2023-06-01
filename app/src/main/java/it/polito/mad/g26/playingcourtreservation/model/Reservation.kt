@@ -1,48 +1,49 @@
 package it.polito.mad.g26.playingcourtreservation.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.ForeignKey.Companion.CASCADE
-import androidx.room.PrimaryKey
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.ServerTimestamp
+import it.polito.mad.g26.playingcourtreservation.util.getDigest
 
-@Entity(
-    tableName = "reservation", foreignKeys = [
-        ForeignKey(
-            entity = Court::class,
-            parentColumns = ["id"],
-            childColumns = ["id_court"],
-            onDelete = CASCADE
-        )
-    ]
-)
-class Reservation {
-
+data class Reservation(
+    var id: String = "",
+    val userId: String = "",
+    val sportCenterId: String = "",
+    val courtId: String = "",
+    var date: String = "",
+    var time: String = "",
+    var amount: Float = 0.0f,
+    var services: List<String> = arrayListOf(),
+    var participants: List<String> = arrayListOf(),
+    var requests: List<String> = arrayListOf(),
+    var invitees: List<String> = arrayListOf(),
+    var reviews: List<Review> = arrayListOf()
+) {
     companion object {
-        fun getReservationDatePattern(): String {
-            return "dd-MM-yyyy"
+        private const val DATE_PATTERN = "dd-MM-yyyy"
+        private const val TIME_PATTERN = "HH:mm"
+
+        fun getDatePattern(): String {
+            return DATE_PATTERN
         }
-        fun getReservationTimePattern(): String {
-            return "kk:mm"
+
+        fun getTimePattern(): String {
+            return TIME_PATTERN
         }
+
+        fun generateId(courtId: String, date: String, time: String): String =
+            getDigest(courtId + date + time)
     }
+}
 
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+data class Review(
+    val userId: String = "",
+    val rating: Float = 0.0F,
+    val text: String? = null,
+    @ServerTimestamp
+    val timestamp: Timestamp = Timestamp.now()
+)
 
-    @ColumnInfo(name = "id_user")
-    var idUser: Int = 1
-
-    @ColumnInfo(name = "id_court")
-    var idCourt: Int = 0
-
-    var date: String = ""
-
-    var time: String = ""
-
-    var amount: Float = 0.0F
-
-    override fun toString() = "{ id: $id, id_user: $idUser, id_court: $idCourt, " +
-            "date: \"$date\", time: \"$time\", amount: $amount }"
-
+fun List<Review>.avg(): Float {
+    val ratings = this.filter { !it.rating.isNaN() }.map { it.rating }
+    return if (ratings.isEmpty()) 0.0f else ratings.average().toFloat()
 }
