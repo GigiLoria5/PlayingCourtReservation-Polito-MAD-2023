@@ -188,7 +188,7 @@
                     app:trackColorInactive="@color/green_700"
                     app:values="@array/initial_skills_slider_values" />
 
-                <!--
+                <!-- QUESTO PER ORA LASCIATELO COME BACKUP, NON SI SA MAI
                                 <com.google.android.material.card.MaterialCardView
                                     android:id="@+id/roleTypeMCV"
                                     android:layout_width="0dp"
@@ -235,7 +235,7 @@
                                 </com.google.android.material.card.MaterialCardView>
 
                 -->
-
+<!-- L'IDEA è: di default li metti tutti selezionati e facciamo in modo che c’è sempre minimo uno selezionato-->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/roleTypeMCV"
                     android:layout_width="match_parent"
