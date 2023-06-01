@@ -43,4 +43,10 @@
     <style name="custom_number_picker" parent="">
         <item name="colorControlNormal">@android:color/transparent</item>
     </style>
+
+    <!-- Reservation Details -->
+    <style name="card_circle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

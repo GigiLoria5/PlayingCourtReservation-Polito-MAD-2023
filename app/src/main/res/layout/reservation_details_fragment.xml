@@ -154,7 +154,7 @@
 
                     <TextView
                         android:id="@+id/service_title"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@string/chosen_services"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -162,7 +162,8 @@
                         android:textSize="@dimen/sport_center_secondary_info"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/price" />
+                        app:layout_constraintTop_toBottomOf="@id/price"
+                        tools:ignore="TextContrastCheck" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -276,7 +277,8 @@
                     app:layout_constraintHorizontal_bias="0.96"
                     app:layout_constraintStart_toEndOf="@id/player_title"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:ignore="TextContrastCheck" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/player_list"
@@ -346,9 +348,9 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/page_external_space"
                     android:visibility="gone"
-                    app:cardBackgroundColor="@color/white"
+                    app:cardBackgroundColor="@color/grey_light_2"
                     app:cardCornerRadius="@dimen/corner_radius"
-                    app:cardElevation="0dp"
+                    app:cardElevation="2dp"
                     app:cardUseCompatPadding="true"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

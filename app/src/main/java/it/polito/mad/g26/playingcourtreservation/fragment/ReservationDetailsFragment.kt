@@ -69,7 +69,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             findNavController().popBackStack()
         }
         val privateList = listOf(
-            "profile11111111111111111111",
+            "profile11111111111111111111111",
             "profile2",
             "profile3",
             "profile4",
