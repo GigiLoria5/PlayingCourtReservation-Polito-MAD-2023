@@ -8,8 +8,8 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +27,7 @@ import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.EditReservationDetailsViewModel
+import it.polito.mad.g26.playingcourtreservation.viewmodel.SharedReservationDetailsViewModel
 import pl.droidsonroids.gif.GifImageView
 
 @AndroidEntryPoint
@@ -43,16 +44,22 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
     private val searchSportCentersUtils = SearchSportCentersUtils
     private val reservationDetailsUtils = ReservationDetailsUtils
 
-    private val args: ReservationDetailsFragmentArgs by navArgs()
     private val viewModel by viewModels<EditReservationDetailsViewModel>()
+    private lateinit var sharedReservationDetailsViewModel: SharedReservationDetailsViewModel
+
     private lateinit var servicesUsed: List<String>
     private lateinit var servicesAll: List<Service>
     private lateinit var servicesChosen: MutableList<Service>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val reservationId = args.reservationId
-        viewModel.initialize(reservationId)
+        sharedReservationDetailsViewModel =
+            ViewModelProvider(requireActivity())[SharedReservationDetailsViewModel::class.java]
+        viewModel.initialize(
+            sharedReservationDetailsViewModel.reservation,
+            sharedReservationDetailsViewModel.reservationSportCenter,
+            sharedReservationDetailsViewModel.reservationCourt
+        )
 
         // Find Components
         loaderImage = view.findViewById(R.id.loaderImage)
@@ -112,105 +119,89 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
             )
         }
 
-        // Retrieve Reservation Details
-        viewModel.loadReservationAndSportCenterInformation()
-        viewModel.loadingState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is UiState.Loading -> {
-                    // TODO: Start Animation
-                }
-
-                is UiState.Failure -> {
-                    // TODO: Stop Animation
-                    toast(state.error ?: "Unable to get reservation details")
-                }
-
-                is UiState.Success -> {
-                    val reservation = viewModel.reservation
-                    val reservationSportCenter = viewModel.sportCenter
-                    val reservationCourt = viewModel.court
-                    // Update UI components
-                    centerName.text = reservationSportCenter.name
-                    centerTime.text = view.context.getString(
-                        R.string.set_opening_hours,
-                        reservationSportCenter.openTime,
-                        reservationSportCenter.closeTime
-                    )
-                    field.text = reservationCourt.name
-                    sport.text = reservationCourt.sport
-                    address.text =
-                        getString(
-                            R.string.sport_center_address_res,
-                            reservationSportCenter.address,
-                            reservationSportCenter.city
-                        )
-                    date.text = getString(
-                        R.string.selected_date_time_res,
-                        reservation.time,
-                        reservation.date
-                    )
-                    price.text = view.context.getString(
-                        R.string.set_text_with_euro,
-                        reservation.amount.toString()
-                    )
-                    val amount = mutableListOf(reservation.amount)
-                    dateNew.text = reservation.date
-                    timeNew.text = reservation.time
-                    priceNew.text = view.context.getString(
-                        R.string.set_text_with_euro,
-                        reservation.amount.toString()
-                    )
-                    // Variables
-                    val dateDayReservation = createCalendarObject(
-                        reservation.date,
-                        reservation.time
-                    )
-                    hourMCV.setOnClickListener {
-                        reservationDetailsUtils.showAndManageBehaviorTimePickerDialog(
-                            requireContext(),
-                            viewModel.selectedDateTimeMillis.value!!,
-                            viewModel.sportCenter,
-                        ) {
-                            viewModel.changeSelectedDateTimeMillis(it)
-                            timeNew.text = viewModel.getDateTimeFormatted(viewModel.timeFormat)
-                        }
-                    }
-
-                    // Select date of reservation as initial date
-                    viewModel.changeSelectedDateTimeMillis(dateDayReservation.timeInMillis)
-
-                    // List of service used
-                    servicesUsed = reservation.services
-
-                    // List of ServiceWithFee of that SportCenter
-                    servicesAll = reservationSportCenter.services
-
-                    //List of service chosen
-                    servicesChosen = servicesAll
-                        .filter { servicesUsed.contains(it.name) }
-                        .toMutableList()
-
-                    //Recycler view of services
-                    val recyclerView =
-                        view.findViewById<RecyclerView>(R.id.recyclerView_chip)
-                    val adapter =
-                        ModifyReservationDetailsAdapter(
-                            servicesAll,
-                            servicesChosen,
-                            priceNew,
-                            amount
-                        )
-                    val itemDecoration =
-                        HorizontalSpaceItemDecoration(
-                            resources.getDimensionPixelSize(
-                                R.dimen.chip_distance
-                            )
-                        )
-                    recyclerView.addItemDecoration(itemDecoration)
-                    recyclerView.adapter = adapter
-                }
+        // Update UI with Reservation Details
+        val reservation = viewModel.reservation
+        val reservationSportCenter = viewModel.sportCenter
+        val reservationCourt = viewModel.court
+        // Update UI components
+        centerName.text = reservationSportCenter.name
+        centerTime.text = view.context.getString(
+            R.string.set_opening_hours,
+            reservationSportCenter.openTime,
+            reservationSportCenter.closeTime
+        )
+        field.text = reservationCourt.name
+        sport.text = reservationCourt.sport
+        address.text =
+            getString(
+                R.string.sport_center_address_res,
+                reservationSportCenter.address,
+                reservationSportCenter.city
+            )
+        date.text = getString(
+            R.string.selected_date_time_res,
+            reservation.time,
+            reservation.date
+        )
+        price.text = view.context.getString(
+            R.string.set_text_with_euro,
+            reservation.amount.toString()
+        )
+        val amount = mutableListOf(reservation.amount)
+        dateNew.text = reservation.date
+        timeNew.text = reservation.time
+        priceNew.text = view.context.getString(
+            R.string.set_text_with_euro,
+            reservation.amount.toString()
+        )
+        // Variables
+        val dateDayReservation = createCalendarObject(
+            reservation.date,
+            reservation.time
+        )
+        hourMCV.setOnClickListener {
+            reservationDetailsUtils.showAndManageBehaviorTimePickerDialog(
+                requireContext(),
+                viewModel.selectedDateTimeMillis.value!!,
+                viewModel.sportCenter,
+            ) {
+                viewModel.changeSelectedDateTimeMillis(it)
+                timeNew.text = viewModel.getDateTimeFormatted(viewModel.timeFormat)
             }
         }
+
+        // Select date of reservation as initial date
+        viewModel.changeSelectedDateTimeMillis(dateDayReservation.timeInMillis)
+
+        // List of service used
+        servicesUsed = reservation.services
+
+        // List of ServiceWithFee of that SportCenter
+        servicesAll = reservationSportCenter.services
+
+        //List of service chosen
+        servicesChosen = servicesAll
+            .filter { servicesUsed.contains(it.name) }
+            .toMutableList()
+
+        //Recycler view of services
+        val recyclerView =
+            view.findViewById<RecyclerView>(R.id.recyclerView_chip)
+        val adapter =
+            ModifyReservationDetailsAdapter(
+                servicesAll,
+                servicesChosen,
+                priceNew,
+                amount
+            )
+        val itemDecoration =
+            HorizontalSpaceItemDecoration(
+                resources.getDimensionPixelSize(
+                    R.dimen.chip_distance
+                )
+            )
+        recyclerView.addItemDecoration(itemDecoration)
+        recyclerView.adapter = adapter
 
         // Handle update reservation
         customConfirmIconIV.setOnClickListener {
@@ -243,7 +234,7 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
                 is UiState.Success -> {
                     findNavController().previousBackStackEntry?.savedStateHandle?.set(
                         "key",
-                        viewModel.reservationId
+                        viewModel.reservation.id
                     )
                     findNavController().popBackStack()
                     loaderImage.makeGone()

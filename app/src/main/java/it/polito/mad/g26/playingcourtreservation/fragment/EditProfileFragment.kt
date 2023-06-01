@@ -60,8 +60,8 @@ import java.util.*
 @AndroidEntryPoint
 class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
 
-    private lateinit var sharedProfileViewModel: SharedProfileViewModel
     private val viewModel by viewModels<EditProfileViewModel>()
+    private lateinit var sharedProfileViewModel: SharedProfileViewModel
 
     private lateinit var usernameEditText: EditText
     private lateinit var usernameContainer: TextInputLayout
