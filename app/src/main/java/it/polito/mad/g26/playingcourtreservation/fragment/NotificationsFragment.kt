@@ -20,6 +20,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +32,8 @@ import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.NotificationsViewModel
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -44,6 +48,7 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
     private lateinit var notificationsAdapter: NotificationsAdapter
     private var deleteData: Notification? = null
     private val viewModel by viewModels<NotificationsViewModel>()
+    private lateinit var notificationsShimmerView: ShimmerFrameLayout
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         /* CUSTOM TOOLBAR MANAGEMENT*/
@@ -59,6 +64,7 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
 
         noNotificationMCV = view.findViewById(R.id.noNotificationsFoundMCV)
         deleteAllNotificationMCV = view.findViewById(R.id.deleteNotificationsMCV)
+        notificationsShimmerView = view.findViewById(R.id.notificationsShimmerView)
 
         /*Set-up recycle view */
         notificationsRV = view.findViewById(R.id.notificationsRV)
@@ -69,16 +75,16 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    // TODO: Add loading animation
+                    notificationsShimmerView.startShimmerAnimation(notificationsRV)
                 }
 
                 is UiState.Failure -> {
-                    // TODO: Stop loading animation
+                    notificationsShimmerView.stopShimmerAnimation(notificationsRV)
                     toast(state.error ?: "Unable to get notifications")
                 }
 
                 is UiState.Success -> {
-                    // TODO: Stop loading animation
+                    notificationsShimmerView.stopShimmerAnimation(notificationsRV)
                     // Update Notifications
                     val notifications = viewModel.notifications
                     if (notifications.isNotEmpty()) {

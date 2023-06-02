@@ -29,17 +29,42 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/notificationsRV"
+    <RelativeLayout
+        android:id="@+id/notificationsRL"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/notificationABL"
-        app:layout_constraintBottom_toTopOf="@id/deleteNotificationsMCV"
+        android:animateLayoutChanges="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        tools:listitem="@layout/notification_item" />
+        app:layout_constraintTop_toBottomOf="@+id/notificationABL">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notificationsRV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintHorizontal_bias="0.0"
+            tools:listitem="@layout/notification_item" />
+
+        <!-- Placeholder -->
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/notificationsShimmerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shimmer_repeat_mode="restart"
+            app:shimmer_shape="radial">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/notification_item" />
+
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+    </RelativeLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/deleteNotificationsMCV"
