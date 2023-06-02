@@ -192,8 +192,7 @@
                     android:id="@+id/gender_container"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
                         android:id="@+id/gender_autocomplete"
@@ -252,9 +251,10 @@
                     android:layout_marginBottom="16dp">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/edit_profile_recycler_view"
+                        android:id="@+id/editSportsRV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         android:orientation="vertical" />

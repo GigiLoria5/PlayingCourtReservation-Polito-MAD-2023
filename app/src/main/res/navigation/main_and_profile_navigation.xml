@@ -17,6 +17,11 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <argument
+            android:name="userId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -80,11 +85,7 @@
         android:id="@+id/modifyReservationDetailsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.EditReservationDetailsFragment"
         android:label="modifyReservationDetailsFragment"
-        tools:layout="@layout/edit_reservation_details_fragment">
-        <argument
-            android:name="reservationId"
-            app:argType="string" />
-    </fragment>
+        tools:layout="@layout/edit_reservation_details_fragment" />
     <fragment
         android:id="@+id/searchCitiesFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCitiesFragment"

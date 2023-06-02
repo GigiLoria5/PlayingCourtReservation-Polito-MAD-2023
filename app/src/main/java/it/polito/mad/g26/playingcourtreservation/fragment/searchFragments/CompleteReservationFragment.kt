@@ -27,7 +27,7 @@ import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.CompleteReservationViewModel
 import pl.droidsonroids.gif.GifImageView
@@ -207,7 +207,7 @@ class CompleteReservationFragment : Fragment(R.layout.complete_reservation_fragm
         viewModel.services.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    chooseAvailableServicesShimmerView.startShimmerAnimation(
+                    chooseAvailableServicesShimmerView.startShimmerRVAnimation(
                         chooseAvailableServicesRV
                     )
                     numberOfAvailableServicesTV.makeGone()

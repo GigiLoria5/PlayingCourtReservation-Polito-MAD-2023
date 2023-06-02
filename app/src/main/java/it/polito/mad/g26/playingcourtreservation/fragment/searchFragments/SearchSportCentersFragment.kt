@@ -30,8 +30,8 @@ import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersViewModel
 
@@ -230,8 +230,8 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
             when (state) {
                 is UiState.Loading -> {
                     existingReservationCL.makeGone()
-                    sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
-                    servicesShimmerView.startShimmerAnimation(servicesRV)
+                    sportCentersShimmerView.startShimmerRVAnimation(sportCentersRV)
+                    servicesShimmerView.startShimmerRVAnimation(servicesRV)
                     courtTypeACTV.makeInvisible()
                     courtTypeMCV.makeInvisible()
                     selectedSportShimmerView.makeVisible()
@@ -241,7 +241,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                 }
 
                 is UiState.Failure -> {
-                    servicesShimmerView.stopShimmerAnimation(servicesRV)
+                    servicesShimmerView.stopShimmerRVAnimation(servicesRV)
                     servicesShimmerView.stopShimmer()
                     sportCentersShimmerView.stopShimmer()
                     sportCentersShimmerView.makeInvisible()
@@ -336,8 +336,8 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         existingReservationCL.makeGone()
                         courtTypeACTV.makeInvisible()
                         courtTypeMCV.makeInvisible()
-                        servicesShimmerView.startShimmerAnimation(servicesRV)
-                        sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
+                        servicesShimmerView.startShimmerRVAnimation(servicesRV)
+                        sportCentersShimmerView.startShimmerRVAnimation(sportCentersRV)
                         selectedSportShimmerView.makeVisible()
                         selectedSportShimmerView.startShimmer()
                     }

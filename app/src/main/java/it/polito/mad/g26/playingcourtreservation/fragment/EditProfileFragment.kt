@@ -34,7 +34,9 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,6 +49,8 @@ import it.polito.mad.g26.playingcourtreservation.adapter.EditProfileAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
+import it.polito.mad.g26.playingcourtreservation.viewmodel.EditProfileViewModel
+import it.polito.mad.g26.playingcourtreservation.viewmodel.SharedProfileViewModel
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
@@ -55,6 +59,9 @@ import java.util.*
 
 @AndroidEntryPoint
 class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
+
+    private val viewModel by viewModels<EditProfileViewModel>()
+    private lateinit var sharedProfileViewModel: SharedProfileViewModel
 
     private lateinit var usernameEditText: EditText
     private lateinit var usernameContainer: TextInputLayout
@@ -160,6 +167,9 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBar(activity, "Edit Profile", true)
+        sharedProfileViewModel =
+            ViewModelProvider(requireActivity())[SharedProfileViewModel::class.java]
+        viewModel.initialize(sharedProfileViewModel.currentUserInfo)
 
         usernameEditText = view.findViewById(R.id.username_et)
         autoCompletePosition = view.findViewById(R.id.position_autocomplete)
@@ -192,12 +202,13 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
 
         if (sharedPref.contains("profile")) {//work to replace all the strings
             val json = sharedPref.getString("profile", "Default")?.let { JSONObject(it) }
-            usernameEditText.setText(json?.getString("username"))
-            autoCompletePosition.setText(json?.getString("position"), false)
-            fullNameEditText.setText(json?.getString("fullName"))
+            val userInfo = viewModel.userInformation
+            usernameEditText.setText(userInfo.username)
+            autoCompletePosition.setText(userInfo.position ?: "Not specified", false)
+            fullNameEditText.setText(userInfo.fullname)
             dateOfBirthEditText.setText(json?.getString("date"))
             autoCompleteGender.setText(json?.getString("gender"), false)
-            locationEditText.setText(json?.getString("location"))
+            locationEditText.setText(userInfo.location ?: "Not specified")
             json?.getInt("year")?.let { myCalendar[Calendar.YEAR] = it }
             json?.getInt("month")?.let { myCalendar[Calendar.MONTH] = it }
             json?.getInt("day")?.let { myCalendar[Calendar.DAY_OF_MONTH] = it }

@@ -247,25 +247,26 @@
                 android:layout_marginTop="@dimen/edit_default_margin_double"
                 app:layout_constraintTop_toBottomOf="@id/info_layout">
 
-                 <com.google.android.material.card.MaterialCardView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     app:cardCornerRadius="4dp"
-                     app:strokeWidth="1dp"
-                     app:strokeColor="@color/border_grey_light"
-                     app:layout_constraintTop_toTopOf="parent"
-                     app:layout_constraintStart_toStartOf="parent"
-                     app:layout_constraintBottom_toBottomOf="parent"
-                     android:layout_marginBottom="@dimen/edit_default_margin_double">
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="4dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/border_grey_light"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="@dimen/edit_default_margin_double">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/edit_profile_recycler_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/edit_default_padding"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:orientation="vertical" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/editSportsRV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/edit_default_padding"
+                        android:nestedScrollingEnabled="false"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:orientation="vertical" />
 
                 </com.google.android.material.card.MaterialCardView>
             </androidx.constraintlayout.widget.ConstraintLayout>

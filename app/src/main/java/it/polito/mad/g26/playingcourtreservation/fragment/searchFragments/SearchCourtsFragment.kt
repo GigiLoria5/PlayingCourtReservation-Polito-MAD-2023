@@ -26,8 +26,8 @@ import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCourtsViewModel
 
@@ -177,17 +177,17 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    courtsShimmerView.startShimmerAnimation(courtsRV)
+                    courtsShimmerView.startShimmerRVAnimation(courtsRV)
                     numberOfAvailableCourtsTV.makeGone()
                 }
 
                 is UiState.Failure -> {
-                    courtsShimmerView.stopShimmerAnimation(courtsRV)
+                    courtsShimmerView.stopShimmerRVAnimation(courtsRV)
                     toast(state.error ?: "Unable to get courts")
                 }
 
                 is UiState.Success -> {
-                    courtsShimmerView.stopShimmerAnimation(courtsRV)
+                    courtsShimmerView.stopShimmerRVAnimation(courtsRV)
                     val numberOfAvailableCourts = viewModel.getTotAvailableCourts()
                     numberOfAvailableCourtsTV.text = getString(
                         R.string.search_courts_results_info,
