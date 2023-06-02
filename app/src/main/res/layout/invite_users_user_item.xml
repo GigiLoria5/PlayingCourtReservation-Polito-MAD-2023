@@ -117,7 +117,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.85" />
+        app:layout_constraintGuide_percent="0.83" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/userActionMCV"
@@ -127,12 +127,10 @@
         app:cardElevation="@dimen/standard_elevation"
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/userItemGL"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/card_circle">
 
-        <!-- TODO QUANDO C'è LA V E NON IL +, FAI BACKGROUND VERDE E ICONA GREYLIGHT2-->
         <ImageView
             android:id="@+id/customSearchIconIV"
             android:layout_width="match_parent"

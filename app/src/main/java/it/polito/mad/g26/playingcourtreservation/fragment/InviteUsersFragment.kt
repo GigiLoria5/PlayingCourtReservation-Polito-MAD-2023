@@ -192,7 +192,6 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
     }
 
     private fun showConfirmationDialog(user: User) {
-
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Confirm the invitation")
             .setMessage("Confirm the invitation for ${user.username}?")
@@ -202,7 +201,6 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
             }.setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
-            .setCancelable(false)
             .show()
     }
 

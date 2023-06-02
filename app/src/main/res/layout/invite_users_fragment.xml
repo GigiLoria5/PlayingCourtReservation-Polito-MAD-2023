@@ -103,7 +103,6 @@
                             android:orientation="vertical"
                             app:layout_constraintGuide_percent="0.8" />
 
-                        <!-- TODO LA MANTENGO O NON è PIù NECESSARIA QUESTA ICONA-->
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_height="0dp"
