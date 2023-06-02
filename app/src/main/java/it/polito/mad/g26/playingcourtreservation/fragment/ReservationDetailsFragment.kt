@@ -79,7 +79,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             "profile8",
             "profile9",
             "profile10",
-            "profile11"
+            "profile11",
+            "profile12"
         )
 
         /*BACK BUTTON MANAGEMENT*/
@@ -305,16 +306,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val adapter = ReservationDetailsAdapter(privateList, 1)
         partiRecyclerView.adapter = adapter
         partiRecyclerView.layoutManager = GridLayoutManager(context, 2)
-        //to avoid scrolling of recycler
-
-
-        //see if work
+        
         val partiRecyclerView2 = view.findViewById<RecyclerView>(R.id.requester_list)
         val adapter2 = ReservationDetailsAdapter(privateList, 2)
         partiRecyclerView2.adapter = adapter2
         partiRecyclerView2.layoutManager = LinearLayoutManager(context)
-        //to avoid scrolling of recycler
-        partiRecyclerView2.isNestedScrollingEnabled = false
 
         /*MENU ITEM*/
         val menuHost: MenuHost = requireActivity()
