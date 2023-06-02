@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
@@ -122,6 +123,19 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
 
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(notificationsRV)
+
+        // Delete Alert Dialog
+        val builder = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+        builder.setMessage("Are you sure you want to delete all notifications?")
+        builder.setPositiveButton("Confirm") { _, _ ->
+            viewModel.deleteAllCurrentUserNotifications()
+        }
+        builder.setNegativeButton("Cancel") { _, _ ->
+        }
+
+        deleteAllNotificationMCV.setOnClickListener {
+            builder.show()
+        }
     }
 
     private var simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
