@@ -272,6 +272,33 @@ class ReservationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getReservationsAt(date: String, time: String): UiState<List<Reservation>> {
+        return try {
+            Log.d(TAG, "getReservationsAt with date: $date and time: $time")
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .whereEqualTo("date", date)
+                .whereEqualTo("time", time)
+                .get().await()
+            Log.d(
+                TAG,
+                "getReservationsAt with date: $date and time: $time: ${result.documents.size} result"
+            )
+            val reservations = arrayListOf<Reservation>()
+            for (document in result) {
+                val reservation = document.toObject(Reservation::class.java)
+                reservations.add(reservation)
+            }
+            UiState.Success(reservations)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing getReservationsAt with date: $date and time: $time: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     override suspend fun getCourtReservationAt(
         courtId: String,
         date: String,
