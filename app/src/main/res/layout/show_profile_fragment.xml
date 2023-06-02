@@ -57,9 +57,7 @@
                         android:scaleType="fitXY"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/profile_default"
-                        app:shapeAppearanceOverlay="@style/circular"
-                        app:strokeColor="@color/black"
-                        app:strokeWidth="4dp" />
+                        app:shapeAppearanceOverlay="@style/circular" />
                     <!-- Image Animation Placeholder -->
                     <com.facebook.shimmer.ShimmerFrameLayout
                         android:id="@+id/avatarShimmerView"

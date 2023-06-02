@@ -43,9 +43,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:shapeAppearanceOverlay="@style/circular"
-                    app:strokeColor="@color/black"
-                    app:strokeWidth="6dp" />
+                    app:shapeAppearanceOverlay="@style/circular" />
 
                 <ImageButton
                     android:id="@+id/imageButton"
