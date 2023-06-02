@@ -18,6 +18,7 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.Guideline
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -51,12 +52,12 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
     private lateinit var sharedProfileViewModel: SharedProfileViewModel
 
     // Visual Components
-    private lateinit var usernameEditText: EditText
     private lateinit var usernameContainer: TextInputLayout
-    private lateinit var fullNameEditText: EditText
     private lateinit var fullNameContainer: TextInputLayout
-    private lateinit var locationEditText: EditText
     private lateinit var locationContainer: TextInputLayout
+    private lateinit var usernameEditText: EditText
+    private lateinit var fullNameEditText: EditText
+    private lateinit var locationEditText: EditText
     private lateinit var positionAutoComplete: AutoCompleteTextView
     private lateinit var birthDateEditText: EditText
     private lateinit var genderAutoComplete: AutoCompleteTextView
@@ -85,6 +86,9 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
         handleMenuAction(menuHost)
 
         // Find visual components
+        usernameContainer = view.findViewById(R.id.username_container)
+        fullNameContainer = view.findViewById(R.id.full_name_container)
+        locationContainer = view.findViewById(R.id.location_container)
         usernameEditText = view.findViewById(R.id.username_et)
         positionAutoComplete = view.findViewById(R.id.position_autocomplete)
         fullNameEditText = view.findViewById(R.id.full_name_et)
@@ -109,6 +113,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
         // Init components
         populateDropdowns()
         setupBirthDateComponents()
+        setupValidationHelpers()
 
         // Handle User Update
         viewModel.updateState.observe(viewLifecycleOwner) { state ->
@@ -168,7 +173,8 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
                             birthDate = birthDateEditText.text.toString(),
                             skills = (sportRecycleView.adapter as UserSkillsAdapter).getSkills()
                         )
-                        viewModel.updateCurrentUserInformation(updatedUserInformation)
+                        if (areUserInformationValid(updatedUserInformation))
+                            viewModel.updateCurrentUserInformation(updatedUserInformation)
                         true
                     }
 
@@ -222,6 +228,103 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
     private fun updateBirthDateEditText(myCalendar: Calendar) {
         val sdf = SimpleDateFormat(User.BIRTHDATE_PATTERN, Locale.getDefault())
         birthDateEditText.setText(sdf.format(myCalendar.time))
+    }
+
+    // Validation Management
+    private fun areUserInformationValid(user: User): Boolean {
+        if (user.username.isEmpty() || usernameContainer.helperText != null) {
+            toast("Please enter a valid username")
+            return false
+        }
+
+        if (user.position.isNullOrEmpty()) {
+            toast("The position field is mandatory")
+            return false
+        }
+
+        if (user.fullname.isEmpty() || fullNameContainer.helperText != null) {
+            toast("Please enter a valid fullname")
+            return false
+        }
+
+        if (user.birthDate.isNullOrEmpty()) {
+            toast("The birth date field is mandatory")
+            return false
+        }
+
+        if (user.gender.isNullOrEmpty()) {
+            toast("The gender field is mandatory")
+            return false
+        }
+
+        if (user.location.isNullOrEmpty() || locationContainer.helperText != null) {
+            toast("Please enter a valid location")
+            return false
+        }
+
+        return true
+    }
+
+    private fun setupValidationHelpers() {
+        usernameEditText.addTextChangedListener {
+            usernameContainer.helperText = validUsername()
+        }
+
+        fullNameEditText.addTextChangedListener {
+            fullNameContainer.helperText = validFullName()
+        }
+
+        locationEditText.addTextChangedListener {
+            locationContainer.helperText = validLocation()
+        }
+    }
+
+    private fun validUsername(): String? {
+        val usernameText = usernameEditText.text.toString()
+        val regex = "[A-Za-z]\\w{7,29}".toRegex() // Username from 8 to 30 characters
+        return when {
+            usernameText.isEmpty()
+            -> getString(R.string.required_helper)
+
+            usernameText.length < 8
+            -> getString(R.string.username_min_length)
+
+            usernameText.length > 30
+            -> getString(R.string.username_max_length)
+
+            !usernameText.matches(regex)
+            -> getString(R.string.invalid_field_helper)
+
+            else -> null
+        }
+    }
+
+    private fun validFullName(): String? {
+        val fullNameText = fullNameEditText.text.toString()
+        val regex = "([A-Za-z][a-z]*)+([ '\\\\-][A-Za-z]+)*[/.']?".toRegex()
+        return when {
+            fullNameText.isEmpty()
+            -> getString(R.string.required_helper)
+
+            !fullNameText.matches(regex)
+            -> getString(R.string.invalid_field_helper)
+
+            else -> null
+        }
+    }
+
+    private fun validLocation(): String? {
+        val locationText = locationEditText.text.toString()
+        val regex = "[a-zA-Z]+([ \\-][a-zA-Z]+)*\$".toRegex()
+        return when {
+            locationText.isEmpty()
+            -> getString(R.string.required_helper)
+
+            !locationText.matches(regex)
+            -> getString(R.string.invalid_field_helper)
+
+            else -> null
+        }
     }
 
 }

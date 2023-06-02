@@ -13,7 +13,7 @@ data class User(
     val gender: String? = null,
     val location: String? = null,
     val position: String? = null,
-    val skills: List<Skill> = emptyList()
+    var skills: List<Skill> = emptyList()
 ) {
     companion object {
         const val BIRTHDATE_PATTERN = "dd-MM-yyyy"

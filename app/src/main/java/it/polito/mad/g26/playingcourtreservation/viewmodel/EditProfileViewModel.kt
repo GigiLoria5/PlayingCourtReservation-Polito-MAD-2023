@@ -34,9 +34,16 @@ class EditProfileViewModel @Inject constructor(
 
     fun updateCurrentUserInformation(updatedUserInformation: User) = viewModelScope.launch {
         _updateState.value = UiState.Loading
-        val resultState = userRepository.updateCurrentUserInformation(updatedUserInformation)
+        // Check if there are any changes
+        userInformation.skills = userInformation.skills.sortedBy { it.rating }
+        updatedUserInformation.skills = updatedUserInformation.skills.sortedBy { it.rating }
+        if (userInformation == updatedUserInformation) {
+            _updateState.value = UiState.Failure("Please make changes before saving")
+            return@launch
+        }
+        // val resultState = userRepository.updateCurrentUserInformation(updatedUserInformation)
         delay(500)
-        _updateState.value = resultState
+        _updateState.value = UiState.Success(Unit)
     }
 
     // Manage skill list
