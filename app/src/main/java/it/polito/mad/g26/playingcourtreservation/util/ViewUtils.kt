@@ -2,13 +2,17 @@ package it.polito.mad.g26.playingcourtreservation.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import it.polito.mad.g26.playingcourtreservation.activity.MainActivity
+import java.io.ByteArrayOutputStream
 
 internal fun Context.getColorCompat(@ColorRes color: Int) =
     ContextCompat.getColor(this, color)
@@ -49,4 +53,11 @@ fun View.makeInvisible() {
 
 fun View.makeGone() {
     visibility = View.GONE
+}
+
+fun ImageView.toByteArray(): ByteArray {
+    val bitmap = (this.drawable as BitmapDrawable).bitmap
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    return baos.toByteArray()
 }

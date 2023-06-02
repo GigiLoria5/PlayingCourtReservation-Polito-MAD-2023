@@ -16,6 +16,5 @@ object SportNames {
 }
 
 object FirebaseStorageConstants {
-    val ROOT_DIRECTORY = "app"
-    val USER_IMAGES = "user"
+    const val USER_IMAGES = "user"
 }

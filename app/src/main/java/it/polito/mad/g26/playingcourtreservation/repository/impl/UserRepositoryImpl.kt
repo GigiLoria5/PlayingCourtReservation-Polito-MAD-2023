@@ -4,8 +4,10 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.StorageReference
 import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.repository.UserRepository
+import it.polito.mad.g26.playingcourtreservation.util.FirebaseStorageConstants
 import it.polito.mad.g26.playingcourtreservation.util.FirestoreCollections
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.await
@@ -14,7 +16,7 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val db: FirebaseFirestore,
-//    private val storage: StorageReference
+    private val storage: StorageReference
 ) : UserRepository {
 
     override val currentUser: FirebaseUser?
@@ -104,6 +106,30 @@ class UserRepositoryImpl @Inject constructor(
             )
             UiState.Failure(e.localizedMessage)
         }
+    }
+
+    override suspend fun updateUserImage(imageData: ByteArray): UiState<Unit> {
+        val userId = currentUser!!.uid
+        return try {
+            Log.d(TAG, "Performing updateUserImage for user with id $userId")
+            storage
+                .child(getStorageFileName(userId))
+                .putBytes(imageData)
+                .await()
+            Log.d(TAG, "User image with ID $userId updated in Firebase storage")
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing updateUserImage for user with id ${userId}: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    private fun getStorageFileName(userId: String): String {
+        return "${FirebaseStorageConstants.USER_IMAGES}/$userId.jpg"
     }
 
     companion object {

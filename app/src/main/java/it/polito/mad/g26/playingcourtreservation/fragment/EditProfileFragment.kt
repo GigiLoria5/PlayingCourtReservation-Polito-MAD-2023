@@ -50,6 +50,7 @@ import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
+import it.polito.mad.g26.playingcourtreservation.util.toByteArray
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.EditProfileViewModel
 import it.polito.mad.g26.playingcourtreservation.viewmodel.SharedProfileViewModel
@@ -203,8 +204,14 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
                             birthDate = birthDateEditText.text.toString(),
                             skills = (sportRecycleView.adapter as UserSkillsAdapter).getSkills()
                         )
+                        val newUserAvatarData =
+                            if (imageUri != null) avatarImage.toByteArray()
+                            else null
                         if (areUserInformationValid(updatedUserInformation))
-                            viewModel.updateCurrentUserInformation(updatedUserInformation)
+                            viewModel.updateCurrentUserInformation(
+                                updatedUserInformation,
+                                newUserAvatarData
+                            )
                         true
                     }
 
