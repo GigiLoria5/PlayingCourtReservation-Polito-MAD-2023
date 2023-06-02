@@ -177,7 +177,7 @@
                     android:stepSize="0.5"
                     android:valueFrom="0"
                     android:valueTo="5"
-                    app:layout_constraintBottom_toTopOf="@id/roleTypeMCV"
+                    app:layout_constraintBottom_toTopOf="@id/positionsRV"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/filterBySkillsTV"
@@ -188,56 +188,8 @@
                     app:trackColorInactive="@color/green_700"
                     app:values="@array/initial_skills_slider_values" />
 
-                <!-- QUESTO PER ORA LASCIATELO COME BACKUP, NON SI SA MAI
-                                <com.google.android.material.card.MaterialCardView
-                                    android:id="@+id/roleTypeMCV"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:marginHorizontal="@dimen/page_external_space"
-                                    app:cardCornerRadius="@dimen/corner_radius"
-                                    android:layout_marginBottom="@dimen/page_external_space"
-                                    app:cardElevation="@dimen/standard_elevation"
-                                    app:cardMaxElevation="@dimen/standard_elevation"
-                                    app:cardPreventCornerOverlap="true"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/skillRS">
-
-
-                                    <com.google.android.material.textfield.TextInputLayout
-                                        android:id="@+id/courtTypeTIL"
-                                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        app:boxBackgroundColor="@color/white"
-                                        app:boxStrokeWidth="0dp"
-                                        app:boxStrokeWidthFocused="0dp"
-                                        app:endIconTint="@color/grey">
-
-                                        <AutoCompleteTextView
-                                            android:id="@+id/courtTypeACTV"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:background="@color/white"
-                                            android:ellipsize="end"
-                                            android:inputType="none"
-                                            android:maxLines="1"
-                                            android:paddingTop="0dp"
-                                            android:paddingBottom="0dp"
-                                            android:singleLine="true"
-                                            android:textColor="@color/grey"
-                                            android:textSize="@dimen/date_type_buttons_text_size"
-                                            android:textStyle="normal"
-                                            tools:ignore="LabelFor,TextContrastCheck,VisualLintTextFieldSize"
-                                            tools:text="All roles" />
-                                    </com.google.android.material.textfield.TextInputLayout>
-                                </com.google.android.material.card.MaterialCardView>
-
-                -->
-                <!-- L'IDEA è: di default li metti tutti selezionati e facciamo in modo che c’è sempre minimo uno selezionato-->
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/roleTypeMCV"
+                    android:id="@+id/positionsRV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"

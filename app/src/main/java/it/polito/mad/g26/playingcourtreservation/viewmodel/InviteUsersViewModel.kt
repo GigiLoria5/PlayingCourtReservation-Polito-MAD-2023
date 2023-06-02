@@ -42,13 +42,16 @@ class InviteUsersViewModel @Inject constructor(
         reservationId: String,
         date: String,
         time: String,
-        sport: String
+        sport: String,
+        allPositions: Set<String>
     ) {
         this.city = city
         this.reservationId = reservationId
         this.date = date
         this.time = time
         this.sport = sport
+        this._selectedPositions.value = allPositions.toMutableSet()
+
         _filteredUsername.observeForever {
             fetchUsersData()
         }
@@ -62,6 +65,9 @@ class InviteUsersViewModel @Inject constructor(
             fetchUsersData()
         }
         _selectedMaxSkill.observeForever {
+            fetchUsersData()
+        }
+        _selectedPositions.observeForever {
             fetchUsersData()
         }
     }
@@ -95,6 +101,29 @@ class InviteUsersViewModel @Inject constructor(
     fun changeSelectedMaxSkill(skillValue: Float) {
         _selectedMaxSkill.value = skillValue
     }
+
+    /*POSITIONS MANAGEMENT*/
+    private var _selectedPositions = MutableLiveData<MutableSet<String>>().also {
+        it.value = mutableSetOf()
+    }
+
+    fun addPositionToFilters(position: String) {
+        val s = _selectedPositions.value
+        s?.add(position)
+        _selectedPositions.value = s
+    }
+
+    fun removePositionFromFilters(position: String) {
+        val s = _selectedPositions.value
+        s?.remove(position)
+        _selectedPositions.value = s
+    }
+
+    fun isPositionInList(position: String): Boolean {
+        return _selectedPositions.value?.contains(position) ?: false
+    }
+
+    fun numberOfSelectedPositions(): Int = _selectedPositions.value?.size ?: 0
 
     // Load users data
     private val _loadingState = MutableLiveData<UiState<Unit>>()
@@ -139,7 +168,10 @@ class InviteUsersViewModel @Inject constructor(
     }
 
     fun getFilteredUsers(): List<User> {
-        return users
+        val filteredUsers = users
+            .filter { user ->
+                _selectedPositions.value?.contains(user.position) ?: false
+            }
             .filter { user ->
                 val ageString = user.getAgeOrDefault()
                 ageString != User.DEFAULT_BIRTHDATE
@@ -156,6 +188,11 @@ class InviteUsersViewModel @Inject constructor(
                     ignoreCase = true
                 )
             }
+        val cityUsers = filteredUsers.filter { user -> user.location == city }
+            .sortedBy { user -> user.username }
+        val notCityUsers = filteredUsers.filter { user -> user.location != city }
+            .sortedBy { user -> user.username }
+        return cityUsers + notCityUsers
     }
 
     fun isUserIdInvited(userId: String): Boolean = myInvitees.contains(userId)

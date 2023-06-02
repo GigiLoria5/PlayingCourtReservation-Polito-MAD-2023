@@ -19,6 +19,8 @@ import com.google.android.material.slider.RangeSlider
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.InviteUserAdapter
+import it.polito.mad.g26.playingcourtreservation.adapter.PositionsAdapter
+import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
@@ -42,6 +44,8 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
     private lateinit var ageRS: RangeSlider
     private lateinit var filterBySkillsTV: TextView
     private lateinit var skillRS: RangeSlider
+    private lateinit var positionsRV: RecyclerView
+    private lateinit var positionsAdapter: PositionsAdapter
     private lateinit var numberOfFoundUsersTV: TextView
     private lateinit var usersRV: RecyclerView
     private lateinit var inviteUsersAdapter: InviteUserAdapter
@@ -58,7 +62,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
     private var date: String = ""
     private var time: String = ""
     private var sport: String = ""
-
+    private var positions = setOf<String>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         city = args.city
@@ -66,10 +70,10 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         date = args.date
         time = args.time
         sport = args.sport
+        positions = resources.getStringArray(R.array.position_array).toSet()
 
-        println("$city $date $time $reservationId $sport")
         /* VM INITIALIZATIONS */
-        viewModel.initialize(city, reservationId, date, time, sport)
+        viewModel.initialize(city, reservationId, date, time, sport, positions)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)
@@ -133,6 +137,14 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
             viewModel.changeSelectedMaxSkill(skillRS.values[1])
         }
 
+        /* positionsRV RECYCLE VIEW INITIALIZER*/
+        positionsRV = view.findViewById(R.id.positionsRV)
+        positionsAdapter = createPositionsAdapter()
+        positionsRV.adapter = positionsAdapter
+        val itemDecoration =
+            HorizontalSpaceItemDecoration(resources.getDimensionPixelSize(R.dimen.chip_distance))
+        positionsRV.addItemDecoration(itemDecoration)
+
         /* numberOfFoundUsersTV INITIALIZER */
         numberOfFoundUsersTV = view.findViewById(R.id.numberOfFoundUsersTV)
 
@@ -147,6 +159,16 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         usersShimmerView = view.findViewById(R.id.usersShimmerView)
 
 
+    }
+
+    private fun createPositionsAdapter(): PositionsAdapter {
+        return PositionsAdapter(
+            positions.toList(),
+            { viewModel.addPositionToFilters(it) },
+            { viewModel.removePositionFromFilters(it) },
+            { viewModel.isPositionInList(it) },
+            { viewModel.numberOfSelectedPositions() }
+        )
     }
 
     private fun createInviteUserAdapter(): InviteUserAdapter {
