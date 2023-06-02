@@ -87,4 +87,14 @@ class NotificationsViewModel @Inject constructor(
 
     }
 
+    fun setNotificationAsRead(notificationId: String) = viewModelScope.launch {
+        _loadingState.value = UiState.Loading
+        val state = notificationRepository.setNotificationAsRead(notificationId)
+        if (state is UiState.Failure) {
+            _loadingState.value = state
+            return@launch
+        }
+        loadNotifications() // to update the notifications
+    }
+
 }

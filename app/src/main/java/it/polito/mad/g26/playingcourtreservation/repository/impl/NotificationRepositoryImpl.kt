@@ -68,7 +68,7 @@ class NotificationRepositoryImpl @Inject constructor(
             Log.d(TAG, "Performing setNotificationAsRead of notification with id $notificationId")
             db.collection(FirestoreCollections.NOTIFICATIONS)
                 .document(notificationId)
-                .update("isRead", true).await()
+                .update("read", true).await()
             Log.d(TAG, "Notification $notificationId set as read")
             UiState.Success(Unit)
         } catch (e: Exception) {

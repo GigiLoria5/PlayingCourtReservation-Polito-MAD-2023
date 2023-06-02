@@ -20,7 +20,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.facebook.shimmer.Shimmer
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
@@ -92,6 +91,7 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
                         noNotificationMCV.makeInvisible()
                         deleteAllNotificationMCV.makeVisible()
                     } else {
+                        notificationsAdapter.updateNotifications(notifications)
                         noNotificationMCV.makeVisible()
                         deleteAllNotificationMCV.makeInvisible()
                     }
@@ -114,13 +114,12 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
                     }
 
                     is UiState.Failure -> {
-                        // TODO: Stop loading animation
                         toast(state.error ?: "Reservation no longer available")
+                        viewModel.setNotificationAsRead(viewModel.notifications[position].id)
                     }
 
                     is UiState.Success -> {
-                        // TODO: Stop loading animation
-                        println("Success")
+                        viewModel.setNotificationAsRead(viewModel.notifications[position].id)
                         val action = NotificationsFragmentDirections
                             .actionNotificationFragmentToReservationDetailsFragment2(reservationId)
                         findNavController().navigate(action)
@@ -159,6 +158,7 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
         builder.setMessage("Are you sure you want to delete all notifications?")
         builder.setPositiveButton("Confirm") { _, _ ->
             viewModel.deleteAllCurrentUserNotifications()
+            notificationsAdapter.updateNotifications(viewModel.notifications)
         }
         builder.setNegativeButton("Cancel") { _, _ ->
         }
