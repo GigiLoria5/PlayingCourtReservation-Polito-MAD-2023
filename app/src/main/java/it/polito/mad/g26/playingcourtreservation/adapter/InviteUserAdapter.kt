@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.User
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
 
 class InviteUserAdapter(
     private var collection: List<User>,
     private val isUserIdInvited: (String) -> Boolean,
-    private val sport: String
+    private val sport: String,
+    private val navigateToShowProfileFragment: (String) -> Unit,
 ) :
     RecyclerView.Adapter<InviteUserAdapter.UserViewHolder>() {
 
@@ -52,6 +54,7 @@ class InviteUserAdapter(
         private val userCityTV = itemView.findViewById<TextView>(R.id.userCityTV)
         private val userAvailabilityTV = itemView.findViewById<TextView>(R.id.userAvailabilityTV)
         private val ratingRB = itemView.findViewById<RatingBar>(R.id.ratingRB)
+        private val userMCV = itemView.findViewById<MaterialCardView>(R.id.userMCV)
         private val userActionMCV = itemView.findViewById<MaterialCardView>(R.id.userActionMCV)
         private val customSearchIconIV = itemView.findViewById<ImageView>(R.id.customSearchIconIV)
 
@@ -61,7 +64,7 @@ class InviteUserAdapter(
             if (user.position == null) {
                 //if one info is null, all infos are null
                 userPositionAgeTV.text = itemView.context.getString(R.string.not_specified_info)
-                userCityTV.text = ""
+                userCityTV.makeGone()
             } else {
                 val age = user.getAgeOrDefault()
                 userPositionAgeTV.text =
@@ -70,16 +73,30 @@ class InviteUserAdapter(
             }
             ratingRB.rating = user.skills.find { it.sportName == sport }?.rating ?: 0f
 
+            userMCV.setOnClickListener {
+                navigateToShowProfileFragment(user.id)
+            }
+
             when (isUserIdInvited) {
                 false -> {
                     userAvailabilityTV.text = itemView.context.getString(R.string.user_available)
-                    customSearchIconIV.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.baseline_add_24_green))
+                    customSearchIconIV.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            itemView.context,
+                            R.drawable.baseline_add_24_green
+                        )
+                    )
                     userActionMCV.setCardBackgroundColor(itemView.context.getColor(R.color.grey_light_2))
                 }
 
                 true -> {
                     userAvailabilityTV.text = itemView.context.getString(R.string.user_invited)
-                    customSearchIconIV.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.baseline_check_24))
+                    customSearchIconIV.setImageDrawable(
+                        AppCompatResources.getDrawable(
+                            itemView.context,
+                            R.drawable.baseline_check_24
+                        )
+                    )
                     userActionMCV.setCardBackgroundColor(itemView.context.getColor(R.color.green_500))
                 }
             }

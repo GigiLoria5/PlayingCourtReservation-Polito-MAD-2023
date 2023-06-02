@@ -265,5 +265,13 @@
         <argument
             android:name="sport"
             app:argType="string" />
+        <action
+            android:id="@+id/action_inviteUsersFragment_to_showProfileFragment"
+            app:destination="@id/showProfileFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
+            />
     </fragment>
 </navigation>

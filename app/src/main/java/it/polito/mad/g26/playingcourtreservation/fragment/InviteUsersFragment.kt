@@ -35,20 +35,19 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
     /*   VISUAL COMPONENTS       */
     private lateinit var customToolBar: Toolbar
     private lateinit var numberOfFoundUsersTV: TextView
-
     private lateinit var usersRV: RecyclerView
-
-   private lateinit var inviteUsersAdapter: InviteUserAdapter
-
+    private lateinit var inviteUsersAdapter: InviteUserAdapter
     private lateinit var usersShimmerView: ShimmerFrameLayout
 
+    /* SUPPORT VARIABLES */
+    private var navigatingToOtherFragment = false
 
     /* ARGS */
     private var city: String = ""
     private var reservationId: String = ""
     private var date: String = ""
     private var time: String = ""
-    private var sport: String=""
+    private var sport: String = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,7 +55,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         reservationId = args.reservationId
         date = args.date
         time = args.time
-        sport=args.sport
+        sport = args.sport
 
         println("$city $date $time $reservationId $sport")
         /* VM INITIALIZATIONS */
@@ -78,7 +77,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         /* USERS RECYCLE VIEW INITIALIZER*/
         usersRV = view.findViewById(R.id.usersRV)
         inviteUsersAdapter = createInviteUserAdapter()
-           usersRV.adapter = inviteUsersAdapter
+        usersRV.adapter = inviteUsersAdapter
 
         /* shimmerFrameLayout INITIALIZER */
         usersShimmerView = view.findViewById(R.id.usersShimmerView)
@@ -90,7 +89,15 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         return InviteUserAdapter(
             viewModel.users,
             { viewModel.isUserIdInvited(it) },
-            sport
+            sport,
+            { userId ->
+                navigatingToOtherFragment = true
+                val direction =
+                    InviteUsersFragmentDirections.actionInviteUsersFragmentToShowProfileFragment(
+                        userId
+                    )
+                findNavController().navigate(direction)
+            }
         )
     }
 
@@ -108,7 +115,6 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                     //       noAvailableUsersFoundTV.makeGone()
                 }
 
-
                 is UiState.Failure -> {
                     usersShimmerView.stopShimmer()
                     usersShimmerView.makeInvisible()
@@ -119,19 +125,19 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                     usersShimmerView.stopShimmer()
                     usersShimmerView.makeInvisible()
                     numberOfFoundUsersTV.makeVisible()
-                    val numberOfAvailableUsersFound =  viewModel.users.size
+                    val numberOfAvailableUsersFound = viewModel.users.size
                     numberOfFoundUsersTV.text = getString(
                         R.string.found_users_results_info,
                         numberOfAvailableUsersFound,
                         if (numberOfAvailableUsersFound != 1) "s" else ""
                     )
-                        inviteUsersAdapter.updateCollection(viewModel.users)
-                      if (numberOfAvailableUsersFound > 0) {
+                    inviteUsersAdapter.updateCollection(viewModel.users)
+                    if (numberOfAvailableUsersFound > 0) {
                         usersRV.makeVisible()
-                    } //else {
-                    //  noAvailableUsersFoundTV.makeVisible()
-                    // usersRV.makeInvisible()
-                    // }
+                    } else {
+                        //  noAvailableUsersFoundTV.makeVisible()
+                        usersRV.makeInvisible()
+                    }
                 }
             }
         }
@@ -143,7 +149,10 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
             val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
             anim.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {
-                    numberOfFoundUsersTV.makeGone()
+                    if (!navigatingToOtherFragment) {
+                        numberOfFoundUsersTV.makeGone()
+                        usersRV.makeInvisible()
+                    }
                 }
 
                 override fun onAnimationRepeat(animation: Animation) {
@@ -151,7 +160,9 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                 }
 
                 override fun onAnimationEnd(animation: Animation) {
-                    loadAvailableUsers()
+                    if (enter) {
+                        loadAvailableUsers()
+                    }
                 }
             })
             return anim
@@ -161,6 +172,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
 
     override fun onResume() {
         super.onResume()
+        navigatingToOtherFragment = false
         hideActionBar(activity)
     }
 
