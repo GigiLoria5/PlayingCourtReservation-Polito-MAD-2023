@@ -23,6 +23,8 @@ class InviteUsersViewModel @Inject constructor(
     private var reservationId: String = ""
     private var date: String = ""
     private var time: String = ""
+    private val myInvitees: MutableSet<String> = mutableSetOf()
+
 
     /* INITIALIZATION */
     fun initialize(
@@ -46,34 +48,34 @@ class InviteUsersViewModel @Inject constructor(
     val users: List<User>
         get() = _users
 
-    private var _reservations: List<Reservation> = listOf()
-
-    val reservations: List<Reservation>
-        get() = _reservations
 
     fun fetchUsersData() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
         // Get all reservations for the specified date/time
         val reservationsState =
-        reservationRepository.getReservationsAt(date,time)
+            reservationRepository.getReservationsAt(date, time)
         if (reservationsState is UiState.Failure) {
             _loadingState.value = reservationsState
             return@launch
         }
-        _reservations = (reservationsState as UiState.Success).result
-        val myReservation=_reservations.find { it.id==reservationId }!!
-        val myInvitees=myReservation.invitees
-        val myRequests=myReservation.requests
-        val notInvitablePeople= mutableSetOf<String>()
+
+        val reservations = (reservationsState as UiState.Success).result
+
+        val myReservation = reservations.find { it.id == reservationId }!!
+        myReservation.invitees.forEach { myInvitees.add(it) }
+        val myRequests = myReservation.requests
+
+        val notInvitablePeople = mutableSetOf<String>()
         myRequests.forEach { notInvitablePeople.add(it) }
-        _reservations.forEach {reservation->
+        reservations.forEach { reservation ->
             notInvitablePeople.add(reservation.userId)
-            reservation.participants.forEach {participant->notInvitablePeople.add(participant)  }
+            reservation.participants.forEach { participant -> notInvitablePeople.add(participant) }
         }
-        _reservations=reservations
         notInvitablePeople.forEach { println(it) }
 
         //ORA DOVRAI UTILIZZARE NOT INVITABLE PEOPLE PER FILTRARE GLI UTENTI
+
+        //la funzione del repository è getFilteredUsers
         _loadingState.value = UiState.Success(Unit)
     }
 
