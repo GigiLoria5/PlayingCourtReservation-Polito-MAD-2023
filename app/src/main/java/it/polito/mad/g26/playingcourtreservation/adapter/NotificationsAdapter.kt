@@ -8,16 +8,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.Notification
+import it.polito.mad.g26.playingcourtreservation.util.timestampToDate
 
 class NotificationsAdapter(
-    private var notifications: MutableList<Notification>
+    private var notifications: List<Notification>
 ) : RecyclerView.Adapter<NotificationsAdapter.NotificationsViewHolder>() {
 
-    private lateinit var mListener: onItemClickListener
-    interface onItemClickListener{
+    private lateinit var mListener: OnItemClickListener
+    fun interface OnItemClickListener{
         fun onItemClick(position: Int)
     }
-    fun setOnItemClickListener(listener: onItemClickListener){
+    fun setOnItemClickListener(listener: OnItemClickListener){
         mListener = listener
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationsViewHolder {
@@ -31,7 +32,7 @@ class NotificationsAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateNotifications(updatedCollection: MutableList<Notification>) {
+    fun updateNotifications(updatedCollection: List<Notification>) {
         this.notifications = updatedCollection
         notifyDataSetChanged()
     }
@@ -47,12 +48,11 @@ class NotificationsAdapter(
 
     fun removeItem(position: Int): Notification {
         val deleteNotification = notifications[position]
-        notifications.removeAt(position)
         notifyItemRemoved(position)
         return deleteNotification
     }
 
-    inner class NotificationsViewHolder(view: View, listener: onItemClickListener) : RecyclerView.ViewHolder(view) {
+    inner class NotificationsViewHolder(view: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(view) {
         private val timestamp = view.findViewById<TextView>(R.id.notificationTimestampTV)
         private val message = view.findViewById<TextView>(R.id.notificationMessageTV)
 
@@ -62,7 +62,7 @@ class NotificationsAdapter(
             }
         }
         fun bind(notification: Notification) {
-            timestamp.text = notification.timestamp
+            timestamp.text = timestampToDate(notification.timestamp)
             message.text = notification.message
         }
     }

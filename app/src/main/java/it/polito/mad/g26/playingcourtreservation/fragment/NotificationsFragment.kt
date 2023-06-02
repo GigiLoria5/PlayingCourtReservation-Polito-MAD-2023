@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -20,15 +21,19 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.NotificationsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Notification
+import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.polito.mad.g26.playingcourtreservation.util.toast
+import it.polito.mad.g26.playingcourtreservation.viewmodel.NotificationsViewModel
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
-
+@AndroidEntryPoint
 class NotificationsFragment : Fragment(R.layout.notification_fragment) {
 
     private lateinit var customToolBar: Toolbar
@@ -37,7 +42,7 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
     private lateinit var deleteAllNotificationMCV: MaterialCardView
     private lateinit var notificationsAdapter: NotificationsAdapter
     private var deleteData: Notification? = null
-    val notifications = mutableListOf<Notification>()
+    private val viewModel by viewModels<NotificationsViewModel>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         /* CUSTOM TOOLBAR MANAGEMENT*/
@@ -56,51 +61,44 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
 
         /*Set-up recycle view */
         notificationsRV = view.findViewById(R.id.notificationsRV)
-
-        val n0 = Notification()
-        n0.id = 0
-        n0.isRead = true
-        n0.timestamp = "28-05-2023 18:32:05"
-        n0.message = "Filippo invited you to play"
-        n0.idReservation = 1
-
-        val n1 = Notification()
-        n1.id = 1
-        n1.isRead = false
-        n1.timestamp = "28-05-2023 18:32:20"
-        n1.message = "Marco invited you to play"
-        n1.idReservation = 1
-
-        val n2 = Notification()
-        n2.id = 2
-        n2.isRead = false
-        n2.timestamp = "28-05-2023 18:32:40"
-        n2.message = "Luca invited you to play"
-        n2.idReservation = 20
-
-        notifications += n0
-        notifications += n1
-        notifications += n2
-
-        notificationsAdapter = NotificationsAdapter(notifications)
+        notificationsAdapter = NotificationsAdapter(viewModel.notifications)
         notificationsRV.adapter = notificationsAdapter
-        notificationsAdapter.setOnItemClickListener(object : NotificationsAdapter.onItemClickListener{
-            override fun onItemClick(position: Int) {
-                val action = NotificationsFragmentDirections
-                    .actionNotificationFragmentToReservationDetailsFragment2(notifications[position].idReservation)
-                findNavController().navigate(action)
+        // Load the data needed
+        viewModel.loadNotifications()
+        viewModel.loadingState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    // TODO: Add loading animation
+                }
+
+                is UiState.Failure -> {
+                    // TODO: Stop loading animation
+                    toast(state.error ?: "Unable to get court reviews")
+                }
+
+                is UiState.Success -> {
+                    // TODO: Stop loading animation
+                    // Update Notifications
+                    val notifications = viewModel.notifications
+                    if (notifications.isNotEmpty()) {
+                        notificationsAdapter.updateNotifications(notifications)
+                        noNotificationMCV.makeInvisible()
+                        deleteAllNotificationMCV.makeVisible()
+                    } else {
+                        noNotificationMCV.makeVisible()
+                        deleteAllNotificationMCV.makeInvisible()
+                    }
+                }
             }
-
-        })
-        notificationsRV.addItemDecoration(DividerItemDecoration(this.activity, LinearLayout.VERTICAL))
-
-        if (notifications.isNotEmpty()){
-            noNotificationMCV.makeInvisible()
-            deleteAllNotificationMCV.makeVisible()
-        }else{
-            noNotificationMCV.makeVisible()
-            deleteAllNotificationMCV.makeInvisible()
         }
+
+        notificationsAdapter.setOnItemClickListener { position ->
+            val action = NotificationsFragmentDirections
+                .actionNotificationFragmentToReservationDetailsFragment2(viewModel.notifications[position].reservationId)
+            findNavController().navigate(action)
+        }
+
+        notificationsRV.addItemDecoration(DividerItemDecoration(this.activity, LinearLayout.VERTICAL))
 
         // Handle Menu Items
         val menuHost: MenuHost = requireActivity()
@@ -139,13 +137,14 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
             when(direction){
                 ItemTouchHelper.LEFT ->{
                     deleteData = notificationsAdapter.removeItem(position)
-
+                    viewModel.deleteNotification(deleteData!!.id)
+                    notificationsAdapter.updateNotifications(viewModel.notifications)
                     Snackbar.make(notificationsRV, "Notification deleted", Snackbar.LENGTH_LONG)
                         .setAction(
                             "Undo"
                         ) {
-                            notifications.add(position, deleteData!!)
-                            notificationsAdapter.notifyItemInserted(position)
+                            viewModel.addNotification(deleteData!!)
+                            notificationsAdapter.updateNotifications(viewModel.notifications)
                         }.show()
                 }
             }
