@@ -33,6 +33,7 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             app:cardCornerRadius="50dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/bellIV"
             app:layout_constraintTop_toTopOf="@+id/bellIV">
 

@@ -29,10 +29,9 @@ class NotificationsViewModel @Inject constructor(
 
     fun loadNotifications() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
-        // Get Sport Center information and Courts reviews in parallel
         val notificationsDeferred = async { notificationRepository.getCurrentUserNotification() }
         val notificationsState = notificationsDeferred.await()
-        // Check sport center result
+        // Check result
         if (notificationsState is UiState.Failure) {
             _loadingState.value = notificationsState
             return@launch
