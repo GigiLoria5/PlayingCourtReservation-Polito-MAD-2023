@@ -85,11 +85,11 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getFilteredUsers(notAvailableUsersId: List<String>): UiState<List<User>> {
         return try {
-            Log.d(TAG, "getAvailableUsers")
+            Log.d(TAG, "getFilteredUsers")
             val result = db.collection(FirestoreCollections.USERS)
                 .whereNotIn("id",notAvailableUsersId)
                 .get().await()
-            Log.d(TAG, "getAvailableUsers result")
+            Log.d(TAG, "getFilteredUsers result")
             val users = arrayListOf<User>()
             for (document in result) {
                 val user = document.toObject(User::class.java)
@@ -97,7 +97,7 @@ class UserRepositoryImpl @Inject constructor(
             }
             UiState.Success(users)
         } catch (e: Exception) {
-            Log.e(TAG, "Error while performing getAvailableUsers", e)
+            Log.e(TAG, "Error while performing getFilteredUsers", e)
             UiState.Failure(e.localizedMessage)
         }
     }
