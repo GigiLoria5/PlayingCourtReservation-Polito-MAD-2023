@@ -89,8 +89,8 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         filterByAgeTV = view.findViewById(R.id.filterByAgeTV)
         filterByAgeTV.text = getString(
             R.string.filter_by_age,
-            viewModel.initialMinAge.toString(),
-            viewModel.initialMaxAge.toString()
+            viewModel.initialMinAge.toInt().toString(),
+            viewModel.initialMaxAge.toInt().toString()
         )
 
         /*ageRS INITIALIZER*/

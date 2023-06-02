@@ -146,14 +146,13 @@ class InviteUsersViewModel @Inject constructor(
                         && ageString.toInt() >= _selectedMinAge.value!!.toInt()
                         && ageString.toInt() <= _selectedMaxAge.value!!.toInt()
             }
-
             .filter { user ->
                 val skillValue = user.skills.find { it.sportName == sport }?.rating ?: 0f
                 skillValue >= _selectedMinSkill.value!! && skillValue <= _selectedMaxSkill.value!!
             }
             .filter { user ->
-                _filteredUsername.value!!.isEmpty() || _filteredUsername.value!!.contains(
-                    user.username,
+                _filteredUsername.value!!.isEmpty() || user.username.contains(
+                    _filteredUsername.value!!,
                     ignoreCase = true
                 )
             }
