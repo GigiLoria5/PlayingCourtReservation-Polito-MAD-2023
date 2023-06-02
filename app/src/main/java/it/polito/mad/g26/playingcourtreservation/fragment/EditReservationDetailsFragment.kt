@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.adapter.ModifyReservationDetailsAdapter
+import it.polito.mad.g26.playingcourtreservation.adapter.EditReservationDetailsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Service
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
@@ -188,7 +188,7 @@ class EditReservationDetailsFragment : Fragment(R.layout.edit_reservation_detail
         val recyclerView =
             view.findViewById<RecyclerView>(R.id.recyclerView_chip)
         val adapter =
-            ModifyReservationDetailsAdapter(
+            EditReservationDetailsAdapter(
                 servicesAll,
                 servicesChosen,
                 priceNew,

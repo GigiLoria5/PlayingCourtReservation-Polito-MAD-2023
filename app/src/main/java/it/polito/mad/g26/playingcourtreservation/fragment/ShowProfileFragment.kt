@@ -20,7 +20,7 @@ import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.adapter.UserSportsSelfAssessmentAdapter
+import it.polito.mad.g26.playingcourtreservation.adapter.UserSkillsAdapter
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
@@ -107,16 +107,16 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
                     sharedProfileViewModel.currentUserInfo = userInfo
                     username.text = userInfo.username
                     fullName.text = userInfo.fullname
-                    age.text = userInfo.age?.toString() ?: "N/A"
-                    gender.text = userInfo.gender ?: "Unknown"
-                    location.text = userInfo.location ?: "Not specified"
-                    position.text = userInfo.position ?: "Not specified"
+                    age.text = userInfo.getAgeOrDefault()
+                    gender.text = userInfo.getGenderOrDefault()
+                    location.text = userInfo.getLocationOrDefault()
+                    position.text = userInfo.getPositionOrDefault()
                     if (userInfo.skills.isEmpty()) {
                         sportRecycleViewShimmer.makeGone()
                         sportRecycleView.makeGone()
                         return@observe
                     }
-                    sportRecycleView.adapter = UserSportsSelfAssessmentAdapter(userInfo.skills)
+                    sportRecycleView.adapter = UserSkillsAdapter(userInfo.skills)
                     sportRecycleView.layoutManager = LinearLayoutManager(context)
                 }
             }
