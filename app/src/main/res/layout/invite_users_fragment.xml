@@ -9,7 +9,7 @@
         android:id="@+id/inviteUsersABL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/usersRL"
+        app:layout_constraintBottom_toTopOf="@id/usersCL"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -235,7 +235,7 @@
                                 </com.google.android.material.card.MaterialCardView>
 
                 -->
-<!-- L'IDEA è: di default li metti tutti selezionati e facciamo in modo che c’è sempre minimo uno selezionato-->
+                <!-- L'IDEA è: di default li metti tutti selezionati e facciamo in modo che c’è sempre minimo uno selezionato-->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/roleTypeMCV"
                     android:layout_width="match_parent"
@@ -273,43 +273,71 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
-        android:id="@+id/usersRL"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/usersCL"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:animateLayoutChanges="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inviteUsersABL">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/usersRV"
+        <RelativeLayout
+            android:id="@+id/usersRL"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingVertical="@dimen/page_external_space"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/invite_users_user_item" />
+            android:layout_height="0dp"
+            android:animateLayoutChanges="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Placeholder -->
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/usersShimmerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/page_external_space"
-            app:shimmer_repeat_mode="restart"
-            app:shimmer_shape="radial">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/usersRV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingVertical="@dimen/page_external_space"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/invite_users_user_item" />
 
-            <LinearLayout
+            <!-- Placeholder -->
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/usersShimmerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:paddingVertical="@dimen/page_external_space"
+                app:shimmer_repeat_mode="restart"
+                app:shimmer_shape="radial">
 
-                <include layout="@layout/invite_users_user_item_placeholder" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/invite_users_user_item_placeholder" />
 
 
-            </LinearLayout>
-        </com.facebook.shimmer.ShimmerFrameLayout>
-    </RelativeLayout>
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/noUsersFoundTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/page_external_space"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:text="@string/no_users_found"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/grey"
+            android:textStyle="normal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

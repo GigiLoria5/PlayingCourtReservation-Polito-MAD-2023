@@ -46,6 +46,8 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
     private lateinit var usersRV: RecyclerView
     private lateinit var inviteUsersAdapter: InviteUserAdapter
     private lateinit var usersShimmerView: ShimmerFrameLayout
+    private lateinit var noUsersFoundTV: TextView
+
 
     /* SUPPORT VARIABLES */
     private var navigatingToOtherFragment = false
@@ -67,7 +69,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
 
         println("$city $date $time $reservationId $sport")
         /* VM INITIALIZATIONS */
-        viewModel.initialize(city, reservationId, date, time,sport)
+        viewModel.initialize(city, reservationId, date, time, sport)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)
@@ -139,6 +141,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         usersRV = view.findViewById(R.id.usersRV)
         inviteUsersAdapter = createInviteUserAdapter()
         usersRV.adapter = inviteUsersAdapter
+        noUsersFoundTV = view.findViewById(R.id.noUsersFoundTV)
 
         /* shimmerFrameLayout INITIALIZER */
         usersShimmerView = view.findViewById(R.id.usersShimmerView)
@@ -173,7 +176,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                         usersRV
                     )
                     numberOfFoundUsersTV.makeGone()
-                    //       noAvailableUsersFoundTV.makeGone()
+                    noUsersFoundTV.makeGone()
                 }
 
                 is UiState.Failure -> {
@@ -186,7 +189,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                     usersShimmerView.stopShimmer()
                     usersShimmerView.makeInvisible()
                     numberOfFoundUsersTV.makeVisible()
-                    val filteredUsers=viewModel.getFilteredUsers()
+                    val filteredUsers = viewModel.getFilteredUsers()
                     val numberOfAvailableUsersFound = filteredUsers.size
                     numberOfFoundUsersTV.text = getString(
                         R.string.found_users_results_info,
@@ -197,7 +200,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                     if (numberOfAvailableUsersFound > 0) {
                         usersRV.makeVisible()
                     } else {
-                        //  noAvailableUsersFoundTV.makeVisible()
+                        noUsersFoundTV.makeVisible()
                         usersRV.makeInvisible()
                     }
                 }
@@ -214,6 +217,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                     if (!navigatingToOtherFragment) {
                         numberOfFoundUsersTV.makeGone()
                         usersRV.makeInvisible()
+                        noUsersFoundTV.makeGone()
                     }
                 }
 

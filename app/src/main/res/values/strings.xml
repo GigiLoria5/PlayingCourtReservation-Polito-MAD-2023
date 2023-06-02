@@ -171,6 +171,7 @@
     <string name="found_users_results_info">%1$d user%2$s found</string>
     <string name="user_position_age">%1$s, %2$s y.o.</string>
     <string name="not_specified_info">Non-specified information</string>
+    <string name="no_users_found">There are no available users with these search criteria</string>
 
     <string name="user_invited">Invited</string>
     <string name="user_available">Available</string>
