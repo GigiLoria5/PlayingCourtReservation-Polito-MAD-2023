@@ -18,17 +18,22 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReviewsAdapter
+import it.polito.mad.g26.playingcourtreservation.model.avg
+import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtReviewsVM
+import it.polito.mad.g26.playingcourtreservation.util.toast
+import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtReviewsViewModel
 
+@AndroidEntryPoint
 class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
 
     private val args: CourtReviewsFragmentArgs by navArgs()
-    private val vm by viewModels<CourtReviewsVM>()
+    private val viewModel by viewModels<CourtReviewsViewModel>()
 
     private lateinit var reviewsRV: RecyclerView
     private lateinit var sportCenterTV: TextView
@@ -43,6 +48,7 @@ class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val sportCenterId = args.sportCenterId
         val courtId = args.courtId
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
@@ -56,57 +62,70 @@ class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
             findNavController().popBackStack()
         }
 
-        //Set up SportCenter name, address and field name
+        // Visual components
         sportCenterTV = view.findViewById(R.id.sportCenterTV)
         sportCenterAddressTV = view.findViewById(R.id.sportCenterAddressTV)
         courtTV = view.findViewById(R.id.courtTV)
-        vm.getCourt(courtId).observe(viewLifecycleOwner) {
-            courtTV.text = it.name
-            vm.getSportCenter(it.idSportCenter).observe(viewLifecycleOwner) { sc ->
-                sportCenterTV.text = sc.name
-                sportCenterAddressTV.text = getString(
-                    R.string.sport_center_address_res,
-                    sc.address, sc.city
-                )
-            }
-
-        }
-
-        /*Set-up mean value*/
         meanRatingMCV = view.findViewById(R.id.meanRatingMCV)
         meanRatingBar = view.findViewById(R.id.meanRating)
         meanRatingValueTV = view.findViewById(R.id.meanRatingValueTV)
         meanRatingTV = view.findViewById(R.id.meanRatingTV)
-
-        /*Set-up recycle view */
         reviewsRV = view.findViewById(R.id.reviewsRV)
-        val reviewsAdapter = ReviewsAdapter(vm.courtReviews(courtId).value ?: listOf())
         noReviewMCV = view.findViewById(R.id.noReviewFoundMCV)
 
-        vm.courtReviews(courtId).observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                reviewsRV.makeVisible()
-                noReviewMCV.makeInvisible()
-                meanRatingMCV.makeVisible()
-
-                vm.courtReviewsMean(courtId).observe(viewLifecycleOwner) { mean ->
-                    meanRatingBar.rating = mean
-                    meanRatingValueTV.text =
-                        getString(R.string.mean_rating_value, String.format("%.2f", mean))
-                }
-                vm.courtReviewsCount(courtId).observe(viewLifecycleOwner) { count ->
-                    meanRatingTV.text = getString(R.string.mean_rating_text, count.toString())
-                }
-
-            } else {
-                reviewsRV.makeInvisible()
-                noReviewMCV.makeVisible()
-                meanRatingMCV.makeInvisible()
-            }
-            reviewsAdapter.updateReviews(it)
-        }
-
+        // Setup RV
+        val reviewsAdapter = ReviewsAdapter(viewModel.courtReviews, viewModel.userInformationMap)
         reviewsRV.adapter = reviewsAdapter
+
+        // Load the data needed
+        viewModel.loadCourtReviews(sportCenterId, courtId)
+        viewModel.loadingState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    // TODO: Add loading animation
+                }
+
+                is UiState.Failure -> {
+                    // TODO: Stop loading animation
+                    toast(state.error ?: "Unable to get court reviews")
+                }
+
+                is UiState.Success -> {
+                    // TODO: Stop loading animation
+                    val sportCenter = viewModel.sportCenter
+                    val court = viewModel.court
+                    val courtReviews = viewModel.courtReviews
+                    val userInformationMap = viewModel.userInformationMap
+                    // Update Sport Center Information
+                    sportCenterTV.text = sportCenter.name
+                    sportCenterAddressTV.text = getString(
+                        R.string.sport_center_address_res,
+                        sportCenter.address, sportCenter.city
+                    )
+                    // Update Court Information
+                    courtTV.text = court.name
+                    // Update Reviews Information
+                    if (courtReviews.isNotEmpty()) {
+                        reviewsRV.makeVisible()
+                        noReviewMCV.makeInvisible()
+                        meanRatingMCV.makeVisible()
+                        meanRatingTV.text =
+                            getString(R.string.mean_rating_text, courtReviews.size.toString(),
+                                if (courtReviews.size != 1) "s" else ""
+                            )
+                        val meanRating = courtReviews.avg()
+                        meanRatingBar.rating = meanRating
+                        meanRatingValueTV.text =
+                            getString(R.string.mean_rating_value, String.format("%.2f", meanRating))
+                    } else {
+                        reviewsRV.makeInvisible()
+                        noReviewMCV.makeVisible()
+                        meanRatingMCV.makeInvisible()
+                    }
+                    reviewsAdapter.updateReviews(courtReviews, userInformationMap)
+                }
+            }
+        }
 
         // Handle Menu Items
         val menuHost: MenuHost = requireActivity()

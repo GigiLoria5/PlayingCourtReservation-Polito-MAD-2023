@@ -10,13 +10,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.custom.ServiceWithFee
+import it.polito.mad.g26.playingcourtreservation.model.Service
 
 class ChooseAvailableServiceAdapter(
-    private var collection: List<ServiceWithFee>,
-    private val addServiceIdToList: ((Int) -> Unit)? = null,
-    private val removeServiceIdFromList: ((Int) -> Unit)? = null,
-    private val isServiceIdInList: (Int) -> Boolean,
+    private var collection: List<Service>,
+    private val addServiceToList: ((Service) -> Unit)? = null,
+    private val removeServiceFromList: ((Service) -> Unit)? = null,
+    private val isServiceInList: (Service) -> Boolean,
 ) :
     RecyclerView.Adapter<ChooseAvailableServiceAdapter.ChooseAvailableServiceViewHolder>() {
 
@@ -34,7 +34,7 @@ class ChooseAvailableServiceAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateCollection(updatedCollection: List<ServiceWithFee>) {
+    fun updateCollection(updatedCollection: List<Service>) {
         this.collection = updatedCollection
         notifyDataSetChanged()
     }
@@ -84,11 +84,11 @@ class ChooseAvailableServiceAdapter(
         }
 
         fun bind(
-            collection: ServiceWithFee
+            service: Service
         ) {
-            val service = collection.service
-            val fee = collection.fee
-            serviceNameTV.text = service.name
+            val serviceName = service.name
+            val fee = service.fee
+            serviceNameTV.text = serviceName
             servicePriceTV.text =
                 itemView.context.getString(
                     R.string.just_total_reservation_price,
@@ -96,14 +96,14 @@ class ChooseAvailableServiceAdapter(
                 )
 
             availableServiceMCV.setOnClickListener {
-                when (isServiceIdInList(service.id)) {
+                when (isServiceInList(service)) {
                     true -> {
-                        removeServiceIdFromList?.let { it1 -> it1(service.id) }
+                        removeServiceFromList?.let { it1 -> it1(service) }
                         setColors(R.color.grey_light_2, R.color.custom_black, R.color.grey, false)
                     }
 
                     false -> {
-                        addServiceIdToList?.let { it1 -> it1(service.id) }
+                        addServiceToList?.let { it1 -> it1(service) }
                         setColors(R.color.green_500, R.color.white, R.color.white, true)
                     }
                 }

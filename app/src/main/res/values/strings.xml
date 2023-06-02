@@ -139,6 +139,10 @@
         <item>Other</item>
     </string-array>
 
+    <!-- Dialogs-->
+    <string name="dialog_generic_title">A problem occurred</string>
+    <string name="dialog_try_again_title">Try again</string>
+
     <!-- Reviews-->
     <string name="tv_rating">Rating</string>
     <string name="tv_review">Write a text review</string>
@@ -151,7 +155,7 @@
 
     <string name="no_review_found">There are no reviews available for this court</string>
     <string name="mean_rating_value">%1$s/5</string>
-    <string name="mean_rating_text">Based on %1$s reviews</string>
+    <string name="mean_rating_text">Based on %1$s review%2$s</string>
     <string name="rating_error"> Rating required</string>
 
     <string name="my_review">Review</string>

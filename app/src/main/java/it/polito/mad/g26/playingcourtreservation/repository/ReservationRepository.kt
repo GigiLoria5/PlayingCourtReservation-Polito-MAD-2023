@@ -1,30 +1,48 @@
 package it.polito.mad.g26.playingcourtreservation.repository
 
-import android.app.Application
-import androidx.lifecycle.LiveData
-import it.polito.mad.g26.playingcourtreservation.database.CourtReservationDatabase
-import it.polito.mad.g26.playingcourtreservation.model.*
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
+import it.polito.mad.g26.playingcourtreservation.model.Review
+import it.polito.mad.g26.playingcourtreservation.model.SportCenter
+import it.polito.mad.g26.playingcourtreservation.util.UiState
 
-class ReservationRepository(application: Application) {
-    private val reservationDao = CourtReservationDatabase.getDatabase(application).reservationDao()
-    fun add(idUser: Int, idCourt: Int, date: String, time: String, amount: Float): Long {
-        val reservation = Reservation().also {
-            it.idUser = idUser
-            it.idCourt = idCourt
-            it.date = date
-            it.time = time
-            it.amount = amount
-        }
-        return reservationDao.addReservation(reservation)
-    }
+interface ReservationRepository {
+    suspend fun getAllSportCenterReviews(sportCenter: SportCenter): UiState<List<Review>>
 
-    fun filteredReservations(
+    suspend fun getCourtReviews(courtId: String): UiState<List<Review>>
+
+    suspend fun getReservationReviewByUserId(
+        reservationId: String,
+        userId: String
+    ): UiState<Review?>
+
+    suspend fun saveReview(reservationId: String, review: Review): UiState<Unit>
+
+    suspend fun updateReview(reservationId: String, review: Review): UiState<Unit>
+
+    suspend fun deleteUserReview(reservationId: String, userId: String): UiState<Unit>
+
+    suspend fun getUserReservations(userId: String): UiState<List<Reservation>>
+
+    suspend fun getReservationById(reservationId: String): UiState<Reservation>
+
+    suspend fun getUserReservationAt(
+        userId: String,
         date: String,
-        hour: String,
-        courtsIdList: List<Int>
-    ): LiveData<List<Reservation>> =
-        reservationDao.findFiltered(date, hour, courtsIdList)
+        time: String
+    ): UiState<Reservation?>
 
-    fun reservationIdByUserIdAndDateAndHour(userId: Int, date: String, hour: String): LiveData<Int?> =
-        reservationDao.findReservationIdByUserIdAndDateAndHour(userId, date, hour)
+    suspend fun getCourtReservationAt(
+        courtId: String,
+        date: String,
+        time: String
+    ): UiState<Reservation?>
+
+    suspend fun saveReservation(reservation: Reservation): UiState<Unit>
+
+    suspend fun updateReservation(
+        reservationId: String,
+        updatedReservation: Reservation
+    ): UiState<Unit>
+
+    suspend fun deleteReservation(reservationId: String): UiState<Unit>
 }
