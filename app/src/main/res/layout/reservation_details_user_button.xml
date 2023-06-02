@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/green_700"
-        android:text="@string/ask_to_play_button"
+        android:text="@string/request_join_button"
         android:textColor="@color/white"
         app:cornerRadius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"

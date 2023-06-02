@@ -102,8 +102,8 @@
     <string name="reject_button">Reject invite</string>
     <string name="accept_button">Accept invite</string>
     <string name="remove_button">Remove participation</string>
-    <string name="ask_to_play_button">Request to join</string>
-    <string name="already_asked">Join request sent</string>
+    <string name="request_join_button">Request to join</string>
+    <string name="request_sent_button">Join request sent</string>
     <!-- Edit reservations details-->
     <string name="edit_reservation_details">Edit Reservation</string>
     <string name="edit_date_time">Edit Date/time</string>
