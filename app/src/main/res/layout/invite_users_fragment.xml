@@ -138,7 +138,7 @@
                     android:id="@+id/ageRS"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/page_external_space"
+                    android:layout_marginHorizontal="@dimen/page_external_space"
 
                     android:stepSize="1.0"
                     android:valueFrom="18"
@@ -177,6 +177,7 @@
                     android:stepSize="0.5"
                     android:valueFrom="0"
                     android:valueTo="5"
+                    android:layout_marginHorizontal="@dimen/page_external_space"
                     app:layout_constraintBottom_toTopOf="@id/positionsRV"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
