@@ -20,7 +20,7 @@ import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.InviteUsersViewModel
 
@@ -89,7 +89,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    usersShimmerView.startShimmerAnimation(
+                    usersShimmerView.startShimmerRVAnimation(
                         usersRV
                     )
                     numberOfFoundUsersTV.makeGone()

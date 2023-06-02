@@ -82,7 +82,7 @@ class InviteUsersViewModel @Inject constructor(
             return@launch
         }
         val _users = (filteredUsersState as UiState.Success).result
-println("---")
+        println("---")
         _users.forEach { println(it) }
 
         //la funzione del repository è getFilteredUsers

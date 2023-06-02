@@ -18,8 +18,8 @@ import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.Cit
 import it.polito.mad.g26.playingcourtreservation.util.Debouncer
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCitiesViewModel
 
@@ -100,16 +100,16 @@ class SearchCitiesFragment : Fragment(R.layout.search_cities_fragment) {
         viewModel.cities.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    citiesShimmerView.startShimmerAnimation(citiesResultRV)
+                    citiesShimmerView.startShimmerRVAnimation(citiesResultRV)
                 }
 
                 is UiState.Failure -> {
-                    citiesShimmerView.stopShimmerAnimation(citiesResultRV)
+                    citiesShimmerView.stopShimmerRVAnimation(citiesResultRV)
                     toast(state.error ?: "Unable to get cities")
                 }
 
                 is UiState.Success -> {
-                    citiesShimmerView.stopShimmerAnimation(citiesResultRV)
+                    citiesShimmerView.stopShimmerRVAnimation(citiesResultRV)
                     cityResultAdapter.updateCollection(state.result)
                 }
             }

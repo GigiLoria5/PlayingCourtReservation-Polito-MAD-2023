@@ -92,9 +92,7 @@ class UserRepositoryImpl @Inject constructor(
             Log.d(TAG, "getFilteredUsers result")
             val users = arrayListOf<User>()
             for (document in result) {
-                println(document)
                 val user = document.toObject(User::class.java)
-                println(user)
                 users.add(user)
             }
             UiState.Success(users)

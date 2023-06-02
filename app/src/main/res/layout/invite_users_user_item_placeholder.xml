@@ -30,10 +30,11 @@
                 android:id="@+id/avatar"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
+                android:background="@color/loading"
                 android:contentDescription="@string/avatar_description"
                 android:padding="@dimen/page_external_space"
                 android:scaleType="fitXY"
-android:background="@color/loading"                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/circular"
@@ -88,17 +89,18 @@ android:background="@color/loading"                app:layout_constraintBottom_t
                 app:layout_constraintBottom_toTopOf="@id/ratingRB"
                 app:layout_constraintStart_toEndOf="@id/avatar"
                 app:layout_constraintTop_toBottomOf="@id/userRoleTV" />
+
             <RatingBar
                 android:id="@+id/ratingRB"
                 style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-android:visibility="invisible"
                 android:contentDescription="@string/rating_description"
                 android:isIndicator="false"
                 android:numStars="5"
                 android:rating="4"
                 android:theme="@style/ratingBar"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/avatar"
                 app:layout_constraintTop_toBottomOf="@id/userAvailabilityTV" />
