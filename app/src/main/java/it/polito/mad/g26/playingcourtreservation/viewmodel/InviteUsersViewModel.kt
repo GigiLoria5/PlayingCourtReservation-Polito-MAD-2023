@@ -74,6 +74,17 @@ class InviteUsersViewModel @Inject constructor(
 
         //ORA DOVRAI UTILIZZARE NOT INVITABLE PEOPLE PER FILTRARE GLI UTENTI
 
+        // Get all available users for the specified date/time
+        val filteredUsersState =
+            userRepository.getFilteredUsers(notInvitablePeople.toList())
+        if (filteredUsersState is UiState.Failure) {
+            _loadingState.value = filteredUsersState
+            return@launch
+        }
+        val _users = (filteredUsersState as UiState.Success).result
+println("---")
+        _users.forEach { println(it) }
+
         //la funzione del repository è getFilteredUsers
         _loadingState.value = UiState.Success(Unit)
     }

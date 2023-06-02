@@ -317,7 +317,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         courtTypeACTV.makeVisible()
         courtTypeMCV.makeVisible()
         existingReservationCL.makeGone()
-        servicesShimmerView.stopShimmerAnimation(servicesRV)
+        servicesShimmerView.stopShimmerRVAnimation(servicesRV)
         servicesAdapter.updateCollection(viewModel.allServices)
         sportCentersShimmerView.stopShimmer()
         selectedSportShimmerView.stopShimmer()

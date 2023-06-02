@@ -291,6 +291,7 @@ class ReservationRepositoryImpl @Inject constructor(
             )
             val reservations = arrayListOf<Reservation>()
             for (document in result) {
+                println(document)
                 val reservation = document.toObject(Reservation::class.java)
                 reservations.add(reservation)
             }

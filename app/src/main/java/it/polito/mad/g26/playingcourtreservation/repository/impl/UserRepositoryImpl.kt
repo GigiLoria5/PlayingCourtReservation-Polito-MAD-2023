@@ -87,12 +87,14 @@ class UserRepositoryImpl @Inject constructor(
         return try {
             Log.d(TAG, "getFilteredUsers")
             val result = db.collection(FirestoreCollections.USERS)
-                .whereNotIn("id",notAvailableUsersId)
+              //  .whereNotIn("id",notAvailableUsersId)
                 .get().await()
             Log.d(TAG, "getFilteredUsers result")
             val users = arrayListOf<User>()
             for (document in result) {
+                println(document)
                 val user = document.toObject(User::class.java)
+                println(user)
                 users.add(user)
             }
             UiState.Success(users)
