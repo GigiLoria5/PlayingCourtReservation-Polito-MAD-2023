@@ -30,12 +30,11 @@ data class User(
         }
     }
 
-    fun getBirthDateOrDefault(): String = birthDate ?: DEFAULT_BIRTHDATE
-    fun getGenderOrDefault(): String = gender ?: DEFAULT_GENDER
-    fun getLocationOrDefault(): String = location ?: DEFAULT_LOCATION
-    fun getPositionOrDefault(): String = position ?: DEFAULT_POSITION
+    fun genderOrDefault(): String = gender ?: DEFAULT_GENDER
+    fun locationOrDefault(): String = location ?: DEFAULT_LOCATION
+    fun positionOrDefault(): String = position ?: DEFAULT_POSITION
 
-    fun getAgeOrDefault(): String {
+    fun ageOrDefault(): String {
         if (birthDate == null)
             return DEFAULT_BIRTHDATE
         val birthDateObj = LocalDate.parse(

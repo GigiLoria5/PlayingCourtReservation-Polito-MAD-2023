@@ -83,6 +83,28 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateCurrentUserInformation(updatedUserInformation: User): UiState<Unit> {
+        return try {
+            val userId = currentUser!!.uid
+            Log.d(TAG, "Performing updateCurrentUserInformation for user with id $userId")
+            Log.d(TAG, "$updatedUserInformation")
+            if (userId != updatedUserInformation.id)
+                return UiState.Failure("Impossible to update user information")
+            db.collection(FirestoreCollections.USERS)
+                .document(userId)
+                .set(updatedUserInformation).await()
+            Log.d(TAG, "User document with ID $userId updated in Firestore collection")
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing updateCurrentUserInformation for user ${updatedUserInformation.id}: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     companion object {
         private const val TAG = "UserRepository"
     }

@@ -12,4 +12,6 @@ interface UserRepository {
     suspend fun getCurrentUserInformation(): UiState<User>
 
     suspend fun getUserInformationById(userId: String): UiState<User>
+
+    suspend fun updateCurrentUserInformation(updatedUserInformation: User): UiState<Unit>
 }

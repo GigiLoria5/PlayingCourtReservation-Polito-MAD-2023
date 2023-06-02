@@ -31,10 +31,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.UserSkillsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.User
+import it.polito.mad.g26.playingcourtreservation.util.UiState
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
+import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
+import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.EditProfileViewModel
 import it.polito.mad.g26.playingcourtreservation.viewmodel.SharedProfileViewModel
+import pl.droidsonroids.gif.GifImageView
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -57,6 +62,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
     private lateinit var genderAutoComplete: AutoCompleteTextView
     private lateinit var datePickerDialog: DatePickerDialog
     private val myCalendar = Calendar.getInstance()
+    private lateinit var loaderImage: GifImageView
     private lateinit var confirmAlertDialog: AlertDialog
     private lateinit var avatarImage: ImageView
     private var imageUri: Uri? = null
@@ -87,6 +93,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
         locationEditText = view.findViewById(R.id.location_et)
         avatarImage = view.findViewById(R.id.avatar)
         sportRecycleView = view.findViewById(R.id.editSportsRV)
+        loaderImage = view.findViewById(R.id.loaderImage)
 
         // Load current user information
         val currentUserInformation = viewModel.userInformation
@@ -102,6 +109,29 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
         // Init components
         populateDropdowns()
         setupBirthDateComponents()
+
+        // Handle User Update
+        viewModel.updateState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    loaderImage.setFreezesAnimation(false)
+                    loaderImage.makeVisible()
+                }
+
+                is UiState.Failure -> {
+                    loaderImage.makeGone()
+                    loaderImage.setFreezesAnimation(true)
+                    toast(state.error ?: "Unable to update user information")
+                }
+
+                is UiState.Success -> {
+                    findNavController().popBackStack()
+                    loaderImage.makeGone()
+                    loaderImage.setFreezesAnimation(true)
+                    toast("Profile successfully updated")
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -138,7 +168,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
                             birthDate = birthDateEditText.text.toString(),
                             skills = (sportRecycleView.adapter as UserSkillsAdapter).getSkills()
                         )
-                        println(updatedUserInformation)
+                        viewModel.updateCurrentUserInformation(updatedUserInformation)
                         true
                     }
 

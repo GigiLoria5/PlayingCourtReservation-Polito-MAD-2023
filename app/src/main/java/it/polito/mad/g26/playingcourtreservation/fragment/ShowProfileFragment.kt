@@ -107,16 +107,18 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
                     sharedProfileViewModel.currentUserInfo = userInfo
                     username.text = userInfo.username
                     fullName.text = userInfo.fullname
-                    age.text = userInfo.getAgeOrDefault()
-                    gender.text = userInfo.getGenderOrDefault()
-                    location.text = userInfo.getLocationOrDefault()
-                    position.text = userInfo.getPositionOrDefault()
+                    age.text = userInfo.ageOrDefault()
+                    gender.text = userInfo.genderOrDefault()
+                    location.text = userInfo.locationOrDefault()
+                    position.text = userInfo.positionOrDefault()
                     if (userInfo.skills.isEmpty()) {
                         sportRecycleViewShimmer.makeGone()
                         sportRecycleView.makeGone()
                         return@observe
                     }
-                    sportRecycleView.adapter = UserSkillsAdapter(userInfo.skills)
+                    sportRecycleView.adapter = UserSkillsAdapter(
+                        userInfo.skills.sortedBy { -it.rating }
+                    )
                     sportRecycleView.layoutManager = LinearLayoutManager(context)
                 }
             }
