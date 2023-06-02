@@ -4,10 +4,12 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.StorageReference
 import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.repository.UserRepository
 import it.polito.mad.g26.playingcourtreservation.util.FirebaseStorageConstants
+import it.polito.mad.g26.playingcourtreservation.util.FirebaseStorageConstants.MAX_DOWNLOAD_SIZE
 import it.polito.mad.g26.playingcourtreservation.util.FirestoreCollections
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.await
@@ -122,6 +124,28 @@ class UserRepositoryImpl @Inject constructor(
             Log.e(
                 TAG,
                 "Error while performing updateUserImage for user with id ${userId}: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun downloadUserImage(userId: String): UiState<ByteArray?> {
+        return try {
+            Log.d(TAG, "Performing downloadUserImage for user with id $userId")
+            val imageData = storage
+                .child(getStorageFileName(userId))
+                .getBytes(MAX_DOWNLOAD_SIZE)
+                .await()
+            Log.d(TAG, "User image with ID $userId downloaded from Firebase storage")
+            UiState.Success(imageData)
+        } catch (e: StorageException) {
+            Log.d(TAG, "User image with ID $userId not found in Firebase storage")
+            UiState.Success(null)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing downloadUserImage for user with id ${userId}: ${e.message}",
                 e
             )
             UiState.Failure(e.localizedMessage)

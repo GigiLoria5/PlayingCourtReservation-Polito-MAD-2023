@@ -3,6 +3,7 @@ package it.polito.mad.g26.playingcourtreservation.util
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.widget.ImageView
@@ -60,4 +61,9 @@ fun ImageView.toByteArray(): ByteArray {
     val baos = ByteArrayOutputStream()
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
     return baos.toByteArray()
+}
+
+fun ImageView.setImageFromByteArray(imageData: ByteArray) {
+    val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+    setImageBitmap(bitmap)
 }

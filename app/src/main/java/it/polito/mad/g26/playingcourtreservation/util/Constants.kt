@@ -17,4 +17,5 @@ object SportNames {
 
 object FirebaseStorageConstants {
     const val USER_IMAGES = "user"
+    const val MAX_DOWNLOAD_SIZE = (1 * 1024 * 1024).toLong() // 1 MB
 }

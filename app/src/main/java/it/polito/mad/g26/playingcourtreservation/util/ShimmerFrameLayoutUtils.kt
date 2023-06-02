@@ -1,9 +1,9 @@
 package it.polito.mad.g26.playingcourtreservation.util
 
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.material.imageview.ShapeableImageView
 
 
 fun ShimmerFrameLayout.startShimmerRVAnimation(recyclerView: RecyclerView) {
@@ -18,13 +18,13 @@ fun ShimmerFrameLayout.stopShimmerRVAnimation(recyclerView: RecyclerView) {
     recyclerView.makeVisible()
 }
 
-fun ShimmerFrameLayout.startShimmerImgAnimation(image: ShapeableImageView) {
+fun ShimmerFrameLayout.startShimmerImgAnimation(image: ImageView) {
     image.makeInvisible()
     makeVisible()
     startShimmer()
 }
 
-fun ShimmerFrameLayout.stopShimmerImgAnimation(image: ShapeableImageView) {
+fun ShimmerFrameLayout.stopShimmerImgAnimation(image: ImageView) {
     stopShimmer()
     makeInvisible()
     image.makeVisible()

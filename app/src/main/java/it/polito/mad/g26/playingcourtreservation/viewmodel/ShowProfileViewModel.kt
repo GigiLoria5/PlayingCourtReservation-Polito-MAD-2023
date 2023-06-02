@@ -8,7 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.repository.UserRepository
 import it.polito.mad.g26.playingcourtreservation.util.UiState
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,18 +17,40 @@ class ShowProfileViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val _userInformationState = MutableLiveData<UiState<User>>()
-    val userInformationState: LiveData<UiState<User>>
-        get() = _userInformationState
+    private val _loadingState = MutableLiveData<UiState<Unit>>()
+    val loadingState: LiveData<UiState<Unit>>
+        get() = _loadingState
+
+    private var _userInformation = User()
+    val userInformation: User
+        get() = _userInformation
+
+    private var _userImageData: ByteArray? = null
+    val userImageData: ByteArray?
+        get() = _userImageData
 
     fun loadCurrentUserInformation(userId: String?) = viewModelScope.launch {
-        _userInformationState.value = UiState.Loading
-        val resultState =
+        _loadingState.value = UiState.Loading
+        val deferredUserInfoState =
             if (userId == null)
-                userRepository.getCurrentUserInformation()
+                async { userRepository.getCurrentUserInformation() }
             else
-                userRepository.getUserInformationById(userId)
-        delay(500)
-        _userInformationState.value = resultState
+                async { userRepository.getUserInformationById(userId) }
+        val deferredUserImageState = async {
+            userRepository.downloadUserImage(userId ?: userRepository.currentUser!!.uid)
+        }
+        val userInfoState = deferredUserInfoState.await()
+        val userImgUpdateState = deferredUserImageState.await()
+        if (userInfoState is UiState.Failure) {
+            _loadingState.value = userInfoState
+            return@launch
+        }
+        if (userImgUpdateState is UiState.Failure) {
+            _loadingState.value = userImgUpdateState
+            return@launch
+        }
+        _userInformation = (userInfoState as UiState.Success).result
+        _userImageData = (userImgUpdateState as UiState.Success).result
+        _loadingState.value = UiState.Success(Unit)
     }
 }
