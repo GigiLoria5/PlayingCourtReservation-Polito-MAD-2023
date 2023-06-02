@@ -24,6 +24,16 @@ class InviteUsersViewModel @Inject constructor(
     private var time: String = ""
     private val myInvitees: MutableSet<String> = mutableSetOf()
 
+    val initialMinAge = 25f
+    val initialMaxAge = 70f
+    val initialMinSkill = 2f
+    val initialMaxSkill = 4f
+
+    val minAge = 18f
+    val maxAge = 90f
+    val minSkill = 0f
+    val maxSkill = 5f
+
 
     /* INITIALIZATION */
     fun initialize(
@@ -36,6 +46,52 @@ class InviteUsersViewModel @Inject constructor(
         this.reservationId = reservationId
         this.date = date
         this.time = time
+
+        _filteredUsername.observeForever {
+            fetchUsersData()
+        }
+        _selectedMinAge.observeForever {
+            fetchUsersData()
+        }
+        _selectedMaxAge.observeForever {
+            fetchUsersData()
+        }
+        _selectedMinSkill.observeForever {
+            fetchUsersData()
+        }
+        _selectedMaxSkill.observeForever {
+            fetchUsersData()
+        }
+    }
+
+    /*USERNAME FILTER MANAGEMENT*/
+    private val _filteredUsername = MutableLiveData("")
+    fun changeFilteredUsername(username: String) {
+        _filteredUsername.value = username
+    }
+
+    /*SELECTED MIN AGE MANAGEMENT*/
+    private val _selectedMinAge = MutableLiveData(initialMinAge)
+    fun changeSelectedMinAge(age: Float) {
+        _selectedMinAge.value = age
+    }
+
+    /*SELECTED MAX AGE MANAGEMENT*/
+    private val _selectedMaxAge = MutableLiveData(initialMaxAge)
+    fun changeSelectedMaxAge(age: Float) {
+        _selectedMaxAge.value = age
+    }
+
+    /*SELECTED MIN SKILL MANAGEMENT*/
+    private val _selectedMinSkill = MutableLiveData(initialMinSkill)
+    fun changeSelectedMinSkill(skillValue: Float) {
+        _selectedMinSkill.value = skillValue
+    }
+
+    /*SELECTED MAX SKILL MANAGEMENT*/
+    private val _selectedMaxSkill = MutableLiveData(initialMaxSkill)
+    fun changeSelectedMaxSkill(skillValue: Float) {
+        _selectedMaxSkill.value = skillValue
     }
 
     // Load users data
@@ -83,6 +139,6 @@ class InviteUsersViewModel @Inject constructor(
         _loadingState.value = UiState.Success(Unit)
     }
 
-    fun isUserIdInvited(userId:String):Boolean = myInvitees.contains(userId)
+    fun isUserIdInvited(userId: String): Boolean = myInvitees.contains(userId)
 
 }
