@@ -418,6 +418,37 @@ class ReservationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun inviteUser(reservationId: String, userId: String): UiState<Unit> {
+        return try {
+            Log.d(TAG, "inviteUser for reservation: $reservationId and user: $userId")
+            // Get the reservation
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "inviteUser for reservation: $reservationId and user: $userId found=${result.exists()}"
+            )
+            if (!result.exists()) // Reservation Id must be unique and existing
+                UiState.Failure(noReservationFound)
+            val reservation = result.toObject(Reservation::class.java)!!
+            // Add the invitation
+            reservation.invitees = reservation.invitees.plus(userId)
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .set(reservation).await()
+            Log.d(TAG, "inviteUser for reservation: $reservationId and user: $userId has been added}")
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing inviteUser for reservation: $reservationId and user: $userId: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     companion object {
         private const val TAG = "ReservationRepository"
     }

@@ -50,4 +50,6 @@ interface ReservationRepository {
     ): UiState<Unit>
 
     suspend fun deleteReservation(reservationId: String): UiState<Unit>
+
+    suspend fun inviteUser(reservationId: String,userId: String):UiState<Unit>
 }

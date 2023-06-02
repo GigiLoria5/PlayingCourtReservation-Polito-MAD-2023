@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.polito.mad.g26.playingcourtreservation.model.Notification
 import it.polito.mad.g26.playingcourtreservation.model.User
+import it.polito.mad.g26.playingcourtreservation.repository.NotificationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.UserRepository
 import it.polito.mad.g26.playingcourtreservation.util.UiState
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class InviteUsersViewModel @Inject constructor(
     private val reservationRepository: ReservationRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val notificationRepository: NotificationRepository
 ) : ViewModel() {
 
     private var city: String = ""
@@ -68,9 +71,6 @@ class InviteUsersViewModel @Inject constructor(
             fetchUsersData()
         }
         _selectedPositions.observeForever {
-            fetchUsersData()
-        }
-        _numberOfInvitationsDone.observeForever {
             fetchUsersData()
         }
     }
@@ -202,14 +202,25 @@ class InviteUsersViewModel @Inject constructor(
     fun isUserIdInvited(userId: String): Boolean = myInvitees.contains(userId)
 
     /*INVITATIONS MANAGEMENT*/
+    fun inviteAndNotifyUser(userId: String) = viewModelScope.launch {
+        _loadingState.value = UiState.Loading
+        // Invite user
+        var state = reservationRepository.inviteUser(reservationId, userId)
+        if (state is UiState.Failure) {
+            _loadingState.value = state
+            return@launch
+        }
 
-    //Useful to update users list after a notification is sent
-    private val _numberOfInvitationsDone = MutableLiveData(0)
-    private fun increaseNumberOfInvitationsDone() {
-        _numberOfInvitationsDone.value =_numberOfInvitationsDone.value!!+1
-    }
-
-    fun inviteAndNotifyUser(userId:String){
-        increaseNumberOfInvitationsDone()
+        // Send notification
+        val notification = Notification.matchInvitation(
+            userId,
+            reservationId
+        )
+        state = notificationRepository.saveNotification(notification)
+        if (state is UiState.Failure) {
+            _loadingState.value = state
+            return@launch
+        }
+        fetchUsersData()
     }
 }
