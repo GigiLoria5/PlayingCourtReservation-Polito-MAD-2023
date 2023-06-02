@@ -58,7 +58,7 @@ class SearchCitiesFragment : Fragment(R.layout.search_cities_fragment) {
         val searchDebouncer = Debouncer(500)
         searchInputET.doOnTextChanged { text, _, _, _ ->
             searchDebouncer.submit {
-                viewModel.getCities(text.toString())
+                viewModel.getCities(text.toString().trim())
             }
         }
         searchInputET.requestFocus()

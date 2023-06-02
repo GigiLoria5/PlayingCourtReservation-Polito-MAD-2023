@@ -22,9 +22,10 @@ class InviteUsersViewModel @Inject constructor(
     private var reservationId: String = ""
     private var date: String = ""
     private var time: String = ""
+    private var sport: String = ""
     private val myInvitees: MutableSet<String> = mutableSetOf()
 
-    val initialMinAge = 25f
+    val initialMinAge = 22f
     val initialMaxAge = 70f
     val initialMinSkill = 2f
     val initialMaxSkill = 4f
@@ -40,13 +41,14 @@ class InviteUsersViewModel @Inject constructor(
         city: String,
         reservationId: String,
         date: String,
-        time: String
+        time: String,
+        sport: String
     ) {
         this.city = city
         this.reservationId = reservationId
         this.date = date
         this.time = time
-
+        this.sport = sport
         _filteredUsername.observeForever {
             fetchUsersData()
         }
@@ -67,7 +69,7 @@ class InviteUsersViewModel @Inject constructor(
     /*USERNAME FILTER MANAGEMENT*/
     private val _filteredUsername = MutableLiveData("")
     fun changeFilteredUsername(username: String) {
-        _filteredUsername.value = username
+        _filteredUsername.value = username.trim()
     }
 
     /*SELECTED MIN AGE MANAGEMENT*/
@@ -99,10 +101,7 @@ class InviteUsersViewModel @Inject constructor(
     val loadingState: LiveData<UiState<Unit>>
         get() = _loadingState
 
-    private var _users: List<User> = listOf()
-    val users: List<User>
-        get() = _users
-
+    private var users: List<User> = listOf()
 
     fun fetchUsersData() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
@@ -135,8 +134,29 @@ class InviteUsersViewModel @Inject constructor(
         val allUsers = (allUsersState as UiState.Success).result
 
         //can't apply this filter to db query because firebase supports Lists of max 10 elements
-        _users = allUsers.filter { !notInvitablePeople.contains(it.id) }
+        users = allUsers.filter { !notInvitablePeople.contains(it.id) }
         _loadingState.value = UiState.Success(Unit)
+    }
+
+    fun getFilteredUsers(): List<User> {
+        return users
+            .filter { user ->
+                val ageString = user.getAgeOrDefault()
+                ageString != User.DEFAULT_BIRTHDATE
+                        && ageString.toInt() >= _selectedMinAge.value!!.toInt()
+                        && ageString.toInt() <= _selectedMaxAge.value!!.toInt()
+            }
+
+            .filter { user ->
+                val skillValue = user.skills.find { it.sportName == sport }?.rating ?: 0f
+                skillValue >= _selectedMinSkill.value!! && skillValue <= _selectedMaxSkill.value!!
+            }
+            .filter { user ->
+                _filteredUsername.value!!.isEmpty() || _filteredUsername.value!!.contains(
+                    user.username,
+                    ignoreCase = true
+                )
+            }
     }
 
     fun isUserIdInvited(userId: String): Boolean = myInvitees.contains(userId)

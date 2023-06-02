@@ -67,7 +67,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
 
         println("$city $date $time $reservationId $sport")
         /* VM INITIALIZATIONS */
-        viewModel.initialize(city, reservationId, date, time)
+        viewModel.initialize(city, reservationId, date, time,sport)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         customToolBar = view.findViewById(R.id.customToolBar)
@@ -148,7 +148,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
 
     private fun createInviteUserAdapter(): InviteUserAdapter {
         return InviteUserAdapter(
-            viewModel.users,
+            viewModel.getFilteredUsers(),
             { viewModel.isUserIdInvited(it) },
             sport,
             { userId ->
@@ -186,13 +186,14 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                     usersShimmerView.stopShimmer()
                     usersShimmerView.makeInvisible()
                     numberOfFoundUsersTV.makeVisible()
-                    val numberOfAvailableUsersFound = viewModel.users.size
+                    val filteredUsers=viewModel.getFilteredUsers()
+                    val numberOfAvailableUsersFound = filteredUsers.size
                     numberOfFoundUsersTV.text = getString(
                         R.string.found_users_results_info,
                         numberOfAvailableUsersFound,
                         if (numberOfAvailableUsersFound != 1) "s" else ""
                     )
-                    inviteUsersAdapter.updateCollection(viewModel.users)
+                    inviteUsersAdapter.updateCollection(filteredUsers)
                     if (numberOfAvailableUsersFound > 0) {
                         usersRV.makeVisible()
                     } else {
