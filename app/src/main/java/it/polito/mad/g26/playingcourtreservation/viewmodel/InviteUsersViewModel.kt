@@ -70,25 +70,19 @@ class InviteUsersViewModel @Inject constructor(
             notInvitablePeople.add(reservation.userId)
             reservation.participants.forEach { participant -> notInvitablePeople.add(participant) }
         }
-        notInvitablePeople.forEach { println(it) }
-
-        //ORA DOVRAI UTILIZZARE NOT INVITABLE PEOPLE PER FILTRARE GLI UTENTI
-
-        // Get all available users for the specified date/time
-        val filteredUsersState =
-            userRepository.getFilteredUsers(notInvitablePeople.toList())
-        if (filteredUsersState is UiState.Failure) {
-            _loadingState.value = filteredUsersState
+        // Get all users
+        val allUsersState = userRepository.getAllUsers()
+        if (allUsersState is UiState.Failure) {
+            _loadingState.value = allUsersState
             return@launch
         }
-        val _users = (filteredUsersState as UiState.Success).result
-        println("---")
-        _users.forEach { println(it) }
+        val allUsers = (allUsersState as UiState.Success).result
 
-        //la funzione del repository è getFilteredUsers
+        //can't apply this filter to db query because firebase supports Lists of max 10 elements
+        _users = allUsers.filter { !notInvitablePeople.contains(it.id) }
         _loadingState.value = UiState.Success(Unit)
     }
 
-    fun getTotAvailableUsers(): Int = users.size
+    fun isUserIdInvited(userId:String):Boolean = myInvitees.contains(userId)
 
 }

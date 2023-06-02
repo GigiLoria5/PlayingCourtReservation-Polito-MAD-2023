@@ -81,6 +81,8 @@ class MainActivity : AppCompatActivity() {
 
                     R.id.reservationDetailsFragment -> lockOrientationAndShowNav()
 
+                    R.id.inviteUsersFragment -> lockOrientationAndHideNav()
+
                     R.id.modifyReservationDetailsFragment -> lockOrientationAndHideNav()
 
                     // Profile

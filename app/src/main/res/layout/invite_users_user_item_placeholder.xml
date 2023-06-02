@@ -48,36 +48,34 @@
                 android:layout_height="wrap_content"
                 android:background="@color/loading"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintBottom_toTopOf="@id/userAgeTV"
+                app:layout_constraintBottom_toTopOf="@id/userPositionAgeTV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/avatar"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                android:id="@+id/userAgeTV"
+                android:id="@+id/userPositionAgeTV"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:background="@color/loading"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/grey"
-                app:layout_constraintBottom_toTopOf="@id/userRoleTV"
+                app:layout_constraintBottom_toTopOf="@id/userCityTV"
                 app:layout_constraintStart_toEndOf="@id/avatar"
                 app:layout_constraintTop_toBottomOf="@id/userNameTV" />
 
             <TextView
-                android:id="@+id/userRoleTV"
+                android:id="@+id/userCityTV"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
-
                 android:background="@color/loading"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/grey"
                 app:layout_constraintBottom_toTopOf="@id/userAvailabilityTV"
                 app:layout_constraintStart_toEndOf="@id/avatar"
-                app:layout_constraintTop_toBottomOf="@id/userAgeTV" />
+                app:layout_constraintTop_toBottomOf="@id/userPositionAgeTV" />
 
             <TextView
                 android:id="@+id/userAvailabilityTV"
@@ -88,7 +86,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 app:layout_constraintBottom_toTopOf="@id/ratingRB"
                 app:layout_constraintStart_toEndOf="@id/avatar"
-                app:layout_constraintTop_toBottomOf="@id/userRoleTV" />
+                app:layout_constraintTop_toBottomOf="@id/userCityTV" />
 
             <RatingBar
                 android:id="@+id/ratingRB"

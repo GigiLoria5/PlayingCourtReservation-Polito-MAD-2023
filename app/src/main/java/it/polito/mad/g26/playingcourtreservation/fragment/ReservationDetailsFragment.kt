@@ -1,8 +1,5 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
-
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -185,9 +182,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
                     //TODO DELETE THIS
                     sportCenterPhoneNumberMCV.setOnClickListener {
-                        val direction=ReservationDetailsFragmentDirections.actionReservationDetailsFragmentToInviteUsersFragment(reservation.id,reservation.date,reservation.time,reservationSportCenter.city)
+                        val direction=ReservationDetailsFragmentDirections.actionReservationDetailsFragmentToInviteUsersFragment(reservation.id,reservation.date,reservation.time,reservationSportCenter.city,reservationCourt.sport)
                         findNavController().navigate(direction)
-
                     }
 
                     // Show reservation buttons if future or review button is past

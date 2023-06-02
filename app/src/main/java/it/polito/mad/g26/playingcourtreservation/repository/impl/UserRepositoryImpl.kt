@@ -83,11 +83,10 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFilteredUsers(notAvailableUsersId: List<String>): UiState<List<User>> {
+    override suspend fun getAllUsers(): UiState<List<User>> {
         return try {
             Log.d(TAG, "getFilteredUsers")
             val result = db.collection(FirestoreCollections.USERS)
-              //  .whereNotIn("id",notAvailableUsersId)
                 .get().await()
             Log.d(TAG, "getFilteredUsers result")
             val users = arrayListOf<User>()

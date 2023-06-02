@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.adapter.InviteUserAdapter
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
@@ -37,7 +38,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
 
     private lateinit var usersRV: RecyclerView
 
-//    private lateinit var usersAdapter: UserAdapter
+   private lateinit var inviteUsersAdapter: InviteUserAdapter
 
     private lateinit var usersShimmerView: ShimmerFrameLayout
 
@@ -47,6 +48,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
     private var reservationId: String = ""
     private var date: String = ""
     private var time: String = ""
+    private var sport: String=""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,8 +56,9 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         reservationId = args.reservationId
         date = args.date
         time = args.time
+        sport=args.sport
 
-        println("$city $date $time $reservationId")
+        println("$city $date $time $reservationId $sport")
         /* VM INITIALIZATIONS */
         viewModel.initialize(city, reservationId, date, time)
 
@@ -74,14 +77,23 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
 
         /* USERS RECYCLE VIEW INITIALIZER*/
         usersRV = view.findViewById(R.id.usersRV)
-        //     usersAdapter = createUserAdapter()
-        //   usersRV.adapter = usersAdapter
+        inviteUsersAdapter = createInviteUserAdapter()
+           usersRV.adapter = inviteUsersAdapter
 
         /* shimmerFrameLayout INITIALIZER */
         usersShimmerView = view.findViewById(R.id.usersShimmerView)
 
 
     }
+
+    private fun createInviteUserAdapter(): InviteUserAdapter {
+        return InviteUserAdapter(
+            viewModel.users,
+            { viewModel.isUserIdInvited(it) },
+            sport
+        )
+    }
+
 
     private fun loadAvailableUsers() {
         /* USERS LOADING */
@@ -107,16 +119,16 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                     usersShimmerView.stopShimmer()
                     usersShimmerView.makeInvisible()
                     numberOfFoundUsersTV.makeVisible()
-                    val numberOfAvailableUsersFound = 0// state.result.size
+                    val numberOfAvailableUsersFound =  viewModel.users.size
                     numberOfFoundUsersTV.text = getString(
                         R.string.found_users_results_info,
                         numberOfAvailableUsersFound,
                         if (numberOfAvailableUsersFound != 1) "s" else ""
                     )
-                    //    usersAdapter.updateCollection(state.result)
-                    //  if (numberOfAvailableUsersFound > 0) {
-                    //    usersRV.makeVisible()
-                    //} else {
+                        inviteUsersAdapter.updateCollection(viewModel.users)
+                      if (numberOfAvailableUsersFound > 0) {
+                        usersRV.makeVisible()
+                    } //else {
                     //  noAvailableUsersFoundTV.makeVisible()
                     // usersRV.makeInvisible()
                     // }

@@ -262,5 +262,8 @@
         <argument
             android:name="city"
             app:argType="string" />
+        <argument
+            android:name="sport"
+            app:argType="string" />
     </fragment>
 </navigation>

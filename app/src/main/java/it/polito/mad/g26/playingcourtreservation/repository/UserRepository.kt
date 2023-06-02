@@ -13,7 +13,5 @@ interface UserRepository {
 
     suspend fun getUserInformationById(userId: String): UiState<User>
 
-    suspend fun getFilteredUsers(
-        notAvailableUsersId: List<String>
-    ): UiState<List<User>>
+    suspend fun getAllUsers(): UiState<List<User>>
 }
