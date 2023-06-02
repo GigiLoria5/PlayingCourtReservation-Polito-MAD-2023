@@ -87,6 +87,7 @@
                                     android:backgroundTint="@color/white"
                                     android:hint="@string/user_search_box_hint"
                                     android:inputType="text"
+                                    android:imeOptions="actionDone"
                                     android:textColor="@color/grey"
                                     android:textSize="@dimen/search_city_text_size"
                                     app:layout_constraintBottom_toBottomOf="parent"
