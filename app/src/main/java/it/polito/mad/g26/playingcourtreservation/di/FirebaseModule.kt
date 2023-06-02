@@ -20,4 +20,5 @@ object FirebaseModule {
     @Provides
     fun provideFirestoreInstance(): FirebaseFirestore = FirebaseFirestore.getInstance()
 
+
 }

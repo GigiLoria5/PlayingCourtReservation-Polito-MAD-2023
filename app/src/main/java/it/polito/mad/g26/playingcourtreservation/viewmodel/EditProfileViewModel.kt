@@ -41,9 +41,9 @@ class EditProfileViewModel @Inject constructor(
             _updateState.value = UiState.Failure("Please make changes before saving")
             return@launch
         }
-        // val resultState = userRepository.updateCurrentUserInformation(updatedUserInformation)
+        val resultState = userRepository.updateCurrentUserInformation(updatedUserInformation)
         delay(500)
-        _updateState.value = UiState.Success(Unit)
+        _updateState.value = resultState
     }
 
     // Manage skill list

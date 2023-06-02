@@ -14,3 +14,8 @@ object SportNames {
     const val BEACH_SOCCER = "Beach Soccer"
     const val FUTSAL = "Futsal"
 }
+
+object FirebaseStorageConstants {
+    val ROOT_DIRECTORY = "app"
+    val USER_IMAGES = "user"
+}
