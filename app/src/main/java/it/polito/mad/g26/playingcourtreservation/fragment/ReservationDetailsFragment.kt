@@ -1,6 +1,8 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu

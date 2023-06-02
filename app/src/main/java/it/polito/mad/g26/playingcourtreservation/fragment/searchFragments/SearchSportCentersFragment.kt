@@ -303,6 +303,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         courtTypeACTV.makeInvisible()
         courtTypeMCV.makeInvisible()
         selectedSportShimmerView.stopShimmer()
+        selectedSportShimmerView.makeInvisible()
 
         numberOfSportCentersFoundTV.makeGone()
         noSportCentersFoundTV.makeGone()

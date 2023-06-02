@@ -1,6 +1,7 @@
 package it.polito.mad.g26.playingcourtreservation.repository.impl
 
 import android.util.Log
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.model.Review
@@ -250,9 +251,14 @@ class ReservationRepositoryImpl @Inject constructor(
         return try {
             Log.d(TAG, "getUserReservationAt with user id: $userId, date: $date and time: $time")
             val result = db.collection(FirestoreCollections.RESERVATIONS)
-                .whereEqualTo("userId", userId)
                 .whereEqualTo("date", date)
                 .whereEqualTo("time", time)
+                .where(
+                    Filter.or(
+                        Filter.equalTo("userId", userId),
+                        Filter.arrayContains("participants", userId)
+                    )
+                )
                 .get().await()
             Log.d(
                 TAG,
