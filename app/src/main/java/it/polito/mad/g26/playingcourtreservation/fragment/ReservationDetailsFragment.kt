@@ -81,26 +81,15 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val date = view.findViewById<TextView>(R.id.date)
         val serviceTitle = view.findViewById<TextView>(R.id.service_title)
         val serviceRV = view.findViewById<RecyclerView>(R.id.service_list)
+        val participantsRecyclerView = view.findViewById<RecyclerView>(R.id.player_list)
+        val inviteesRecyclerView = view.findViewById<RecyclerView>(R.id.requester_list)
+        val inviteesLayout = view.findViewById<ConstraintLayout>(R.id.invitees_layout)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
         customToolBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-        val privateList = listOf(
-            "profile11111111111111111111111",
-            "profile2",
-            "profile3",
-            "profile4",
-            "profile5",
-            "profile6",
-            "profile7",
-            "profile8",
-            "profile9",
-            "profile10",
-            "profile11",
-            "profile12"
-        )
 
         /*BACK BUTTON MANAGEMENT*/
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -188,46 +177,69 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         R.string.set_text_with_euro,
                         reservation.amount.toString()
                     )
-                    // Show reservation buttons if future or review button is past
-                    if (viewModel.nowIsBeforeReservationDateTime()) {
-                        // Inflate the new layout with two buttons of reservation
-                        val inflater = LayoutInflater.from(requireContext())
-                        val viewDeleteAndEdit = inflater.inflate(
-                            R.layout.reservation_details_delete_and_edit_buttons,
-                            viewReservationButtons,
-                            false
-                        )
-                        val deleteButton =
-                            viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
-                        val editButton =
-                            viewDeleteAndEdit.findViewById<MaterialButton>(R.id.modify_reservation_button)
-                        viewReservationButtons.addView(viewDeleteAndEdit)
 
-                        deleteButton.setOnClickListener {
-                            builder.show()
-                        }
-                        editButton.setOnClickListener {
-                            val action =
-                                ReservationDetailsFragmentDirections.openReservationEdit(
-                                    viewModel.reservationId
-                                )
-                            findNavController().navigate(action)
+                    //Show players confirmed
+                    val participantsAdapter = ReservationDetailsAdapter(reservation.participants, 1)
+                    participantsRecyclerView.adapter = participantsAdapter
+                    participantsRecyclerView.layoutManager = GridLayoutManager(context, 2)
+
+                    // Show reservation buttons+ applicants list if future or review button is past
+                    if (viewModel.nowIsBeforeReservationDateTime()) {
+
+                        println("----RESERVATION-------")
+                        println(reservation)
+                        println("----CURRENT USER-------")
+                        println(viewModel.userId)
+
+                        //TODO: if to discern between creator, applicant, player or user
+                        if (reservation.userId == viewModel.userId) {
+                            // Inflate the new layout with two buttons of reservation
+                            val inflater = LayoutInflater.from(requireContext())
+                            val viewDeleteAndEdit = inflater.inflate(
+                                R.layout.reservation_details_delete_and_edit_buttons,
+                                viewReservationButtons,
+                                false
+                            )
+                            val deleteButton =
+                                viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
+                            val editButton =
+                                viewDeleteAndEdit.findViewById<MaterialButton>(R.id.modify_reservation_button)
+                            viewReservationButtons.addView(viewDeleteAndEdit)
+
+                            // TODO : on click on card + on click on buttons
+                            //Show invitees list if not empty
+                            if (reservation.invitees.isNotEmpty()) {
+                                inviteesLayout.makeVisible()
+                                val inviteesAdapter =
+                                    ReservationDetailsAdapter(reservation.invitees, 2)
+                                inviteesRecyclerView.adapter = inviteesAdapter
+                                inviteesRecyclerView.layoutManager = LinearLayoutManager(context)
+                            }
+
+                            deleteButton.setOnClickListener {
+                                builder.show()
+                            }
+                            editButton.setOnClickListener {
+                                val action =
+                                    ReservationDetailsFragmentDirections.openReservationEdit(
+                                        viewModel.reservationId
+                                    )
+                                findNavController().navigate(action)
+                            }
+                        } else if (reservation.participants.contains(reservation.userId)) {
+                            //we have a participant-> button to remove itself and send notification
+                        } else if (reservation.invitees.contains(reservation.userId)) {
+                            //we have a invitees-> button not clickable already sent invite
+                        } else if (reservation.requests.contains(reservation.userId)) {
+                            //we have someone invited by creator-> button accept or reject
+                        } else {
+                            //we have a simply user-> button to ask to join
                         }
                         return@observe
                     }
                     loadReview()
-                }
+                }//HERE SUCCESS IS CLOSED
             }
-
-            val partiRecyclerView = view.findViewById<RecyclerView>(R.id.player_list)
-            val adapter = ReservationDetailsAdapter(privateList, 1)
-            partiRecyclerView.adapter = adapter
-            partiRecyclerView.layoutManager = GridLayoutManager(context, 2)
-
-            val partiRecyclerView2 = view.findViewById<RecyclerView>(R.id.requester_list)
-            val adapter2 = ReservationDetailsAdapter(privateList, 2)
-            partiRecyclerView2.adapter = adapter2
-            partiRecyclerView2.layoutManager = LinearLayoutManager(context)
         }
 
         /*MENU ITEM*/

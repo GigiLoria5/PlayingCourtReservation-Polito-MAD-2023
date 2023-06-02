@@ -249,7 +249,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/requester_layout">
+                app:layout_constraintBottom_toTopOf="@id/invitees_layout">
 
 
                 <TextView
@@ -296,13 +296,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/requester_layout"
+                android:id="@+id/invitees_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/player_layout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/reviewDataCL">
+                app:layout_constraintBottom_toTopOf="@id/reviewDataCL"
+                android:visibility="gone">
 
 
                 <TextView
@@ -341,7 +342,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/requester_layout">
+                app:layout_constraintTop_toBottomOf="@id/invitees_layout">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/reservationReviewMCV"
