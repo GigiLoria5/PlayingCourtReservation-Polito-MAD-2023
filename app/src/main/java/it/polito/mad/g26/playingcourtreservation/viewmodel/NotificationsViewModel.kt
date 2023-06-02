@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.polito.mad.g26.playingcourtreservation.model.Notification
 import it.polito.mad.g26.playingcourtreservation.repository.NotificationRepository
+import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotificationsViewModel @Inject constructor(
-    private val notificationRepository: NotificationRepository
+    private val notificationRepository: NotificationRepository,
+    private val reservationRepository: ReservationRepository
 ) : ViewModel() {
 
     private val _loadingState = MutableLiveData<UiState<Unit>>()
@@ -69,5 +71,20 @@ class NotificationsViewModel @Inject constructor(
         loadNotifications() // to update the notifications
     }
 
+    private val _loadingStateReservation = MutableLiveData<UiState<Unit>>()
+    val loadingStateReservation: LiveData<UiState<Unit>>
+        get() = _loadingStateReservation
+
+    fun findReservation(reservationId: String) = viewModelScope.launch {
+        _loadingStateReservation.value = UiState.Loading
+        val reservationDeferred = async { reservationRepository.getReservationById(reservationId) }
+        val reservationState = reservationDeferred.await()
+        if (reservationState is UiState.Failure) {
+            _loadingStateReservation.value = reservationState
+            return@launch
+        }
+        _loadingStateReservation.value = UiState.Success(Unit)
+
+    }
 
 }

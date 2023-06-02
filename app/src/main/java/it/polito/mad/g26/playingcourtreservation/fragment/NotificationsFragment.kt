@@ -74,7 +74,7 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
 
                 is UiState.Failure -> {
                     // TODO: Stop loading animation
-                    toast(state.error ?: "Unable to get court reviews")
+                    toast(state.error ?: "Unable to get notifications")
                 }
 
                 is UiState.Success -> {
@@ -92,11 +92,35 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
                 }
             }
         }
+        // Dialog no reservation
+        val builderNoReservation = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+        builderNoReservation.setMessage("The reservation associated with this notification is no longer available?")
+        builderNoReservation.setPositiveButton("Ok") { _, _ ->
+        }
 
         notificationsAdapter.setOnItemClickListener { position ->
-            val action = NotificationsFragmentDirections
-                .actionNotificationFragmentToReservationDetailsFragment2(viewModel.notifications[position].reservationId)
-            findNavController().navigate(action)
+            val reservationId = viewModel.notifications[position].reservationId
+            viewModel.findReservation(reservationId)
+            viewModel.loadingStateReservation.observe(viewLifecycleOwner) { state ->
+                when (state) {
+                    is UiState.Loading -> {
+                        // TODO: Add loading animation
+                    }
+
+                    is UiState.Failure -> {
+                        // TODO: Stop loading animation
+                        toast(state.error ?: "Reservation no longer available")
+                    }
+
+                    is UiState.Success -> {
+                        // TODO: Stop loading animation
+                        println("Success")
+                        val action = NotificationsFragmentDirections
+                            .actionNotificationFragmentToReservationDetailsFragment2(reservationId)
+                        findNavController().navigate(action)
+                    }
+                }
+            }
         }
 
         notificationsRV.addItemDecoration(DividerItemDecoration(this.activity, LinearLayout.VERTICAL))
