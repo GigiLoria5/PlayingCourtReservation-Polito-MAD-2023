@@ -234,6 +234,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     servicesShimmerView.startShimmerAnimation(servicesRV)
                     courtTypeACTV.makeInvisible()
                     courtTypeMCV.makeInvisible()
+                    selectedSportShimmerView.makeVisible()
                     selectedSportShimmerView.startShimmer()
                     numberOfSportCentersFoundTV.makeGone()
                     noSportCentersFoundTV.makeGone()
@@ -245,6 +246,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     sportCentersShimmerView.stopShimmer()
                     sportCentersShimmerView.makeInvisible()
                     selectedSportShimmerView.stopShimmer()
+                    selectedSportShimmerView.makeInvisible()
                     numberOfSportCentersFoundTV.makeVisible()
                     toast(state.error ?: "Unable to load requested information")
                 }
@@ -319,6 +321,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         servicesAdapter.updateCollection(viewModel.allServices)
         sportCentersShimmerView.stopShimmer()
         selectedSportShimmerView.stopShimmer()
+        selectedSportShimmerView.makeInvisible()
         sportCentersShimmerView.makeInvisible()
         numberOfSportCentersFoundTV.makeVisible()
     }
@@ -335,6 +338,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         courtTypeMCV.makeInvisible()
                         servicesShimmerView.startShimmerAnimation(servicesRV)
                         sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
+                        selectedSportShimmerView.makeVisible()
                         selectedSportShimmerView.startShimmer()
                     }
                 }
