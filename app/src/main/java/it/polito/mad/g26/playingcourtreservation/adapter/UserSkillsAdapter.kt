@@ -28,6 +28,10 @@ class UserSkillsAdapter(
         return UserSkillsViewHolder(view)
     }
 
+    fun getSkills(): List<Skill> {
+        return skills.filter { it.rating != 0.0f }
+    }
+
     // Need to know the max value of position
     override fun getItemCount(): Int {
         return skills.size
