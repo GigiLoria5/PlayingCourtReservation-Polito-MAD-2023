@@ -20,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.InviteUserAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.PositionsAdapter
+import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
@@ -29,6 +30,7 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.InviteUsersViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 @AndroidEntryPoint
@@ -183,8 +185,25 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                         userId
                     )
                 findNavController().navigate(direction)
+            },
+            { user -> showConfirmationDialog(user)
             }
         )
+    }
+
+    private fun showConfirmationDialog(user: User) {
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Confirm the invitation")
+            .setMessage("Confirm the invitation for ${user.username}?")
+            .setPositiveButton("Confirm") { dialog, _ ->
+                viewModel.inviteAndNotifyUser(user.id)
+                dialog.dismiss()
+            }.setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
     }
 
 

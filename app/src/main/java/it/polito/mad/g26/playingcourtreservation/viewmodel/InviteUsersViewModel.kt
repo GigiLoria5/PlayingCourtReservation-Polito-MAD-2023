@@ -70,6 +70,9 @@ class InviteUsersViewModel @Inject constructor(
         _selectedPositions.observeForever {
             fetchUsersData()
         }
+        _numberOfInvitationsDone.observeForever {
+            fetchUsersData()
+        }
     }
 
     /*USERNAME FILTER MANAGEMENT*/
@@ -125,7 +128,8 @@ class InviteUsersViewModel @Inject constructor(
 
     fun numberOfSelectedPositions(): Int = _selectedPositions.value?.size ?: 0
 
-    // Load users data
+
+    /*USER DATA MANAGEMENT*/
     private val _loadingState = MutableLiveData<UiState<Unit>>()
     val loadingState: LiveData<UiState<Unit>>
         get() = _loadingState
@@ -197,4 +201,15 @@ class InviteUsersViewModel @Inject constructor(
 
     fun isUserIdInvited(userId: String): Boolean = myInvitees.contains(userId)
 
+    /*INVITATIONS MANAGEMENT*/
+
+    //Useful to update users list after a notification is sent
+    private val _numberOfInvitationsDone = MutableLiveData(0)
+    private fun increaseNumberOfInvitationsDone() {
+        _numberOfInvitationsDone.value =_numberOfInvitationsDone.value!!+1
+    }
+
+    fun inviteAndNotifyUser(userId:String){
+        increaseNumberOfInvitationsDone()
+    }
 }

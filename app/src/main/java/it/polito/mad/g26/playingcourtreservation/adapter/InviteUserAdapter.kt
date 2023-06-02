@@ -19,6 +19,7 @@ class InviteUserAdapter(
     private val isUserIdInvited: (String) -> Boolean,
     private val sport: String,
     private val navigateToShowProfileFragment: (String) -> Unit,
+    private val inviteUser:(User)->Unit
 ) :
     RecyclerView.Adapter<InviteUserAdapter.UserViewHolder>() {
 
@@ -87,6 +88,9 @@ class InviteUserAdapter(
                         )
                     )
                     userActionMCV.setCardBackgroundColor(itemView.context.getColor(R.color.grey_light_2))
+                    userActionMCV.setOnClickListener {
+                        inviteUser(user)
+                    }
                 }
 
                 true -> {
@@ -98,6 +102,8 @@ class InviteUserAdapter(
                         )
                     )
                     userActionMCV.setCardBackgroundColor(itemView.context.getColor(R.color.green_500))
+                    userActionMCV.isClickable=false
+                    userActionMCV.isEnabled=false
                 }
             }
         }
