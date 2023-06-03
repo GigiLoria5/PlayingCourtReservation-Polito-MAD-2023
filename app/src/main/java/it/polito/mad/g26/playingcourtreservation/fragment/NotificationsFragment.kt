@@ -31,8 +31,8 @@ import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.NotificationsViewModel
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -74,16 +74,16 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    notificationsShimmerView.startShimmerAnimation(notificationsRV)
+                    notificationsShimmerView.startShimmerRVAnimation(notificationsRV)
                 }
 
                 is UiState.Failure -> {
-                    notificationsShimmerView.stopShimmerAnimation(notificationsRV)
+                    notificationsShimmerView.stopShimmerRVAnimation(notificationsRV)
                     toast(state.error ?: "Unable to get notifications")
                 }
 
                 is UiState.Success -> {
-                    notificationsShimmerView.stopShimmerAnimation(notificationsRV)
+                    notificationsShimmerView.stopShimmerRVAnimation(notificationsRV)
                     // Update Notifications
                     val notifications = viewModel.notifications
                     if (notifications.isNotEmpty()) {

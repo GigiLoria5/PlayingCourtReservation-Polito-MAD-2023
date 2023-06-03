@@ -163,18 +163,6 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
             .show()
     }
 
-    private fun getUserCity(): String? {
-        val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
-        if (sharedPref.contains("profile")) {
-            val json = sharedPref.getString("profile", "Default")?.let { JSONObject(it) }
-            if (json != null) {
-                return json.getString("location")
-            }
-            return null
-        }
-        return null
-    }
-
     private fun countNoReadNotifications(notifications: List<Notification>): Int {
         var count = 0
         for(n in notifications){
