@@ -179,19 +179,18 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     )
 
                     //Show players confirmed
-                    val participantsAdapter = ReservationDetailsAdapter(reservation.participants, 1)
+                    val user = viewModel.user
+                    //val participants = listOf(viewModel.participants, user)
+                    val participantsAdapter =
+                        ReservationDetailsAdapter(listOf(user), 1, "sport")
                     participantsRecyclerView.adapter = participantsAdapter
                     participantsRecyclerView.layoutManager = GridLayoutManager(context, 2)
 
                     // Show reservation buttons+ applicants list if future or review button is past
                     if (viewModel.nowIsBeforeReservationDateTime()) {
 
-                        println("----RESERVATION-------")
-                        println(reservation)
-                        println("----CURRENT USER-------")
-                        println(viewModel.userId)
-
                         //TODO: if to discern between creator, applicant, player or user
+                        //Creator
                         if (reservation.userId == viewModel.userId) {
                             // Inflate the new layout with two buttons of reservation
                             val inflater = LayoutInflater.from(requireContext())
@@ -211,7 +210,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             if (reservation.invitees.isNotEmpty()) {
                                 inviteesLayout.makeVisible()
                                 val inviteesAdapter =
-                                    ReservationDetailsAdapter(reservation.invitees, 2)
+                                    ReservationDetailsAdapter(listOf(user), 2, "sport")
                                 inviteesRecyclerView.adapter = inviteesAdapter
                                 inviteesRecyclerView.layoutManager = LinearLayoutManager(context)
                             }

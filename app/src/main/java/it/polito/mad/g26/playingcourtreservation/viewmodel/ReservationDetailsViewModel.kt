@@ -9,6 +9,7 @@ import it.polito.mad.g26.playingcourtreservation.model.Notification
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.model.Review
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
+import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.repository.NotificationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
@@ -58,6 +59,10 @@ class ReservationDetailsViewModel @Inject constructor(
     val sportCenter: SportCenter
         get() = _sportCenter
 
+    private var _user: User = User()
+    val user: User
+        get() = _user
+
     fun loadReservationAndSportCenterInformation() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
         // Get reservation details
@@ -76,6 +81,12 @@ class ReservationDetailsViewModel @Inject constructor(
             return@launch
         }
         _sportCenter = (sportCenterState as UiState.Success).result
+        val userState = userRepository.getCurrentUserInformation()
+        if (userState is UiState.Failure) {
+            _loadingState.value = userState
+            return@launch
+        }
+        _user = (userState as UiState.Success).result
         _loadingState.value = UiState.Success(Unit)
     }
 
