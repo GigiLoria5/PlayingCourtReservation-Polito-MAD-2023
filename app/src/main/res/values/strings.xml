@@ -66,7 +66,7 @@
     <string name="position_title">Position</string>
     <string name="dob_title">Date of birth</string>
     <string name="default_username">NoobSmasher</string>
-    <string name="default_position">Attacker</string>
+    <string name="default_position">Midfielder</string>
     <fraction name="default_rating">0</fraction>
     <string name="default_full_name">Giacinto Milanesi</string>
     <integer name="default_age">21</integer>
@@ -86,7 +86,7 @@
     <string name="camera">Camera</string>
     <string name="galley">Gallery</string>
     <string name="default_date">14–04–2002</string>
-    <string name="username_min_length">Username min length is 8 characters</string>
+    <string name="username_min_length">Username min length is 5 characters</string>
     <string name="username_max_length">Username max length is 30 characters</string>
     <string name="home">Home</string>
     <string name="reservations">Reservations</string>

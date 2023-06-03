@@ -73,6 +73,9 @@
             android:id="@+id/openReservationEdit"
             app:destination="@id/modifyReservationDetailsFragment" />
         <action
+            android:id="@+id/openShowProfile"
+            app:destination="@id/showProfileFragment" />
+        <action
             android:id="@+id/action_reservationDetailsFragment_to_inviteUsersFragment"
             app:destination="@id/inviteUsersFragment"
             app:enterAnim="@anim/from_right"

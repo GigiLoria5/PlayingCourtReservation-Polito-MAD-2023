@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -17,13 +18,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.material.imageview.ShapeableImageView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.UserSkillsAdapter
 import it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
+import it.polito.mad.g26.playingcourtreservation.util.setImageFromByteArray
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerImgAnimation
@@ -45,7 +46,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
     private val viewModel by viewModels<ShowProfileViewModel>()
     private lateinit var sharedProfileViewModel: SharedProfileViewModel
 
-    private lateinit var avatarImage: ShapeableImageView
+    private lateinit var avatarImage: ImageView
     private lateinit var username: TextView
     private lateinit var sportRecycleView: RecyclerView
     private lateinit var secondaryInformationTVList: List<TextView>
@@ -54,12 +55,22 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
     private lateinit var secondaryInformationShimmer: ShimmerFrameLayout
     private lateinit var sportRecycleViewShimmer: ShimmerFrameLayout
 
+    private var _isCurrentUserProfile = true
+    val isCurrentUserProfile: Boolean
+        get() = _isCurrentUserProfile
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedProfileViewModel =
             ViewModelProvider(requireActivity())[SharedProfileViewModel::class.java]
         val userId = args.userId
-        setupActionBar(activity, "Profile", userId != null) // if not null is called from somewhere
+        _isCurrentUserProfile = userId == null
+        // Hide bottom bar and edit button if is not current user profile
+        setupActionBar(
+            activity,
+            "Profile",
+            !isCurrentUserProfile
+        )
 
         // Handle top menu actions
         val menuHost: MenuHost = requireActivity()
@@ -90,7 +101,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
 
         // Load user information
         viewModel.loadCurrentUserInformation(userId)
-        viewModel.userInformationState.observe(viewLifecycleOwner) { state ->
+        viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
                     startLoadingAnimation()
@@ -103,20 +114,27 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
 
                 is UiState.Success -> {
                     stopLoadingAnimation()
-                    val userInfo = state.result
+                    val userInfo = viewModel.userInformation
+                    val userImageData = viewModel.userImageData
+                    if (userImageData != null) {
+                        avatarImage.setImageFromByteArray(userImageData)
+                    }
                     sharedProfileViewModel.currentUserInfo = userInfo
+                    sharedProfileViewModel.currentUserImageData = userImageData
                     username.text = userInfo.username
                     fullName.text = userInfo.fullname
-                    age.text = userInfo.getAgeOrDefault()
-                    gender.text = userInfo.getGenderOrDefault()
-                    location.text = userInfo.getLocationOrDefault()
-                    position.text = userInfo.getPositionOrDefault()
+                    age.text = userInfo.ageOrDefault()
+                    gender.text = userInfo.genderOrDefault()
+                    location.text = userInfo.locationOrDefault()
+                    position.text = userInfo.positionOrDefault()
                     if (userInfo.skills.isEmpty()) {
                         sportRecycleViewShimmer.makeGone()
                         sportRecycleView.makeGone()
                         return@observe
                     }
-                    sportRecycleView.adapter = UserSkillsAdapter(userInfo.skills)
+                    sportRecycleView.adapter = UserSkillsAdapter(
+                        userInfo.skills.sortedBy { -it.rating }
+                    )
                     sportRecycleView.layoutManager = LinearLayoutManager(context)
                 }
             }
@@ -159,7 +177,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
                 return when (item.itemId) {
                     // Edit (only for current user)
                     R.id.edit_menu_item -> {
-                        if (viewModel.userInformationState.value is UiState.Success)
+                        if (viewModel.loadingState.value is UiState.Success)
                             findNavController().navigate(R.id.action_showProfileFragment_to_editProfileFragment)
                         true
                     }

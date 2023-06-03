@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:value="@string/default_full_name"
-            app:valueTextColor="@color/grey"
-            app:valueBackgroundColor="@color/grey" />
+            app:valueTextColor="@color/loading"
+            app:valueBackgroundColor="@color/loading" />
 
     </LinearLayout>
 
@@ -39,8 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:value="@integer/default_age"
-            app:valueTextColor="@color/grey"
-            app:valueBackgroundColor="@color/grey" />
+            app:valueTextColor="@color/loading"
+            app:valueBackgroundColor="@color/loading" />
 
         <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
             android:id="@+id/gender"
@@ -48,8 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:value="@string/default_gender"
-            app:valueTextColor="@color/grey"
-            app:valueBackgroundColor="@color/grey" />
+            app:valueTextColor="@color/loading"
+            app:valueBackgroundColor="@color/loading" />
 
         <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
             android:id="@+id/placeholder"
@@ -74,8 +74,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:value="@string/default_location"
-            app:valueTextColor="@color/grey"
-            app:valueBackgroundColor="@color/grey" />
+            app:valueTextColor="@color/loading"
+            app:valueBackgroundColor="@color/loading" />
 
         <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
             android:id="@+id/position"
@@ -83,8 +83,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:value="@string/default_position"
-            app:valueTextColor="@color/grey"
-            app:valueBackgroundColor="@color/grey" />
+            app:valueTextColor="@color/loading"
+            app:valueBackgroundColor="@color/loading" />
 
         <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
             android:id="@+id/placeholder2"

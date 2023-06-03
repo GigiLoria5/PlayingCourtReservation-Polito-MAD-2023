@@ -202,7 +202,12 @@ class ReservationRepositoryImpl @Inject constructor(
         return try {
             Log.d(TAG, "getUserReservation for user with id: $userId")
             val result = db.collection(FirestoreCollections.RESERVATIONS)
-                .whereEqualTo("userId", userId)
+                .where(
+                    Filter.or(
+                        Filter.equalTo("userId", userId),
+                        Filter.arrayContains("participants", userId)
+                    )
+                )
                 .orderBy("date")
                 .orderBy("time")
                 .get().await()

@@ -14,3 +14,8 @@ object SportNames {
     const val BEACH_SOCCER = "Beach Soccer"
     const val FUTSAL = "Futsal"
 }
+
+object FirebaseStorageConstants {
+    const val USER_IMAGES = "user"
+    const val MAX_DOWNLOAD_SIZE = (1 * 1024 * 1024).toLong() // 1 MB
+}
