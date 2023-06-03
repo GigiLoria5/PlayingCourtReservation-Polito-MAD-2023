@@ -31,6 +31,7 @@ import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.InviteUsersViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import it.polito.mad.g26.playingcourtreservation.util.toastShort
 
 
 @AndroidEntryPoint
@@ -217,7 +218,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                 }
 
                 is UiState.Success -> {
-                    toast("The invitation was successfully sent")
+                    toastShort("The invitation was successfully sent")
                 }
             }
         }

@@ -254,6 +254,9 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
         }
         val maxDate = Calendar.getInstance()
         maxDate.add(Calendar.YEAR, -14)
+        val minDate = Calendar.getInstance()
+        minDate.add(Calendar.YEAR, -90)
+
         datePickerDialog = DatePickerDialog(
             requireContext(),
             datePicker,
@@ -262,6 +265,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
             myCalendar[Calendar.DAY_OF_MONTH]
         )
         datePickerDialog.datePicker.maxDate = maxDate.timeInMillis
+        datePickerDialog.datePicker.minDate = minDate.timeInMillis
         birthDateEditText.setOnClickListener {
             datePickerDialog.show()
         }

@@ -30,7 +30,7 @@ class InviteUsersViewModel @Inject constructor(
     private var sport: String = ""
     private val myInvitees: MutableSet<String> = mutableSetOf()
 
-    val minAge = 18f
+    val minAge = 14f
     val maxAge = 90f
     val minSkill = 0f
     val maxSkill = 5f
