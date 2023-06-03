@@ -102,7 +102,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/userItemGL"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/card_circle">
+        app:shapeAppearanceOverlay="@style/res_card_circle">
 
         <!-- TODO QUANDO C'è LA V E NON IL +, FAI BACKGROUND VERDE E ICONA GREYLIGHT2-->
         <ImageView

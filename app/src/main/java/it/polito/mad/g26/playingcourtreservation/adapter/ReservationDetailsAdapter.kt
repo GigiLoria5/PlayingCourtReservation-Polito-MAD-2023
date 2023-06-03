@@ -59,9 +59,9 @@ class ReservationDetailsAdapter(
         fun bind(u: User, sport: String) {
             username.text = u.username
             role.text = u.position
-            val rate = u.skills.find { it.first == sport }
+            val rate = u.skills.find { it.sportName == sport }
             if (rate != null)
-                rating.rating = rate.second.toFloat()
+                rating.rating = rate.rating
             else rating.rating = 0f
             card.setOnClickListener {
                 //navigate to profile
@@ -84,9 +84,9 @@ class ReservationDetailsAdapter(
         fun bind(u: User, sport: String) {
             username.text = u.username
             role.text = u.position
-            val rate = u.skills.find { it.first == sport }
+            val rate = u.skills.find { it.sportName == sport }
             if (rate != null)
-                rating.rating = rate.second.toFloat()
+                rating.rating = rate.rating
             else rating.rating = 0f
             card.setOnClickListener {
                 //go to profile

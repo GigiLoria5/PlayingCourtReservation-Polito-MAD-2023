@@ -245,7 +245,6 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             editButton.setOnClickListener {
                                 val action =
                                     ReservationDetailsFragmentDirections.openReservationEdit(
-                                        viewModel.reservationId
                                     )
                                 findNavController().navigate(action)
                             }
