@@ -12,4 +12,10 @@ interface UserRepository {
     suspend fun getCurrentUserInformation(): UiState<User>
 
     suspend fun getUserInformationById(userId: String): UiState<User>
+
+    suspend fun updateCurrentUserInformation(updatedUserInformation: User): UiState<Unit>
+
+    suspend fun updateUserImage(imageData: ByteArray): UiState<Unit>
+
+    suspend fun downloadUserImage(userId: String): UiState<ByteArray?>
 }

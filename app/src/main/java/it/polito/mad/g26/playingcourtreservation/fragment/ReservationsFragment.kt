@@ -47,8 +47,8 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationsViewModel
 import java.time.LocalDate
@@ -153,16 +153,16 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    shimmerFrameLayout.startShimmerAnimation(reservationsRv)
+                    shimmerFrameLayout.startShimmerRVAnimation(reservationsRv)
                 }
 
                 is UiState.Failure -> {
-                    shimmerFrameLayout.stopShimmerAnimation(reservationsRv)
+                    shimmerFrameLayout.stopShimmerRVAnimation(reservationsRv)
                     toast(state.error ?: "Unable to get user reservations")
                 }
 
                 is UiState.Success -> {
-                    shimmerFrameLayout.stopShimmerAnimation(reservationsRv)
+                    shimmerFrameLayout.stopShimmerRVAnimation(reservationsRv)
                     reservations.clear()
                     viewModel.reservations.forEach { reservation ->
                         val localDate = LocalDate.parse(

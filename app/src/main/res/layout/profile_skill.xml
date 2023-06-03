@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sport_info_show_profile"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/sport_title_edit_profile"
+        android:id="@+id/sport_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/sport_default"
         android:textSize="16sp"
+        android:textColor="@color/custom_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RatingBar
-        android:id="@+id/sport_rating_edit_profile"
+        android:id="@+id/rating"
         style="?android:attr/ratingBarStyleIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,10 +30,10 @@
         android:rating="0"
         android:theme="@style/ratingBar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sport_title_edit_profile" />
+        app:layout_constraintTop_toBottomOf="@id/sport_name" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/sport_delete_rating"
+        android:id="@+id/delete_rating"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="8dp"
