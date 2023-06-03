@@ -229,12 +229,18 @@ class InviteUsersViewModel @Inject constructor(
     fun isUserIdInvited(userId: String): Boolean = myInvitees.contains(userId)
 
     /*INVITATIONS MANAGEMENT*/
+
+    // Handle Invitation
+    private val _invitationState = MutableLiveData<UiState<Unit>>()
+    val invitationState: LiveData<UiState<Unit>>
+        get() = _invitationState
     fun inviteAndNotifyUser(userId: String) = viewModelScope.launch {
+        _invitationState.value = UiState.Loading
         _loadingState.value = UiState.Loading
         // Invite user
-        var state = reservationRepository.inviteUser(reservationId, userId)
+        val state = reservationRepository.inviteUser(reservationId, userId)
         if (state is UiState.Failure) {
-            _loadingState.value = state
+            _invitationState.value = state
             return@launch
         }
 
@@ -243,11 +249,12 @@ class InviteUsersViewModel @Inject constructor(
             userId,
             reservationId
         )
-        state = notificationRepository.saveNotification(notification)
-        if (state is UiState.Failure) {
-            _loadingState.value = state
-            return@launch
-        }
+        notificationRepository.saveNotification(notification)
+        /* since the invitation has already been sent at this point,
+        it is not worth checking whether the notification has been sent correctly or not
+        */
+
+        _invitationState.value = UiState.Success(Unit)
         fetchUsersData()
     }
 }

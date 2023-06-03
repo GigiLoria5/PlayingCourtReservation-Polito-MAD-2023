@@ -156,7 +156,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         inviteUsersAdapter = createInviteUserAdapter()
         usersRV.adapter = inviteUsersAdapter
         noUsersFoundTV = view.findViewById(R.id.noUsersFoundTV)
-
+        handleConfirmInvitation()
         /* shimmerFrameLayout INITIALIZER */
         usersShimmerView = view.findViewById(R.id.usersShimmerView)
 
@@ -197,14 +197,31 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
             .setTitle("Confirm the invitation")
             .setMessage("Confirm the invitation for ${user.username}?")
             .setPositiveButton("Confirm") { dialog, _ ->
-                viewModel.inviteAndNotifyUser(user.id)
                 dialog.dismiss()
+                viewModel.inviteAndNotifyUser(user.id)
             }.setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
     }
 
+    private fun handleConfirmInvitation() {
+        viewModel.invitationState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    //LOADING IS MANAGED BY _loadingState
+                }
+
+                is UiState.Failure -> {
+                    toast(state.error ?: "Unable to send the invitation")
+                }
+
+                is UiState.Success -> {
+                    toast("The invitation was successfully sent")
+                }
+            }
+        }
+    }
 
     private fun loadAvailableUsers() {
         /* USERS LOADING */
