@@ -124,10 +124,6 @@ class AddReviewDialogFragment : DialogFragment() {
 
     private fun checkReviewValidity(): Boolean {
         var error = false
-        if (textReview.text.toString().trim().length < 10) {
-            textReview.error = "Review size should be at least 10 characters long"
-            error = true
-        }
         if (rating.rating == 0.0f) {
             ratingError.makeVisible()
             error = true
