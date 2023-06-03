@@ -10,6 +10,7 @@ import it.polito.mad.g26.playingcourtreservation.repository.NotificationReposito
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +37,9 @@ class NotificationsViewModel @Inject constructor(
             _loadingState.value = notificationsState
             return@launch
         }
-        _notifications = (notificationsState as UiState.Success).result.sortedByDescending { it.timestamp }
+        _notifications =
+            (notificationsState as UiState.Success).result.sortedByDescending { it.timestamp }
+        delay(500)
         _loadingState.value = UiState.Success(Unit)
     }
 
