@@ -13,7 +13,8 @@ import it.polito.mad.g26.playingcourtreservation.model.User
 class ReservationDetailsAdapter(
     private val l: List<User>,
     private val mode: Int,
-    private val sport: String
+    private val sport: String,
+    private val navigateToShowProfileFragment: (String) -> Unit,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -89,7 +90,8 @@ class ReservationDetailsAdapter(
                 rating.rating = rate.rating
             else rating.rating = 0f
             card.setOnClickListener {
-                //go to profile
+                //go to profile openShowProfile
+                navigateToShowProfileFragment(u.id)
             }
         }
     }

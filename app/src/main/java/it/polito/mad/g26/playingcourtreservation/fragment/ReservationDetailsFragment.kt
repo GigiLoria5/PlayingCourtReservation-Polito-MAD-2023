@@ -194,11 +194,17 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         findNavController().navigate(direction)
                     }*/
 
-                    //Show players confirmed
+                    //Show applicant confirmed
                     val user = viewModel.user
                     val participants = viewModel.participants + user
                     val participantsAdapter =
-                        ReservationDetailsAdapter(participants, 1, viewModel.court.sport)
+                        ReservationDetailsAdapter(
+                            participants, 1, viewModel.court.sport
+                        ) { userId ->
+                            val direction =
+                                ReservationDetailsFragmentDirections.openShowProfile(userId)
+                            findNavController().navigate(direction)
+                        }
                     participantsRecyclerView.adapter = participantsAdapter
                     participantsRecyclerView.layoutManager = GridLayoutManager(context, 2)
                     val maxParticipants = Court.getSportTotParticipants(viewModel.court.sport)
@@ -232,7 +238,13 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                         viewModel.requesters,
                                         2,
                                         viewModel.court.sport
-                                    )
+                                    ) { userId ->
+                                        val direction =
+                                            ReservationDetailsFragmentDirections.openShowProfile(
+                                                userId
+                                            )
+                                        findNavController().navigate(direction)
+                                    }
                                 inviteesRecyclerView.adapter = requesterAdapter
                                 inviteesRecyclerView.layoutManager = LinearLayoutManager(context)
                             }
