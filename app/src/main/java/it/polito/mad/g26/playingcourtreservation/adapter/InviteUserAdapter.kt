@@ -105,6 +105,7 @@ class InviteUserAdapter(
                     userActionMCV.setOnClickListener {
                         inviteUser(user)
                     }
+                    userActionMCV.isClickable = true
                 }
 
                 true -> {
@@ -118,7 +119,6 @@ class InviteUserAdapter(
                     userActionMCV.setCardBackgroundColor(itemView.context.getColor(R.color.green_500))
                     userActionMCV.setOnClickListener(null)
                     userActionMCV.isClickable = false
-                    userActionMCV.isEnabled = false
                 }
             }
         }
