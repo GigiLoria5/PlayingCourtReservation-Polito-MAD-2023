@@ -40,14 +40,13 @@ class ReviewsAdapter(
         private val date = view.findViewById<TextView>(R.id.reviewDateTV)
         private val rating = view.findViewById<RatingBar>(R.id.rating)
         private val text = view.findViewById<TextView>(R.id.reviewTextTV)
+        private val username = view.findViewById<TextView>(R.id.usernameTV)
 
         fun bind(review: Review) {
             date.text = timestampToDate(review.timestamp)
             rating.rating = review.rating
             text.text = review.text
-            // TODO: add user username
-            val userReviewUsername = userInformationMap[review.userId]!!.username
-            println(userReviewUsername)
+            username.text = userInformationMap[review.userId]!!.username
         }
     }
 }
