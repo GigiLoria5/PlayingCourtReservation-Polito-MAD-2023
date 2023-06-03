@@ -224,4 +224,16 @@ class ReservationDetailsViewModel @Inject constructor(
         _loadingState.value = UiState.Success(Unit)
     }
 
+    fun deleteRequester(userID: String) = viewModelScope.launch {
+        _loadingState.value = UiState.Loading
+        
+        val requesterState = reservationRepository.removeRequester(_reservationId, userID)
+        if (requesterState is UiState.Failure) {
+            _deleteState.value = requesterState
+            return@launch
+        }
+        //TODO:sendNotification
+        _loadingState.value = UiState.Success(Unit)
+    }
+
 }

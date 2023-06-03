@@ -209,6 +209,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                     ReservationDetailsFragmentDirections.openShowProfile(userId)
                                 findNavController().navigate(direction)
                             },
+                            {},
                             {}
                         )
                     participantsRecyclerView.adapter = participantsAdapter
@@ -251,9 +252,14 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                                         .openShowProfile(userId)
                                                 findNavController().navigate(direction)
                                             },
-                                            { userToParticipant ->
+                                            { requesterToParticipant ->
                                                 showConfirmationDialog(
-                                                    userToParticipant
+                                                    requesterToParticipant, 1
+                                                )
+                                            },
+                                            { requesterToUser ->
+                                                showConfirmationDialog(
+                                                    requesterToUser, 2
                                                 )
                                             }
                                         )
@@ -459,17 +465,31 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
     }
 
-    private fun showConfirmationDialog(user: User) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Accept the user")
-            .setMessage("Confirm to add${user.username}?")
-            .setPositiveButton("Confirm") { dialog, _ ->
-                dialog.dismiss()
-                viewModel.addParticipantAndDeleteRequester(user.id)
-            }.setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
+    private fun showConfirmationDialog(user: User, mode: Int) {
+        if (mode == 1) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Accept the user")
+                .setMessage("Confirm to add ${user.username}?")
+                .setPositiveButton("Confirm") { dialog, _ ->
+                    dialog.dismiss()
+                    viewModel.addParticipantAndDeleteRequester(user.id)
+                }.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        } else {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Reject the user")
+                .setMessage("Confirm to reject ${user.username}?")
+                .setPositiveButton("Confirm") { dialog, _ ->
+                    dialog.dismiss()
+                    viewModel.deleteRequester(user.id)
+                }.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+
     }
 
     override fun onResume() {
