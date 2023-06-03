@@ -17,6 +17,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
@@ -26,6 +27,8 @@ import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtReviewsViewModel
 
@@ -45,6 +48,7 @@ class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
     private lateinit var meanRatingTV: TextView
     private lateinit var meanRatingValueTV: TextView
     private lateinit var customToolBar: Toolbar
+    private lateinit var reviewsShimmerView: ShimmerFrameLayout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,6 +77,9 @@ class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
         reviewsRV = view.findViewById(R.id.reviewsRV)
         noReviewMCV = view.findViewById(R.id.noReviewFoundMCV)
 
+        /* shimmerFrameLayout INITIALIZER */
+        reviewsShimmerView = view.findViewById(R.id.reviewsShimmerView)
+
         // Setup RV
         val reviewsAdapter = ReviewsAdapter(viewModel.courtReviews, viewModel.userInformationMap)
         reviewsRV.adapter = reviewsAdapter
@@ -82,16 +89,17 @@ class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    // TODO: Add loading animation
+                    reviewsShimmerView.startShimmerAnimation(reviewsRV)
+                    meanRatingMCV.makeInvisible()
                 }
 
                 is UiState.Failure -> {
-                    // TODO: Stop loading animation
+                    reviewsShimmerView.stopShimmerAnimation(reviewsRV)
                     toast(state.error ?: "Unable to get court reviews")
                 }
 
                 is UiState.Success -> {
-                    // TODO: Stop loading animation
+                    reviewsShimmerView.stopShimmerAnimation(reviewsRV)
                     val sportCenter = viewModel.sportCenter
                     val court = viewModel.court
                     val courtReviews = viewModel.courtReviews

@@ -81,6 +81,29 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Placeholder -->
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/reviewsShimmerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shimmer_repeat_mode="restart"
+        app:shimmer_shape="radial"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reviewABL">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/court_review_placeholder" />
+
+
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/meanRatingMCV"
         android:layout_width="match_parent"

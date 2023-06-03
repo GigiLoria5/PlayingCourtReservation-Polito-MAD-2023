@@ -2,8 +2,92 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/meanRatingMCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/page_external_space"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
+        app:cardPreventCornerOverlap="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/meanRatingValueLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/page_external_space">
+
+            <LinearLayout
+                android:id="@+id/meanRatingLL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/page_external_space">
+
+                <RatingBar
+                    android:id="@+id/meanRating"
+                    style="?android:attr/ratingBarStyleIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/review_rating_description"
+                    android:background="@color/loading"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:rating="@fraction/default_rating"
+                    android:stepSize="0.5"
+                    android:theme="@style/ratingBar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/meanRatingValueTV"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/loading"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/meanRatingTV"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@color/loading"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_margin="@dimen/page_external_space"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@id/ReviewListMCV"
+        app:layout_constraintTop_toBottomOf="@id/meanRatingMCV"
+        tools:layout_editor_absoluteX="11dp" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/ReviewListMCV"
@@ -18,7 +102,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/divider">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -36,6 +120,7 @@
                 android:rating="@fraction/default_rating"
                 android:stepSize="0.5"
                 android:theme="@style/ratingBar"
+                android:background="@color/loading"
                 app:layout_constraintBottom_toTopOf="@id/ReviewListCL"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -51,10 +136,10 @@
 
                 <TextView
                     android:id="@+id/usernameTV"
-                    android:layout_width="0dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:gravity="start"
-                    android:text="@string/default_username"
+                    android:background="@color/loading"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -70,10 +155,10 @@
 
                 <TextView
                     android:id="@+id/reviewDateTV"
-                    android:layout_width="0dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:text="@string/default_date"
+                    android:background="@color/loading"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -88,7 +173,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/review_list_text"
+                android:background="@color/loading"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
