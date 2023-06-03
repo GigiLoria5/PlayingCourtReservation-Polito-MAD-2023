@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.util.UiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +22,7 @@ class SearchCitiesViewModel @Inject constructor(
 
     fun getCities(cityNamePrefix: String) = viewModelScope.launch {
         _cities.value = UiState.Loading
+        delay(500)
         _cities.value =
             if (cityNamePrefix.isEmpty())
                 sportCenterRepository.getAllSportCentersCities()

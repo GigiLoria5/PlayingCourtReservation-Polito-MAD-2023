@@ -31,6 +31,11 @@ interface ReservationRepository {
         time: String
     ): UiState<Reservation?>
 
+    suspend fun getReservationsAt(
+        date: String,
+        time: String
+    ): UiState<List<Reservation>>
+
     suspend fun getCourtReservationAt(
         courtId: String,
         date: String,
@@ -45,4 +50,6 @@ interface ReservationRepository {
     ): UiState<Unit>
 
     suspend fun deleteReservation(reservationId: String): UiState<Unit>
+
+    suspend fun inviteUser(reservationId: String,userId: String):UiState<Unit>
 }

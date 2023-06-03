@@ -1,6 +1,5 @@
 package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -8,6 +7,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,8 +19,9 @@ import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.toast
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerTextAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerTextAnimation
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.HomePageViewModel
-import org.json.JSONObject
 import pl.droidsonroids.gif.GifImageView
 
 @AndroidEntryPoint
@@ -29,19 +30,21 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
     private val viewModel by viewModels<HomePageViewModel>()
 
     private lateinit var loaderImage: GifImageView
+    private lateinit var cityNameTV: TextView
+    private lateinit var cityShimmerView: ShimmerFrameLayout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         hideActionBar(activity)
 
-        // Setup late init variables
+        // Setup visual components
         loaderImage = requireActivity().findViewById(R.id.loaderImage)
-
-        val cityNameTV = view.findViewById<TextView>(R.id.cityNameTV)
+        cityNameTV = view.findViewById(R.id.cityNameTV)
+        cityShimmerView = view.findViewById(R.id.cityShimmerView)
         val selectCityMCV = view.findViewById<MaterialCardView>(R.id.citySearchMCV)
         val searchMCV = view.findViewById<MaterialCardView>(R.id.searchMCV)
 
-        cityNameTV.text = getUserCity() ?: getString(R.string.default_city)
+        // Handle navigation
         val allSportName = requireContext().getString(R.string.all_sports)
         selectCityMCV.setOnClickListener {
             val direction =
@@ -100,6 +103,10 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
         super.onStart()
         if (viewModel.currentUser == null)
             viewModel.login()
+        else
+            viewModel.getCurrentUserInformation()
+
+        // Handle state changes
         viewModel.loginState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
@@ -107,18 +114,32 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
                     loaderImage.makeVisible()
                 }
 
-                is UiState.Success -> {
-                    loaderImage.makeGone()
-                }
-
                 is UiState.Failure -> {
                     loaderImage.setFreezesAnimation(true)
                     showLoginErrorDialog(state.error)
                 }
 
-                else -> {
-                    loaderImage.setFreezesAnimation(true)
-                    showLoginErrorDialog("")
+                is UiState.Success -> {
+                    loaderImage.makeGone()
+                    viewModel.getCurrentUserInformation()
+                }
+            }
+        }
+
+        viewModel.currentUserInformation.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    cityShimmerView.startShimmerTextAnimation(cityNameTV)
+                }
+
+                is UiState.Failure -> {
+                    cityShimmerView.stopShimmerTextAnimation(cityNameTV)
+                    toast(state.error ?: "Unable to load user information")
+                }
+
+                is UiState.Success -> {
+                    cityNameTV.text = state.result.location ?: ""
+                    cityShimmerView.stopShimmerTextAnimation(cityNameTV)
                 }
             }
         }

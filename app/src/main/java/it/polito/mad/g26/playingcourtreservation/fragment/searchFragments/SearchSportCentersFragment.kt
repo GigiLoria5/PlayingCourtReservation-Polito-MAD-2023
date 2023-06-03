@@ -30,8 +30,8 @@ import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchSportCentersViewModel
 
@@ -50,6 +50,8 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
     private lateinit var courtTypeACTV: AutoCompleteTextView
     private lateinit var courtTypeMCV: MaterialCardView
+    private lateinit var selectedSportShimmerView: ShimmerFrameLayout
+
     private lateinit var servicesRV: RecyclerView
     private lateinit var sportCentersRV: RecyclerView
     private lateinit var sportCentersShimmerView: ShimmerFrameLayout
@@ -124,6 +126,10 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         courtTypeACTV.setOnItemClickListener { _, _, _, _ ->
             viewModel.changeSelectedSport(courtTypeACTV.text.toString())
         }
+
+        /* selectedSportShimmerView INITIALIZER */
+        selectedSportShimmerView = view.findViewById(R.id.selectedSportShimmerView)
+
 
         /* DATE MATERIAL CARD VIEW MANAGEMENT*/
         dateMCV = view.findViewById(R.id.dateMCV)
@@ -224,17 +230,23 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
             when (state) {
                 is UiState.Loading -> {
                     existingReservationCL.makeGone()
-                    sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
-                    servicesShimmerView.startShimmerAnimation(servicesRV)
+                    sportCentersShimmerView.startShimmerRVAnimation(sportCentersRV)
+                    servicesShimmerView.startShimmerRVAnimation(servicesRV)
+                    courtTypeACTV.makeInvisible()
+                    courtTypeMCV.makeInvisible()
+                    selectedSportShimmerView.makeVisible()
+                    selectedSportShimmerView.startShimmer()
                     numberOfSportCentersFoundTV.makeGone()
                     noSportCentersFoundTV.makeGone()
                 }
 
                 is UiState.Failure -> {
-                    servicesShimmerView.stopShimmerAnimation(servicesRV)
+                    servicesShimmerView.stopShimmerRVAnimation(servicesRV)
                     servicesShimmerView.stopShimmer()
                     sportCentersShimmerView.stopShimmer()
                     sportCentersShimmerView.makeInvisible()
+                    selectedSportShimmerView.stopShimmer()
+                    selectedSportShimmerView.makeInvisible()
                     numberOfSportCentersFoundTV.makeVisible()
                     toast(state.error ?: "Unable to load requested information")
                 }
@@ -244,8 +256,9 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                     if (reservationFound != null) {
                         servicesShimmerView.stopShimmer()
                         sportCentersShimmerView.stopShimmer()
+                        selectedSportShimmerView.stopShimmer()
                         // The user already has a reservation for this date/time
-                        showExistingReservationCL()
+                        visibilityChangesToShowExistingReservation()
                         navigateToReservationBTN.setOnClickListener {
                             findNavController().navigate(
                                 SearchSportCentersFragmentDirections.actionSearchSportCentersToReservationDetails(
@@ -256,20 +269,13 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         return@observe
                     }
                     // The user is free for this date/time
-                    hideExistingReservationCL()
-                    servicesShimmerView.stopShimmerAnimation(servicesRV)
-                    servicesAdapter.updateCollection(viewModel.allServices)
+                    visibilityChangesToHideExistingReservation()
                     searchSportCentersUtil.setAutoCompleteTextViewSport(
                         requireContext(),
                         viewModel.allSports,
                         courtTypeACTV,
                         viewModel.getSelectedSportName()
                     )
-                    servicesShimmerView.stopShimmer()
-                    sportCentersShimmerView.stopShimmer()
-                    sportCentersShimmerView.makeInvisible()
-                    numberOfSportCentersFoundTV.makeVisible()
-
                     val filteredSportCenters = viewModel.getFilteredSportCenters()
                     val numberOfSportCentersFound = filteredSportCenters.size
                     numberOfSportCentersFoundTV.text = getString(
@@ -289,7 +295,7 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         }
     }
 
-    private fun showExistingReservationCL() {
+    private fun visibilityChangesToShowExistingReservation() {
         servicesRV.makeGone()
         servicesShimmerView.makeGone()
 
@@ -298,6 +304,8 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
 
         courtTypeACTV.makeInvisible()
         courtTypeMCV.makeInvisible()
+        selectedSportShimmerView.stopShimmer()
+        selectedSportShimmerView.makeInvisible()
 
         numberOfSportCentersFoundTV.makeGone()
         noSportCentersFoundTV.makeGone()
@@ -305,12 +313,18 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
         existingReservationCL.makeVisible()
     }
 
-    private fun hideExistingReservationCL() {
+    private fun visibilityChangesToHideExistingReservation(){
         courtTypeACTV.makeVisible()
         courtTypeMCV.makeVisible()
         existingReservationCL.makeGone()
+        servicesShimmerView.stopShimmerRVAnimation(servicesRV)
+        servicesAdapter.updateCollection(viewModel.allServices)
+        sportCentersShimmerView.stopShimmer()
+        selectedSportShimmerView.stopShimmer()
+        selectedSportShimmerView.makeInvisible()
+        sportCentersShimmerView.makeInvisible()
+        numberOfSportCentersFoundTV.makeVisible()
     }
-
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         return if (nextAnim != 0) {
             val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
@@ -322,9 +336,10 @@ class SearchSportCentersFragment : Fragment(R.layout.search_sport_centers_fragme
                         existingReservationCL.makeGone()
                         courtTypeACTV.makeInvisible()
                         courtTypeMCV.makeInvisible()
-                        servicesRV.makeInvisible()
-                        servicesShimmerView.startShimmerAnimation(servicesRV)
-                        sportCentersShimmerView.startShimmerAnimation(sportCentersRV)
+                        servicesShimmerView.startShimmerRVAnimation(servicesRV)
+                        sportCentersShimmerView.startShimmerRVAnimation(sportCentersRV)
+                        selectedSportShimmerView.makeVisible()
+                        selectedSportShimmerView.startShimmer()
                     }
                 }
 

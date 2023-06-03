@@ -11,12 +11,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.CityResultAdapter
 import it.polito.mad.g26.playingcourtreservation.util.Debouncer
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.SearchCitiesViewModel
 
@@ -28,6 +31,7 @@ class SearchCitiesFragment : Fragment(R.layout.search_cities_fragment) {
 
     private lateinit var searchInputET: EditText
     private lateinit var citiesResultRV: RecyclerView
+    private lateinit var citiesShimmerView: ShimmerFrameLayout
 
     /* ARGS */
     private var city: String = ""
@@ -54,12 +58,15 @@ class SearchCitiesFragment : Fragment(R.layout.search_cities_fragment) {
         val searchDebouncer = Debouncer(500)
         searchInputET.doOnTextChanged { text, _, _, _ ->
             searchDebouncer.submit {
-                viewModel.getCities(text.toString())
+                viewModel.getCities(text.toString().trim())
             }
         }
         searchInputET.requestFocus()
         openKeyboard()
         searchInputET.setText(city)
+
+        /* shimmerFrameLayout INITIALIZER */
+        citiesShimmerView = view.findViewById(R.id.citiesShimmerView)
 
         /* CITIES RESULTS RECYCLE VIEW INITIALIZER*/
         citiesResultRV = view.findViewById(R.id.citiesResultRV)
@@ -93,16 +100,16 @@ class SearchCitiesFragment : Fragment(R.layout.search_cities_fragment) {
         viewModel.cities.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    // TODO: Start Shimmer Loading
+                    citiesShimmerView.startShimmerRVAnimation(citiesResultRV)
                 }
 
                 is UiState.Failure -> {
-                    // TODO: Stop Shimmer Loading
+                    citiesShimmerView.stopShimmerRVAnimation(citiesResultRV)
                     toast(state.error ?: "Unable to get cities")
                 }
 
                 is UiState.Success -> {
-                    // TODO: Stop Shimmer Loading
+                    citiesShimmerView.stopShimmerRVAnimation(citiesResultRV)
                     cityResultAdapter.updateCollection(state.result)
                 }
             }

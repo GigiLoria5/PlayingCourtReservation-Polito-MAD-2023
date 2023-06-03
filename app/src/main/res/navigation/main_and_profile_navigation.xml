@@ -17,6 +17,11 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <argument
+            android:name="userId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -67,16 +72,23 @@
         <action
             android:id="@+id/openReservationEdit"
             app:destination="@id/modifyReservationDetailsFragment" />
+        <action
+            android:id="@+id/openShowProfile"
+            app:destination="@id/showProfileFragment" />
+        <action
+            android:id="@+id/action_reservationDetailsFragment_to_inviteUsersFragment"
+            app:destination="@id/inviteUsersFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
+            />
     </fragment>
     <fragment
         android:id="@+id/modifyReservationDetailsFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.EditReservationDetailsFragment"
         android:label="modifyReservationDetailsFragment"
-        tools:layout="@layout/edit_reservation_details_fragment">
-        <argument
-            android:name="reservationId"
-            app:argType="string" />
-    </fragment>
+        tools:layout="@layout/edit_reservation_details_fragment" />
     <fragment
         android:id="@+id/searchCitiesFragment"
         android:name="it.polito.mad.g26.playingcourtreservation.fragment.searchFragments.SearchCitiesFragment"
@@ -185,6 +197,14 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_searchCourtsFragment_to_reservationDetailsFragment"
+            app:destination="@id/reservationDetailsFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
+            />
     </fragment>
     <fragment
         android:id="@+id/courtReviewsFragment"
@@ -228,6 +248,34 @@
         <argument
             android:name="dateTime"
             app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/inviteUsersFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.InviteUsersFragment"
+        android:label="InviteUsersFragment" >
+        <argument
+            android:name="reservationId"
+            app:argType="string" />
+        <argument
+            android:name="date"
+            app:argType="string" />
+        <argument
+            android:name="time"
+            app:argType="string" />
+        <argument
+            android:name="city"
+            app:argType="string" />
+        <argument
+            android:name="sport"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_inviteUsersFragment_to_showProfileFragment"
+            app:destination="@id/showProfileFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"
+            />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"

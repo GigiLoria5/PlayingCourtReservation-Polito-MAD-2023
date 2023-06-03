@@ -30,26 +30,48 @@
             android:layout_height="match_parent">
 
             <!-- Avatar -->
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/avatar"
-                android:layout_width="@dimen/profile_image"
-                android:layout_height="@dimen/profile_image"
-                android:contentDescription="@string/avatar_description"
-                android:padding="4dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/profile_default"
+            <RelativeLayout
+                android:id="@+id/avatarContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@+id/user_main_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed"
-                app:shapeAppearanceOverlay="@style/circular"
-                app:strokeColor="@color/black"
-                app:strokeWidth="4dp" />
+                app:layout_constraintVertical_chainStyle="packed">
+                <!-- User Image -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="@dimen/profile_image"
+                    android:layout_height="@dimen/profile_image"
+                    android:contentDescription="@string/avatar_description"
+                    android:padding="4dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/profile_default"
+                    android:layout_centerHorizontal="true"
+                    app:shapeAppearanceOverlay="@style/circular" />
+                <!-- Image Animation Placeholder -->
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/avatarShimmerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/profile_image_placeholder" />
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+            </RelativeLayout>
 
             <!-- Main User Info -->
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/user_main_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,36 +81,37 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/avatar">
-
-
+                app:layout_constraintTop_toBottomOf="@+id/avatarContainer">
+                <!-- Username  -->
                 <TextView
                     android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/default_username"
+                    android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@color/custom_black"
                     android:textSize="18sp"
-                    android:textAlignment="center" />
-
-                <ImageView
-                    android:id="@+id/warning_icon"
-                    android:layout_width="wrap_content"
+                    android:textStyle="bold" />
+                <!-- Username Animation Placeholder -->
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/usernameShimmerView"
+                    android:visibility="invisible"
+                    android:layout_marginHorizontal="40dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/warning_icon_description"
-                    android:src="@drawable/baseline_warning_24"
-                    android:visibility="gone"
-                    tools:ignore="ImageContrastCheck" />
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial">
 
-                <ImageView
-                    android:id="@+id/danger_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/danger_icon_description"
-                    android:src="@drawable/baseline_dangerous_24"
-                    android:visibility="gone" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/profile_username_placeholder" />
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+            </RelativeLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </HorizontalScrollView>
@@ -110,107 +133,135 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- User Information -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_secondary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:layout_marginTop="@dimen/edit_default_margin"
-            android:backgroundTint="@color/grey_light_2"
-            app:cardElevation="@dimen/cardview_default_elevation"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:cardCornerRadius="@dimen/corner_radius">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/secondary_information"
+            <!-- User Information -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_secondary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginVertical="16dp"
-                android:orientation="vertical">
+                android:paddingBottom="16dp"
+                android:layout_marginTop="@dimen/edit_default_margin"
+                android:backgroundTint="@color/grey_light_2"
+                app:cardElevation="@dimen/cardview_default_elevation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardCornerRadius="@dimen/corner_radius">
 
-                <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                    android:id="@+id/full_name"
+                <RelativeLayout
+                    android:id="@+id/secondaryInformationContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:title="@string/full_name_title"
-                    app:value="@string/default_full_name" />
+                    app:layout_constraintTop_toTopOf="@id/card_secondary">
 
-                <LinearLayout
-                    android:id="@+id/user_information_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/full_name">
-
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/age"
-                        android:layout_width="0dp"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/secondary_information"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title="@string/age_title"
-                        app:value="@integer/default_age" />
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginVertical="16dp"
+                        android:orientation="vertical">
 
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/gender"
-                        android:layout_width="0dp"
+                        <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                            android:id="@+id/full_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:title="@string/full_name_title"
+                            app:value="@string/default_full_name" />
+
+                        <LinearLayout
+                            android:id="@+id/user_information_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/full_name">
+
+                            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                                android:id="@+id/age"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:title="@string/age_title"
+                                app:value="@integer/default_age" />
+
+                            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                                android:id="@+id/gender"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:title="@string/gender_title"
+                                app:value="@string/default_gender" />
+
+                            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                                android:id="@+id/placeholder"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:title=""
+                                app:value="" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/user_information_container">
+
+                            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                                android:id="@+id/location"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:title="@string/location_title"
+                                app:value="@string/default_location" />
+
+                            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                                android:id="@+id/position"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:title="@string/position_title"
+                                app:value="@string/default_position" />
+
+                            <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
+                                android:id="@+id/placeholder2"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                app:title=""
+                                app:value="" />
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- Secondary Information Animation Placeholder -->
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/secondaryInformationShimmerView"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title="@string/gender_title"
-                        app:value="@string/default_gender" />
+                        android:visibility="invisible"
+                        android:paddingHorizontal="8dp"
+                        android:paddingTop="10dp"
+                        app:shimmer_repeat_mode="restart"
+                        app:shimmer_shape="radial">
 
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/placeholder"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title=""
-                        app:value="" />
-                </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/user_information_container">
+                            <include layout="@layout/profile_secondary_information_placeholder" />
 
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/location"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title="@string/location_title"
-                        app:value="@string/default_location" />
-
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/position"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title="@string/position_title"
-                        app:value="@string/default_position" />
-
-                    <it.polito.mad.g26.playingcourtreservation.ui.CustomTextView
-                        android:id="@+id/placeholder2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:title=""
-                        app:value="" />
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Rating Container -->
             <com.google.android.material.card.MaterialCardView
@@ -228,16 +279,42 @@
                 app:layout_constraintTop_toBottomOf="@id/card_secondary"
                 app:layout_constraintVertical_bias="0.0">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/show_profile_recycler_view"
+                <RelativeLayout
+                    android:id="@+id/sportsContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_height="wrap_content">
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/sportsRV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:nestedScrollingEnabled="false"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/sportsRVShimmerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="8dp"
+                        android:visibility="invisible"
+                        app:shimmer_repeat_mode="restart"
+                        app:shimmer_shape="radial"
+                        tools:ignore="RtlSymmetry">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <include layout="@layout/profile_sport_item_placeholder" />
+
+                        </LinearLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+                </RelativeLayout>
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

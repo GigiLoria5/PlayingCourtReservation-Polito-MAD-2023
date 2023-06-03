@@ -3,38 +3,38 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
-import android.util.DisplayMetrics
-import android.util.Log
-import android.view.*
-import android.widget.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.constraintlayout.widget.Guideline
 import androidx.core.app.ActivityCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,208 +43,215 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.adapter.EditProfileAdapter
-import it.polito.mad.g26.playingcourtreservation.model.Reservation
+import it.polito.mad.g26.playingcourtreservation.adapter.UserSkillsAdapter
+import it.polito.mad.g26.playingcourtreservation.model.User
+import it.polito.mad.g26.playingcourtreservation.util.UiState
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
+import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.polito.mad.g26.playingcourtreservation.util.setImageFromByteArray
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
-import org.json.JSONObject
-import java.io.ByteArrayOutputStream
+import it.polito.mad.g26.playingcourtreservation.util.toByteArray
+import it.polito.mad.g26.playingcourtreservation.util.toast
+import it.polito.mad.g26.playingcourtreservation.viewmodel.EditProfileViewModel
+import it.polito.mad.g26.playingcourtreservation.viewmodel.SharedProfileViewModel
+import pl.droidsonroids.gif.GifImageView
 import java.io.FileDescriptor
 import java.io.IOException
-import java.util.*
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
 
-    private lateinit var usernameEditText: EditText
-    private lateinit var usernameContainer: TextInputLayout
+    private val viewModel by viewModels<EditProfileViewModel>()
+    private lateinit var sharedProfileViewModel: SharedProfileViewModel
 
-    private lateinit var fullNameEditText: EditText
-    private lateinit var fullNameContainer: TextInputLayout
-
-    private lateinit var locationEditText: EditText
-    private lateinit var locationContainer: TextInputLayout
-
-    private lateinit var autoCompletePosition: AutoCompleteTextView
-    private lateinit var dateOfBirthEditText: EditText
-    private lateinit var autoCompleteGender: AutoCompleteTextView
-
-    private val myCalendar = Calendar.getInstance()
-    private lateinit var datePickerDialog: DatePickerDialog
-
-    private lateinit var confirmAlertDialog: AlertDialog
-
+    // Visual Components
+    private lateinit var loaderImage: GifImageView
     private lateinit var avatarImage: ImageView
-    private var imageUri: Uri? = null
-    private lateinit var bitMapImage: Bitmap
+    private lateinit var usernameContainer: TextInputLayout
+    private lateinit var fullNameContainer: TextInputLayout
+    private lateinit var locationContainer: TextInputLayout
+    private lateinit var usernameEditText: EditText
+    private lateinit var fullNameEditText: EditText
+    private lateinit var locationEditText: EditText
+    private lateinit var birthDateEditText: EditText
+    private lateinit var positionAutoComplete: AutoCompleteTextView
+    private lateinit var genderAutoComplete: AutoCompleteTextView
+    private lateinit var datePickerDialog: DatePickerDialog
+    private lateinit var sportRecycleView: RecyclerView
+    private lateinit var changeImageButton: ImageButton
+    private lateinit var galleryBtn: ImageButton
+    private lateinit var cameraBtn: ImageButton
     private lateinit var profilePictureAlertDialog: BottomSheetDialog
 
-    private lateinit var sportRecycleView: RecyclerView
-    private lateinit var sportList: List<String>
-    private lateinit var sportRating: MutableList<Float>
-    private lateinit var guide: Guideline
-    private lateinit var configuration: Configuration
-    private lateinit var metrics: DisplayMetrics
+    private lateinit var bitMapImage: Bitmap
+    private val myCalendar = Calendar.getInstance()
+    private var imageUri: Uri? = null
 
-
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            if (permissions[Manifest.permission.CAMERA] == true && (android.os.Build.VERSION.SDK_INT > 29 || permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true)) {
-                openCamera()
-            }
-        }
-
-    // get the image from gallery and display it
-    private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
-            processResponseGallery(it)
-        }
-
-    private fun processResponseGallery(response: ActivityResult) {
-        if (response.resultCode == RESULT_OK) {
-            imageUri = response.data?.data
-            val inputImage: Bitmap? = uriToBitmap(imageUri)
-            bitMapImage = rotateBitmap(inputImage!!)
-            avatarImage.setImageBitmap(bitMapImage)
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        // save current calendar selection
-        outState.putInt("YEAR", myCalendar[Calendar.YEAR])
-        outState.putInt("MONTH", myCalendar[Calendar.MONTH])
-        outState.putInt("DAY_OF_MONTH", myCalendar[Calendar.DAY_OF_MONTH])
-        //save datePickerDialog
-        if (::datePickerDialog.isInitialized && datePickerDialog.isShowing) {
-            outState.putBoolean("datePickerDialogShowing", true)
-            //save selected date
-            outState.putInt("YEAR_SEL", datePickerDialog.datePicker.year)
-            outState.putInt("MONTH_SEL", datePickerDialog.datePicker.month)
-            outState.putInt("DAY_OF_MONTH_SEL", datePickerDialog.datePicker.dayOfMonth)
-            datePickerDialog.dismiss()
-        } else
-            outState.putBoolean("datePickerDialogShowing", false)
-
-        // save avatar image
-        if (imageUri != null) {
-            outState.putString("imageUri", imageUri.toString())
-        } else {
-            outState.putString("imageUri", "null")
-        }
-
-        // save profilePictureAlertDialog
-        if (::profilePictureAlertDialog.isInitialized && profilePictureAlertDialog.isShowing) {
-            outState.putBoolean("profilePictureAlertDialogShowing", true)
-            profilePictureAlertDialog.dismiss()
-        } else
-            outState.putBoolean("profilePictureAlertDialogShowing", false)
-
-        // save confirmAlertDialog
-        if (::confirmAlertDialog.isInitialized &&
-            confirmAlertDialog.isShowing
-        ) {
-            outState.putBoolean("confirmAlertDialogShowing", true)
-            confirmAlertDialog.dismiss()
-        } else
-            outState.putBoolean("confirmAlertDialogShowing", false)
-
-        //save rating
-        if (::sportRating.isInitialized)
-            outState.putFloatArray("rating", sportRating.toFloatArray())
+    companion object {
+        const val IMAGE_URI_KEY = "imageUri"
+        const val NO_IMAGE_VALUE = "null"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBar(activity, "Edit Profile", true)
+        sharedProfileViewModel =
+            ViewModelProvider(requireActivity())[SharedProfileViewModel::class.java]
+        viewModel.initialize(sharedProfileViewModel.currentUserInfo)
 
-        usernameEditText = view.findViewById(R.id.username_et)
-        autoCompletePosition = view.findViewById(R.id.position_autocomplete)
-        fullNameEditText = view.findViewById(R.id.full_name_et)
-        dateOfBirthEditText = view.findViewById(R.id.dob_et)
-        autoCompleteGender = view.findViewById(R.id.gender_autocomplete)
-        locationEditText = view.findViewById(R.id.location_et)
-        avatarImage = view.findViewById(R.id.avatar)
+        // Handle top menu actions
+        val menuHost: MenuHost = requireActivity()
+        handleMenuAction(menuHost)
 
+        // Find visual components
         usernameContainer = view.findViewById(R.id.username_container)
         fullNameContainer = view.findViewById(R.id.full_name_container)
         locationContainer = view.findViewById(R.id.location_container)
-        sportRecycleView = view.findViewById(R.id.edit_profile_recycler_view)
-        sportList = resources.getStringArray(R.array.sport_array).toList()
+        usernameEditText = view.findViewById(R.id.username_et)
+        positionAutoComplete = view.findViewById(R.id.position_autocomplete)
+        fullNameEditText = view.findViewById(R.id.full_name_et)
+        birthDateEditText = view.findViewById(R.id.dob_et)
+        genderAutoComplete = view.findViewById(R.id.gender_autocomplete)
+        locationEditText = view.findViewById(R.id.location_et)
+        avatarImage = view.findViewById(R.id.avatar)
+        sportRecycleView = view.findViewById(R.id.editSportsRV)
+        loaderImage = view.findViewById(R.id.loaderImage)
+        changeImageButton = view.findViewById(R.id.imageButton)
 
-        guide = requireView().findViewById(R.id.guideline)
-        metrics = requireContext().resources.displayMetrics
-        // Get the current configuration
-        configuration = resources.configuration
-        // Check if the orientation is landscape
-        if (configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            // The layout is in portrait mode
-            val height = metrics.heightPixels
-            val pixelsLimit = (height / 100) * 33
-            guide.setGuidelineBegin(pixelsLimit)
+        // Load current user information
+        val currentUserInformation = viewModel.userInformation
+        usernameEditText.setText(currentUserInformation.username)
+        positionAutoComplete.setText(currentUserInformation.position ?: "", false)
+        fullNameEditText.setText(currentUserInformation.fullname)
+        birthDateEditText.setText(currentUserInformation.birthDate ?: "")
+        genderAutoComplete.setText(currentUserInformation.gender ?: "", false)
+        locationEditText.setText(currentUserInformation.location ?: "")
+        sportRecycleView.adapter = UserSkillsAdapter(viewModel.getAllSkills(), true)
+        sportRecycleView.layoutManager = LinearLayoutManager(context)
+        val userImageData = sharedProfileViewModel.currentUserImageData
+        if (userImageData != null && imageUri == null) {
+            avatarImage.setImageFromByteArray(userImageData)
         }
 
-        //PERSISTENCE
-        val sharedPref = this.requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
+        // Init components
+        populateDropdowns()
+        setupBirthDateComponents()
+        setupValidationHelpers()
+        setupChangeImageManagement()
 
-        if (sharedPref.contains("profile")) {//work to replace all the strings
-            val json = sharedPref.getString("profile", "Default")?.let { JSONObject(it) }
-            usernameEditText.setText(json?.getString("username"))
-            autoCompletePosition.setText(json?.getString("position"), false)
-            fullNameEditText.setText(json?.getString("fullName"))
-            dateOfBirthEditText.setText(json?.getString("date"))
-            autoCompleteGender.setText(json?.getString("gender"), false)
-            locationEditText.setText(json?.getString("location"))
-            json?.getInt("year")?.let { myCalendar[Calendar.YEAR] = it }
-            json?.getInt("month")?.let { myCalendar[Calendar.MONTH] = it }
-            json?.getInt("day")?.let { myCalendar[Calendar.DAY_OF_MONTH] = it }
-            if (json?.getString("rating") != null) {
-                //retrieve rating from json
-                val sublist = json.getString("rating").split(",")
-                //transform in float
-                sportRating = mutableListOf()
-                for (string in sublist)
-                    sportRating.add(string.toFloat())
-                sportRecycleView.adapter = EditProfileAdapter(sportList, sportRating)
-                sportRecycleView.layoutManager =
-                    LinearLayoutManager(context)
+        //restore avatar image
+        if (savedInstanceState !== null && savedInstanceState.getString(IMAGE_URI_KEY) != NO_IMAGE_VALUE) {
+            imageUri = Uri.parse(savedInstanceState.getString(IMAGE_URI_KEY))
+            val inputImage: Bitmap? = uriToBitmap(imageUri)
+            bitMapImage = rotateBitmap(inputImage!!)
+            avatarImage.setImageBitmap(bitMapImage)
+        }
+
+        // Handle User Update
+        viewModel.updateState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    loaderImage.setFreezesAnimation(false)
+                    loaderImage.makeVisible()
+                }
+
+                is UiState.Failure -> {
+                    loaderImage.makeGone()
+                    loaderImage.setFreezesAnimation(true)
+                    toast(state.error ?: "Unable to update user information")
+                }
+
+                is UiState.Success -> {
+                    findNavController().popBackStack()
+                    loaderImage.makeGone()
+                    loaderImage.setFreezesAnimation(true)
+                    toast("Profile successfully updated")
+                }
             }
-        } else {//put the default value
-            usernameEditText.setText(getString(R.string.default_username))
-            autoCompletePosition.setText(getString(R.string.default_position), false)
-            fullNameEditText.setText(getString(R.string.default_full_name))
-            dateOfBirthEditText.setText(getString(R.string.default_date))
-            autoCompleteGender.setText(getString(R.string.default_gender), false)
-            locationEditText.setText(getString(R.string.default_location))
-            myCalendar.add(Calendar.YEAR, -21)
-            //RecyclerView Management
-            sportRating = MutableList(sportList.size) { 0f }
-            sportRecycleView.adapter = EditProfileAdapter(sportList, sportRating)
-            sportRecycleView.layoutManager =
-                LinearLayoutManager(context)
         }
-        //position dropdown management
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showActionBar(activity)
+        populateDropdowns()
+    }
+
+    // Top Bar Management
+    private fun handleMenuAction(menuHost: MenuHost) {
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menuInflater.inflate(R.menu.edit_profile_menu, menu)
+            }
+
+            override fun onMenuItemSelected(item: MenuItem): Boolean {
+                // Handle the menu selection
+                return when (item.itemId) {
+                    // Back
+                    android.R.id.home -> {
+                        findNavController().popBackStack()
+                        true
+                    }
+
+                    // Confirm Changes
+                    R.id.confirm_menu_item -> {
+                        val updatedUserInformation = viewModel.userInformation.copy(
+                            username = usernameEditText.text.toString(),
+                            fullname = fullNameEditText.text.toString(),
+                            location = locationEditText.text.toString(),
+                            gender = genderAutoComplete.text.toString(),
+                            position = positionAutoComplete.text.toString(),
+                            birthDate = birthDateEditText.text.toString(),
+                            skills = (sportRecycleView.adapter as UserSkillsAdapter).getSkills()
+                        )
+                        val newUserAvatarData =
+                            if (imageUri != null) avatarImage.toByteArray()
+                            else null
+                        if (areUserInformationValid(updatedUserInformation))
+                            viewModel.updateCurrentUserInformation(
+                                updatedUserInformation,
+                                newUserAvatarData
+                            )
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    // Dropdowns Management
+    private fun populateDropdowns() {
+        populatePositionAutoComplete()
+        populateGenderAutoComplete()
+    }
+
+    private fun populatePositionAutoComplete() {
         val positionItems = resources.getStringArray(R.array.position_array)
         val adapterPos = ArrayAdapter(requireContext(), R.layout.list_item, positionItems)
-        autoCompletePosition.setAdapter(adapterPos)
+        positionAutoComplete.setAdapter(adapterPos)
+    }
 
-        //gender dropdown management
+    private fun populateGenderAutoComplete() {
         val genderItems: Array<String> = resources.getStringArray(R.array.gender_array)
         val adapterGen = ArrayAdapter(requireContext(), R.layout.list_item, genderItems)
-        autoCompleteGender.setAdapter(adapterGen)
+        genderAutoComplete.setAdapter(adapterGen)
+    }
 
-        //Date of birth management
-        //updateDateOfBirthEditText(myCalendar)
+    // Birth Date Management
+    private fun setupBirthDateComponents() {
         val datePicker = DatePickerDialog.OnDateSetListener { _, year, month, day ->
             myCalendar[Calendar.YEAR] = year
             myCalendar[Calendar.MONTH] = month
             myCalendar[Calendar.DAY_OF_MONTH] = day
-            updateDateOfBirthEditText(myCalendar)
+            updateBirthDateEditText(myCalendar)
         }
-
         val maxDate = Calendar.getInstance()
         maxDate.add(Calendar.YEAR, -14)
         datePickerDialog = DatePickerDialog(
@@ -255,121 +262,136 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
             myCalendar[Calendar.DAY_OF_MONTH]
         )
         datePickerDialog.datePicker.maxDate = maxDate.timeInMillis
+        birthDateEditText.setOnClickListener {
+            datePickerDialog.show()
+        }
+    }
 
-        //image management
-        val editBtn = view.findViewById<ImageButton>(R.id.imageButton)
+    private fun updateBirthDateEditText(myCalendar: Calendar) {
+        val sdf = SimpleDateFormat(User.BIRTHDATE_PATTERN, Locale.getDefault())
+        birthDateEditText.setText(sdf.format(myCalendar.time))
+    }
 
-        profilePictureAlertDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
-        profilePictureAlertDialog.setContentView(R.layout.edit_profile_custom_dialog_photo)
-        profilePictureAlertDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        val galleryBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.gallery)
-        val cameraBtn = profilePictureAlertDialog.findViewById<ImageButton>(R.id.camera)
-        // Create the AlertDialog
-        // Set other dialog properties
-        profilePictureAlertDialog.setCancelable(true)
-
-        //Restore status
-        if (savedInstanceState !== null) {
-            //take calendar
-            myCalendar[Calendar.YEAR] = savedInstanceState.getInt("YEAR")
-            myCalendar[Calendar.MONTH] = savedInstanceState.getInt("MONTH")
-            myCalendar[Calendar.DAY_OF_MONTH] = savedInstanceState.getInt("DAY_OF_MONTH")
-
-            //restore datePickerDialog
-            val datePickerDialogOn =
-                savedInstanceState.getBoolean("datePickerDialogShowing")
-            if (datePickerDialogOn) {
-                datePickerDialog.updateDate(
-                    savedInstanceState.getInt("YEAR_SEL"),
-                    savedInstanceState.getInt("MONTH_SEL"),
-                    savedInstanceState.getInt("DAY_OF_MONTH_SEL")
-                )
-                datePickerDialog.show()
-            }
-
-            //restore avatar image
-            if (savedInstanceState.getString("imageUri") != "null") {
-                imageUri = Uri.parse(savedInstanceState.getString("imageUri"))
-                val inputImage: Bitmap? = uriToBitmap(imageUri)
-                bitMapImage = rotateBitmap(inputImage!!)
-                avatarImage.setImageBitmap(bitMapImage)
-            }
-
-            //restore profilePictureAlertDialog
-            val profilePictureAlertOn =
-                savedInstanceState.getBoolean("profilePictureAlertDialogShowing")
-            if (profilePictureAlertOn)
-                profilePictureAlertDialog.show()
-
-            //restore confirmAlertDialog
-            val confirmAlertOn = savedInstanceState.getBoolean("confirmAlertDialogShowing")
-            if (confirmAlertOn)
-                submitForm()
-
-            sportRating = savedInstanceState.getFloatArray("rating")!!.toMutableList()
-            sportRecycleView.adapter = EditProfileAdapter(sportList, sportRating)
+    // Validation Management
+    private fun areUserInformationValid(user: User): Boolean {
+        if (user.username.isEmpty() || usernameContainer.helperText != null) {
+            toast("Please enter a valid username")
+            return false
         }
 
-
-        //IMAGE MANAGEMENT
-        if (imageUri == null) {
-            val file = requireActivity().applicationContext.getFileStreamPath("imageBit")
-            if (file.exists()) {
-                val fileInput = requireActivity().openFileInput("imageBit")
-                bitMapImage = if (fileInput.available() > 0) {
-                    val bitmap = BitmapFactory.decodeStream(fileInput)//already decompressed
-                    avatarImage.setImageBitmap(bitmap)
-                    bitmap
-                } else {
-                    avatarImage.setImageBitmap(
-                        AppCompatResources.getDrawable(
-                            requireContext(),
-                            R.drawable.profile_default
-                        )!!.toBitmap()
-                    )
-                    avatarImage.drawable.toBitmap()
-                }
-                fileInput.close()
-            } else {
-                avatarImage.setImageBitmap(
-                    AppCompatResources.getDrawable(
-                        requireContext(),
-                        R.drawable.profile_default
-                    )!!.toBitmap()
-                )
-                bitMapImage = avatarImage.drawable.toBitmap()
-            }
+        if (user.position.isNullOrEmpty()) {
+            toast("The position field is mandatory")
+            return false
         }
 
-        //username management
+        if (user.fullname.isEmpty() || fullNameContainer.helperText != null) {
+            toast("Please enter a valid fullname")
+            return false
+        }
+
+        if (user.birthDate.isNullOrEmpty()) {
+            toast("The birth date field is mandatory")
+            return false
+        }
+
+        if (user.gender.isNullOrEmpty()) {
+            toast("The gender field is mandatory")
+            return false
+        }
+
+        if (user.location.isNullOrEmpty() || locationContainer.helperText != null) {
+            toast("Please enter a valid location")
+            return false
+        }
+
+        return true
+    }
+
+    private fun setupValidationHelpers() {
         usernameEditText.addTextChangedListener {
             usernameContainer.helperText = validUsername()
         }
 
-        //fullName management
         fullNameEditText.addTextChangedListener {
             fullNameContainer.helperText = validFullName()
         }
 
-        dateOfBirthEditText.setOnClickListener {
-            datePickerDialog.show()
-        }
-
-
-        //location management
         locationEditText.addTextChangedListener {
             locationContainer.helperText = validLocation()
         }
+    }
 
-        galleryBtn?.setOnClickListener {
-            val galleryIntent =
-                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+    private fun validUsername(): String? {
+        val usernameText = usernameEditText.text.toString()
+        val regex = "[A-Za-z]\\w{4,29}".toRegex() // Username from 5 to 30 characters
+        return when {
+            usernameText.isEmpty()
+            -> getString(R.string.required_helper)
 
+            usernameText.length < 5
+            -> getString(R.string.username_min_length)
+
+            usernameText.length > 30
+            -> getString(R.string.username_max_length)
+
+            !usernameText.matches(regex)
+            -> getString(R.string.invalid_field_helper)
+
+            else -> null
+        }
+    }
+
+    private fun validFullName(): String? {
+        val fullNameText = fullNameEditText.text.toString()
+        val regex = "([A-Za-z][a-z]*)+([ '\\\\-][A-Za-z]+)*[/.']?".toRegex()
+        return when {
+            fullNameText.isEmpty()
+            -> getString(R.string.required_helper)
+
+            !fullNameText.matches(regex)
+            -> getString(R.string.invalid_field_helper)
+
+            else -> null
+        }
+    }
+
+    private fun validLocation(): String? {
+        val locationText = locationEditText.text.toString()
+        val regex = "[a-zA-Z]+([ \\-][a-zA-Z]+)*\$".toRegex()
+        return when {
+            locationText.isEmpty()
+            -> getString(R.string.required_helper)
+
+            !locationText.matches(regex)
+            -> getString(R.string.invalid_field_helper)
+
+            else -> null
+        }
+    }
+
+    // Change Image Management
+    private fun setupChangeImageManagement() {
+        profilePictureAlertDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
+        profilePictureAlertDialog.setContentView(R.layout.edit_profile_custom_dialog_photo)
+        profilePictureAlertDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        galleryBtn = profilePictureAlertDialog.findViewById(R.id.gallery)!!
+        cameraBtn = profilePictureAlertDialog.findViewById(R.id.camera)!!
+        profilePictureAlertDialog.setCancelable(true)
+        // Open Dialog
+        changeImageButton.setOnClickListener {
+            profilePictureAlertDialog.show()
+        }
+        // Choose Image from Gallery
+        galleryBtn.setOnClickListener {
+            val galleryIntent = Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            )
             galleryActivityResultLauncher.launch(galleryIntent)
             profilePictureAlertDialog.dismiss()
         }
-
-        cameraBtn?.setOnClickListener {
+        // Take a Photo
+        cameraBtn.setOnClickListener {
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.CAMERA
@@ -390,188 +412,77 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
             }
             profilePictureAlertDialog.dismiss()
         }
-
-        editBtn.setOnClickListener {
-            profilePictureAlertDialog.show()
-        }
-
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
-                menuInflater.inflate(R.menu.edit_profile_menu, menu)
-            }
-
-            override fun onMenuItemSelected(item: MenuItem): Boolean {
-                // Handle the menu selection
-                return when (item.itemId) {
-                    // Back
-                    android.R.id.home -> {
-                        findNavController().popBackStack()
-                        true
-                    }
-                    // Confirm Changes
-                    R.id.confirm_menu_item -> {
-
-                        //Save new profile
-                        val sharedPreferences =
-                            requireActivity().getSharedPreferences("test", Context.MODE_PRIVATE)
-                        val json = JSONObject()
-                        json.put("username", usernameEditText.text.toString())
-                        json.put("fullName", fullNameEditText.text.toString())
-                        json.put("location", locationEditText.text.toString())
-                        json.put("gender", autoCompleteGender.text.toString())
-                        json.put("position", autoCompletePosition.text.toString())
-                        json.put("date", dateOfBirthEditText.text.toString())
-                        json.put("year", myCalendar[Calendar.YEAR])
-                        json.put("month", myCalendar[Calendar.MONTH])
-                        json.put("day", myCalendar[Calendar.DAY_OF_MONTH])
-
-                        //save rating
-                        var rating = ""
-                        for (i in sportRating)
-                            rating = "$rating,$i"
-                        val finalRating = rating.substring(1)
-                        json.put("rating", finalRating)
-
-                        //Calculate and save age
-                        val year = myCalendar[Calendar.YEAR]
-                        val day = myCalendar[Calendar.DAY_OF_YEAR]
-                        val todayCalendar = Calendar.getInstance(TimeZone.getDefault())
-                        val currentYear = todayCalendar[Calendar.YEAR]
-                        var age = currentYear - year
-                        val currentDay = todayCalendar[Calendar.DAY_OF_YEAR]
-                        if (day > currentDay) {
-                            age--
-                        }
-                        json.put("age", age)
-
-                        val editor = sharedPreferences.edit()
-                        editor.putString("profile", json.toString())
-                        editor.apply()
-
-                        //Saving image
-                        val stream = ByteArrayOutputStream()
-                        bitMapImage.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                        val byteArray = stream.toByteArray()
-                        val fileOut =
-                            requireActivity().openFileOutput("imageBit", Context.MODE_PRIVATE)
-                        fileOut.write(byteArray)
-                        fileOut.close()
-
-                        submitForm()
-
-                        true
-                    }
-
-                    else -> false
-                }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onResume() {
-        super.onResume()
-        showActionBar(activity)
-        //position dropdown management
-        val positionItems = resources.getStringArray(R.array.position_array)
-        val adapterPos = ArrayAdapter(requireContext(), R.layout.list_item, positionItems)
-        autoCompletePosition.setAdapter(adapterPos)
-        //gender dropdown management
-        val genderItems: Array<String> = resources.getStringArray(R.array.gender_array)
-        val adapterGen = ArrayAdapter(requireContext(), R.layout.list_item, genderItems)
-        autoCompleteGender.setAdapter(adapterGen)
-    }
-
-    private fun validUsername(): String? {
-        val usernameText = usernameEditText.text.toString()
-        val regex =
-            "[A-Za-z]\\w{7,29}".toRegex() // Validation. Username da 8 a 30 characters
-        return when {
-            usernameText.isEmpty()
-            -> getString(R.string.required_helper)
-
-            usernameText.length < 8
-            -> getString(R.string.username_min_length)
-
-            usernameText.length > 30
-            -> getString(R.string.username_max_length)
-
-            !usernameText.matches(regex)
-            -> getString(R.string.invalid_field_helper)
-
-            else -> null
-        }
-    }
-
-    private fun validFullName(): String? {
-        val fullNameText = fullNameEditText.text.toString()
-        val regex =
-            "([A-Za-z][a-z]*)+([ '\\\\-][A-Za-z]+)*[/.']?".toRegex() // Validation
-        return when {
-            fullNameText.isEmpty()
-            -> getString(R.string.required_helper)
-
-            !fullNameText.matches(regex)
-            -> getString(R.string.invalid_field_helper)
-
-            else -> null
-        }
-    }
-
-    private fun validLocation(): String? {
-        val locationText = locationEditText.text.toString()
-        val regex =
-            "[a-zA-Z]+([ \\-][a-zA-Z]+)*\$".toRegex() // Validation
-        return when {
-            locationText.isEmpty()
-            -> getString(R.string.required_helper)
-
-            !locationText.matches(regex)
-            -> getString(R.string.invalid_field_helper)
-
-            else -> null
-        }
-    }
-
-    //update Date Of Birth Edit Text
-    private fun updateDateOfBirthEditText(myCalendar: Calendar) {
-        val myFormat = Reservation.getDatePattern()
-        val sdf = SimpleDateFormat(myFormat, Locale.ITALY)
-        dateOfBirthEditText.setText(sdf.format(myCalendar.time))
-    }
-
-    private fun validInputData(): Boolean {
-        val validUsername = usernameContainer.helperText == null
-        val validFullName = fullNameContainer.helperText == null
-        val validLocation = locationContainer.helperText == null
-        return validLocation && validFullName && validUsername
-    }
-
-    private fun confirmAlertDialogBuilder(isOk: Boolean) {
-        return if (isOk) {
-            findNavController().popBackStack()
-            Toast.makeText(
-                context,
-                R.string.edit_profile_ok_update_dialog_message,
-                Toast.LENGTH_SHORT
-            ).show()
-
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // save avatar image
+        if (imageUri != null) {
+            outState.putString(IMAGE_URI_KEY, imageUri.toString())
         } else {
-            Toast.makeText(
-                context,
-                R.string.edit_profile_no_ok_update_dialog_message,
-                Toast.LENGTH_SHORT
-            ).show()
+            outState.putString(IMAGE_URI_KEY, NO_IMAGE_VALUE)
         }
     }
 
-    private fun submitForm() {
-        confirmAlertDialogBuilder(validInputData())
+    // GALLERY UTILS
+    // get the image from gallery and display it
+    private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            processResponseGallery(it)
+        }
 
+    private fun processResponseGallery(response: ActivityResult) {
+        if (response.resultCode == RESULT_OK) {
+            imageUri = response.data?.data
+            val inputImage: Bitmap? = uriToBitmap(imageUri)
+            bitMapImage = rotateBitmap(inputImage!!)
+            avatarImage.setImageBitmap(bitMapImage)
+        }
     }
 
-    //opens camera so that user can capture image
+    // takes URI of the image and returns bitmap
+    private fun uriToBitmap(selectedFileUri: Uri?): Bitmap? {
+        try {
+            val parcelFileDescriptor: ParcelFileDescriptor? =
+                requireActivity().contentResolver.openFileDescriptor(selectedFileUri!!, "r")
+            val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
+            val image: Bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+            parcelFileDescriptor.close()
+            return image
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    // rotate image if image captured on samsung devices
+    // Most phone cameras are landscape, meaning if you take the photo in portrait, the resulting photos will be rotated 90 degrees.
+    @SuppressLint("Range")
+    fun rotateBitmap(input: Bitmap): Bitmap {
+        val orientationColumn = arrayOf(MediaStore.Images.Media.ORIENTATION)
+        val cur: Cursor? =
+            requireActivity().contentResolver.query(imageUri!!, orientationColumn, null, null, null)
+        var orientation = -1
+        if (cur != null && cur.moveToFirst()) {
+            orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]))
+            cur.close()
+        }
+        val rotationMatrix = Matrix()
+        rotationMatrix.setRotate(orientation.toFloat())
+        return Bitmap.createBitmap(input, 0, 0, input.width, input.height, rotationMatrix, true)
+    }
+
+    // CAMERA UTILS
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions[Manifest.permission.CAMERA] == true && (android.os.Build.VERSION.SDK_INT > 29 || permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true)) {
+                openCamera()
+            }
+        }
+
+    // opens camera so that user can capture image
     private fun openCamera() {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "New Picture")
@@ -602,36 +513,4 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
         }
     }
 
-    //takes URI of the image and returns bitmap
-    private fun uriToBitmap(selectedFileUri: Uri?): Bitmap? {
-        try {
-            val parcelFileDescriptor: ParcelFileDescriptor? =
-                requireActivity().contentResolver.openFileDescriptor(selectedFileUri!!, "r")
-            val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
-            val image: Bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-            parcelFileDescriptor.close()
-            return image
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return null
-    }
-
-    //rotate image if image captured on samsung devices
-    //Most phone cameras are landscape, meaning if you take the photo in portrait, the resulting photos will be rotated 90 degrees.
-    @SuppressLint("Range")
-    fun rotateBitmap(input: Bitmap): Bitmap {
-        val orientationColumn = arrayOf(MediaStore.Images.Media.ORIENTATION)
-        val cur: Cursor? =
-            requireActivity().contentResolver.query(imageUri!!, orientationColumn, null, null, null)
-        var orientation = -1
-        if (cur != null && cur.moveToFirst()) {
-            orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]))
-            cur.close()
-        }
-        Log.d("tryOrientation", orientation.toString() + "")
-        val rotationMatrix = Matrix()
-        rotationMatrix.setRotate(orientation.toFloat())
-        return Bitmap.createBitmap(input, 0, 0, input.width, input.height, rotationMatrix, true)
-    }
 }

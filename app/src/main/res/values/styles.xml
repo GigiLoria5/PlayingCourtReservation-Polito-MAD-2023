@@ -10,6 +10,11 @@
         <item name="colorControlActivated">@color/yellow</item>
     </style>
 
+    <style name="ratingBarPlaceholder" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/invisible</item>
+        <item name="colorControlActivated">@color/invisible</item>
+    </style>
+
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="buttonBarPositiveButtonStyle">@style/MyPositiveButtonStyle</item>
         <item name="buttonBarNegativeButtonStyle">@style/MyNegativeButtonStyle</item>
@@ -42,5 +47,11 @@
 
     <style name="custom_number_picker" parent="">
         <item name="colorControlNormal">@android:color/transparent</item>
+    </style>
+
+    <!-- Invite users -->
+    <style name="card_circle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 </resources>
