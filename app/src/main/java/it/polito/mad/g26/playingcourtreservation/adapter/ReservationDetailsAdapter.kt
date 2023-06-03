@@ -65,7 +65,7 @@ class ReservationDetailsAdapter(
                 rating.rating = rate.rating
             else rating.rating = 0f
             card.setOnClickListener {
-                //navigate to profile
+                navigateToShowProfileFragment(u.id)
             }
             acceptButton.setOnClickListener {
                 //add to participant
@@ -90,7 +90,6 @@ class ReservationDetailsAdapter(
                 rating.rating = rate.rating
             else rating.rating = 0f
             card.setOnClickListener {
-                //go to profile openShowProfile
                 navigateToShowProfileFragment(u.id)
             }
         }
