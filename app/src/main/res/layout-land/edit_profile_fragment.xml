@@ -5,8 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-
     tools:context=".fragment.EditProfileFragment">
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/loaderImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:src="@drawable/football_loader"
+        android:elevation="1000dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/user_photo_view"
@@ -32,9 +44,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/circular"
-            app:strokeColor="@color/black"
-            app:strokeWidth="4dp" />
+            app:shapeAppearanceOverlay="@style/circular" />
 
         <ImageButton
             android:id="@+id/imageButton"
@@ -192,8 +202,7 @@
                     android:id="@+id/gender_container"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
                         android:id="@+id/gender_autocomplete"
@@ -252,9 +261,10 @@
                     android:layout_marginBottom="16dp">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/edit_profile_recycler_view"
+                        android:id="@+id/editSportsRV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         android:orientation="vertical" />

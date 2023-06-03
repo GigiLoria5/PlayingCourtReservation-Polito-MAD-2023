@@ -9,7 +9,6 @@ import it.polito.mad.g26.playingcourtreservation.model.Court
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
-import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepository
 import it.polito.mad.g26.playingcourtreservation.repository.UserRepository
 import it.polito.mad.g26.playingcourtreservation.util.ReservationDetailsUtils
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
@@ -20,20 +19,34 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditReservationDetailsViewModel @Inject constructor(
-    private val sportCenterRepository: SportCenterRepository,
     private val reservationRepository: ReservationRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
     /* INITIALIZATION */
-    private var _reservationId: String = ""
-    val reservationId: String
-        get() = _reservationId
+    private var _reservation: Reservation = Reservation()
+    val reservation: Reservation
+        get() = _reservation
+
+    private var _sportCenter: SportCenter = SportCenter()
+    val sportCenter: SportCenter
+        get() = _sportCenter
+
+    private var _court: Court = Court()
+    val court: Court
+        get() = _court
+
     val userId: String
         get() = userRepository.currentUser!!.uid
 
-    fun initialize(reservationId: String) {
-        this._reservationId = reservationId
+    fun initialize(
+        reservation: Reservation,
+        reservationSportCenter: SportCenter,
+        reservationCourt: Court
+    ) {
+        _reservation = reservation
+        _sportCenter = reservationSportCenter
+        _court = reservationCourt
     }
 
     // DateTime management
@@ -56,43 +69,6 @@ class EditReservationDetailsViewModel @Inject constructor(
         _selectedDateTimeMillis.value = newTimeInMillis
     }
 
-    // Load reservation data
-    private val _loadingState = MutableLiveData<UiState<Unit>>()
-    val loadingState: LiveData<UiState<Unit>>
-        get() = _loadingState
-
-    private var _reservation: Reservation = Reservation()
-    val reservation: Reservation
-        get() = _reservation
-
-    private var _sportCenter: SportCenter = SportCenter()
-    val sportCenter: SportCenter
-        get() = _sportCenter
-
-    private var _court: Court = Court()
-    val court: Court
-        get() = _court
-
-    fun loadReservationAndSportCenterInformation() = viewModelScope.launch {
-        _loadingState.value = UiState.Loading
-        // Get reservation details
-        val reservationState = reservationRepository.getReservationById(_reservationId)
-        if (reservationState is UiState.Failure) {
-            _loadingState.value = reservationState
-            return@launch
-        }
-        _reservation = (reservationState as UiState.Success).result
-        // Get sport center information where the reservation has been made
-        val sportCenterState = sportCenterRepository.getSportCenterById(_reservation.sportCenterId)
-        if (sportCenterState is UiState.Failure) {
-            _loadingState.value = sportCenterState
-            return@launch
-        }
-        _sportCenter = (sportCenterState as UiState.Success).result
-        _court = _sportCenter.courts.first { it.id == reservation.courtId }
-        _loadingState.value = UiState.Success(Unit)
-    }
-
     // Update Reservation
     private val _updateState = MutableLiveData<UiState<Unit>>()
     val updateState: LiveData<UiState<Unit>>
@@ -100,6 +76,11 @@ class EditReservationDetailsViewModel @Inject constructor(
 
     fun updateReservation(updatedReservation: Reservation) = viewModelScope.launch {
         _updateState.value = UiState.Loading
+        // Check if there are any changes
+        if (reservation == updatedReservation) {
+            _updateState.value = UiState.Failure("Please make changes before saving")
+            return@launch
+        }
         // Check if user is free
         val newDate = getDateTimeFormatted(dateFormat)
         val newTime = getDateTimeFormatted(timeFormat)
@@ -126,11 +107,12 @@ class EditReservationDetailsViewModel @Inject constructor(
         )
         updatedReservation.amount = getFinalPrice(updatedReservation)
         // Update Reservation
-        val resultState = reservationRepository.updateReservation(reservationId, updatedReservation)
+        val resultState = reservationRepository
+            .updateReservation(reservation.id, updatedReservation)
         delay(500)
         if (resultState is UiState.Success) {
             _reservation = updatedReservation
-            _reservationId = updatedReservation.id
+            _reservation.id = updatedReservation.id
         }
         _updateState.value = resultState
     }
