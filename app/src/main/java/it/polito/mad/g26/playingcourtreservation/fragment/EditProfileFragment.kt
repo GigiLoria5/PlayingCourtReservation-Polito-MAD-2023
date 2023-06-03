@@ -323,12 +323,12 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
 
     private fun validUsername(): String? {
         val usernameText = usernameEditText.text.toString()
-        val regex = "[A-Za-z]\\w{7,29}".toRegex() // Username from 8 to 30 characters
+        val regex = "[A-Za-z]\\w{4,29}".toRegex() // Username from 5 to 30 characters
         return when {
             usernameText.isEmpty()
             -> getString(R.string.required_helper)
 
-            usernameText.length < 8
+            usernameText.length < 5
             -> getString(R.string.username_min_length)
 
             usernameText.length > 30
