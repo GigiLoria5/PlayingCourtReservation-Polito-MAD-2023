@@ -60,7 +60,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <include layout="@layout/notification_item" />
+                <include layout="@layout/notification_item_placeholder" />
+                <include layout="@layout/notification_item_placeholder" />
+                <include layout="@layout/notification_item_placeholder" />
 
             </LinearLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
@@ -74,6 +76,7 @@
         app:cardCornerRadius="0dp"
         app:cardElevation="@dimen/standard_elevation"
         app:cardMaxElevation="@dimen/standard_elevation"
+        android:visibility="gone"
         app:cardPreventCornerOverlap="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
