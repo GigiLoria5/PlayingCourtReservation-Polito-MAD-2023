@@ -15,6 +15,7 @@ class ReservationDetailsAdapter(
     private val mode: Int,
     private val sport: String,
     private val navigateToShowProfileFragment: (String) -> Unit,
+    private val changeUser: (User) -> Unit
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -68,7 +69,7 @@ class ReservationDetailsAdapter(
                 navigateToShowProfileFragment(u.id)
             }
             acceptButton.setOnClickListener {
-                //add to participant
+                changeUser(u)
             }
             removeButton.setOnClickListener {
                 //remove from request

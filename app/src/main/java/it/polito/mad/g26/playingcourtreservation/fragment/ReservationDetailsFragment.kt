@@ -26,11 +26,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReservationDetailsAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceWithFeeAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
@@ -190,26 +192,25 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         R.string.set_text_with_euro,
                         reservation.amount.toString()
                     )
-
-
+                    //Telephone icon
                     sportCenterPhoneNumberMCV.setOnClickListener {
                         val intent = Intent(Intent.ACTION_DIAL)
                         intent.data = Uri.parse("tel:${reservationSportCenter.phoneNumber}")
                         startActivity(intent)
                     }
-
-
                     //Show applicant confirmed
                     val user = viewModel.user
                     val participants = viewModel.participants + user
                     val participantsAdapter =
                         ReservationDetailsAdapter(
-                            participants, 1, viewModel.court.sport
-                        ) { userId ->
-                            val direction =
-                                ReservationDetailsFragmentDirections.openShowProfile(userId)
-                            findNavController().navigate(direction)
-                        }
+                            participants, 1, viewModel.court.sport,
+                            { userId ->
+                                val direction =
+                                    ReservationDetailsFragmentDirections.openShowProfile(userId)
+                                findNavController().navigate(direction)
+                            },
+                            {}
+                        )
                     participantsRecyclerView.adapter = participantsAdapter
                     participantsRecyclerView.layoutManager = GridLayoutManager(context, 2)
                     val maxParticipants = Court.getSportTotParticipants(viewModel.court.sport)
@@ -222,36 +223,46 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     // Show reservation buttons+ applicants list if future or review button is past
                     if (viewModel.nowIsBeforeReservationDateTime()) {
 
-                        //Creator
+                        //CREATOR
                         if (reservation.userId == viewModel.userId) {
                             // TODO : on click on card + on click on buttons requester
-
-                            //Show requesters list if not empty
-                            inviteButton.makeVisible()
-                            inviteButton.setOnClickListener {
-                                val direction = ReservationDetailsFragmentDirections
-                                    .actionReservationDetailsFragmentToInviteUsersFragment(
-                                        reservation.id, reservation.date, reservation.time,
-                                        reservationSportCenter.city, reservationCourt.sport
-                                    )
-                                findNavController().navigate(direction)
-                            }
-                            if (reservation.requests.isNotEmpty()) {
-                                requestersLayout.makeVisible()
-                                val requesterAdapter =
-                                    ReservationDetailsAdapter(
-                                        viewModel.requesters,
-                                        2,
-                                        viewModel.court.sport
-                                    ) { userId ->
-                                        val direction =
-                                            ReservationDetailsFragmentDirections.openShowProfile(
-                                                userId
-                                            )
-                                        findNavController().navigate(direction)
-                                    }
-                                inviteesRecyclerView.adapter = requesterAdapter
-                                inviteesRecyclerView.layoutManager = LinearLayoutManager(context)
+                            //Show invite button+requester list if there is space available
+                            if (participants.size <= maxParticipants) {
+                                inviteButton.makeVisible()
+                                inviteButton.setOnClickListener {
+                                    val direction = ReservationDetailsFragmentDirections
+                                        .actionReservationDetailsFragmentToInviteUsersFragment(
+                                            reservation.id, reservation.date, reservation.time,
+                                            reservationSportCenter.city, reservationCourt.sport
+                                        )
+                                    findNavController().navigate(direction)
+                                }
+                                //Show requesters list if not empty
+                                if (reservation.requests.isNotEmpty()) {
+                                    requestersLayout.makeVisible()
+                                    val requesterAdapter =
+                                        ReservationDetailsAdapter(
+                                            viewModel.requesters,
+                                            2,
+                                            viewModel.court.sport,
+                                            { userId ->
+                                                val direction =
+                                                    ReservationDetailsFragmentDirections
+                                                        .openShowProfile(userId)
+                                                findNavController().navigate(direction)
+                                            },
+                                            { userToParticipant ->
+                                                showConfirmationDialog(
+                                                    userToParticipant
+                                                )
+                                            }
+                                        )
+                                    inviteesRecyclerView.adapter = requesterAdapter
+                                    inviteesRecyclerView.layoutManager =
+                                        LinearLayoutManager(context)
+                                }
+                            } else {
+                                //delete invitees and requester list
                             }
                             // Inflate button to edit/delete reservation
                             val inflater = LayoutInflater.from(requireContext())
@@ -277,7 +288,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             }
 
                         } else if (reservation.participants.contains(viewModel.userId)) {
-                            //Participant-> button to remove itself and send notification
+                            //PARTICIPANT-> button to remove itself and send notification
                             val inflater = LayoutInflater.from(requireContext())
                             val viewRemoveFromReservation = inflater.inflate(
                                 R.layout.reservation_details_participant_button,
@@ -290,7 +301,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                 //viewModel.removeParticipant
                             }
                         } else if (reservation.requests.contains(reservation.userId)) {
-                            //we have a requester-> button not clickable already sent invite
+                            //REQUESTER-> button not clickable already sent invite
                             val inflater = LayoutInflater.from(requireContext())
                             val viewRequest = inflater.inflate(
                                 R.layout.reservation_details_requester_button,
@@ -298,7 +309,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                 false
                             )
                         } else if (reservation.invitees.contains(reservation.userId)) {
-                            //we have a invitees(invited by creator)-> button accept or reject
+                            //INVITEES(invited by creator)-> button accept or reject
                             val inflater = LayoutInflater.from(requireContext())
                             val viewAcceptOrReject = inflater.inflate(
                                 R.layout.reservation_details_invited_buttons,
@@ -316,7 +327,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                 //viewModel.sendNotification
                             }
                         } else {
-                            //we have a simply user-> button to ask to join and become requester
+                            //USER-> button to ask to join and become requester
                             val inflater = LayoutInflater.from(requireContext())
                             val viewAsk = inflater.inflate(
                                 R.layout.reservation_details_user_button,
@@ -332,7 +343,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         return@observe
                     }
                     loadReview()
-                }//HERE SUCCESS IS CLOSED
+                }
             }
         }
 
@@ -446,6 +457,19 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                 AddReviewDialogFragment.TAG
             )
         }
+    }
+
+    private fun showConfirmationDialog(user: User) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Accept the user")
+            .setMessage("Confirm to add${user.username}?")
+            .setPositiveButton("Confirm") { dialog, _ ->
+                dialog.dismiss()
+                viewModel.addParticipantAndDeleteRequester(user.id)
+            }.setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun onResume() {

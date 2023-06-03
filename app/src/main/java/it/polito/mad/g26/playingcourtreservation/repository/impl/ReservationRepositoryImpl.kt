@@ -442,12 +442,79 @@ class ReservationRepositoryImpl @Inject constructor(
             db.collection(FirestoreCollections.RESERVATIONS)
                 .document(reservationId)
                 .set(reservation).await()
-            Log.d(TAG, "inviteUser for reservation: $reservationId and user: $userId has been added}")
+            Log.d(
+                TAG,
+                "inviteUser for reservation: $reservationId and user: $userId has been added}"
+            )
             UiState.Success(Unit)
         } catch (e: Exception) {
             Log.e(
                 TAG,
                 "Error while performing inviteUser for reservation: $reservationId and user: $userId: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun addParticipant(reservationId: String, userId: String): UiState<Unit> {
+        return try {
+            Log.d(TAG, "addParticipant with reservation id: $reservationId and userId: $userId")
+            // Get the reservation
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "addParticipant get reservation id: $reservationId: found=${result.exists()}"
+            )
+            if (!result.exists()) // Reservation Id must be unique and existing
+                UiState.Failure(noReservationFound)
+            // Add participant
+            val reservation = result.toObject(Reservation::class.java)!!
+            reservation.participants = reservation.participants.plus(userId)
+            // Save changes
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .set(reservation).await()
+            Log.d(TAG, "addParticipant: participant added")
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing addParticipant with reservation id: $reservationId and userId: $userId: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun removeRequester(reservationId: String, userId: String): UiState<Unit> {
+        return try {
+            Log.d(TAG, "removeRequester with reservation id: $reservationId and userId: $userId")
+            // Get the reservation
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "removeRequester get reservation id: $reservationId: found=${result.exists()}"
+            )
+            if (!result.exists()) // Reservation Id must be unique and existing
+                UiState.Failure(noReservationFound)
+            // Remove the requester
+            val reservation = result.toObject(Reservation::class.java)!!
+            reservation.requests = reservation.requests.filter { it != userId }
+            // Save changes
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .set(reservation).await()
+            Log.d(TAG, "removeRequester: requester deleted")
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing removeRequester with reservation id: $reservationId and userId: $userId: ${e.message}",
                 e
             )
             UiState.Failure(e.localizedMessage)

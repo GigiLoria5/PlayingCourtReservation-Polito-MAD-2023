@@ -116,6 +116,7 @@ class ReservationDetailsViewModel @Inject constructor(
 
                 is UiState.Failure -> {
                     _loadingState.value = state
+                    //TODO: return@launch?
                 }
 
                 else -> {
@@ -138,6 +139,7 @@ class ReservationDetailsViewModel @Inject constructor(
 
                 is UiState.Failure -> {
                     _loadingState.value = state
+                    //TODO: return@launch?
                 }
 
                 else -> {
@@ -145,7 +147,6 @@ class ReservationDetailsViewModel @Inject constructor(
                 }
             }
         }
-
         //Get object Court
         _court = _sportCenter.courts.filter { it.id == _reservation.courtId }[0]
 
@@ -204,6 +205,23 @@ class ReservationDetailsViewModel @Inject constructor(
         )
         val now = LocalDateTime.now()
         return now.isBefore(reservationDate)
+    }
+
+    fun addParticipantAndDeleteRequester(userID: String) = viewModelScope.launch {
+        _loadingState.value = UiState.Loading
+
+        val participantState = reservationRepository.addParticipant(_reservationId, userID)
+        if (participantState is UiState.Failure) {
+            _deleteState.value = participantState
+            return@launch
+        }
+        val requesterState = reservationRepository.removeRequester(_reservationId, userID)
+        if (requesterState is UiState.Failure) {
+            _deleteState.value = requesterState
+            return@launch
+        }
+        //TODO:sendNotification
+        _loadingState.value = UiState.Success(Unit)
     }
 
 }
