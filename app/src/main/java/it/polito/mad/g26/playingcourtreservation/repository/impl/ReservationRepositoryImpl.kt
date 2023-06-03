@@ -256,9 +256,14 @@ class ReservationRepositoryImpl @Inject constructor(
         return try {
             Log.d(TAG, "getUserReservationAt with user id: $userId, date: $date and time: $time")
             val result = db.collection(FirestoreCollections.RESERVATIONS)
-                .whereEqualTo("userId", userId)
                 .whereEqualTo("date", date)
                 .whereEqualTo("time", time)
+                .where(
+                    Filter.or(
+                        Filter.equalTo("userId", userId),
+                        Filter.arrayContains("participants", userId)
+                    )
+                )
                 .get().await()
             Log.d(
                 TAG,
@@ -272,6 +277,33 @@ class ReservationRepositoryImpl @Inject constructor(
             Log.e(
                 TAG,
                 "Error while performing getUserReservationAt with user id: $userId, date: $date and time: $time: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun getReservationsAt(date: String, time: String): UiState<List<Reservation>> {
+        return try {
+            Log.d(TAG, "getReservationsAt with date: $date and time: $time")
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .whereEqualTo("date", date)
+                .whereEqualTo("time", time)
+                .get().await()
+            Log.d(
+                TAG,
+                "getReservationsAt with date: $date and time: $time: ${result.documents.size} result"
+            )
+            val reservations = arrayListOf<Reservation>()
+            for (document in result) {
+                val reservation = document.toObject(Reservation::class.java)
+                reservations.add(reservation)
+            }
+            UiState.Success(reservations)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing getReservationsAt with date: $date and time: $time: ${e.message}",
                 e
             )
             UiState.Failure(e.localizedMessage)
@@ -317,7 +349,7 @@ class ReservationRepositoryImpl @Inject constructor(
             db.runTransaction { transaction ->
                 val snapshot = transaction[reservationRef]
                 if (snapshot.exists()) {
-                    throw IllegalStateException("Unfortunately, the court is no longer available")
+                    throw IllegalStateException("Unfortunately, the court is no longer available for reservation")
                 }
                 transaction[reservationRef] = reservation
             }.await()
@@ -387,6 +419,37 @@ class ReservationRepositoryImpl @Inject constructor(
             UiState.Success(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Error while performing deleteReservation $reservationId: ${e.message}", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
+    override suspend fun inviteUser(reservationId: String, userId: String): UiState<Unit> {
+        return try {
+            Log.d(TAG, "inviteUser for reservation: $reservationId and user: $userId")
+            // Get the reservation
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "inviteUser for reservation: $reservationId and user: $userId found=${result.exists()}"
+            )
+            if (!result.exists()) // Reservation Id must be unique and existing
+                UiState.Failure(noReservationFound)
+            val reservation = result.toObject(Reservation::class.java)!!
+            // Add the invitation
+            reservation.invitees = reservation.invitees.plus(userId)
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .set(reservation).await()
+            Log.d(TAG, "inviteUser for reservation: $reservationId and user: $userId has been added}")
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing inviteUser for reservation: $reservationId and user: $userId: ${e.message}",
+                e
+            )
             UiState.Failure(e.localizedMessage)
         }
     }

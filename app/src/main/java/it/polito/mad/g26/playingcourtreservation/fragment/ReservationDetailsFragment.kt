@@ -1,6 +1,5 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -180,6 +179,13 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         R.string.set_text_with_euro,
                         reservation.amount.toString()
                     )
+
+                    //TODO DELETE THIS
+                    sportCenterPhoneNumberMCV.setOnClickListener {
+                        val direction=ReservationDetailsFragmentDirections.actionReservationDetailsFragmentToInviteUsersFragment(reservation.id,reservation.date,reservation.time,reservationSportCenter.city,reservationCourt.sport)
+                        findNavController().navigate(direction)
+                    }
+
                     // Show reservation buttons if future or review button is past
                     if (viewModel.nowIsBeforeReservationDateTime()) {
                         // Inflate the new layout with two buttons of reservation

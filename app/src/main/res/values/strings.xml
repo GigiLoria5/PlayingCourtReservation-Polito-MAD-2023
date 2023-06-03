@@ -19,7 +19,8 @@
     <string name="reserve_a_court">Reserve a court</string>
     <string name="hour_charge_court_short">€%1$s</string>
     <string name="sport_center_hours">%1$s - %2$s</string>
-    <string name="court_available">Available</string>
+    <string name="court_available_to_reserve">Available to reserve</string>
+    <string name="court_available_to_join">%1$s player%2$s needed</string>
     <string name="court_not_available">Unavailable</string>
     <string name="you_already_have_a_reservation">You already have a reservation in this date and time</string>
     <string name="no_sport_centers_found">There are no available sport centers with these search criteria</string>
@@ -153,4 +154,27 @@
     <string name="edit_review_button">Edit review</string>
     <string name="delete_review_button">Delete review</string>
     <string name="court_reviews">Court Reviews</string>
+
+    <!-- Invite users -->
+    <string name="invite_users">Invite users</string>
+    <string name="user_search_box_hint">Filter by username</string>
+    <string name="filter_by_age">Filter by age (%1$s-%2$s)</string>
+    <array name="initial_age_slider_values">
+        <item>25</item>
+        <item>70</item>
+    </array>
+    <string name="filter_by_skills">Filter by skills (%1$s-%2$s)</string>
+    <array name="initial_skills_slider_values">
+        <item>2</item>
+        <item>4</item>
+    </array>
+    <string name="found_users_results_info">%1$d user%2$s found</string>
+    <string name="user_position_age">%1$s, %2$s y.o.</string>
+    <string name="not_specified_info">Non-specified information</string>
+    <string name="no_users_found">There are no available users with these search criteria</string>
+
+    <string name="user_invited">Invited</string>
+    <string name="user_available">Available</string>
+
+
 </resources>

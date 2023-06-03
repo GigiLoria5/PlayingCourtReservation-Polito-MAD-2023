@@ -88,6 +88,24 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getAllUsers(): UiState<List<User>> {
+        return try {
+            Log.d(TAG, "getFilteredUsers")
+            val result = db.collection(FirestoreCollections.USERS)
+                .get().await()
+            Log.d(TAG, "getFilteredUsers result")
+            val users = arrayListOf<User>()
+            for (document in result) {
+                val user = document.toObject(User::class.java)
+                users.add(user)
+            }
+            UiState.Success(users)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error while performing getFilteredUsers", e)
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     override suspend fun updateCurrentUserInformation(updatedUserInformation: User): UiState<Unit> {
         return try {
             val userId = currentUser!!.uid

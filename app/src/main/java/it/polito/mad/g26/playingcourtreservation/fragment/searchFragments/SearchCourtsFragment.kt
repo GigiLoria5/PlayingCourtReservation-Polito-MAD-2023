@@ -51,8 +51,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
     private lateinit var courtsAdapter: CourtAdapter
 
     /* SUPPORT VARIABLES */
-    private var goingToCompleteReservation = false
-    private var goingToCourtReviews = false
+    private var navigatingToOtherFragment = false
 
     /* ARGS */
     private var sportCenterId: String = ""
@@ -129,12 +128,19 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
             viewModel.courts,
             sportCenterId,
             viewModel.reviews,
-            { viewModel.isCourtAvailable(it) },
+            viewModel.reservations,
             { courtId, sportCenterId ->
-                goingToCourtReviews = true
+                navigatingToOtherFragment = true
                 val direction =
                     SearchCourtsFragmentDirections.actionSearchCourtsToCourtReviews(
                         courtId, sportCenterId
+                    )
+                findNavController().navigate(direction)
+            }, { reservationId ->
+                navigatingToOtherFragment = true
+                val direction =
+                    SearchCourtsFragmentDirections.actionSearchCourtsFragmentToReservationDetailsFragment(
+                        reservationId
                     )
                 findNavController().navigate(direction)
             }
@@ -147,7 +153,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
                     Toast.LENGTH_LONG
                 ).show()
             } else {
-                goingToCompleteReservation = true
+                navigatingToOtherFragment = true
                 val direction =
                     SearchCourtsFragmentDirections.actionSearchCourtsFragmentToCompleteReservationFragment(
                         sportCenterId,
@@ -189,7 +195,11 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
                         if (numberOfAvailableCourts > 1) "s" else ""
                     )
                     numberOfAvailableCourtsTV.makeVisible()
-                    courtsAdapter.updateCollection(viewModel.courts, viewModel.reviews)
+                    courtsAdapter.updateCollection(
+                        viewModel.courts,
+                        viewModel.reviews,
+                        viewModel.reservations
+                    )
                 }
             }
         }
@@ -200,7 +210,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
             val anim: Animation = AnimationUtils.loadAnimation(activity, nextAnim)
             anim.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {
-                    if (!(goingToCompleteReservation || goingToCourtReviews)) {
+                    if (!navigatingToOtherFragment) {
                         numberOfAvailableCourtsTV.makeGone()
                         courtsRV.makeInvisible()
                     }
@@ -221,8 +231,7 @@ class SearchCourtsFragment : Fragment(R.layout.search_courts_fragment) {
 
     override fun onResume() {
         super.onResume()
-        goingToCompleteReservation = false
-        goingToCourtReviews = false
+        navigatingToOtherFragment = false
         hideActionBar(activity)
     }
 }
