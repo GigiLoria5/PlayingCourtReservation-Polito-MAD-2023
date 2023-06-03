@@ -309,7 +309,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         } else if (reservation.requests.contains(reservation.userId)) {
                             //REQUESTER-> button not clickable already sent invite
                             val inflater = LayoutInflater.from(requireContext())
-                            val viewRequest = inflater.inflate(
+                            inflater.inflate(
                                 R.layout.reservation_details_requester_button,
                                 viewReservationButtons,
                                 false
@@ -325,12 +325,12 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             val acceptButton =
                                 viewAcceptOrReject.findViewById<MaterialButton>(R.id.reservation_details_accept_button)
                             acceptButton.setOnClickListener {
-                                viewModel.addParticipantAndRemoveInvitees(currentUser.id)
+                                viewModel.addParticipantAndRemoveInvitee(currentUser.id)
                             }
                             val rejectButton =
                                 viewAcceptOrReject.findViewById<MaterialButton>(R.id.reservation_details_reject_button)
                             rejectButton.setOnClickListener {
-                                //viewModel.removeInvitees(currentUser.id)
+                                viewModel.removeInvitee(currentUser.id)
                             }
                         } else {
                             //USER-> button to ask to join and become requester
