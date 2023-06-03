@@ -61,29 +61,31 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
         val noReadNotificationCounterMCV = view.findViewById<MaterialCardView>(R.id.notificationCountMCV)
         val noReadNotificationCounterTV = view.findViewById<TextView>(R.id.notificationCountTV)
         // Load the data needed
-        viewModel.loadNotifications()
-        viewModel.loadingState.observe(viewLifecycleOwner) { state ->
-            when(state){
-                is UiState.Loading -> {
-                    loaderImage.setFreezesAnimation(false)
-                    loaderImage.makeVisible()
-                }
-                is UiState.Failure ->{
-                    toast(state.error ?: "Unable to get notifications")
-                }
-                is UiState.Success -> {
-                    loaderImage.makeGone()
-                    val notifications = viewModel.notifications
-                    if (notifications.isNotEmpty()) {
-                        val countNoRead = countNoReadNotifications(notifications)
-                        if(countNoRead == 0){
+        if (viewModel.currentUser != null){
+            viewModel.loadNotifications()
+            viewModel.loadingState.observe(viewLifecycleOwner) { state ->
+                when(state){
+                    is UiState.Loading -> {
+                        loaderImage.setFreezesAnimation(false)
+                        loaderImage.makeVisible()
+                    }
+                    is UiState.Failure ->{
+                        toast(state.error ?: "Unable to get notifications")
+                    }
+                    is UiState.Success -> {
+                        loaderImage.makeGone()
+                        val notifications = viewModel.notifications
+                        if (notifications.isNotEmpty()) {
+                            val countNoRead = countNoReadNotifications(notifications)
+                            if(countNoRead == 0){
+                                noReadNotificationCounterMCV.makeInvisible()
+                            }else{
+                                noReadNotificationCounterMCV.makeVisible()
+                                noReadNotificationCounterTV.text = countNoRead.toString()
+                            }
+                        } else {
                             noReadNotificationCounterMCV.makeInvisible()
-                        }else{
-                            noReadNotificationCounterMCV.makeVisible()
-                            noReadNotificationCounterTV.text = countNoRead.toString()
                         }
-                    } else {
-                        noReadNotificationCounterMCV.makeInvisible()
                     }
                 }
             }

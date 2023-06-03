@@ -36,7 +36,7 @@ class NotificationsViewModel @Inject constructor(
             _loadingState.value = notificationsState
             return@launch
         }
-        _notifications = (notificationsState as UiState.Success).result
+        _notifications = (notificationsState as UiState.Success).result.sortedByDescending { it.timestamp }
         _loadingState.value = UiState.Success(Unit)
     }
 
