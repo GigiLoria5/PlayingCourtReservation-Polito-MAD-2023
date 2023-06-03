@@ -34,10 +34,6 @@ class InviteUserAdapter(
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = users[position]
         val userPicture = userPicturesMap[user.id]
-
-
-
-
         holder.bind(user, userPicture, isUserIdInvited(user.id))
     }
 
@@ -96,12 +92,6 @@ class InviteUserAdapter(
                 navigateToShowProfileFragment(user.id)
             }
 
-            userActionMCV.setOnClickListener {
-                if (!isUserIdInvited)
-                    inviteUser(user)
-                else Unit
-            }
-
             when (isUserIdInvited) {
                 false -> {
                     userAvailabilityTV.text = itemView.context.getString(R.string.user_available)
@@ -112,6 +102,9 @@ class InviteUserAdapter(
                         )
                     )
                     userActionMCV.setCardBackgroundColor(itemView.context.getColor(R.color.grey_light_2))
+                    userActionMCV.setOnClickListener {
+                        inviteUser(user)
+                    }
                 }
 
                 true -> {
@@ -123,6 +116,7 @@ class InviteUserAdapter(
                         )
                     )
                     userActionMCV.setCardBackgroundColor(itemView.context.getColor(R.color.green_500))
+                    userActionMCV.setOnClickListener(null)
                     userActionMCV.isClickable = false
                     userActionMCV.isEnabled = false
                 }
