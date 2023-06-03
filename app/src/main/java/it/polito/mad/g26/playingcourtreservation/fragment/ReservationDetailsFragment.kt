@@ -325,12 +325,12 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             val acceptButton =
                                 viewAcceptOrReject.findViewById<MaterialButton>(R.id.reservation_details_accept_button)
                             acceptButton.setOnClickListener {
-                                //viewModel.addParticipant
+                                viewModel.addParticipantAndRemoveInvitees(currentUser.id)
                             }
                             val rejectButton =
                                 viewAcceptOrReject.findViewById<MaterialButton>(R.id.reservation_details_reject_button)
                             rejectButton.setOnClickListener {
-                                //viewModel.sendNotification
+                                //viewModel.removeInvitees(currentUser.id)
                             }
                         } else {
                             //USER-> button to ask to join and become requester

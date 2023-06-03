@@ -248,4 +248,21 @@ class ReservationDetailsViewModel @Inject constructor(
         _loadingState.value = UiState.Success(Unit)
     }
 
+    fun addParticipantAndRemoveInvitees(userID: String) = viewModelScope.launch {
+        _loadingState.value = UiState.Loading
+
+        val participantState = reservationRepository.addParticipant(_reservationId, userID)
+        if (participantState is UiState.Failure) {
+            _deleteState.value = participantState
+            return@launch
+        }
+        val inviteeState = reservationRepository.removeInvitee(_reservationId, userID)
+        if (inviteeState is UiState.Failure) {
+            _deleteState.value = inviteeState
+            return@launch
+        }
+        //TODO:sendNotification
+        _loadingState.value = UiState.Success(Unit)
+    }
+
 }
