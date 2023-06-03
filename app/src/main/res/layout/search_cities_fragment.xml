@@ -11,7 +11,7 @@
         android:id="@+id/searchCityABL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/citiesResultRV"
+        app:layout_constraintBottom_toTopOf="@id/citiesRL"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -80,7 +80,7 @@
                                 android:inputType="text"
                                 android:textColor="@color/grey"
                                 android:textSize="@dimen/search_city_text_size"
-
+                                android:imeOptions="actionDone"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
@@ -111,14 +111,40 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/citiesResultRV"
+    <RelativeLayout
+        android:id="@+id/citiesRL"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchCityABL"
+        app:layout_constraintTop_toBottomOf="@id/searchCityABL">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/citiesResultRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/search_cities_city_item" />
+
+        <!-- Placeholder -->
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/citiesShimmerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shimmer_repeat_mode="restart"
+            app:shimmer_shape="radial">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/search_cities_city_item_placeholder" />
+                <include layout="@layout/search_cities_city_item_placeholder" />
+                <include layout="@layout/search_cities_city_item_placeholder" />
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,5 +3,9 @@
     <declare-styleable name="CustomTextView">
         <attr name="title" format="string" />
         <attr name="value" format="string" />
+        <attr name="titleTextColor" format="color" />
+        <attr name="valueTextColor" format="color" />
+        <attr name="titleBackgroundColor" format="color" />
+        <attr name="valueBackgroundColor" format="color" />
     </declare-styleable>
 </resources>

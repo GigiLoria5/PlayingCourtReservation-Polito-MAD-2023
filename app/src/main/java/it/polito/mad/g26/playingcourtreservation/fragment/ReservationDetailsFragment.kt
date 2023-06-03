@@ -1,6 +1,5 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -17,6 +16,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -37,12 +37,14 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.timestampToDate
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationDetailsViewModel
+import it.polito.mad.g26.playingcourtreservation.viewmodel.SharedReservationDetailsViewModel
 
 @AndroidEntryPoint
 class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragment) {
 
     private val args: ReservationDetailsFragmentArgs by navArgs()
     private val viewModel by viewModels<ReservationDetailsViewModel>()
+    private lateinit var sharedReservationDetailsViewModel: SharedReservationDetailsViewModel
 
     // Visual Components
     private lateinit var reservationReviewMCV: MaterialCardView
@@ -55,6 +57,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val reservationId = args.reservationId
+        sharedReservationDetailsViewModel =
+            ViewModelProvider(requireActivity())[SharedReservationDetailsViewModel::class.java]
 
         // VM Initialization
         val navController = findNavController()
@@ -133,9 +137,13 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     }
                     // Update UI with Reservation Details
                     val reservation = viewModel.reservation
+                    sharedReservationDetailsViewModel.reservation = reservation
                     val reservationSportCenter = viewModel.sportCenter
+                    sharedReservationDetailsViewModel.reservationSportCenter =
+                        reservationSportCenter
                     val reservationCourt = reservationSportCenter.courts
                         .filter { it.id == reservation.courtId }[0]
+                    sharedReservationDetailsViewModel.reservationCourt = reservationCourt
                     val reservationServicesWithFee = reservationSportCenter.services
                         .filter { reservation.services.contains(it.name) }
                     if (reservationServicesWithFee.isEmpty())
@@ -179,6 +187,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         R.string.set_text_with_euro,
                         reservation.amount.toString()
                     )
+                    //TODO DELETE THIS
+                    /*sportCenterPhoneNumberMCV.setOnClickListener {
+                        val direction=ReservationDetailsFragmentDirections.actionReservationDetailsFragmentToInviteUsersFragment(reservation.id,reservation.date,reservation.time,reservationSportCenter.city,reservationCourt.sport)
+                        findNavController().navigate(direction)
+                    }*/
 
                     //Show players confirmed
                     val user = viewModel.user

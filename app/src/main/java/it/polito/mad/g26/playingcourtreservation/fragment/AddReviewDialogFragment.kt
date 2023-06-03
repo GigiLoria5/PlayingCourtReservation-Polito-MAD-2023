@@ -14,10 +14,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.Review
 import it.polito.mad.g26.playingcourtreservation.util.UiState
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.AddReviewDialogViewModel
+import pl.droidsonroids.gif.GifImageView
 
 @AndroidEntryPoint
 class AddReviewDialogFragment : DialogFragment() {
@@ -33,6 +35,7 @@ class AddReviewDialogFragment : DialogFragment() {
     private lateinit var reservationId: String
     private lateinit var userId: String
     private lateinit var updateParentFragment: () -> Unit
+    private lateinit var loaderImage: GifImageView
 
     companion object {
         const val TAG = "Review Dialog"
@@ -58,6 +61,8 @@ class AddReviewDialogFragment : DialogFragment() {
             ratingError = view.findViewById(R.id.errorRatingMCV)
             ratingError.makeInvisible()
 
+            loaderImage = requireActivity().findViewById(R.id.loaderImage)
+
             // Alert Builder
             val builder = AlertDialog.Builder(requireContext()).setView(view)
             val submit = view.findViewById<Button>(R.id.submit_button)
@@ -76,16 +81,17 @@ class AddReviewDialogFragment : DialogFragment() {
                 viewModel.review.observe(owner) { state ->
                     when (state) {
                         is UiState.Loading -> {
-                            // TODO: Show Loading?
+                            loaderImage.setFreezesAnimation(false)
+                            loaderImage.makeVisible()
                         }
 
                         is UiState.Failure -> {
-                            // TODO: Stop Loading?
+                            loaderImage.makeGone()
                             toast(state.error ?: "Unable to get review")
                         }
 
                         is UiState.Success -> {
-                            // TODO: Stop Loading?
+                            loaderImage.makeGone()
                             val review = state.result
                             isUpdate = review != null
                             rating.rating = review?.rating ?: 0.0F
@@ -124,10 +130,6 @@ class AddReviewDialogFragment : DialogFragment() {
 
     private fun checkReviewValidity(): Boolean {
         var error = false
-        if (textReview.text.toString().trim().length < 10) {
-            textReview.error = "Review size should be at least 10 characters long"
-            error = true
-        }
         if (rating.rating == 0.0f) {
             ratingError.makeVisible()
             error = true

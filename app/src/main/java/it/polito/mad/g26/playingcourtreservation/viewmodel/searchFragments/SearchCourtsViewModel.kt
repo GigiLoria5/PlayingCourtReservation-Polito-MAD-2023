@@ -47,7 +47,10 @@ class SearchCourtsViewModel @Inject constructor(
     val reviews: HashMap<String, List<Review>>
         get() = _reviews
 
-    private var reservations: HashMap<String, Reservation?> = hashMapOf()
+    private var _reservations: HashMap<String, Reservation?> = hashMapOf()
+
+    val reservations: HashMap<String, Reservation?>
+        get() = _reservations
 
     fun fetchCourtsData() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
@@ -99,7 +102,7 @@ class SearchCourtsViewModel @Inject constructor(
         for ((index, state) in reservationResults.withIndex()) {
             when (state) {
                 is UiState.Success -> {
-                    reservations[_courts[index].id] = state.result
+                    _reservations[_courts[index].id] = state.result
                 }
 
                 is UiState.Failure -> {
@@ -126,10 +129,6 @@ class SearchCourtsViewModel @Inject constructor(
     }
 
     /*RESERVATIONS MANAGEMENT*/
-    fun isCourtAvailable(courtId: String): Boolean {
-        return reservations[courtId] == null
-    }
-
-    fun getTotAvailableCourts(): Int = courts.size - reservations.count { it.value != null }
+    fun getTotAvailableCourts(): Int = courts.size - _reservations.count { it.value != null }
 
 }
