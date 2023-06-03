@@ -63,6 +63,14 @@ class ReservationDetailsViewModel @Inject constructor(
     val user: User
         get() = _user
 
+    private var _participants: MutableList<User> = mutableListOf()
+    val participants: List<User>
+        get() = _participants
+
+    private var _requesters: MutableList<User> = mutableListOf()
+    val requesters: List<User>
+        get() = _requesters
+
     fun loadReservationAndSportCenterInformation() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
         // Get reservation details
@@ -87,6 +95,51 @@ class ReservationDetailsViewModel @Inject constructor(
             return@launch
         }
         _user = (userState as UiState.Success).result
+        //Get participants List<User> from List<String>
+        val deferredParticipants = _reservation.participants.map { participantID ->
+            async {
+                userRepository.getUserInformationById(participantID)
+            }
+        }
+        val participantsResult = deferredParticipants.awaitAll()
+        for ((index, state) in participantsResult.withIndex()) {
+            when (state) {
+                is UiState.Success -> {
+                    _participants.add(state.result)
+                }
+
+                is UiState.Failure -> {
+                    _loadingState.value = state
+                }
+
+                else -> {
+                    _loadingState.value = UiState.Failure(null)
+                }
+            }
+        }
+        //Get requesters List<User> from List<String>
+        val deferredRequesters = _reservation.requests.map { requesterID ->
+            async {
+                userRepository.getUserInformationById(requesterID)
+            }
+        }
+        val requestersResult = deferredRequesters.awaitAll()
+        for ((index, state) in requestersResult.withIndex()) {
+            when (state) {
+                is UiState.Success -> {
+                    _requesters.add(state.result)
+                }
+
+                is UiState.Failure -> {
+                    _loadingState.value = state
+                }
+
+                else -> {
+                    _loadingState.value = UiState.Failure(null)
+                }
+            }
+        }
+
         _loadingState.value = UiState.Success(Unit)
     }
 

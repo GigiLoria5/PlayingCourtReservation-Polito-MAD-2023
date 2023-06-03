@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/participantMCV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/grey_light_2"

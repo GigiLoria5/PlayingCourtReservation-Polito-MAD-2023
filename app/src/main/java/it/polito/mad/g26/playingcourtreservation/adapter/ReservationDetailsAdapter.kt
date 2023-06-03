@@ -80,7 +80,7 @@ class ReservationDetailsAdapter(
         private val username = v.findViewById<TextView>(R.id.username)
         private val role = v.findViewById<TextView>(R.id.user_roleTV)
         private val rating = v.findViewById<RatingBar>(R.id.ratingRB)
-
+        private val card = v.findViewById<MaterialCardView>(R.id.participantMCV)
         fun bind(u: User, sport: String) {
             username.text = u.username
             role.text = u.position
@@ -88,6 +88,9 @@ class ReservationDetailsAdapter(
             if (rate != null)
                 rating.rating = rate.second.toFloat()
             else rating.rating = 0f
+            card.setOnClickListener {
+                //go to profile
+            }
         }
     }
 

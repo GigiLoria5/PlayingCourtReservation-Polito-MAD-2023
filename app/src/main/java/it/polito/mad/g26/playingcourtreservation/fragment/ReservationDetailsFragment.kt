@@ -178,12 +178,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         reservation.amount.toString()
                     )
 
-                    //TODO: extract participants user list and requester list
                     //Show players confirmed
                     val user = viewModel.user
-                    //val participants = listOf(viewModel.participants, user)
+                    val participants = viewModel.participants + user
                     val participantsAdapter =
-                        ReservationDetailsAdapter(listOf(user), 1, "sport")
+                        ReservationDetailsAdapter(participants, 1, "sport")
                     participantsRecyclerView.adapter = participantsAdapter
                     participantsRecyclerView.layoutManager = GridLayoutManager(context, 2)
 
@@ -192,7 +191,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
                         //Creator
                         if (reservation.userId == viewModel.userId) {
-                            // TODO : on click on card + on click on buttons
+                            // TODO : on click on card + on click on buttons both participant/requester
                             //Show requesters list if not empty
                             if (reservation.requests.isNotEmpty()) {
                                 requestersLayout.makeVisible()
@@ -201,7 +200,6 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                 inviteesRecyclerView.adapter = requesterAdapter
                                 inviteesRecyclerView.layoutManager = LinearLayoutManager(context)
                             }
-
                             // Inflate the new layout with two buttons of reservation
                             val inflater = LayoutInflater.from(requireContext())
                             val viewDeleteAndEdit = inflater.inflate(
