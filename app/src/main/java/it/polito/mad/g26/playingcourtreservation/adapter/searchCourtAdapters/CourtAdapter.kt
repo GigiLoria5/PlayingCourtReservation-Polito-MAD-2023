@@ -122,11 +122,14 @@ class CourtAdapter(
             }
 
             if (courtReviews.isNotEmpty()) {
+                courtMCV.isClickable = true
                 courtReviewsMCV.setOnClickListener {
                     navigateToReviews(court.id, sportCenterId)
                 }
+                courtReviewsMCV.alpha=1f
             } else {
                 courtReviewsMCV.isClickable = false
+                courtReviewsMCV.setOnClickListener(null)
                 courtReviewsMCV.alpha = 0.7f
             }
 
@@ -139,7 +142,7 @@ class CourtAdapter(
                     )
                     courtAvailability.text =
                         itemView.context.getString(R.string.court_available_to_reserve)
-
+                    courtMCV.isClickable = true
                     courtMCV.setOnClickListener {
                         val sport = court.sport
                         navigateToCompleteReservation(
@@ -160,6 +163,7 @@ class CourtAdapter(
                             numberOfMissingParticipants.toString(),
                             if (numberOfMissingParticipants != 1) "s" else ""
                         )
+                    courtMCV.isClickable = true
                     courtMCV.setOnClickListener {
                         navigateToReservationDetails(courtReservation!!.id)
                     }
@@ -174,6 +178,7 @@ class CourtAdapter(
                     courtAvailability.text =
                         itemView.context.getString(R.string.court_not_available)
                     courtMCV.elevation = 0F
+                    courtMCV.setOnClickListener(null)
                     courtMCV.isClickable = false
                 }
             }

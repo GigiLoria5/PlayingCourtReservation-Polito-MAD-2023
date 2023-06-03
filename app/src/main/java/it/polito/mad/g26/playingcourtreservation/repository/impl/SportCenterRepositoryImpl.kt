@@ -9,6 +9,7 @@ import it.polito.mad.g26.playingcourtreservation.repository.SportCenterRepositor
 import it.polito.mad.g26.playingcourtreservation.util.FirestoreCollections
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.await
+import java.util.Locale
 import javax.inject.Inject
 
 class SportCenterRepositoryImpl @Inject constructor(
@@ -110,7 +111,8 @@ class SportCenterRepositoryImpl @Inject constructor(
             Log.d(TAG, "getAllSportCenterCourts $sportCenterId: found=${result.exists()}")
             if (!result.exists()) // Court Id must be unique and existing
                 UiState.Failure(sportCenterNotFoundMsg)
-            val courts = result.toObject(SportCenter::class.java)!!.courts.sortedBy { it.name }
+            val courts = result.toObject(SportCenter::class.java)!!.courts.sortedBy { it.name.lowercase(
+                Locale.ROOT) }
             UiState.Success(courts)
         } catch (e: Exception) {
             Log.e(
@@ -142,7 +144,7 @@ class SportCenterRepositoryImpl @Inject constructor(
                 UiState.Failure(sportCenterNotFoundMsg)
             val courts = result.toObject(SportCenter::class.java)!!.courts
                 .filter { it.sport == sportName }
-                .sortedBy { it.name }
+                .sortedBy { it.name.lowercase(Locale.ROOT) }
             UiState.Success(courts)
         } catch (e: Exception) {
             Log.e(
@@ -163,7 +165,7 @@ class SportCenterRepositoryImpl @Inject constructor(
             Log.d(TAG, "getSportCenterServices $sportCenterId: found=${result.exists()}")
             if (!result.exists()) // Court Id must be unique and existing
                 UiState.Failure(sportCenterNotFoundMsg)
-            val services = result.toObject(SportCenter::class.java)!!.services.sortedBy { it.name }
+            val services = result.toObject(SportCenter::class.java)!!.services.sortedBy { it.name.lowercase(Locale.ROOT) }
             UiState.Success(services)
         } catch (e: Exception) {
             Log.e(

@@ -34,20 +34,16 @@ class InviteUserAdapter(
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = users[position]
         val userPicture = userPicturesMap[user.id]
-
-
-
-
         holder.bind(user, userPicture, isUserIdInvited(user.id))
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateCollection(
         updatedUsers: List<User>,
-        updatedUserPicturesMap:HashMap<String, ByteArray?>
+        updatedUserPicturesMap: HashMap<String, ByteArray?>
     ) {
         this.users = updatedUsers
-        this.userPicturesMap=updatedUserPicturesMap
+        this.userPicturesMap = updatedUserPicturesMap
         notifyDataSetChanged()
     }
 
@@ -71,8 +67,13 @@ class InviteUserAdapter(
         fun bind(user: User, userPicture: ByteArray?, isUserIdInvited: Boolean) {
             if (userPicture != null) {
                 avatarImage.setImageFromByteArray(userPicture)
-            }else{
-                avatarImage.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.profile_default))
+            } else {
+                avatarImage.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        itemView.context,
+                        R.drawable.profile_default
+                    )
+                )
             }
             userNameTV.text = user.username
             if (user.position == null) {
@@ -104,6 +105,7 @@ class InviteUserAdapter(
                     userActionMCV.setOnClickListener {
                         inviteUser(user)
                     }
+                    userActionMCV.isClickable = true
                 }
 
                 true -> {
@@ -115,8 +117,8 @@ class InviteUserAdapter(
                         )
                     )
                     userActionMCV.setCardBackgroundColor(itemView.context.getColor(R.color.green_500))
+                    userActionMCV.setOnClickListener(null)
                     userActionMCV.isClickable = false
-                    userActionMCV.isEnabled = false
                 }
             }
         }
