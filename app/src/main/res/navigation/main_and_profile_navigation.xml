@@ -277,4 +277,13 @@
             app:popExitAnim="@anim/to_right"
             />
     </fragment>
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="it.polito.mad.g26.playingcourtreservation.fragment.NotificationsFragment"
+        android:label="notification_fragment"
+        tools:layout="@layout/notification_fragment" >
+        <action
+            android:id="@+id/action_notificationFragment_to_reservationDetailsFragment2"
+            app:destination="@id/reservationDetailsFragment" />
+    </fragment>
 </navigation>

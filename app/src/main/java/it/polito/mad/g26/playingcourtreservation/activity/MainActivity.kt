@@ -106,6 +106,9 @@ class MainActivity : AppCompatActivity() {
                         SCREEN_ORIENTATION_UNSPECIFIED,
                         false
                     )
+
+                    // Notifications
+                    R.id.notificationFragment -> lockOrientationAndShowNav()
                 }
             }
         }

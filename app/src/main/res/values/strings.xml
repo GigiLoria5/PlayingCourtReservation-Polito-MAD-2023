@@ -155,6 +155,15 @@
     <string name="delete_review_button">Delete review</string>
     <string name="court_reviews">Court Reviews</string>
 
+    <!-- Notification-->
+    <string name="notifications">Notifications</string>
+    <string name="no_notifications_found">There are no notifications</string>
+    <string name="notification_timestamp">dd-MM-yyyy HH:mm:ss</string>
+    <string name="notification_message">Notification message</string>
+    <string name="delete_all_notifications">Delete all notifications</string>
+    <string name="delete_notification">Delete notification</string>
+    <string name="number_one">1</string>
+
     <!-- Invite users -->
     <string name="invite_users">Invite users</string>
     <string name="user_search_box_hint">Filter by username</string>

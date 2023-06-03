@@ -2,6 +2,7 @@ package it.polito.mad.g26.playingcourtreservation.fragment.searchFragments
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -11,13 +12,15 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.model.Notification
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
+import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerTextAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerTextAnimation
-import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.searchFragments.HomePageViewModel
 import pl.droidsonroids.gif.GifImageView
 
@@ -56,6 +59,43 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
                     "home", cityNameTV.text.toString(), 0, allSportName, arrayOf()
                 )
             findNavController().navigate(direction)
+        }
+        val notificationBell = view.findViewById<ImageView>(R.id.bellIV)
+        val noReadNotificationCounterMCV = view.findViewById<MaterialCardView>(R.id.notificationCountMCV)
+        val noReadNotificationCounterTV = view.findViewById<TextView>(R.id.notificationCountTV)
+        // Load the data needed
+        if (viewModel.currentUser != null){
+            viewModel.loadNotifications()
+            viewModel.loadingState.observe(viewLifecycleOwner) { state ->
+                when(state){
+                    is UiState.Loading -> {
+                        loaderImage.setFreezesAnimation(false)
+                        loaderImage.makeVisible()
+                    }
+                    is UiState.Failure ->{
+                        toast(state.error ?: "Unable to get notifications")
+                    }
+                    is UiState.Success -> {
+                        loaderImage.makeGone()
+                        val notifications = viewModel.notifications
+                        if (notifications.isNotEmpty()) {
+                            val countNoRead = countNoReadNotifications(notifications)
+                            if(countNoRead == 0){
+                                noReadNotificationCounterMCV.makeInvisible()
+                            }else{
+                                noReadNotificationCounterMCV.makeVisible()
+                                noReadNotificationCounterTV.text = countNoRead.toString()
+                            }
+                        } else {
+                            noReadNotificationCounterMCV.makeInvisible()
+                        }
+                    }
+                }
+            }
+        }
+
+        notificationBell.setOnClickListener {
+            findNavController().navigate(R.id.notificationFragment)
         }
     }
 
@@ -121,6 +161,14 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
             }
             .setCancelable(false)
             .show()
+    }
+
+    private fun countNoReadNotifications(notifications: List<Notification>): Int {
+        var count = 0
+        for(n in notifications){
+            if (!n.isRead) count++
+        }
+        return count
     }
 
 }
