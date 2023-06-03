@@ -55,9 +55,9 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
     private lateinit var usersShimmerView: ShimmerFrameLayout
     private lateinit var noUsersFoundTV: TextView
 
-
     /* SUPPORT VARIABLES */
     private var navigatingToOtherFragment = false
+    private var sendingInvitation = false
 
     /* ARGS */
     private var city: String = ""
@@ -188,7 +188,8 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                     )
                 findNavController().navigate(direction)
             },
-            { user -> showConfirmationDialog(user)
+            { user ->
+                showConfirmationDialog(user)
             }
         )
     }
@@ -198,6 +199,7 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
             .setTitle("Confirm the invitation")
             .setMessage("Confirm the invitation for ${user.username}?")
             .setPositiveButton("Confirm") { dialog, _ ->
+                sendingInvitation = true
                 dialog.dismiss()
                 viewModel.inviteAndNotifyUser(user.id)
             }.setNegativeButton("Cancel") { dialog, _ ->
@@ -214,11 +216,17 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                 }
 
                 is UiState.Failure -> {
-                    toast(state.error ?: "Unable to send the invitation")
+                    if (sendingInvitation) {
+                        toast(state.error ?: "Unable to send the invitation")
+                        sendingInvitation = false
+                    }
                 }
 
                 is UiState.Success -> {
-                    toastShort("The invitation was successfully sent")
+                    if (sendingInvitation) {
+                        toastShort("The invitation was successfully sent")
+                        sendingInvitation = false
+                    }
                 }
             }
         }
@@ -248,14 +256,14 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                     usersShimmerView.makeInvisible()
                     numberOfFoundUsersTV.makeVisible()
                     val users = viewModel.users
-                    val userPictures=viewModel.userPicturesMap
+                    val userPictures = viewModel.userPicturesMap
                     val numberOfAvailableUsersFound = users.size
                     numberOfFoundUsersTV.text = getString(
                         R.string.found_users_results_info,
                         numberOfAvailableUsersFound,
                         if (numberOfAvailableUsersFound != 1) "s" else ""
                     )
-                    inviteUsersAdapter.updateCollection(users,userPictures)
+                    inviteUsersAdapter.updateCollection(users, userPictures)
                     if (numberOfAvailableUsersFound > 0) {
                         usersRV.makeVisible()
                     } else {

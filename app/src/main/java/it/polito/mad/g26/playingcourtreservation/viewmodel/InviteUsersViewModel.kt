@@ -14,6 +14,7 @@ import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -131,13 +132,14 @@ class InviteUsersViewModel @Inject constructor(
     val loadingState: LiveData<UiState<Unit>>
         get() = _loadingState
 
-    private var _users :List<User> = listOf()
+    private var _users: List<User> = listOf()
     val users: List<User>
         get() = _users
 
     private var _userPicturesMap: HashMap<String, ByteArray?> = hashMapOf() // K = userId
     val userPicturesMap: HashMap<String, ByteArray?>
         get() = _userPicturesMap
+
     fun fetchUsersData() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
         // Get all reservations for the specified date/time
@@ -169,27 +171,29 @@ class InviteUsersViewModel @Inject constructor(
         val allUsers = (allUsersState as UiState.Success).result
         val invitableUsers = allUsers.filter { !notInvitablePeople.contains(it.id) }
 
-        _users=getFilteredUsers(invitableUsers)
+        _users = getFilteredUsers(invitableUsers)
 
         val deferredUserPictures = _users.map { user ->
             async {
-               val state= userRepository.downloadUserImage(user.id)
-                val data= object{
-                    val userId=user.id
-                    val state=state
+                val state = userRepository.downloadUserImage(user.id)
+                val data = object {
+                    val userId = user.id
+                    val state = state
                 }
                 data
             }
         }
         val userPicturesResult = deferredUserPictures.awaitAll()
         for (data in userPicturesResult) {
-            when (val state=data.state) {
+            when (val state = data.state) {
                 is UiState.Success -> {
                     _userPicturesMap[data.userId] = state.result
                 }
+
                 is UiState.Failure -> {
                     _loadingState.value = state
                 }
+
                 else -> {
                     _loadingState.value = UiState.Failure(null)
                 }
@@ -219,11 +223,19 @@ class InviteUsersViewModel @Inject constructor(
                     ignoreCase = true
                 )
             }
-        val cityUsers = filteredUsers.filter { user -> user.location == city }
-            .sortedBy { user -> user.username }
-        val notCityUsers = filteredUsers.filter { user -> user.location != city }
-            .sortedBy { user -> user.username }
-        return cityUsers + notCityUsers
+        val cityUsers: MutableList<User> = mutableListOf()
+        val notCityUsers: MutableList<User> = mutableListOf()
+        val invitedUsers: MutableList<User> = mutableListOf()
+
+        filteredUsers.forEach { user ->
+            when {
+                isUserIdInvited(user.id) -> invitedUsers.add(user)
+                user.location == city -> cityUsers.add(user)
+                user.location != city -> notCityUsers.add(user)
+            }
+        }
+
+        return cityUsers.sortedBy { user -> user.username.lowercase(Locale.ROOT) } + notCityUsers.sortedBy { user -> user.username.lowercase(Locale.ROOT) } + invitedUsers.sortedBy { user -> user.username.lowercase(Locale.ROOT) }
     }
 
     fun isUserIdInvited(userId: String): Boolean = myInvitees.contains(userId)
@@ -234,6 +246,7 @@ class InviteUsersViewModel @Inject constructor(
     private val _invitationState = MutableLiveData<UiState<Unit>>()
     val invitationState: LiveData<UiState<Unit>>
         get() = _invitationState
+
     fun inviteAndNotifyUser(userId: String) = viewModelScope.launch {
         _invitationState.value = UiState.Loading
         _loadingState.value = UiState.Loading

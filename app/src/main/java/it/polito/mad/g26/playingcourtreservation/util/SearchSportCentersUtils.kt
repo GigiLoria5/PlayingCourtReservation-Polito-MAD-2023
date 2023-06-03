@@ -84,7 +84,7 @@ object SearchSportCentersUtils {
                 R.string.all_sports
             )
         )
-        sports.sortedBy { it }.forEach { courtsType.add(it) }
+        sports.sortedBy { it.lowercase(Locale.ROOT) }.forEach { courtsType.add(it) }
         val adapterCourt = ArrayAdapter(viewContext, R.layout.list_item, courtsType)
         courtTypeACTV.setText(
             sports.find { it == selectedSport } ?: viewContext.getString(

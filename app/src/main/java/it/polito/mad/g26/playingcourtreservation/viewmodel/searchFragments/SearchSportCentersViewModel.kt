@@ -16,6 +16,7 @@ import it.polito.mad.g26.playingcourtreservation.util.UiState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -117,7 +118,7 @@ class SearchSportCentersViewModel @Inject constructor(
         val allSportCenters = (allSportCentersState as UiState.Success).result
         allCitySportCenters = allSportCenters
             .filter { it.city == selectedCity } // Filter sport centers based on current city selected
-            .sortedBy { it.name }
+            .sortedBy { it.name.lowercase(Locale.ROOT) }
         val deferredReviews = allCitySportCenters.map { sportCenter ->
             async {
                 reservationRepository.getAllSportCenterReviews(sportCenter)
