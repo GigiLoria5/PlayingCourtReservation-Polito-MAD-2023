@@ -17,7 +17,6 @@
         android:textSize="@dimen/show_username_size"
         android:textStyle="bold"
         android:background="@color/loading"
-        android:text="@string/default_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
