@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import it.polito.mad.g26.playingcourtreservation.model.Court
 import it.polito.mad.g26.playingcourtreservation.model.Notification
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.model.Review
@@ -71,6 +72,10 @@ class ReservationDetailsViewModel @Inject constructor(
     val requesters: List<User>
         get() = _requesters
 
+    private var _court: Court = Court()
+    val court: Court
+        get() = _court
+
     fun loadReservationAndSportCenterInformation() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
         // Get reservation details
@@ -89,6 +94,7 @@ class ReservationDetailsViewModel @Inject constructor(
             return@launch
         }
         _sportCenter = (sportCenterState as UiState.Success).result
+        //Get current user object
         val userState = userRepository.getCurrentUserInformation()
         if (userState is UiState.Failure) {
             _loadingState.value = userState
@@ -102,7 +108,7 @@ class ReservationDetailsViewModel @Inject constructor(
             }
         }
         val participantsResult = deferredParticipants.awaitAll()
-        for ((index, state) in participantsResult.withIndex()) {
+        for (state in participantsResult) {
             when (state) {
                 is UiState.Success -> {
                     _participants.add(state.result)
@@ -124,7 +130,7 @@ class ReservationDetailsViewModel @Inject constructor(
             }
         }
         val requestersResult = deferredRequesters.awaitAll()
-        for ((index, state) in requestersResult.withIndex()) {
+        for (state in requestersResult) {
             when (state) {
                 is UiState.Success -> {
                     _requesters.add(state.result)
@@ -139,6 +145,9 @@ class ReservationDetailsViewModel @Inject constructor(
                 }
             }
         }
+
+        //Get object Court
+        _court = _sportCenter.courts.filter { it.id == _reservation.courtId }[0]
 
         _loadingState.value = UiState.Success(Unit)
     }

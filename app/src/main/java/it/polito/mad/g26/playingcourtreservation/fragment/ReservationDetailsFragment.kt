@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReservationDetailsAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceWithFeeAdapter
+import it.polito.mad.g26.playingcourtreservation.model.Court
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
@@ -84,6 +85,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val participantsRecyclerView = view.findViewById<RecyclerView>(R.id.player_list)
         val inviteesRecyclerView = view.findViewById<RecyclerView>(R.id.requester_list)
         val requestersLayout = view.findViewById<ConstraintLayout>(R.id.invitees_layout)
+        val participantsTitle = view.findViewById<TextView>(R.id.player_title)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -182,9 +184,16 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     val user = viewModel.user
                     val participants = viewModel.participants + user
                     val participantsAdapter =
-                        ReservationDetailsAdapter(participants, 1, "sport")
+                        ReservationDetailsAdapter(participants, 1, viewModel.court.sport)
                     participantsRecyclerView.adapter = participantsAdapter
                     participantsRecyclerView.layoutManager = GridLayoutManager(context, 2)
+
+                    val maxParticipants = Court.getSportTotParticipants(viewModel.court.sport)
+                    participantsTitle.text = view.context.getString(
+                        R.string.applicant_concatenate_title,
+                        participants.size.toString(),
+                        maxParticipants.toString()
+                    )
 
                     // Show reservation buttons+ applicants list if future or review button is past
                     if (viewModel.nowIsBeforeReservationDateTime()) {
@@ -196,7 +205,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             if (reservation.requests.isNotEmpty()) {
                                 requestersLayout.makeVisible()
                                 val requesterAdapter =
-                                    ReservationDetailsAdapter(listOf(user), 2, "sport")
+                                    ReservationDetailsAdapter(
+                                        viewModel.requesters,
+                                        2,
+                                        viewModel.court.sport
+                                    )
                                 inviteesRecyclerView.adapter = requesterAdapter
                                 inviteesRecyclerView.layoutManager = LinearLayoutManager(context)
                             }
