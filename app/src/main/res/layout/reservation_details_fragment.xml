@@ -273,6 +273,7 @@
                     android:backgroundTint="#249BEA"
                     android:text="@string/search_player_button"
                     app:cornerRadius="16dp"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toTopOf="@id/player_list"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.96"

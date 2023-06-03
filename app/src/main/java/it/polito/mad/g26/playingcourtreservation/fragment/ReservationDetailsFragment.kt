@@ -90,6 +90,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val inviteesRecyclerView = view.findViewById<RecyclerView>(R.id.requester_list)
         val requestersLayout = view.findViewById<ConstraintLayout>(R.id.invitees_layout)
         val participantsTitle = view.findViewById<TextView>(R.id.player_title)
+        val inviteButton = view.findViewById<MaterialButton>(R.id.search_players_button)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -200,7 +201,6 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         ReservationDetailsAdapter(participants, 1, viewModel.court.sport)
                     participantsRecyclerView.adapter = participantsAdapter
                     participantsRecyclerView.layoutManager = GridLayoutManager(context, 2)
-
                     val maxParticipants = Court.getSportTotParticipants(viewModel.court.sport)
                     participantsTitle.text = view.context.getString(
                         R.string.applicant_concatenate_title,
@@ -215,6 +215,16 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         if (reservation.userId == viewModel.userId) {
                             // TODO : on click on card + on click on buttons both participant/requester
                             //Show requesters list if not empty
+
+                            inviteButton.makeVisible()
+                            inviteButton.setOnClickListener {
+                                val direction = ReservationDetailsFragmentDirections
+                                    .actionReservationDetailsFragmentToInviteUsersFragment(
+                                        reservation.id, reservation.date, reservation.time,
+                                        reservationSportCenter.city, reservationCourt.sport
+                                    )
+                                findNavController().navigate(direction)
+                            }
                             if (reservation.requests.isNotEmpty()) {
                                 requestersLayout.makeVisible()
                                 val requesterAdapter =
