@@ -27,8 +27,10 @@ import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerMCVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerMCVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.CourtReviewsViewModel
 
@@ -49,6 +51,7 @@ class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
     private lateinit var meanRatingValueTV: TextView
     private lateinit var customToolBar: Toolbar
     private lateinit var reviewsShimmerView: ShimmerFrameLayout
+    private lateinit var reviewsMeanShimmerView: ShimmerFrameLayout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -79,6 +82,7 @@ class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
 
         /* shimmerFrameLayout INITIALIZER */
         reviewsShimmerView = view.findViewById(R.id.reviewsShimmerView)
+        reviewsMeanShimmerView = view.findViewById(R.id.reviewsMeanShimmerView)
 
         // Setup RV
         val reviewsAdapter = ReviewsAdapter(viewModel.courtReviews, viewModel.userInformationMap)
@@ -89,17 +93,19 @@ class CourtReviewsFragment : Fragment(R.layout.court_reviews_fragment) {
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    reviewsShimmerView.startShimmerAnimation(reviewsRV)
-                    meanRatingMCV.makeInvisible()
+                    reviewsMeanShimmerView.startShimmerMCVAnimation(meanRatingMCV)
+                    reviewsShimmerView.startShimmerRVAnimation(reviewsRV)
                 }
 
                 is UiState.Failure -> {
-                    reviewsShimmerView.stopShimmerAnimation(reviewsRV)
+                    reviewsMeanShimmerView.stopShimmerMCVAnimation(meanRatingMCV)
+                    reviewsShimmerView.stopShimmerRVAnimation(reviewsRV)
                     toast(state.error ?: "Unable to get court reviews")
                 }
 
                 is UiState.Success -> {
-                    reviewsShimmerView.stopShimmerAnimation(reviewsRV)
+                    reviewsMeanShimmerView.stopShimmerMCVAnimation(meanRatingMCV)
+                    reviewsShimmerView.stopShimmerRVAnimation(reviewsRV)
                     val sportCenter = viewModel.sportCenter
                     val court = viewModel.court
                     val courtReviews = viewModel.courtReviews
