@@ -48,6 +48,7 @@ import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.polito.mad.g26.playingcourtreservation.util.setImageFromByteArray
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
 import it.polito.mad.g26.playingcourtreservation.util.toByteArray
@@ -131,6 +132,10 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
         locationEditText.setText(currentUserInformation.location ?: "")
         sportRecycleView.adapter = UserSkillsAdapter(viewModel.getAllSkills(), true)
         sportRecycleView.layoutManager = LinearLayoutManager(context)
+        val userImageData = sharedProfileViewModel.currentUserImageData
+        if (userImageData != null && imageUri == null) {
+            avatarImage.setImageFromByteArray(userImageData)
+        }
 
         // Init components
         populateDropdowns()

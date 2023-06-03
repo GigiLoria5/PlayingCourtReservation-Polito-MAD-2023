@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerTextAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerTextAnimation
@@ -79,6 +80,7 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
                 }
 
                 is UiState.Success -> {
+                    loaderImage.makeGone()
                     viewModel.getCurrentUserInformation()
                 }
             }

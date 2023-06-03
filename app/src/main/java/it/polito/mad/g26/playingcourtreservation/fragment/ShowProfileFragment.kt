@@ -120,6 +120,7 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
                         avatarImage.setImageFromByteArray(userImageData)
                     }
                     sharedProfileViewModel.currentUserInfo = userInfo
+                    sharedProfileViewModel.currentUserImageData = userImageData
                     username.text = userInfo.username
                     fullName.text = userInfo.fullname
                     age.text = userInfo.ageOrDefault()
