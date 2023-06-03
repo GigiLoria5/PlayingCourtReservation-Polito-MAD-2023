@@ -60,9 +60,9 @@ class ReservationDetailsViewModel @Inject constructor(
     val sportCenter: SportCenter
         get() = _sportCenter
 
-    private var _user: User = User()
-    val user: User
-        get() = _user
+    private var _currentUser: User = User()
+    val currentUser: User
+        get() = _currentUser
 
     private var _participants: MutableList<User> = mutableListOf()
     val participants: List<User>
@@ -95,12 +95,12 @@ class ReservationDetailsViewModel @Inject constructor(
         }
         _sportCenter = (sportCenterState as UiState.Success).result
         //Get current user object
-        val userState = userRepository.getCurrentUserInformation()
-        if (userState is UiState.Failure) {
-            _loadingState.value = userState
+        val currentUserState = userRepository.getCurrentUserInformation()
+        if (currentUserState is UiState.Failure) {
+            _loadingState.value = currentUserState
             return@launch
         }
-        _user = (userState as UiState.Success).result
+        _currentUser = (currentUserState as UiState.Success).result
         //Get participants List<User> from List<String>
         val deferredParticipants = _reservation.participants.map { participantID ->
             async {
@@ -226,8 +226,20 @@ class ReservationDetailsViewModel @Inject constructor(
 
     fun deleteRequester(userID: String) = viewModelScope.launch {
         _loadingState.value = UiState.Loading
-        
+
         val requesterState = reservationRepository.removeRequester(_reservationId, userID)
+        if (requesterState is UiState.Failure) {
+            _deleteState.value = requesterState
+            return@launch
+        }
+        //TODO:sendNotification
+        _loadingState.value = UiState.Success(Unit)
+    }
+
+    fun addRequester(userID: String) = viewModelScope.launch {
+        _loadingState.value = UiState.Loading
+
+        val requesterState = reservationRepository.addRequester(_reservationId, userID)
         if (requesterState is UiState.Failure) {
             _deleteState.value = requesterState
             return@launch

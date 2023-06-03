@@ -521,6 +521,38 @@ class ReservationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun addRequester(reservationId: String, userId: String): UiState<Unit> {
+        return try {
+            Log.d(TAG, "addRequester with reservation id: $reservationId and userId: $userId")
+            // Get the reservation
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "addRequester get reservation id: $reservationId: found=${result.exists()}"
+            )
+            if (!result.exists()) // Reservation Id must be unique and existing
+                UiState.Failure(noReservationFound)
+            // Add requester
+            val reservation = result.toObject(Reservation::class.java)!!
+            reservation.requests = reservation.requests.plus(userId)
+            // Save changes
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .set(reservation).await()
+            Log.d(TAG, "addRequester: requester added")
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing addRequester with reservation id: $reservationId and userId: $userId: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     companion object {
         private const val TAG = "ReservationRepository"
     }

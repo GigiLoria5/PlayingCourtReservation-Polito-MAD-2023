@@ -199,8 +199,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         startActivity(intent)
                     }
                     //Show applicant confirmed
-                    val user = viewModel.user
-                    val participants = viewModel.participants + user
+                    val currentUser = viewModel.currentUser
+                    val participants = viewModel.participants + currentUser
                     val participantsAdapter =
                         ReservationDetailsAdapter(
                             participants, 1, viewModel.court.sport,
@@ -343,7 +343,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             val askButton =
                                 viewAsk.findViewById<MaterialButton>(R.id.reservation_details_ask_button)
                             askButton.setOnClickListener {
-                                //viewModel.addRequest
+                                viewModel.addRequester(currentUser.id)
                             }
                         }
                         return@observe
