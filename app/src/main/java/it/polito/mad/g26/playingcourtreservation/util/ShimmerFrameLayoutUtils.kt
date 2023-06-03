@@ -4,6 +4,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.card.MaterialCardView
 
 
 fun ShimmerFrameLayout.startShimmerRVAnimation(recyclerView: RecyclerView) {
@@ -52,4 +53,16 @@ fun ShimmerFrameLayout.stopShimmerTVListAnimation(tvList: List<TextView>) {
     stopShimmer()
     makeInvisible()
     tvList.forEach { it.makeVisible() }
+}
+
+fun ShimmerFrameLayout.startShimmerMCVAnimation(mcv: MaterialCardView) {
+    mcv.makeInvisible()
+    makeVisible()
+    startShimmer()
+}
+
+fun ShimmerFrameLayout.stopShimmerMCVAnimation(mcv: MaterialCardView) {
+    stopShimmer()
+    makeInvisible()
+    mcv.makeVisible()
 }
