@@ -304,7 +304,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             val removeButton =
                                 viewRemoveFromReservation.findViewById<MaterialButton>(R.id.reservation_details_remove_button)
                             removeButton.setOnClickListener {
-                                //viewModel.removeParticipant
+                                viewModel.removeParticipant(currentUser.id)
                             }
                         } else if (reservation.requests.contains(reservation.userId)) {
                             //REQUESTER-> button not clickable already sent invite

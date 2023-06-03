@@ -57,6 +57,7 @@ interface ReservationRepository {
     suspend fun removeRequester(reservationId: String, userId: String): UiState<Unit>
     suspend fun addRequester(reservationId: String, userId: String): UiState<Unit>
     suspend fun removeInvitee(reservationId: String, userId: String): UiState<Unit>
+    suspend fun removeParticipant(reservationId: String, userId: String): UiState<Unit>
 
 
 }
