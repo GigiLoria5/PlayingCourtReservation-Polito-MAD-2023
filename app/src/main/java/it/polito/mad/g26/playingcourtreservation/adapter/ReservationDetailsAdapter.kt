@@ -25,13 +25,13 @@ class ReservationDetailsAdapter(
         return if (mode == 1) {
             val v =
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.reservation_details_profile, parent, false)
-            ReservationDetailsViewHolderApplicant(v)
+                    .inflate(R.layout.reservation_details_profile_participants, parent, false)
+            ReservationDetailsViewHolderParticipant(v)
         } else {
             val v =
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.reservation_details_applicant_profile, parent, false)
-            ReservationDetailsViewHolderInvitees(v)
+                    .inflate(R.layout.reservation_details_profile_requester, parent, false)
+            ReservationDetailsViewHolderRequester(v)
         }
     }
 
@@ -43,18 +43,19 @@ class ReservationDetailsAdapter(
     //called after viewHolder are created, to put data into them
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ReservationDetailsViewHolderApplicant -> holder.bind(l[position], sport)
-            is ReservationDetailsViewHolderInvitees -> holder.bind(l[position], sport)
+            is ReservationDetailsViewHolderParticipant -> holder.bind(l[position], sport)
+            is ReservationDetailsViewHolderRequester -> holder.bind(l[position], sport)
         }
     }
 
-    inner class ReservationDetailsViewHolderInvitees(v: View) : RecyclerView.ViewHolder(v) {
+    inner class ReservationDetailsViewHolderRequester(v: View) : RecyclerView.ViewHolder(v) {
 
         private val username = v.findViewById<TextView>(R.id.username)
         private val role = v.findViewById<TextView>(R.id.user_roleTV)
         private val rating = v.findViewById<RatingBar>(R.id.ratingRB)
         private val acceptButton = v.findViewById<MaterialCardView>(R.id.userAddActionMCV)
         private val removeButton = v.findViewById<MaterialCardView>(R.id.userRemoveActionMCV)
+        private val card = v.findViewById<MaterialCardView>(R.id.userMCV)
         fun bind(u: User, sport: String) {
             username.text = u.username
             role.text = u.position
@@ -62,16 +63,19 @@ class ReservationDetailsAdapter(
             if (rate != null)
                 rating.rating = rate.second.toFloat()
             else rating.rating = 0f
+            card.setOnClickListener {
+                //navigate to profile
+            }
             acceptButton.setOnClickListener {
-
+                //add to participant
             }
             removeButton.setOnClickListener {
-
+                //remove from request
             }
         }
     }
 
-    inner class ReservationDetailsViewHolderApplicant(v: View) : RecyclerView.ViewHolder(v) {
+    inner class ReservationDetailsViewHolderParticipant(v: View) : RecyclerView.ViewHolder(v) {
 
         private val username = v.findViewById<TextView>(R.id.username)
         private val role = v.findViewById<TextView>(R.id.user_roleTV)
