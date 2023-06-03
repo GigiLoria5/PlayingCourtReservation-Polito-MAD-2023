@@ -11,6 +11,8 @@ import it.polito.mad.g26.playingcourtreservation.repository.NotificationReposito
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.UserRepository
 import it.polito.mad.g26.playingcourtreservation.util.UiState
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,11 +29,6 @@ class InviteUsersViewModel @Inject constructor(
     private var time: String = ""
     private var sport: String = ""
     private val myInvitees: MutableSet<String> = mutableSetOf()
-
-    val initialMinAge = 22f
-    val initialMaxAge = 70f
-    val initialMinSkill = 2f
-    val initialMaxSkill = 4f
 
     val minAge = 18f
     val maxAge = 90f
@@ -82,25 +79,25 @@ class InviteUsersViewModel @Inject constructor(
     }
 
     /*SELECTED MIN AGE MANAGEMENT*/
-    private val _selectedMinAge = MutableLiveData(initialMinAge)
+    private val _selectedMinAge = MutableLiveData(minAge)
     fun changeSelectedMinAge(age: Float) {
         _selectedMinAge.value = age
     }
 
     /*SELECTED MAX AGE MANAGEMENT*/
-    private val _selectedMaxAge = MutableLiveData(initialMaxAge)
+    private val _selectedMaxAge = MutableLiveData(maxAge)
     fun changeSelectedMaxAge(age: Float) {
         _selectedMaxAge.value = age
     }
 
     /*SELECTED MIN SKILL MANAGEMENT*/
-    private val _selectedMinSkill = MutableLiveData(initialMinSkill)
+    private val _selectedMinSkill = MutableLiveData(minSkill)
     fun changeSelectedMinSkill(skillValue: Float) {
         _selectedMinSkill.value = skillValue
     }
 
     /*SELECTED MAX SKILL MANAGEMENT*/
-    private val _selectedMaxSkill = MutableLiveData(initialMaxSkill)
+    private val _selectedMaxSkill = MutableLiveData(maxSkill)
     fun changeSelectedMaxSkill(skillValue: Float) {
         _selectedMaxSkill.value = skillValue
     }
@@ -134,8 +131,13 @@ class InviteUsersViewModel @Inject constructor(
     val loadingState: LiveData<UiState<Unit>>
         get() = _loadingState
 
-    private var users: List<User> = listOf()
+    private var _users :List<User> = listOf()
+    val users: List<User>
+        get() = _users
 
+    private var _userPicturesMap: HashMap<String, ByteArray?> = hashMapOf() // K = userId
+    val userPicturesMap: HashMap<String, ByteArray?>
+        get() = _userPicturesMap
     fun fetchUsersData() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
         // Get all reservations for the specified date/time
@@ -165,19 +167,44 @@ class InviteUsersViewModel @Inject constructor(
             return@launch
         }
         val allUsers = (allUsersState as UiState.Success).result
+        val invitableUsers = allUsers.filter { !notInvitablePeople.contains(it.id) }
 
-        //can't apply this filter to db query because firebase supports Lists of max 10 elements
-        users = allUsers.filter { !notInvitablePeople.contains(it.id) }
+        _users=getFilteredUsers(invitableUsers)
+
+        val deferredUserPictures = _users.map { user ->
+            async {
+               val state= userRepository.downloadUserImage(user.id)
+                val data= object{
+                    val userId=user.id
+                    val state=state
+                }
+                data
+            }
+        }
+        val userPicturesResult = deferredUserPictures.awaitAll()
+        for (data in userPicturesResult) {
+            when (val state=data.state) {
+                is UiState.Success -> {
+                    _userPicturesMap[data.userId] = state.result
+                }
+                is UiState.Failure -> {
+                    _loadingState.value = state
+                }
+                else -> {
+                    _loadingState.value = UiState.Failure(null)
+                }
+            }
+        }
         _loadingState.value = UiState.Success(Unit)
     }
 
-    fun getFilteredUsers(): List<User> {
-        val filteredUsers = users
+    private fun getFilteredUsers(invitableUsers: List<User>): List<User> {
+        val filteredUsers = invitableUsers
             .filter { user ->
                 _selectedPositions.value?.contains(user.position) ?: false
             }
             .filter { user ->
-                val ageString = user.getAgeOrDefault()
+                val ageString = user.ageOrDefault()
                 ageString != User.DEFAULT_BIRTHDATE
                         && ageString.toInt() >= _selectedMinAge.value!!.toInt()
                         && ageString.toInt() <= _selectedMaxAge.value!!.toInt()

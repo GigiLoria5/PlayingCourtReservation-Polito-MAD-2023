@@ -13,13 +13,15 @@ import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
+import it.polito.mad.g26.playingcourtreservation.util.setImageFromByteArray
 
 class InviteUserAdapter(
-    private var collection: List<User>,
+    private var users: List<User>,
+    private var userPicturesMap: HashMap<String, ByteArray?>,
     private val isUserIdInvited: (String) -> Boolean,
     private val sport: String,
     private val navigateToShowProfileFragment: (String) -> Unit,
-    private val inviteUser:(User)->Unit
+    private val inviteUser: (User) -> Unit
 ) :
     RecyclerView.Adapter<InviteUserAdapter.UserViewHolder>() {
 
@@ -30,16 +32,22 @@ class InviteUserAdapter(
     }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        val user = collection[position]
+        val user = users[position]
+        val userPicture = userPicturesMap[user.id]
 
-        holder.bind(collection[position], isUserIdInvited(user.id))
+
+
+
+        holder.bind(user, userPicture, isUserIdInvited(user.id))
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateCollection(
-        updatedCollection: List<User>
+        updatedUsers: List<User>,
+        updatedUserPicturesMap:HashMap<String, ByteArray?>
     ) {
-        this.collection = updatedCollection
+        this.users = updatedUsers
+        this.userPicturesMap=updatedUserPicturesMap
         notifyDataSetChanged()
     }
 
@@ -47,9 +55,10 @@ class InviteUserAdapter(
         holder.unbind()
     }
 
-    override fun getItemCount() = collection.size
+    override fun getItemCount() = users.size
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val avatarImage = itemView.findViewById<ImageView>(R.id.avatar)
         private val userNameTV = itemView.findViewById<TextView>(R.id.userNameTV)
         private val userPositionAgeTV = itemView.findViewById<TextView>(R.id.userPositionAgeTV)
         private val userCityTV = itemView.findViewById<TextView>(R.id.userCityTV)
@@ -59,15 +68,19 @@ class InviteUserAdapter(
         private val userActionMCV = itemView.findViewById<MaterialCardView>(R.id.userActionMCV)
         private val customSearchIconIV = itemView.findViewById<ImageView>(R.id.customSearchIconIV)
 
-        fun bind(user: User, isUserIdInvited: Boolean) {
-
+        fun bind(user: User, userPicture: ByteArray?, isUserIdInvited: Boolean) {
+            if (userPicture != null) {
+                avatarImage.setImageFromByteArray(userPicture)
+            }else{
+                avatarImage.setImageDrawable(AppCompatResources.getDrawable(itemView.context,R.drawable.profile_default))
+            }
             userNameTV.text = user.username
             if (user.position == null) {
                 //if one info is null, all infos are null
                 userPositionAgeTV.text = itemView.context.getString(R.string.not_specified_info)
                 userCityTV.makeGone()
             } else {
-                val age = user.getAgeOrDefault()
+                val age = user.ageOrDefault()
                 userPositionAgeTV.text =
                     itemView.context.getString(R.string.user_position_age, user.position, age)
                 userCityTV.text = user.location
@@ -102,8 +115,8 @@ class InviteUserAdapter(
                         )
                     )
                     userActionMCV.setCardBackgroundColor(itemView.context.getColor(R.color.green_500))
-                    userActionMCV.isClickable=false
-                    userActionMCV.isEnabled=false
+                    userActionMCV.isClickable = false
+                    userActionMCV.isEnabled = false
                 }
             }
         }

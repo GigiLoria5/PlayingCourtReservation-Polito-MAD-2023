@@ -97,15 +97,15 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         filterByAgeTV = view.findViewById(R.id.filterByAgeTV)
         filterByAgeTV.text = getString(
             R.string.filter_by_age,
-            viewModel.initialMinAge.toInt().toString(),
-            viewModel.initialMaxAge.toInt().toString()
+            viewModel.minAge.toInt().toString(),
+            viewModel.maxAge.toInt().toString()
         )
 
         /*ageRS INITIALIZER*/
         ageRS = view.findViewById(R.id.ageRS)
         ageRS.valueFrom = viewModel.minAge
         ageRS.valueTo = viewModel.maxAge
-        ageRS.values = listOf(viewModel.initialMinAge, viewModel.initialMaxAge)
+        ageRS.values = listOf(viewModel.minAge, viewModel.maxAge)
         ageRS.addOnChangeListener { _, _, _ ->
             filterByAgeTV.text = getString(
                 R.string.filter_by_age,
@@ -120,15 +120,15 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
         filterBySkillsTV = view.findViewById(R.id.filterBySkillsTV)
         filterBySkillsTV.text = getString(
             R.string.filter_by_skills,
-            String.format("%.1f", viewModel.initialMinSkill),
-            String.format("%.1f", viewModel.initialMaxSkill)
+            String.format("%.1f", viewModel.minSkill),
+            String.format("%.1f", viewModel.maxSkill)
         )
 
         /*skillRS INITIALIZER*/
         skillRS = view.findViewById(R.id.skillRS)
         skillRS.valueFrom = viewModel.minSkill
         skillRS.valueTo = viewModel.maxSkill
-        skillRS.values = listOf(viewModel.initialMinSkill, viewModel.initialMaxSkill)
+        skillRS.values = listOf(viewModel.minSkill, viewModel.maxSkill)
         skillRS.addOnChangeListener { _, _, _ ->
             filterBySkillsTV.text = getString(
                 R.string.filter_by_skills,
@@ -175,7 +175,8 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
 
     private fun createInviteUserAdapter(): InviteUserAdapter {
         return InviteUserAdapter(
-            viewModel.getFilteredUsers(),
+            viewModel.users,
+            viewModel.userPicturesMap,
             { viewModel.isUserIdInvited(it) },
             sport,
             { userId ->
@@ -228,14 +229,15 @@ class InviteUsersFragment : Fragment(R.layout.invite_users_fragment) {
                     usersShimmerView.stopShimmer()
                     usersShimmerView.makeInvisible()
                     numberOfFoundUsersTV.makeVisible()
-                    val filteredUsers = viewModel.getFilteredUsers()
-                    val numberOfAvailableUsersFound = filteredUsers.size
+                    val users = viewModel.users
+                    val userPictures=viewModel.userPicturesMap
+                    val numberOfAvailableUsersFound = users.size
                     numberOfFoundUsersTV.text = getString(
                         R.string.found_users_results_info,
                         numberOfAvailableUsersFound,
                         if (numberOfAvailableUsersFound != 1) "s" else ""
                     )
-                    inviteUsersAdapter.updateCollection(filteredUsers)
+                    inviteUsersAdapter.updateCollection(users,userPictures)
                     if (numberOfAvailableUsersFound > 0) {
                         usersRV.makeVisible()
                     } else {
