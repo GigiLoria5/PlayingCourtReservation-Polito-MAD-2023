@@ -55,12 +55,22 @@ class ShowProfileFragment : Fragment(R.layout.show_profile_fragment) {
     private lateinit var secondaryInformationShimmer: ShimmerFrameLayout
     private lateinit var sportRecycleViewShimmer: ShimmerFrameLayout
 
+    private var _isCurrentUserProfile = true
+    val isCurrentUserProfile: Boolean
+        get() = _isCurrentUserProfile
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sharedProfileViewModel =
             ViewModelProvider(requireActivity())[SharedProfileViewModel::class.java]
         val userId = args.userId
-        setupActionBar(activity, "Profile", userId != null) // if not null is called from somewhere
+        _isCurrentUserProfile = userId == null
+        // Hide bottom bar and edit button if is not current user profile
+        setupActionBar(
+            activity,
+            "Profile",
+            !isCurrentUserProfile
+        )
 
         // Handle top menu actions
         val menuHost: MenuHost = requireActivity()

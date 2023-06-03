@@ -72,6 +72,9 @@
         <action
             android:id="@+id/openReservationEdit"
             app:destination="@id/modifyReservationDetailsFragment" />
+        <action
+            android:id="@+id/openShowProfile"
+            app:destination="@id/showProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/modifyReservationDetailsFragment"
