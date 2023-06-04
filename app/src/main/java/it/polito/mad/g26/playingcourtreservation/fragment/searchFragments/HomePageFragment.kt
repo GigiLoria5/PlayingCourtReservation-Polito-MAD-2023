@@ -32,6 +32,10 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
     private lateinit var loaderImage: GifImageView
     private lateinit var cityNameTV: TextView
     private lateinit var cityShimmerView: ShimmerFrameLayout
+    private lateinit var selectCityMCV: MaterialCardView
+    private lateinit var searchMCV: MaterialCardView
+
+    private lateinit var allSportName: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,11 +45,11 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
         loaderImage = requireActivity().findViewById(R.id.loaderImage)
         cityNameTV = view.findViewById(R.id.cityNameTV)
         cityShimmerView = view.findViewById(R.id.cityShimmerView)
-        val selectCityMCV = view.findViewById<MaterialCardView>(R.id.citySearchMCV)
-        val searchMCV = view.findViewById<MaterialCardView>(R.id.searchMCV)
+        selectCityMCV = view.findViewById(R.id.citySearchMCV)
+        searchMCV = view.findViewById(R.id.searchMCV)
 
         // Handle navigation
-        val allSportName = requireContext().getString(R.string.all_sports)
+        allSportName = requireContext().getString(R.string.all_sports)
         selectCityMCV.setOnClickListener {
             val direction =
                 HomePageFragmentDirections.actionHomeToSportCentersAction(
@@ -53,36 +57,33 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
                 )
             findNavController().navigate(direction)
         }
-        searchMCV.setOnClickListener {
-            val direction =
-                HomePageFragmentDirections.actionHomeToSearchSportCenters(
-                    "home", cityNameTV.text.toString(), 0, allSportName, arrayOf()
-                )
-            findNavController().navigate(direction)
-        }
+
         val notificationBell = view.findViewById<ImageView>(R.id.bellIV)
-        val noReadNotificationCounterMCV = view.findViewById<MaterialCardView>(R.id.notificationCountMCV)
+        val noReadNotificationCounterMCV =
+            view.findViewById<MaterialCardView>(R.id.notificationCountMCV)
         val noReadNotificationCounterTV = view.findViewById<TextView>(R.id.notificationCountTV)
         // Load the data needed
-        if (viewModel.currentUser != null){
+        if (viewModel.currentUser != null) {
             viewModel.loadNotifications()
             viewModel.loadingState.observe(viewLifecycleOwner) { state ->
-                when(state){
+                when (state) {
                     is UiState.Loading -> {
                         loaderImage.setFreezesAnimation(false)
                         loaderImage.makeVisible()
                     }
-                    is UiState.Failure ->{
+
+                    is UiState.Failure -> {
                         toast(state.error ?: "Unable to get notifications")
                     }
+
                     is UiState.Success -> {
                         loaderImage.makeGone()
                         val notifications = viewModel.notifications
                         if (notifications.isNotEmpty()) {
                             val countNoRead = countNoReadNotifications(notifications)
-                            if(countNoRead == 0){
+                            if (countNoRead == 0) {
                                 noReadNotificationCounterMCV.makeInvisible()
-                            }else{
+                            } else {
                                 noReadNotificationCounterMCV.makeVisible()
                                 noReadNotificationCounterTV.text = countNoRead.toString()
                             }
@@ -138,8 +139,21 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
                 }
 
                 is UiState.Success -> {
-                    cityNameTV.text = state.result.location ?: ""
+                    val cityName = state.result.location ?: ""
+                    cityNameTV.text = cityName
                     cityShimmerView.stopShimmerTextAnimation(cityNameTV)
+                    searchMCV.setOnClickListener {
+                        val direction =
+                            if (cityName.isNotEmpty())
+                                HomePageFragmentDirections.actionHomeToSearchSportCenters(
+                                    "home", cityNameTV.text.toString(), 0, allSportName, arrayOf()
+                                )
+                            else
+                                HomePageFragmentDirections.actionHomeToSportCentersAction(
+                                    "home", cityNameTV.text.toString(), 0, allSportName, arrayOf()
+                                )
+                        findNavController().navigate(direction)
+                    }
                 }
             }
         }
@@ -165,7 +179,7 @@ class HomePageFragment : Fragment(R.layout.home_page_fragment) {
 
     private fun countNoReadNotifications(notifications: List<Notification>): Int {
         var count = 0
-        for(n in notifications){
+        for (n in notifications) {
             if (!n.isRead) count++
         }
         return count
