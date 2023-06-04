@@ -216,7 +216,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     participantsRecyclerView.layoutManager = GridLayoutManager(context, 2)
                     val maxParticipants = Court.getSportTotParticipants(viewModel.court.sport)
                     participantsTitle.text = view.context.getString(
-                        R.string.applicant_concatenate_title,
+                        R.string.participants_concatenate_title,
                         participants.size.toString(),
                         maxParticipants.toString()
                     )

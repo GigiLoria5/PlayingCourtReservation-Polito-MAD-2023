@@ -311,7 +311,7 @@
                     android:id="@+id/requester_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/applicant_player"
+                    android:text="@string/default_request_title"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textSize="16sp"
                     android:layout_marginStart="4dp"
