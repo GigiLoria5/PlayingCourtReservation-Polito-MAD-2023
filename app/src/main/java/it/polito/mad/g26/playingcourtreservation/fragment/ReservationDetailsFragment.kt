@@ -39,8 +39,10 @@ import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerMCVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerTextAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerMCVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerTextAnimation
 import it.polito.mad.g26.playingcourtreservation.util.timestampToDate
@@ -61,6 +63,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     private lateinit var viewReservationButtons: ConstraintLayout // View to be inflated with buttons
     private lateinit var shimmerFrameLayoutRV: ShimmerFrameLayout
     private lateinit var rowTitleRVShimmer: ShimmerFrameLayout
+    private lateinit var shimmerInviteB: ShimmerFrameLayout
 
     // Action is performing
     private var reviewDeleteInProgress = false
@@ -85,6 +88,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
 
         // Setup late init variables and visual components
+        shimmerInviteB = view.findViewById(R.id.shimmerParticipantButton)
         rowTitleRVShimmer = view.findViewById(R.id.shimmerParticipantTitle)
         shimmerFrameLayoutRV = view.findViewById(R.id.shimmerViewRV)
         reservationReviewMCV = view.findViewById(R.id.reservationReviewMCV)
@@ -104,6 +108,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val requestersLayout = view.findViewById<ConstraintLayout>(R.id.requester_layout)
         val participantsTitle = view.findViewById<TextView>(R.id.player_title)
         val inviteButton = view.findViewById<MaterialButton>(R.id.search_players_button)
+        val inviteButtonMCV = view.findViewById<MaterialCardView>(R.id.inviteButtonMCVForShimmer)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -138,6 +143,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     // TODO: Start Animation
                     shimmerFrameLayoutRV.startShimmerRVAnimation(participantsRecyclerView)
                     rowTitleRVShimmer.startShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
                 }
 
                 is UiState.Failure -> {
@@ -149,6 +155,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     // TODO: Stop Animation
                     shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
                     rowTitleRVShimmer.stopShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
                     if (reviewDeleteInProgress) { // It means the delete was successful
                         reviewDeleteInProgress = false
                         toast("Review deleted successfully")

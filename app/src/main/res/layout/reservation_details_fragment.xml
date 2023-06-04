@@ -280,37 +280,72 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <include layout="@layout/reservation_details_row_title_scrollview_placeholder" />
-
+                        <include
+                            layout="@layout/reservation_details_row_title_scrollview_placeholder"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5" />
 
                     </LinearLayout>
                 </com.facebook.shimmer.ShimmerFrameLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/search_players_button"
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/inviteButtonMCVForShimmer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:backgroundTint="@color/green_500"
-                    android:text="@string/search_player_button"
-                    app:cornerRadius="16dp"
-                    android:visibility="invisible"
                     app:layout_constraintBottom_toTopOf="@id/relativeLayoutRV"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.96"
                     app:layout_constraintStart_toEndOf="@id/player_title"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0"
-                    tools:ignore="TextContrastCheck" />
+                    app:cardElevation="0dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/search_players_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:backgroundTint="@color/green_500"
+                        android:text="@string/search_player_button"
+                        app:cornerRadius="16dp"
+                        android:visibility="invisible"
+                        tools:ignore="TextContrastCheck" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerParticipantButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <include
+                            layout="@layout/reservation_details_invitebutton_placeholders"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5" />
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutRV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/search_players_button">
+                    app:layout_constraintTop_toBottomOf="@id/inviteButtonMCVForShimmer">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/player_list"
