@@ -191,7 +191,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/sportCenterInfoGL"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/stat_sys_phone_call">
+                    app:srcCompat="@android:drawable/stat_sys_phone_call"
+                    tools:ignore="TouchTargetSizeCheck">
 
                     <ImageView
                         android:id="@+id/sportCenterPhoneNumberIV"
@@ -291,8 +292,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:nestedScrollingEnabled="false">
-
-
+                    
                 </androidx.recyclerview.widget.RecyclerView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 

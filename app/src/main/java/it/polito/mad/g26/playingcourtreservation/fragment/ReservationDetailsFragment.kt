@@ -24,6 +24,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -54,6 +55,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     private lateinit var reservationReviewMCV: MaterialCardView
     private lateinit var sportCenterPhoneNumberMCV: MaterialCardView
     private lateinit var viewReservationButtons: ConstraintLayout // View to be inflated with buttons
+    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
 
     // Action is performing
     private var reviewDeleteInProgress = false
@@ -78,6 +80,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
 
         // Setup late init variables and visual components
+        //shimmerFrameLayout = view.findViewById(R.id.participantsRVShimmerView)
         reservationReviewMCV = view.findViewById(R.id.reservationReviewMCV)
         sportCenterPhoneNumberMCV = view.findViewById(R.id.sportCenterPhoneNumberMCV)
         viewReservationButtons = view.findViewById(R.id.reservation_buttons)
@@ -127,6 +130,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             when (state) {
                 is UiState.Loading -> {
                     // TODO: Start Animation
+                    //shimmerFrameLayout.startShimmerRVAnimation(participantsRecyclerView)
                 }
 
                 is UiState.Failure -> {
@@ -136,6 +140,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
                 is UiState.Success -> {
                     // TODO: Stop Animation
+                    //shimmerFrameLayout.stopShimmerRVAnimation(participantsRecyclerView)
                     if (reviewDeleteInProgress) { // It means the delete was successful
                         reviewDeleteInProgress = false
                         toast("Review deleted successfully")
