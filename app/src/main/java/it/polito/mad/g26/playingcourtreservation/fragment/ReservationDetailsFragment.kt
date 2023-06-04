@@ -473,7 +473,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                 .setMessage("Confirm to add ${user.username}?")
                 .setPositiveButton("Confirm") { dialog, _ ->
                     dialog.dismiss()
-                    viewModel.addParticipantAndDeleteRequester(user.id)
+                    viewModel.addParticipantAndDeleteRequester(user.id) { message -> toast(message) }
                 }.setNegativeButton("Cancel") { dialog, _ ->
                     dialog.dismiss()
                 }

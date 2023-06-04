@@ -208,37 +208,46 @@ class ReservationDetailsViewModel @Inject constructor(
         return now.isBefore(reservationDate)
     }
 
-    fun addParticipantAndDeleteRequester(userID: String) = viewModelScope.launch {
-        _loadingState.value = UiState.Loading
+    fun addParticipantAndDeleteRequester(userID: String, message: (String) -> Unit) =
+        viewModelScope.launch {
+            _loadingState.value = UiState.Loading
 
-        //TODO: check if user is free in that time and date for all add
-        val reservationState =
-            reservationRepository.getUserReservationAt(userID, reservation.date, reservation.time)
-        if (reservationState is UiState.Failure) {
-            _deleteState.value = reservationState
-            return@launch
+            //Check if the guy has no other reservation on the same time
+            val reservationState =
+                reservationRepository.getUserReservationAt(
+                    userID,
+                    reservation.date,
+                    reservation.time
+                )
+            if (reservationState is UiState.Failure) {
+                _deleteState.value = reservationState
+                return@launch
+            }
+            if ((reservationState as UiState.Success).result != null) {
+                message("Requester has already a reservation for this hour slot")
+                return@launch
+            }
+            //Add guy in participants
+            val participantState = reservationRepository.addParticipant(reservationId, userID)
+            if (participantState is UiState.Failure) {
+                _deleteState.value = participantState
+                return@launch
+            }
+            //Delete guy from requesters
+            val requesterState = reservationRepository.removeRequester(reservationId, userID)
+            if (requesterState is UiState.Failure) {
+                _deleteState.value = requesterState
+                return@launch
+            }
+            //Notification to the requester from creator
+            val notification = Notification.requestResponse(userID, reservationId, true)
+            val notificationState = notificationRepository.saveNotification(notification)
+            if (notificationState is UiState.Failure) {
+                _deleteState.value = notificationState
+                return@launch
+            }
+            loadReservationAndSportCenterInformation() // To update the UI
         }
-        if ((reservationState as UiState.Success).result != null)
-            return@launch
-        val participantState = reservationRepository.addParticipant(reservationId, userID)
-        if (participantState is UiState.Failure) {
-            _deleteState.value = participantState
-            return@launch
-        }
-        val requesterState = reservationRepository.removeRequester(reservationId, userID)
-        if (requesterState is UiState.Failure) {
-            _deleteState.value = requesterState
-            return@launch
-        }
-        //Notification to the requester from creator
-        val notification = Notification.requestResponse(userID, reservationId, true)
-        val notificationState = notificationRepository.saveNotification(notification)
-        if (notificationState is UiState.Failure) {
-            _deleteState.value = notificationState
-            return@launch
-        }
-        _loadingState.value = UiState.Success(Unit)
-    }
 
     fun deleteRequester(userID: String) = viewModelScope.launch {
         _loadingState.value = UiState.Loading
