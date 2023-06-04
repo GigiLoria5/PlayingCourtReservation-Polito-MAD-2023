@@ -53,15 +53,17 @@ class ReservationDetailsAdapter(
 
     inner class ReservationDetailsViewHolderRequester(v: View) : RecyclerView.ViewHolder(v) {
 
-        private val username = v.findViewById<TextView>(R.id.username)
-        private val role = v.findViewById<TextView>(R.id.user_roleTV)
+        private val username = v.findViewById<TextView>(R.id.user_nameTV)
+        private val roleAndAge = v.findViewById<TextView>(R.id.user_roleAndAgeTV)
         private val rating = v.findViewById<RatingBar>(R.id.ratingRB)
+        private val city = v.findViewById<TextView>(R.id.user_cityTV)
         private val acceptButton = v.findViewById<MaterialCardView>(R.id.userAddActionMCV)
         private val removeButton = v.findViewById<MaterialCardView>(R.id.userRemoveActionMCV)
         private val card = v.findViewById<MaterialCardView>(R.id.userMCV)
         fun bind(u: User, sport: String) {
             username.text = u.username
-            role.text = u.position
+            roleAndAge.text = u.position + ", " + u.ageOrDefault() + " y.o."
+            city.text = u.location
             val rate = u.skills.find { it.sportName == sport }
             if (rate != null)
                 rating.rating = rate.rating
@@ -80,13 +82,15 @@ class ReservationDetailsAdapter(
 
     inner class ReservationDetailsViewHolderParticipant(v: View) : RecyclerView.ViewHolder(v) {
 
-        private val username = v.findViewById<TextView>(R.id.username)
-        private val role = v.findViewById<TextView>(R.id.user_roleTV)
+        private val username = v.findViewById<TextView>(R.id.user_nameTV)
+        private val roleAndAge = v.findViewById<TextView>(R.id.user_roleAndAgeTV)
+        private val city = v.findViewById<TextView>(R.id.user_cityTV)
         private val rating = v.findViewById<RatingBar>(R.id.ratingRB)
-        private val card = v.findViewById<MaterialCardView>(R.id.participantMCV)
+        private val card = v.findViewById<MaterialCardView>(R.id.userMCV)
         fun bind(u: User, sport: String) {
             username.text = u.username
-            role.text = u.position
+            roleAndAge.text = u.position + ", " + u.ageOrDefault() + " y.o."
+            city.text = u.locationOrDefault()
             val rate = u.skills.find { it.sportName == sport }
             if (rate != null)
                 rating.rating = rate.rating
