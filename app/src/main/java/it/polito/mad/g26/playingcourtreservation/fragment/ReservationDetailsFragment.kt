@@ -64,6 +64,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     private lateinit var shimmerFrameLayoutRV: ShimmerFrameLayout
     private lateinit var rowTitleRVShimmer: ShimmerFrameLayout
     private lateinit var shimmerInviteB: ShimmerFrameLayout
+    private lateinit var shimmerTopBar: ShimmerFrameLayout
 
     // Action is performing
     private var reviewDeleteInProgress = false
@@ -88,6 +89,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
 
         // Setup late init variables and visual components
+        shimmerTopBar = view.findViewById(R.id.shimmerTopBar)
         shimmerInviteB = view.findViewById(R.id.shimmerParticipantButton)
         rowTitleRVShimmer = view.findViewById(R.id.shimmerParticipantTitle)
         shimmerFrameLayoutRV = view.findViewById(R.id.shimmerViewRV)
@@ -109,6 +111,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val participantsTitle = view.findViewById<TextView>(R.id.player_title)
         val inviteButton = view.findViewById<MaterialButton>(R.id.search_players_button)
         val inviteButtonMCV = view.findViewById<MaterialCardView>(R.id.inviteButtonMCVForShimmer)
+        val topBarMCV = view.findViewById<MaterialCardView>(R.id.sportCenterDataMCVForShimmer)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -144,6 +147,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerFrameLayoutRV.startShimmerRVAnimation(participantsRecyclerView)
                     rowTitleRVShimmer.startShimmerTextAnimation(participantsTitle)
                     shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.startShimmerMCVAnimation(topBarMCV)
                 }
 
                 is UiState.Failure -> {
@@ -156,6 +160,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
                     rowTitleRVShimmer.stopShimmerTextAnimation(participantsTitle)
                     shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
                     if (reviewDeleteInProgress) { // It means the delete was successful
                         reviewDeleteInProgress = false
                         toast("Review deleted successfully")

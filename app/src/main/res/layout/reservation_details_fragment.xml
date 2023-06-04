@@ -40,135 +40,164 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/customToolBar">
 
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/sportCenterDataCL"
-                    android:layout_width="0dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/sportCenterDataMCVForShimmer"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toTopOf="@id/service_list"
                     app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:animateLayoutChanges="true">
+                    android:backgroundTint="@color/green_500">
 
-                    <TextView
-                        android:id="@+id/sportCenter_name"
-                        android:layout_width="0dp"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sportCenterDataCL"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_name"
-                        app:layout_constraintBottom_toTopOf="@id/address"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="@string/sport_center_name"
-                        tools:ignore="TextContrastCheck" />
 
-                    <TextView
-                        android:id="@+id/address"
-                        android:layout_width="0dp"
+                        android:animateLayoutChanges="true">
+
+                        <TextView
+                            android:id="@+id/sportCenter_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_name"
+                            app:layout_constraintBottom_toTopOf="@id/address"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="@string/sport_center_name"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/address"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/sportCenter_time"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sportCenter_name"
+                            tools:text="@string/sport_center_address"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/sportCenter_time"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/date"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/address"
+                            tools:text="@string/sport_center_opening_hours"
+                            tools:ignore="TextContrastCheck" />
+
+
+                        <TextView
+                            android:id="@+id/date"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/page_external_space"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/court_name"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sportCenter_time"
+                            tools:text="@string/selected_date_time"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/court_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/page_external_space"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/sport"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/date"
+                            tools:text="@string/court_name"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/sport"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/price"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/court_name"
+                            tools:text="@string/all_sports"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/price"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/page_external_space"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/service_title"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sport"
+                            tools:text="@string/court_price"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/service_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/chosen_services"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/price"
+                            tools:ignore="TextContrastCheck" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerTopBar"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintBottom_toTopOf="@id/service_list"
+                    app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/sportCenter_time"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sportCenter_name"
-                        tools:text="@string/sport_center_address"
-                        tools:ignore="TextContrastCheck" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/sportCenter_time"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/date"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/address"
-                        tools:text="@string/sport_center_opening_hours"
-                        tools:ignore="TextContrastCheck" />
+                        <include layout="@layout/reservation_details_topbar_placeholders" />
 
-
-                    <TextView
-                        android:id="@+id/date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/page_external_space"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/court_name"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sportCenter_time"
-                        tools:text="@string/selected_date_time"
-                        tools:ignore="TextContrastCheck" />
-
-                    <TextView
-                        android:id="@+id/court_name"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/page_external_space"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/sport"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/date"
-                        tools:text="@string/court_name"
-                        tools:ignore="TextContrastCheck" />
-
-                    <TextView
-                        android:id="@+id/sport"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/price"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/court_name"
-                        tools:text="@string/all_sports"
-                        tools:ignore="TextContrastCheck" />
-
-                    <TextView
-                        android:id="@+id/price"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/page_external_space"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/service_title"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sport"
-                        tools:text="@string/court_price"
-                        tools:ignore="TextContrastCheck" />
-
-                    <TextView
-                        android:id="@+id/service_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/chosen_services"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/price"
-                        tools:ignore="TextContrastCheck" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/sportCenterInfoGL"
@@ -214,7 +243,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/sportCenterDataCL"
+                    app:layout_constraintTop_toBottomOf="@id/sportCenterDataMCVForShimmer"
                     app:layout_constraintBottom_toBottomOf="parent"
                     tools:listitem="@layout/chip_service_item" />
 
@@ -264,7 +293,8 @@
                     app:layout_constraintBottom_toTopOf="@id/relativeLayoutRV"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="VisualLintOverlap" />
 
                 <com.facebook.shimmer.ShimmerFrameLayout
                     android:id="@+id/shimmerParticipantTitle"
@@ -280,7 +310,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
 
                         <include
                             layout="@layout/reservation_details_row_title_scrollview_placeholder"
@@ -329,7 +360,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
 
                         <include
                             layout="@layout/reservation_details_invitebutton_placeholders"
