@@ -39,6 +39,8 @@ import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
 import it.polito.mad.g26.playingcourtreservation.util.timestampToDate
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationDetailsViewModel
@@ -80,7 +82,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
 
         // Setup late init variables and visual components
-        //shimmerFrameLayout = view.findViewById(R.id.participantsRVShimmerView)
+        shimmerFrameLayout = view.findViewById(R.id.shimmerView)
         reservationReviewMCV = view.findViewById(R.id.reservationReviewMCV)
         sportCenterPhoneNumberMCV = view.findViewById(R.id.sportCenterPhoneNumberMCV)
         viewReservationButtons = view.findViewById(R.id.reservation_buttons)
@@ -130,7 +132,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             when (state) {
                 is UiState.Loading -> {
                     // TODO: Start Animation
-                    //shimmerFrameLayout.startShimmerRVAnimation(participantsRecyclerView)
+                    shimmerFrameLayout.startShimmerRVAnimation(participantsRecyclerView)
                 }
 
                 is UiState.Failure -> {
@@ -140,7 +142,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
                 is UiState.Success -> {
                     // TODO: Stop Animation
-                    //shimmerFrameLayout.stopShimmerRVAnimation(participantsRecyclerView)
+                    shimmerFrameLayout.stopShimmerRVAnimation(participantsRecyclerView)
                     if (reviewDeleteInProgress) { // It means the delete was successful
                         reviewDeleteInProgress = false
                         toast("Review deleted successfully")

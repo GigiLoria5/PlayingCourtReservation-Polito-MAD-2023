@@ -261,7 +261,7 @@
                     android:text="@string/default_players_title"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toTopOf="@id/player_list"
+                    app:layout_constraintBottom_toTopOf="@id/shimmerRVparticipants"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -275,7 +275,7 @@
                     android:text="@string/search_player_button"
                     app:cornerRadius="16dp"
                     android:visibility="invisible"
-                    app:layout_constraintBottom_toTopOf="@id/player_list"
+                    app:layout_constraintBottom_toTopOf="@id/shimmerRVparticipants"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.96"
                     app:layout_constraintStart_toEndOf="@id/player_title"
@@ -283,17 +283,46 @@
                     app:layout_constraintVertical_bias="0.0"
                     tools:ignore="TextContrastCheck" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/player_list"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:id="@+id/shimmerRVparticipants"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/search_players_button"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:nestedScrollingEnabled="false">
-                    
-                </androidx.recyclerview.widget.RecyclerView>
+                    app:layout_constraintTop_toBottomOf="@id/search_players_button">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/player_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:nestedScrollingEnabled="false">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/shimmerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:shimmer_repeat_mode="restart"
+                        app:shimmer_shape="radial">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="8dp"
+                            android:orientation="vertical">
+
+                            <include layout="@layout/reservation_details_profile_participants_placeholder" />
+
+                        </LinearLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                </RelativeLayout>
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
