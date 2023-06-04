@@ -117,7 +117,7 @@ class ReservationDetailsViewModel @Inject constructor(
 
                 is UiState.Failure -> {
                     _loadingState.value = state
-                    //TODO: return@launch?
+                    // TODO: return@launch?
                 }
 
                 else -> {
@@ -132,6 +132,7 @@ class ReservationDetailsViewModel @Inject constructor(
             }
         }
         val requestersResult = deferredRequesters.awaitAll()
+        _requesters.clear()
         for (state in requestersResult) {
             when (state) {
                 is UiState.Success -> {
@@ -140,7 +141,7 @@ class ReservationDetailsViewModel @Inject constructor(
 
                 is UiState.Failure -> {
                     _loadingState.value = state
-                    //TODO: return@launch?
+                    // TODO: return@launch?
                 }
 
                 else -> {
@@ -208,6 +209,7 @@ class ReservationDetailsViewModel @Inject constructor(
         return now.isBefore(reservationDate)
     }
 
+    // TODO: DOESN'T REFRESH, MAYBE WITH SHIMMER?
     fun addParticipantAndDeleteRequester(userID: String, message: (String) -> Unit) =
         viewModelScope.launch {
             _loadingState.value = UiState.Loading
@@ -246,6 +248,7 @@ class ReservationDetailsViewModel @Inject constructor(
                 _deleteState.value = notificationState
                 return@launch
             }
+            message("Requester added")
             loadReservationAndSportCenterInformation() // To update the UI
         }
 

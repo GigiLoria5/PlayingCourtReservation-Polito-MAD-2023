@@ -270,7 +270,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
-                    android:backgroundTint="#249BEA"
+                    android:backgroundTint="@color/green_500"
                     android:text="@string/search_player_button"
                     app:cornerRadius="16dp"
                     android:visibility="invisible"
