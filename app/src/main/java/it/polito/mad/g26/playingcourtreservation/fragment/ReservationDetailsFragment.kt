@@ -209,6 +209,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                     ReservationDetailsFragmentDirections.openShowProfile(userId)
                                 findNavController().navigate(direction)
                             },
+                            viewModel.userPicturesMap,
                             {},
                             {}
                         )
@@ -251,6 +252,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                                         .openShowProfile(userId)
                                                 findNavController().navigate(direction)
                                             },
+                                            viewModel.userPicturesMap,
                                             { requesterToParticipant ->
                                                 showConfirmationDialog(
                                                     requesterToParticipant, 1

@@ -76,6 +76,10 @@ class ReservationDetailsViewModel @Inject constructor(
     val court: Court
         get() = _court
 
+    private var _userPicturesMap: HashMap<String, ByteArray?> = hashMapOf() // K = userId
+    val userPicturesMap: HashMap<String, ByteArray?>
+        get() = _userPicturesMap
+
     fun loadReservationAndSportCenterInformation() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
         // Get reservation details
@@ -149,6 +153,35 @@ class ReservationDetailsViewModel @Inject constructor(
                 }
             }
         }
+        //Get image of all user
+        val listUser = participants + requesters + currentUser
+        val deferredUserPictures = listUser.map { user ->
+            async {
+                val state = userRepository.downloadUserImage(user.id)
+                val data = object {
+                    val userId = user.id
+                    val state = state
+                }
+                data
+            }
+        }
+        val userPicturesResult = deferredUserPictures.awaitAll()
+        for (data in userPicturesResult) {
+            when (data.state) {
+                is UiState.Success -> {
+                    _userPicturesMap[data.userId] = data.state.result
+                }
+
+                is UiState.Failure -> {
+                    _loadingState.value = data.state
+                }
+
+                else -> {
+                    _loadingState.value = UiState.Failure(null)
+                }
+            }
+        }
+
         //Get object Court
         _court = _sportCenter.courts.filter { it.id == _reservation.courtId }[0]
 
