@@ -282,7 +282,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                         LinearLayoutManager(context)
                                 }
                             } else {
-                                viewModel.removeAllInviteesAndRequesters()
+                                if (reservation.requests.isNotEmpty() || reservation.invitees.isNotEmpty())
+                                    viewModel.removeAllInviteesAndRequesters()
                             }
                             // Inflate button to edit/delete reservation
                             val inflater = LayoutInflater.from(requireContext())
