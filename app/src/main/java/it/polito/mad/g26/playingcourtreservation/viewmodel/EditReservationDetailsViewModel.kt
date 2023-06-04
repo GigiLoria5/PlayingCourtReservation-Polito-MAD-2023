@@ -6,13 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.Notification
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
 import it.polito.mad.g26.playingcourtreservation.model.SportCenter
+import it.polito.mad.g26.playingcourtreservation.repository.NotificationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.ReservationRepository
 import it.polito.mad.g26.playingcourtreservation.repository.UserRepository
 import it.polito.mad.g26.playingcourtreservation.util.ReservationDetailsUtils
 import it.polito.mad.g26.playingcourtreservation.util.SearchSportCentersUtils
 import it.polito.mad.g26.playingcourtreservation.util.UiState
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class EditReservationDetailsViewModel @Inject constructor(
     private val reservationRepository: ReservationRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val notificationRepository: NotificationRepository
 ) : ViewModel() {
 
     /* INITIALIZATION */
@@ -114,6 +119,19 @@ class EditReservationDetailsViewModel @Inject constructor(
             _reservation = updatedReservation
             _reservation.id = updatedReservation.id
         }
+        // Send notification to participants
+        val participants = reservation.participants
+        val deferredNotifications = participants.map { participantId ->
+            async {
+                val notification = Notification.matchUpdated(
+                    participantId,
+                    reservation.id
+                )
+                notificationRepository.saveNotification(notification)
+            }
+        }
+        deferredNotifications.awaitAll()
+
         _updateState.value = resultState
     }
 
