@@ -68,5 +68,10 @@ data class Notification(
             }
             return Notification(userId = userId, reservationId = reservationId, message = message)
         }
+
+        fun invitationRemoved(userId: String, reservationId: String): Notification {
+            val message = "Your invite was deleted because the reservation is full."
+            return Notification(userId = userId, reservationId = reservationId, message = message)
+        }
     }
 }

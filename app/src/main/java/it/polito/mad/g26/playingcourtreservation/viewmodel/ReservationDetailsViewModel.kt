@@ -210,94 +210,157 @@ class ReservationDetailsViewModel @Inject constructor(
     fun addParticipantAndDeleteRequester(userID: String) = viewModelScope.launch {
         _loadingState.value = UiState.Loading
 
-        val participantState = reservationRepository.addParticipant(_reservationId, userID)
+        //TODO: check if user is free in that time and date for all add
+        //TODO: save with timestamp of pc not emulator
+        val participantState = reservationRepository.addParticipant(reservationId, userID)
         if (participantState is UiState.Failure) {
             _deleteState.value = participantState
             return@launch
         }
-        val requesterState = reservationRepository.removeRequester(_reservationId, userID)
+        val requesterState = reservationRepository.removeRequester(reservationId, userID)
         if (requesterState is UiState.Failure) {
             _deleteState.value = requesterState
             return@launch
         }
-        //TODO:sendNotification
+        //Notification to the requester from creator
+        val notification = Notification.requestResponse(userID, reservationId, true)
+        val notificationState = notificationRepository.saveNotification(notification)
+        if (notificationState is UiState.Failure) {
+            _deleteState.value = notificationState
+            return@launch
+        }
         _loadingState.value = UiState.Success(Unit)
     }
 
     fun deleteRequester(userID: String) = viewModelScope.launch {
         _loadingState.value = UiState.Loading
 
-        val requesterState = reservationRepository.removeRequester(_reservationId, userID)
+        val requesterState = reservationRepository.removeRequester(reservationId, userID)
         if (requesterState is UiState.Failure) {
             _deleteState.value = requesterState
             return@launch
         }
-        //TODO:sendNotification
+        //Notification to the requester from creator
+        val notification = Notification.requestResponse(userID, reservationId, false)
+        val notificationState = notificationRepository.saveNotification(notification)
+        if (notificationState is UiState.Failure) {
+            _deleteState.value = notificationState
+            return@launch
+        }
         _loadingState.value = UiState.Success(Unit)
     }
 
     fun addRequester(userID: String) = viewModelScope.launch {
         _loadingState.value = UiState.Loading
 
-        val requesterState = reservationRepository.addRequester(_reservationId, userID)
+        val requesterState = reservationRepository.addRequester(reservationId, userID)
         if (requesterState is UiState.Failure) {
             _deleteState.value = requesterState
             return@launch
         }
-        //TODO:sendNotification
+        //Notification from user to the creator
+        val notification = Notification.participationRequest(reservation.userId, reservationId)
+        val notificationState = notificationRepository.saveNotification(notification)
+        if (notificationState is UiState.Failure) {
+            _deleteState.value = notificationState
+            return@launch
+        }
         _loadingState.value = UiState.Success(Unit)
     }
 
     fun addParticipantAndRemoveInvitee(userID: String) = viewModelScope.launch {
         _loadingState.value = UiState.Loading
 
-        val participantState = reservationRepository.addParticipant(_reservationId, userID)
+        val participantState = reservationRepository.addParticipant(reservationId, userID)
         if (participantState is UiState.Failure) {
             _deleteState.value = participantState
             return@launch
         }
-        val inviteeState = reservationRepository.removeInvitee(_reservationId, userID)
+        val inviteeState = reservationRepository.removeInvitee(reservationId, userID)
         if (inviteeState is UiState.Failure) {
             _deleteState.value = inviteeState
             return@launch
         }
-        //TODO:sendNotification
+        //Notification from invitees to the creator
+        val notification = Notification.invitationResponse(reservation.userId, reservationId, true)
+        val notificationState = notificationRepository.saveNotification(notification)
+        if (notificationState is UiState.Failure) {
+            _deleteState.value = notificationState
+            return@launch
+        }
         _loadingState.value = UiState.Success(Unit)
     }
 
     fun removeInvitee(userID: String) = viewModelScope.launch {
         _loadingState.value = UiState.Loading
 
-        val inviteeState = reservationRepository.removeInvitee(_reservationId, userID)
+        val inviteeState = reservationRepository.removeInvitee(reservationId, userID)
         if (inviteeState is UiState.Failure) {
             _deleteState.value = inviteeState
             return@launch
         }
-        //TODO:sendNotification
+        //Notification from invitees to the creator
+        val notification = Notification.invitationResponse(reservation.userId, reservationId, false)
+        val notificationState = notificationRepository.saveNotification(notification)
+        if (notificationState is UiState.Failure) {
+            _deleteState.value = notificationState
+            return@launch
+        }
         _loadingState.value = UiState.Success(Unit)
     }
 
     fun removeParticipant(userID: String) = viewModelScope.launch {
         _loadingState.value = UiState.Loading
 
-        val participantState = reservationRepository.removeParticipant(_reservationId, userID)
+        val participantState = reservationRepository.removeParticipant(reservationId, userID)
         if (participantState is UiState.Failure) {
             _deleteState.value = participantState
             return@launch
         }
-        //TODO:sendNotification
+        //Notification from participant to the creator
+        val notification = Notification.participantAbandoned(reservation.userId, reservationId)
+        val notificationState = notificationRepository.saveNotification(notification)
+        if (notificationState is UiState.Failure) {
+            _deleteState.value = notificationState
+            return@launch
+        }
         _loadingState.value = UiState.Success(Unit)
     }
 
     fun removeAllInviteesAndRequesters() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
 
-        val state = reservationRepository.removeAllInviteesAndRequester(_reservationId)
+        val state = reservationRepository.removeAllInviteesAndRequester(reservationId)
         if (state is UiState.Failure) {
             _deleteState.value = state
             return@launch
         }
-        //TODO:sendNotification
+        //TODO check returning
+        //Send notification to invitees and requesters
+        val requesters = reservation.requests
+        val deferredRequestersNotifications = requesters.map { requesterId ->
+            async {
+                val notification = Notification.requestResponse(
+                    requesterId,
+                    reservationId,
+                    false
+                )
+                notificationRepository.saveNotification(notification)
+            }
+        }
+        deferredRequestersNotifications.awaitAll()
+        val invitees = reservation.invitees
+        val deferredInviteesNotifications = invitees.map { requesterId ->
+            async {
+                val notification = Notification.invitationRemoved(
+                    requesterId,
+                    reservationId
+                )
+                notificationRepository.saveNotification(notification)
+            }
+        }
+        deferredInviteesNotifications.awaitAll()
+
         _loadingState.value = state
     }
 

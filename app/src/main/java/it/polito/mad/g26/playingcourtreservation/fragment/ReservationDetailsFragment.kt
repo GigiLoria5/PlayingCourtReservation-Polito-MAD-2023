@@ -226,7 +226,6 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
                         //CREATOR
                         if (reservation.userId == viewModel.userId) {
-                            // TODO : on click on card + on click on buttons requester
                             //Show invite button+requester list if there is space available
                             if (participants.size < maxParticipants) {
                                 inviteButton.makeVisible()
@@ -467,6 +466,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     }
 
     private fun showConfirmationDialog(user: User, mode: Int) {
+        //Requester being accepted
         if (mode == 1) {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Accept the user")
@@ -478,6 +478,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     dialog.dismiss()
                 }
                 .show()
+            //Requester being rejected
         } else {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Reject the user")
