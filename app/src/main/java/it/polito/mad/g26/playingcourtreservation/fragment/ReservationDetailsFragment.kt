@@ -40,7 +40,9 @@ import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerTextAnimation
 import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerTextAnimation
 import it.polito.mad.g26.playingcourtreservation.util.timestampToDate
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationDetailsViewModel
@@ -57,7 +59,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     private lateinit var reservationReviewMCV: MaterialCardView
     private lateinit var sportCenterPhoneNumberMCV: MaterialCardView
     private lateinit var viewReservationButtons: ConstraintLayout // View to be inflated with buttons
-    private lateinit var shimmerFrameLayout: ShimmerFrameLayout
+    private lateinit var shimmerFrameLayoutRV: ShimmerFrameLayout
+    private lateinit var rowTitleRVShimmer: ShimmerFrameLayout
 
     // Action is performing
     private var reviewDeleteInProgress = false
@@ -82,7 +85,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
 
         // Setup late init variables and visual components
-        shimmerFrameLayout = view.findViewById(R.id.shimmerView)
+        rowTitleRVShimmer = view.findViewById(R.id.shimmerParticipantTitle)
+        shimmerFrameLayoutRV = view.findViewById(R.id.shimmerViewRV)
         reservationReviewMCV = view.findViewById(R.id.reservationReviewMCV)
         sportCenterPhoneNumberMCV = view.findViewById(R.id.sportCenterPhoneNumberMCV)
         viewReservationButtons = view.findViewById(R.id.reservation_buttons)
@@ -132,7 +136,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             when (state) {
                 is UiState.Loading -> {
                     // TODO: Start Animation
-                    shimmerFrameLayout.startShimmerRVAnimation(participantsRecyclerView)
+                    shimmerFrameLayoutRV.startShimmerRVAnimation(participantsRecyclerView)
+                    rowTitleRVShimmer.startShimmerTextAnimation(participantsTitle)
                 }
 
                 is UiState.Failure -> {
@@ -142,7 +147,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
 
                 is UiState.Success -> {
                     // TODO: Stop Animation
-                    shimmerFrameLayout.stopShimmerRVAnimation(participantsRecyclerView)
+                    shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
+                    rowTitleRVShimmer.stopShimmerTextAnimation(participantsTitle)
                     if (reviewDeleteInProgress) { // It means the delete was successful
                         reviewDeleteInProgress = false
                         toast("Review deleted successfully")
