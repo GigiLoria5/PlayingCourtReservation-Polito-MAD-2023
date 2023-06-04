@@ -617,6 +617,40 @@ class ReservationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun removeAllInviteesAndRequester(reservationId: String): UiState<Unit> {
+        return try {
+            Log.d(TAG, "removeAllInviteesAndRequester with reservation id: $reservationId")
+            // Get the reservation
+            val result = db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .get().await()
+            Log.d(
+                TAG,
+                "removeAllInviteesAndRequester get reservation id: $reservationId: found=${result.exists()}"
+            )
+            if (!result.exists()) // Reservation Id must be unique and existing
+                UiState.Failure(noReservationFound)
+            // Remove the invitees
+            val reservation = result.toObject(Reservation::class.java)!!
+            reservation.invitees = listOf()
+            //Remove the requesters
+            reservation.requests = listOf()
+            // Save changes
+            db.collection(FirestoreCollections.RESERVATIONS)
+                .document(reservationId)
+                .set(reservation).await()
+            Log.d(TAG, "removeAllInviteesAndRequester: all deleted")
+            UiState.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error while performing removeAllInviteesAndRequester with reservation id: $reservationId: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     companion object {
         private const val TAG = "ReservationRepository"
     }

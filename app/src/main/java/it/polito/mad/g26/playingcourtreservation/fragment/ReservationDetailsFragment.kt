@@ -228,7 +228,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         if (reservation.userId == viewModel.userId) {
                             // TODO : on click on card + on click on buttons requester
                             //Show invite button+requester list if there is space available
-                            if (participants.size <= maxParticipants) {
+                            if (participants.size < maxParticipants) {
                                 inviteButton.makeVisible()
                                 inviteButton.setOnClickListener {
                                     val direction = ReservationDetailsFragmentDirections
@@ -268,7 +268,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                         LinearLayoutManager(context)
                                 }
                             } else {
-                                //delete invitees and requester list
+                                viewModel.removeAllInviteesAndRequesters()
                             }
                             // Inflate button to edit/delete reservation
                             val inflater = LayoutInflater.from(requireContext())
@@ -348,6 +348,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         }
                         return@observe
                     }
+                    //TODO: check distinction between type current user or deny notification?
                     loadReview()
                 }
             }
