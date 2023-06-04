@@ -324,7 +324,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             val acceptButton =
                                 viewAcceptOrReject.findViewById<MaterialButton>(R.id.reservation_details_accept_button)
                             acceptButton.setOnClickListener {
-                                viewModel.addParticipantAndRemoveInvitee(currentUser.id)
+                                viewModel.addParticipantAndRemoveInvitee(currentUser.id) { message ->
+                                    toast(
+                                        message
+                                    )
+                                }
                             }
                             val rejectButton =
                                 viewAcceptOrReject.findViewById<MaterialButton>(R.id.reservation_details_reject_button)

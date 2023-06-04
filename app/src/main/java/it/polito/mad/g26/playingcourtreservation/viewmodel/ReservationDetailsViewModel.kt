@@ -264,7 +264,7 @@ class ReservationDetailsViewModel @Inject constructor(
             _deleteState.value = notificationState
             return@launch
         }
-        _loadingState.value = UiState.Success(Unit)
+        loadReservationAndSportCenterInformation() // To update the UI
     }
 
     fun addRequester(userID: String) = viewModelScope.launch {
@@ -282,31 +282,51 @@ class ReservationDetailsViewModel @Inject constructor(
             _deleteState.value = notificationState
             return@launch
         }
-        _loadingState.value = UiState.Success(Unit)
+        loadReservationAndSportCenterInformation() // To update the UI
     }
 
-    fun addParticipantAndRemoveInvitee(userID: String) = viewModelScope.launch {
-        _loadingState.value = UiState.Loading
+    fun addParticipantAndRemoveInvitee(userID: String, message: (String) -> Unit) =
+        viewModelScope.launch {
+            _loadingState.value = UiState.Loading
 
-        val participantState = reservationRepository.addParticipant(reservationId, userID)
-        if (participantState is UiState.Failure) {
-            _deleteState.value = participantState
-            return@launch
+
+            //Check if the guy has no other reservation on the same time
+            val reservationState =
+                reservationRepository.getUserReservationAt(
+                    userID,
+                    reservation.date,
+                    reservation.time
+                )
+            if (reservationState is UiState.Failure) {
+                _deleteState.value = reservationState
+                return@launch
+            }
+            if ((reservationState as UiState.Success).result != null) {
+                message("You have already a reservation for this hour slot")
+                return@launch
+            }
+            //Add guy to participants
+            val participantState = reservationRepository.addParticipant(reservationId, userID)
+            if (participantState is UiState.Failure) {
+                _deleteState.value = participantState
+                return@launch
+            }
+            //Delete guy from invitees
+            val inviteeState = reservationRepository.removeInvitee(reservationId, userID)
+            if (inviteeState is UiState.Failure) {
+                _deleteState.value = inviteeState
+                return@launch
+            }
+            //Notification from invitees to the creator
+            val notification =
+                Notification.invitationResponse(reservation.userId, reservationId, true)
+            val notificationState = notificationRepository.saveNotification(notification)
+            if (notificationState is UiState.Failure) {
+                _deleteState.value = notificationState
+                return@launch
+            }
+            loadReservationAndSportCenterInformation() // To update the UI
         }
-        val inviteeState = reservationRepository.removeInvitee(reservationId, userID)
-        if (inviteeState is UiState.Failure) {
-            _deleteState.value = inviteeState
-            return@launch
-        }
-        //Notification from invitees to the creator
-        val notification = Notification.invitationResponse(reservation.userId, reservationId, true)
-        val notificationState = notificationRepository.saveNotification(notification)
-        if (notificationState is UiState.Failure) {
-            _deleteState.value = notificationState
-            return@launch
-        }
-        _loadingState.value = UiState.Success(Unit)
-    }
 
     fun removeInvitee(userID: String) = viewModelScope.launch {
         _loadingState.value = UiState.Loading
@@ -323,7 +343,7 @@ class ReservationDetailsViewModel @Inject constructor(
             _deleteState.value = notificationState
             return@launch
         }
-        _loadingState.value = UiState.Success(Unit)
+        loadReservationAndSportCenterInformation() // To update the UI
     }
 
     fun removeParticipant(userID: String) = viewModelScope.launch {
@@ -341,7 +361,7 @@ class ReservationDetailsViewModel @Inject constructor(
             _deleteState.value = notificationState
             return@launch
         }
-        _loadingState.value = UiState.Success(Unit)
+        loadReservationAndSportCenterInformation() // To update the UI
     }
 
     fun removeAllInviteesAndRequesters() = viewModelScope.launch {
@@ -377,8 +397,7 @@ class ReservationDetailsViewModel @Inject constructor(
             }
         }
         deferredInviteesNotifications.awaitAll()
-
-        _loadingState.value = state
+        loadReservationAndSportCenterInformation() // To update the UI
     }
 
 }
