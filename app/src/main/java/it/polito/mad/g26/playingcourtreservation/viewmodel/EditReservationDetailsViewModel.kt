@@ -82,13 +82,13 @@ class EditReservationDetailsViewModel @Inject constructor(
     fun updateReservation(updatedReservation: Reservation) = viewModelScope.launch {
         _updateState.value = UiState.Loading
         // Check if there are any changes
-        if (reservation == updatedReservation) {
+        val newDate = getDateTimeFormatted(dateFormat)
+        val newTime = getDateTimeFormatted(timeFormat)
+        if (reservation == updatedReservation && newDate == reservation.date && newTime == reservation.time) {
             _updateState.value = UiState.Failure("Please make changes before saving")
             return@launch
         }
         // Check if user is free
-        val newDate = getDateTimeFormatted(dateFormat)
-        val newTime = getDateTimeFormatted(timeFormat)
         val existingReservationState = reservationRepository.getUserReservationAt(
             userId, newDate, newTime
         )
