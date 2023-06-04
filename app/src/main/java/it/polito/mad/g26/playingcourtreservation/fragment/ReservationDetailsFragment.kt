@@ -91,8 +91,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val serviceTitle = view.findViewById<TextView>(R.id.service_title)
         val serviceRV = view.findViewById<RecyclerView>(R.id.service_list)
         val participantsRecyclerView = view.findViewById<RecyclerView>(R.id.player_list)
-        val inviteesRecyclerView = view.findViewById<RecyclerView>(R.id.requester_list)
-        val requestersLayout = view.findViewById<ConstraintLayout>(R.id.invitees_layout)
+        val requesterRecyclerView = view.findViewById<RecyclerView>(R.id.requester_list)
+        val requestersLayout = view.findViewById<ConstraintLayout>(R.id.requester_layout)
         val participantsTitle = view.findViewById<TextView>(R.id.player_title)
         val inviteButton = view.findViewById<MaterialButton>(R.id.search_players_button)
 
@@ -264,8 +264,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                                 )
                                             }
                                         )
-                                    inviteesRecyclerView.adapter = requesterAdapter
-                                    inviteesRecyclerView.layoutManager =
+                                    requesterRecyclerView.adapter = requesterAdapter
+                                    requesterRecyclerView.layoutManager =
                                         LinearLayoutManager(context)
                                 }
                             } else {

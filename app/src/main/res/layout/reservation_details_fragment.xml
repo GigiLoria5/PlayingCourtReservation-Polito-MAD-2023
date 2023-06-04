@@ -234,7 +234,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:isScrollContainer="true"
-        android:measureAllChildren="true">
+        android:measureAllChildren="true"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/reservation_details_scroll_container"
@@ -248,8 +249,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/invitees_layout">
+                app:layout_constraintEnd_toEndOf="parent">
 
 
                 <TextView
@@ -292,18 +292,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:nestedScrollingEnabled="false">
 
-                </androidx.recyclerview.widget.RecyclerView>
 
+                </androidx.recyclerview.widget.RecyclerView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/invitees_layout"
+                android:id="@+id/requester_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/player_layout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/reviewDataCL"
                 android:visibility="gone">
 
 
@@ -343,7 +342,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/invitees_layout">
+                app:layout_constraintTop_toBottomOf="@id/requester_layout"
+                app:layout_constraintVertical_bias="1.0">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/reservationReviewMCV"
@@ -369,9 +369,9 @@
                             android:id="@+id/myReviewTV"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:paddingBottom="8dp"
                             android:paddingStart="4dp"
                             android:paddingEnd="4dp"
+                            android:paddingBottom="8dp"
                             android:text="@string/my_review"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@color/black"
@@ -436,11 +436,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="16dp"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
                             android:text="@string/review_list_text"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                             android:textColor="@color/black"
-                            android:paddingStart="4dp"
-                            android:paddingEnd="4dp"
                             app:layout_constraintBottom_toTopOf="@id/deleteAndEditReviewButtonCL"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

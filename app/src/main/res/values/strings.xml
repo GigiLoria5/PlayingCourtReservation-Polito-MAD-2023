@@ -93,8 +93,8 @@
     <string name="profile">Profile</string>
     <!-- Reservations details-->
     <string name="reservation_details">Reservation Details</string>
-    <string name="delete_reservation_button">Delete</string>
-    <string name="edit_reservation_button">Edit</string>
+    <string name="delete_reservation_button">Delete match</string>
+    <string name="edit_reservation_button">Edit match</string>
     <string name="add_review_button">Add review</string>
     <string name="reservation_no_services_chosen">No services chosen</string>
     <string name="default_players_title">Players 0/?</string>
