@@ -366,9 +366,12 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             }
                         }
                         return@observe
-                    }
-                    //TODO: check distinction between type current user or deny notification?
-                    loadReview()
+                    }// TODO: delete invitees and requester list if past but not completed?
+                    if (reservation.userId == viewModel.userId || reservation.participants.contains(
+                            viewModel.userId
+                        )
+                    )
+                        loadReview()
                 }
             }
         }
