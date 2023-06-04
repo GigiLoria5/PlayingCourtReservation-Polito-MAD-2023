@@ -9,7 +9,7 @@
         android:id="@+id/reservation_details_ask_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/green_700"
+        android:backgroundTint="@color/green_500"
         android:text="@string/request_join_button"
         android:textColor="@color/white"
         app:cornerRadius="16dp"

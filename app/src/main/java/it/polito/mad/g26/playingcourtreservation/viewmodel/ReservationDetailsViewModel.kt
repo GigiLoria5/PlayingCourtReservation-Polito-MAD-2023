@@ -108,6 +108,7 @@ class ReservationDetailsViewModel @Inject constructor(
             }
         }
         val participantsResult = deferredParticipants.awaitAll()
+        _participants.clear()
         for (state in participantsResult) {
             when (state) {
                 is UiState.Success -> {
@@ -211,7 +212,14 @@ class ReservationDetailsViewModel @Inject constructor(
         _loadingState.value = UiState.Loading
 
         //TODO: check if user is free in that time and date for all add
-        //TODO: save with timestamp of pc not emulator
+        val reservationState =
+            reservationRepository.getUserReservationAt(userID, reservation.date, reservation.time)
+        if (reservationState is UiState.Failure) {
+            _deleteState.value = reservationState
+            return@launch
+        }
+        if ((reservationState as UiState.Success).result != null)
+            return@launch
         val participantState = reservationRepository.addParticipant(reservationId, userID)
         if (participantState is UiState.Failure) {
             _deleteState.value = participantState
