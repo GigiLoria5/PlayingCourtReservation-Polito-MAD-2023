@@ -269,6 +269,29 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     tools:listitem="@layout/chip_service_item" />
 
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerServicesRV"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="4dp"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sportCenterDataMCVForShimmer"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <include layout="@layout/reservation_details_service_placeholder" />
+
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
