@@ -146,6 +146,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
+                    shimmerFrameLayoutRV.makeVisible()
                     shimmerFrameLayoutRV.startShimmerRVAnimation(participantsRecyclerView)
                     rowTitleRVShimmer.startShimmerTextAnimation(participantsTitle)
                     shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
@@ -168,6 +169,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
                     shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    shimmerFrameLayoutRV.makeGone()
                     if (reviewDeleteInProgress) { // It means the delete was successful
                         reviewDeleteInProgress = false
                         toast("Review deleted successfully")

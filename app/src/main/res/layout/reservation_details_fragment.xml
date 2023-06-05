@@ -428,7 +428,15 @@
                             android:orientation="vertical">
 
                             <include layout="@layout/reservation_details_profile_participants_placeholder" />
-                            
+
+                            <include layout="@layout/reservation_details_profile_participants_placeholder" />
+
+                            <include layout="@layout/reservation_details_profile_participants_placeholder" />
+
+                            <include layout="@layout/reservation_details_profile_participants_placeholder" />
+
+                            <include layout="@layout/reservation_details_profile_participants_placeholder" />
+
                         </LinearLayout>
                     </com.facebook.shimmer.ShimmerFrameLayout>
 
