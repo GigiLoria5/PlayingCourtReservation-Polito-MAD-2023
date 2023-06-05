@@ -393,10 +393,11 @@ class ReservationDetailsViewModel @Inject constructor(
         loadReservationAndSportCenterInformation() // To update the UI
     }
 
-    fun removeParticipant(userID: String) = viewModelScope.launch {
+    fun removeParticipant() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
 
-        val participantState = reservationRepository.removeParticipant(reservationId, userID)
+        val participantState =
+            reservationRepository.removeParticipant(reservationId, currentUser.id)
         if (participantState is UiState.Failure) {
             _deleteState.value = participantState
             return@launch

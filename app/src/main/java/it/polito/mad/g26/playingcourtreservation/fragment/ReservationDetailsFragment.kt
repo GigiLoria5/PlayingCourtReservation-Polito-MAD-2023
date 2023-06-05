@@ -141,6 +141,15 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
         handleDeleteReservation()
 
+        // Remove participant Alert Dialog
+        val participantRemoveAD = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+        participantRemoveAD.setMessage("Are you sure you want to be removed from the reservation?")
+        participantRemoveAD.setPositiveButton("Confirm") { _, _ ->
+            viewModel.removeParticipant()
+        }
+        participantRemoveAD.setNegativeButton("Cancel") { _, _ ->
+        }
+
         /*BACK BUTTON MANAGEMENT*/
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().popBackStack()
@@ -348,7 +357,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             val removeButton =
                                 viewRemoveFromReservation.findViewById<MaterialButton>(R.id.reservation_details_remove_button)
                             removeButton.setOnClickListener {
-                                viewModel.removeParticipant(currentUser.id)
+                                participantRemoveAD.show()
                             }
                         } else if (reservation.requests.contains(currentUser.id)) {
                             //REQUESTER-> button not clickable already sent invite
