@@ -88,6 +88,31 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getUserInformationByUsername(username: String): UiState<User?> {
+        return try {
+            Log.d(TAG, "Performing getUserInformationByUsername for user with username $username")
+            val result = db.collection(FirestoreCollections.USERS)
+                .whereEqualTo("username", username)
+                .get().await()
+            Log.d(
+                TAG,
+                "getUserInformationByUsername for user with username $username found? ${result.documents.isNotEmpty()}"
+            )
+            var user: User? = null
+            if (result.documents.isNotEmpty())
+                user = result.documents.first().toObject(User::class.java)
+            Log.d(TAG, "The user found with username $username is $user")
+            UiState.Success(user)
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "Error performing getUserInformationByUsername for user with username $username: ${e.message}",
+                e
+            )
+            UiState.Failure(e.localizedMessage)
+        }
+    }
+
     override suspend fun getAllUsers(): UiState<List<User>> {
         return try {
             Log.d(TAG, "getFilteredUsers")
