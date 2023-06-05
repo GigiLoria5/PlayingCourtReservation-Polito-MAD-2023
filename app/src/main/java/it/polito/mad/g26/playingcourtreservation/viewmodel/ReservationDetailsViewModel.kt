@@ -253,7 +253,6 @@ class ReservationDetailsViewModel @Inject constructor(
         return now.isBefore(reservationDate)
     }
 
-    // TODO: DOESN'T REFRESH, MAYBE WITH SHIMMER?
     fun addParticipantAndDeleteRequester(userID: String, message: (String) -> Unit) =
         viewModelScope.launch {
             _loadingState.value = UiState.Loading
