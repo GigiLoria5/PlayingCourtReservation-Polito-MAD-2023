@@ -37,6 +37,7 @@ import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.startShimmerMCVAnimation
@@ -298,7 +299,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                     requesterRecyclerView.adapter = requesterAdapter
                                     requesterRecyclerView.layoutManager =
                                         LinearLayoutManager(context)
-                                }
+                                } else
+                                    requestersLayout.makeGone()
                             } else {
                                 if (reservation.requests.isNotEmpty() || reservation.invitees.isNotEmpty())
                                     viewModel.removeAllInviteesAndRequesters()
