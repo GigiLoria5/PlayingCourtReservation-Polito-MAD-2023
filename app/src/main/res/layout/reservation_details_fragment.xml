@@ -233,6 +233,28 @@
                         app:tint="@color/green_500" />
                 </com.google.android.material.card.MaterialCardView>
 
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerImageMCV"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintEnd_toEndOf="@id/sportCenterPhoneNumberMCV"
+                    app:layout_constraintStart_toStartOf="@id/sportCenterPhoneNumberMCV"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/sportCenterPhoneNumberMCV">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <include layout="@layout/reservation_details_phone_image_placeholder" />
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/service_list"
                     android:layout_width="match_parent"

@@ -65,6 +65,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     private lateinit var rowTitleRVShimmer: ShimmerFrameLayout
     private lateinit var shimmerInviteB: ShimmerFrameLayout
     private lateinit var shimmerTopBar: ShimmerFrameLayout
+    private lateinit var shimmerTopBarImage: ShimmerFrameLayout
 
     // Action is performing
     private var reviewDeleteInProgress = false
@@ -89,6 +90,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
 
         // Setup late init variables and visual components
+        shimmerTopBarImage = view.findViewById(R.id.shimmerImageMCV)
         shimmerTopBar = view.findViewById(R.id.shimmerTopBar)
         shimmerInviteB = view.findViewById(R.id.shimmerParticipantButton)
         rowTitleRVShimmer = view.findViewById(R.id.shimmerParticipantTitle)
@@ -148,6 +150,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     rowTitleRVShimmer.startShimmerTextAnimation(participantsTitle)
                     shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
                     shimmerTopBar.startShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.startShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                 }
 
                 is UiState.Failure -> {
@@ -161,6 +164,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     rowTitleRVShimmer.stopShimmerTextAnimation(participantsTitle)
                     shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
                     shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                     if (reviewDeleteInProgress) { // It means the delete was successful
                         reviewDeleteInProgress = false
                         toast("Review deleted successfully")
