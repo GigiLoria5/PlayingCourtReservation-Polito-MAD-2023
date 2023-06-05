@@ -366,7 +366,12 @@ class ReservationDetailsViewModel @Inject constructor(
             }
             //Notification from invitees to the creator
             val notification =
-                Notification.invitationResponse(reservation.userId, reservationId, true)
+                Notification.invitationResponse(
+                    reservation.userId,
+                    reservationId,
+                    currentUser.username,
+                    true
+                )
             val notificationState = notificationRepository.saveNotification(notification)
             if (notificationState is UiState.Failure) {
                 _deleteState.value = notificationState
@@ -384,7 +389,12 @@ class ReservationDetailsViewModel @Inject constructor(
             return@launch
         }
         //Notification from invitees to the creator
-        val notification = Notification.invitationResponse(reservation.userId, reservationId, false)
+        val notification = Notification.invitationResponse(
+            reservation.userId,
+            reservationId,
+            currentUser.username,
+            false
+        )
         val notificationState = notificationRepository.saveNotification(notification)
         if (notificationState is UiState.Failure) {
             _deleteState.value = notificationState

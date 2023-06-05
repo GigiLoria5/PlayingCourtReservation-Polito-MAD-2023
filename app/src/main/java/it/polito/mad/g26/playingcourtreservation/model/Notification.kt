@@ -26,12 +26,13 @@ data class Notification(
         fun invitationResponse(
             userId: String,
             reservationId: String,
+            userName: String,
             accepted: Boolean
         ): Notification {
             val message = if (accepted) {
-                "Your invitation was accepted by the recipient."
+                "Your invitation was accepted by $userName."
             } else {
-                "Your invitation was rejected by the recipient."
+                "Your invitation was rejected by $userName."
             }
             return Notification(userId = userId, reservationId = reservationId, message = message)
         }
