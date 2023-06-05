@@ -14,8 +14,8 @@
         app:cardElevation="@dimen/standard_elevation"
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/userAddActionMCV"
-        app:layout_constraintStart_toEndOf="@id/userRemoveActionMCV"
+        app:layout_constraintEnd_toStartOf="@id/userRemoveActionMCV"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -113,7 +113,7 @@
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/userMCV"
+        app:layout_constraintStart_toEndOf="@id/userRemoveActionMCV"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/res_card_circle">
 
@@ -136,8 +136,8 @@
         app:cardElevation="@dimen/standard_elevation"
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/userMCV"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/userAddActionMCV"
+        app:layout_constraintStart_toEndOf="@id/userMCV"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/card_circle">
 
