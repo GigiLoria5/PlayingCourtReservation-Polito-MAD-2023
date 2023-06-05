@@ -145,7 +145,6 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    // TODO: Start Animation
                     shimmerFrameLayoutRV.startShimmerRVAnimation(participantsRecyclerView)
                     rowTitleRVShimmer.startShimmerTextAnimation(participantsTitle)
                     shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
@@ -154,12 +153,15 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                 }
 
                 is UiState.Failure -> {
-                    // TODO: Stop Animation
+                    shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
+                    rowTitleRVShimmer.stopShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                     toast(state.error ?: "Unable to get reservation details")
                 }
 
                 is UiState.Success -> {
-                    // TODO: Stop Animation
                     shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
                     rowTitleRVShimmer.stopShimmerTextAnimation(participantsTitle)
                     shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
@@ -229,7 +231,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     }
                     //Show applicant confirmed
                     val currentUser = viewModel.currentUser
-                    val participants = viewModel.participants + currentUser
+                    val participants = listOf(currentUser) + viewModel.participants
                     val participantsAdapter =
                         ReservationDetailsAdapter(
                             participants, 1, viewModel.court.sport,
