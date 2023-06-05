@@ -67,6 +67,10 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     private lateinit var shimmerInviteB: ShimmerFrameLayout
     private lateinit var shimmerTopBar: ShimmerFrameLayout
     private lateinit var shimmerTopBarImage: ShimmerFrameLayout
+    private lateinit var participantsTitle: TextView
+    private lateinit var participantsRecyclerView: RecyclerView
+    private lateinit var inviteButtonMCV: MaterialCardView
+    private lateinit var topBarMCV: MaterialCardView
 
     // Action is performing
     private var reviewDeleteInProgress = false
@@ -108,13 +112,13 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val date = view.findViewById<TextView>(R.id.date)
         val serviceTitle = view.findViewById<TextView>(R.id.service_title)
         val serviceRV = view.findViewById<RecyclerView>(R.id.service_list)
-        val participantsRecyclerView = view.findViewById<RecyclerView>(R.id.player_list)
+        participantsRecyclerView = view.findViewById(R.id.player_list)
         val requesterRecyclerView = view.findViewById<RecyclerView>(R.id.requester_list)
         val requestersLayout = view.findViewById<ConstraintLayout>(R.id.requester_layout)
-        val participantsTitle = view.findViewById<TextView>(R.id.player_title)
+        participantsTitle = view.findViewById(R.id.player_title)
         val inviteButton = view.findViewById<MaterialButton>(R.id.search_players_button)
-        val inviteButtonMCV = view.findViewById<MaterialCardView>(R.id.inviteButtonMCVForShimmer)
-        val topBarMCV = view.findViewById<MaterialCardView>(R.id.sportCenterDataMCVForShimmer)
+        inviteButtonMCV = view.findViewById(R.id.inviteButtonMCVForShimmer)
+        topBarMCV = view.findViewById(R.id.sportCenterDataMCVForShimmer)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -423,16 +427,31 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         viewModel.deleteState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    // TODO: Start Animation
+                    shimmerFrameLayoutRV.makeVisible()
+                    shimmerFrameLayoutRV.startShimmerRVAnimation(participantsRecyclerView)
+                    rowTitleRVShimmer.startShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.startShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.startShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                 }
 
                 is UiState.Failure -> {
-                    // TODO: Stop Animation
+                    shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
+                    rowTitleRVShimmer.stopShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    shimmerFrameLayoutRV.makeGone()
                     toast(state.error ?: "Unable to delete reservation")
                 }
 
                 is UiState.Success -> {
-                    // TODO: Stop Animation
+                    shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
+                    rowTitleRVShimmer.stopShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    shimmerFrameLayoutRV.makeGone()
                     findNavController().popBackStack()
                     toast("Reservation was successfully deleted")
                 }
