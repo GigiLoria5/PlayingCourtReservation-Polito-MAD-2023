@@ -238,7 +238,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     }
                     //Show applicant confirmed
                     val currentUser = viewModel.currentUser
-                    val participants = listOf(currentUser) + viewModel.participants
+                    val creatorUser = viewModel.creatorUser
+                    val participants = listOf(creatorUser) + viewModel.participants
                     val participantsAdapter =
                         ReservationDetailsAdapter(
                             participants, 1, viewModel.court.sport,
@@ -334,35 +335,41 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                 findNavController().navigate(action)
                             }
 
-                        } else if (reservation.participants.contains(viewModel.userId)) {
+                        } else if (reservation.participants.contains(currentUser.id)) {
                             //PARTICIPANT-> button to remove itself and send notification
+                            viewReservationButtons.removeAllViews()
                             val inflater = LayoutInflater.from(requireContext())
                             val viewRemoveFromReservation = inflater.inflate(
                                 R.layout.reservation_details_participant_button,
                                 viewReservationButtons,
                                 false
                             )
+                            viewReservationButtons.addView(viewRemoveFromReservation)
                             val removeButton =
                                 viewRemoveFromReservation.findViewById<MaterialButton>(R.id.reservation_details_remove_button)
                             removeButton.setOnClickListener {
                                 viewModel.removeParticipant(currentUser.id)
                             }
-                        } else if (reservation.requests.contains(reservation.userId)) {
+                        } else if (reservation.requests.contains(currentUser.id)) {
                             //REQUESTER-> button not clickable already sent invite
+                            viewReservationButtons.removeAllViews()
                             val inflater = LayoutInflater.from(requireContext())
-                            inflater.inflate(
+                            val viewRequest = inflater.inflate(
                                 R.layout.reservation_details_requester_button,
                                 viewReservationButtons,
                                 false
                             )
-                        } else if (reservation.invitees.contains(reservation.userId)) {
+                            viewReservationButtons.addView(viewRequest)
+                        } else if (reservation.invitees.contains(currentUser.id)) {
                             //INVITEES(invited by creator)-> button accept or reject
+                            viewReservationButtons.removeAllViews()
                             val inflater = LayoutInflater.from(requireContext())
                             val viewAcceptOrReject = inflater.inflate(
                                 R.layout.reservation_details_invited_buttons,
                                 viewReservationButtons,
                                 false
                             )
+                            viewReservationButtons.addView(viewAcceptOrReject)
                             val acceptButton =
                                 viewAcceptOrReject.findViewById<MaterialButton>(R.id.reservation_details_accept_button)
                             acceptButton.setOnClickListener {
@@ -379,6 +386,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             }
                         } else {
                             //USER-> button to ask to join and become requester
+                            viewReservationButtons.removeAllViews()
                             val inflater = LayoutInflater.from(requireContext())
                             val viewAsk = inflater.inflate(
                                 R.layout.reservation_details_user_button,
@@ -387,9 +395,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                             )
                             val askButton =
                                 viewAsk.findViewById<MaterialButton>(R.id.reservation_details_ask_button)
+                            viewReservationButtons.addView(viewAsk)
                             askButton.setOnClickListener {
                                 viewModel.addRequester(currentUser.id)
                             }
+
                         }
                         return@observe
                     }// TODO: delete invitees and requester list if past but not completed?

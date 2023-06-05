@@ -80,6 +80,10 @@ class ReservationDetailsViewModel @Inject constructor(
     val userPicturesMap: HashMap<String, ByteArray?>
         get() = _userPicturesMap
 
+    private var _creatorUser: User = User()
+    val creatorUser: User
+        get() = _creatorUser
+
     fun loadReservationAndSportCenterInformation() = viewModelScope.launch {
         _loadingState.value = UiState.Loading
         // Get reservation details
@@ -105,6 +109,13 @@ class ReservationDetailsViewModel @Inject constructor(
             return@launch
         }
         _currentUser = (currentUserState as UiState.Success).result
+        //Get creator user object
+        val creatorUserState = userRepository.getUserInformationById(_reservation.userId)
+        if (creatorUserState is UiState.Failure) {
+            _loadingState.value = creatorUserState
+            return@launch
+        }
+        _creatorUser = (creatorUserState as UiState.Success).result
         //Get participants List<User> from List<String>
         val deferredParticipants = _reservation.participants.map { participantID ->
             async {
