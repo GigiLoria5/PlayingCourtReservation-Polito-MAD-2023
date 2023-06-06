@@ -163,7 +163,7 @@ class ReservationDetailsViewModel @Inject constructor(
             }
         }
         //Get image of all user
-        val listUser = participants + requesters + currentUser
+        val listUser = participants + requesters + creatorUser
         val deferredUserPictures = listUser.map { user ->
             async {
                 val state = userRepository.downloadUserImage(user.id)
