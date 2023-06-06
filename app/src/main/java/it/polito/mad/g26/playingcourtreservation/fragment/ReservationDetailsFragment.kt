@@ -220,7 +220,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                     R.dimen.chip_distance
                                 )
                             )
-                        serviceRV.addItemDecoration(itemDecoration)
+                        if (serviceRV.itemDecorationCount == 0)
+                            serviceRV.addItemDecoration(itemDecoration)
                         serviceRV.adapter = adapter
                     }
                     centerName.text = reservationSportCenter.name
