@@ -1,5 +1,7 @@
 package it.polito.mad.g26.playingcourtreservation.fragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -19,17 +21,31 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.adapter.ReservationDetailsAdapter
 import it.polito.mad.g26.playingcourtreservation.adapter.searchCourtAdapters.ServiceWithFeeAdapter
+import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.User
 import it.polito.mad.g26.playingcourtreservation.util.HorizontalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.hideActionBar
+import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeInvisible
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerMCVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerTextAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerMCVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerTextAnimation
 import it.polito.mad.g26.playingcourtreservation.util.timestampToDate
 import it.polito.mad.g26.playingcourtreservation.util.toast
 import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationDetailsViewModel
@@ -46,6 +62,19 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     private lateinit var reservationReviewMCV: MaterialCardView
     private lateinit var sportCenterPhoneNumberMCV: MaterialCardView
     private lateinit var viewReservationButtons: ConstraintLayout // View to be inflated with buttons
+    private lateinit var shimmerFrameLayoutRV: ShimmerFrameLayout
+    private lateinit var rowTitleParticipantRVShimmer: ShimmerFrameLayout
+    private lateinit var shimmerInviteB: ShimmerFrameLayout
+    private lateinit var shimmerTopBar: ShimmerFrameLayout
+    private lateinit var shimmerTopBarImage: ShimmerFrameLayout
+    private lateinit var participantsTitle: TextView
+    private lateinit var participantsRecyclerView: RecyclerView
+    private lateinit var inviteButtonMCV: MaterialCardView
+    private lateinit var topBarMCV: MaterialCardView
+    private lateinit var shimmerServiceRV: ShimmerFrameLayout
+    private lateinit var serviceRV: RecyclerView
+    private lateinit var requesterRecyclerView: RecyclerView
+    private lateinit var requestersLayout: ConstraintLayout
 
     // Action is performing
     private var reviewDeleteInProgress = false
@@ -70,6 +99,12 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
 
         // Setup late init variables and visual components
+        shimmerServiceRV = view.findViewById(R.id.shimmerServicesRV)
+        shimmerTopBarImage = view.findViewById(R.id.shimmerImageMCV)
+        shimmerTopBar = view.findViewById(R.id.shimmerTopBar)
+        shimmerInviteB = view.findViewById(R.id.shimmerParticipantButton)
+        rowTitleParticipantRVShimmer = view.findViewById(R.id.shimmerParticipantTitle)
+        shimmerFrameLayoutRV = view.findViewById(R.id.shimmerViewRV)
         reservationReviewMCV = view.findViewById(R.id.reservationReviewMCV)
         sportCenterPhoneNumberMCV = view.findViewById(R.id.sportCenterPhoneNumberMCV)
         viewReservationButtons = view.findViewById(R.id.reservation_buttons)
@@ -81,7 +116,14 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val price = view.findViewById<TextView>(R.id.price)
         val date = view.findViewById<TextView>(R.id.date)
         val serviceTitle = view.findViewById<TextView>(R.id.service_title)
-        val serviceRV = view.findViewById<RecyclerView>(R.id.service_list)
+        serviceRV = view.findViewById(R.id.service_list)
+        participantsRecyclerView = view.findViewById(R.id.player_list)
+        requesterRecyclerView = view.findViewById(R.id.requester_list)
+        requestersLayout = view.findViewById(R.id.requester_layout)
+        participantsTitle = view.findViewById(R.id.player_title)
+        val inviteButton = view.findViewById<MaterialButton>(R.id.search_players_button)
+        inviteButtonMCV = view.findViewById(R.id.inviteButtonMCVForShimmer)
+        topBarMCV = view.findViewById(R.id.sportCenterDataMCVForShimmer)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -104,6 +146,15 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
         handleDeleteReservation()
 
+        // Remove participant Alert Dialog
+        val participantRemoveAD = AlertDialog.Builder(requireContext(), R.style.MyAlertDialogStyle)
+        participantRemoveAD.setMessage("Are you sure you want to be removed from the reservation?")
+        participantRemoveAD.setPositiveButton("Confirm") { _, _ ->
+            viewModel.removeParticipant()
+        }
+        participantRemoveAD.setNegativeButton("Cancel") { _, _ ->
+        }
+
         /*BACK BUTTON MANAGEMENT*/
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             findNavController().popBackStack()
@@ -113,16 +164,38 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         viewModel.loadingState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    // TODO: Start Animation
+                    shimmerFrameLayoutRV.makeVisible()
+                    shimmerFrameLayoutRV.startShimmerRVAnimation(participantsRecyclerView)
+                    shimmerServiceRV.startShimmerRVAnimation(serviceRV)
+                    rowTitleParticipantRVShimmer.startShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.startShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.startShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    requestersLayout.makeGone()
+                    viewReservationButtons.makeInvisible()
                 }
 
                 is UiState.Failure -> {
-                    // TODO: Stop Animation
+                    shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
+                    rowTitleParticipantRVShimmer.stopShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
+                    shimmerFrameLayoutRV.makeGone()
+                    requestersLayout.makeGone()
+                    viewReservationButtons.makeInvisible()
                     toast(state.error ?: "Unable to get reservation details")
                 }
 
                 is UiState.Success -> {
-                    // TODO: Stop Animation
+                    shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
+                    rowTitleParticipantRVShimmer.stopShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
+                    shimmerFrameLayoutRV.makeGone()
                     if (reviewDeleteInProgress) { // It means the delete was successful
                         reviewDeleteInProgress = false
                         toast("Review deleted successfully")
@@ -138,10 +211,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     sharedReservationDetailsViewModel.reservationCourt = reservationCourt
                     val reservationServicesWithFee = reservationSportCenter.services
                         .filter { reservation.services.contains(it.name) }
-                    if (reservationServicesWithFee.isEmpty())
+                    if (reservationServicesWithFee.isEmpty()) {
                         serviceTitle.text =
                             getString(R.string.reservation_no_services_chosen)
-                    else {
+                        shimmerServiceRV.makeGone()
+                    } else {
                         val adapter = ServiceWithFeeAdapter(
                             reservationServicesWithFee,
                             isServiceNameInList = { false },
@@ -153,7 +227,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                     R.dimen.chip_distance
                                 )
                             )
-                        serviceRV.addItemDecoration(itemDecoration)
+                        if (serviceRV.itemDecorationCount == 0)
+                            serviceRV.addItemDecoration(itemDecoration)
                         serviceRV.adapter = adapter
                     }
                     centerName.text = reservationSportCenter.name
@@ -179,38 +254,202 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         R.string.set_text_with_euro,
                         reservation.amount.toString()
                     )
-
-                    //TODO DELETE THIS
+                    //Telephone icon
                     sportCenterPhoneNumberMCV.setOnClickListener {
-                        val direction=ReservationDetailsFragmentDirections.actionReservationDetailsFragmentToInviteUsersFragment(reservation.id,reservation.date,reservation.time,reservationSportCenter.city,reservationCourt.sport)
-                        findNavController().navigate(direction)
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        intent.data = Uri.parse("tel:${reservationSportCenter.phoneNumber}")
+                        startActivity(intent)
                     }
-
-                    // Show reservation buttons if future or review button is past
-                    if (viewModel.nowIsBeforeReservationDateTime()) {
-                        // Inflate the new layout with two buttons of reservation
-                        val inflater = LayoutInflater.from(requireContext())
-                        val viewDeleteAndEdit = inflater.inflate(
-                            R.layout.reservation_details_delete_and_edit_buttons,
-                            viewReservationButtons,
-                            false
+                    //Show applicant confirmed
+                    val currentUser = viewModel.currentUser
+                    val creatorUser = viewModel.creatorUser
+                    val participants = listOf(creatorUser) + viewModel.participants
+                    val participantsAdapter =
+                        ReservationDetailsAdapter(
+                            participants, 1, viewModel.court.sport,
+                            { userId ->
+                                val direction =
+                                    ReservationDetailsFragmentDirections.openShowProfile(userId)
+                                findNavController().navigate(direction)
+                            },
+                            viewModel.userPicturesMap,
+                            {},
+                            {}
                         )
-                        val deleteButton =
-                            viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
-                        val editButton =
-                            viewDeleteAndEdit.findViewById<MaterialButton>(R.id.modify_reservation_button)
-                        viewReservationButtons.addView(viewDeleteAndEdit)
+                    participantsRecyclerView.adapter = participantsAdapter
+                    participantsRecyclerView.layoutManager = GridLayoutManager(context, 2)
+                    val maxParticipants = Court.getSportTotParticipants(viewModel.court.sport)
+                    participantsTitle.text = view.context.getString(
+                        R.string.participants_concatenate_title,
+                        participants.size.toString(),
+                        maxParticipants.toString()
+                    )
 
-                        deleteButton.setOnClickListener {
-                            builder.show()
-                        }
-                        editButton.setOnClickListener {
-                            val action = ReservationDetailsFragmentDirections.openReservationEdit()
-                            findNavController().navigate(action)
+                    // Show reservation buttons+ applicants list if future or review button is past
+                    if (viewModel.nowIsBeforeReservationDateTime()) {
+
+                        //CREATOR
+                        if (reservation.userId == viewModel.userId) {
+                            //Show invite button+requester list if there is space available
+                            if (participants.size < maxParticipants) {
+                                inviteButton.makeVisible()
+                                inviteButton.setOnClickListener {
+                                    val direction = ReservationDetailsFragmentDirections
+                                        .actionReservationDetailsFragmentToInviteUsersFragment(
+                                            reservation.id, reservation.date, reservation.time,
+                                            reservationSportCenter.city, reservationCourt.sport
+                                        )
+                                    findNavController().navigate(direction)
+                                }
+                                //Show requesters list if not empty
+                                if (reservation.requests.isNotEmpty()) {
+                                    requestersLayout.makeVisible()
+                                    val requesterAdapter =
+                                        ReservationDetailsAdapter(
+                                            viewModel.requesters,
+                                            2,
+                                            viewModel.court.sport,
+                                            { userId ->
+                                                val direction =
+                                                    ReservationDetailsFragmentDirections
+                                                        .openShowProfile(userId)
+                                                findNavController().navigate(direction)
+                                            },
+                                            viewModel.userPicturesMap,
+                                            { requesterToParticipant ->
+                                                showConfirmationDialog(
+                                                    requesterToParticipant, 1
+                                                )
+                                            },
+                                            { requesterToUser ->
+                                                showConfirmationDialog(
+                                                    requesterToUser, 2
+                                                )
+                                            }
+                                        )
+                                    requesterRecyclerView.adapter = requesterAdapter
+                                    requesterRecyclerView.layoutManager =
+                                        LinearLayoutManager(context)
+                                } else
+                                    requestersLayout.makeGone()
+                            } else {
+                                if (reservation.requests.isNotEmpty() || reservation.invitees.isNotEmpty())
+                                    viewModel.removeAllInviteesAndRequesters()
+                            }
+                            // Inflate button to edit/delete reservation
+                            viewReservationButtons.makeVisible()
+                            val inflater = LayoutInflater.from(requireContext())
+                            val viewDeleteAndEdit = inflater.inflate(
+                                R.layout.reservation_details_delete_and_edit_buttons,
+                                viewReservationButtons,
+                                false
+                            )
+                            val deleteButton =
+                                viewDeleteAndEdit.findViewById<MaterialButton>(R.id.delete_reservation_button)
+                            val editButton =
+                                viewDeleteAndEdit.findViewById<MaterialButton>(R.id.modify_reservation_button)
+                            viewReservationButtons.addView(viewDeleteAndEdit)
+
+                            deleteButton.setOnClickListener {
+                                builder.show()
+                            }
+                            editButton.setOnClickListener {
+                                val action =
+                                    ReservationDetailsFragmentDirections.openReservationEdit(
+                                    )
+                                findNavController().navigate(action)
+                            }
+
+                        } else if (reservation.participants.contains(currentUser.id)) {
+                            //PARTICIPANT-> button to remove itself and send notification
+                            viewReservationButtons.removeAllViews()
+                            viewReservationButtons.makeVisible()
+                            val inflater = LayoutInflater.from(requireContext())
+                            val viewRemoveFromReservation = inflater.inflate(
+                                R.layout.reservation_details_participant_button,
+                                viewReservationButtons,
+                                false
+                            )
+                            viewReservationButtons.addView(viewRemoveFromReservation)
+                            val removeButton =
+                                viewRemoveFromReservation.findViewById<MaterialButton>(R.id.reservation_details_remove_button)
+                            removeButton.setOnClickListener {
+                                participantRemoveAD.show()
+                            }
+                        } else if (reservation.requests.contains(currentUser.id)) {
+                            //REQUESTER-> button not clickable already sent invite
+                            viewReservationButtons.removeAllViews()
+                            viewReservationButtons.makeVisible()
+                            val inflater = LayoutInflater.from(requireContext())
+                            val viewRequest = inflater.inflate(
+                                R.layout.reservation_details_requester_button,
+                                viewReservationButtons,
+                                false
+                            )
+                            viewReservationButtons.addView(viewRequest)
+                        } else if (reservation.invitees.contains(currentUser.id)) {
+                            //INVITEES(invited by creator)-> button accept or reject
+                            viewReservationButtons.removeAllViews()
+                            viewReservationButtons.makeVisible()
+                            val inflater = LayoutInflater.from(requireContext())
+                            val viewAcceptOrReject = inflater.inflate(
+                                R.layout.reservation_details_invited_buttons,
+                                viewReservationButtons,
+                                false
+                            )
+                            viewReservationButtons.addView(viewAcceptOrReject)
+                            val acceptButton =
+                                viewAcceptOrReject.findViewById<MaterialButton>(R.id.reservation_details_accept_button)
+                            acceptButton.setOnClickListener {
+                                viewModel.addParticipantAndRemoveInvitee(currentUser.id) { message ->
+                                    toast(
+                                        message
+                                    )
+                                }
+                            }
+                            val rejectButton =
+                                viewAcceptOrReject.findViewById<MaterialButton>(R.id.reservation_details_reject_button)
+                            rejectButton.setOnClickListener {
+                                viewModel.removeInvitee(currentUser.id)
+                            }
+                        } else {
+                            //USER-> button to ask to join and become requester
+                            viewReservationButtons.removeAllViews()
+                            viewReservationButtons.makeVisible()
+                            if (participants.size < maxParticipants) {
+                                val inflater = LayoutInflater.from(requireContext())
+                                val viewAsk = inflater.inflate(
+                                    R.layout.reservation_details_user_button,
+                                    viewReservationButtons,
+                                    false
+                                )
+                                val askButton =
+                                    viewAsk.findViewById<MaterialButton>(R.id.reservation_details_ask_button)
+                                viewReservationButtons.addView(viewAsk)
+                                askButton.setOnClickListener {
+                                    viewModel.addRequester(currentUser.id)
+                                }
+                            } else {
+                                viewReservationButtons.makeVisible()
+                                val inflater = LayoutInflater.from(requireContext())
+                                val viewFull = inflater.inflate(
+                                    R.layout.reservation_details_requester_button,
+                                    viewReservationButtons,
+                                    false
+                                )
+                                viewReservationButtons.addView(viewFull)
+                                val removeButton =
+                                    viewFull.findViewById<MaterialButton>(R.id.reservation_details_ask_button)
+                                removeButton.text = getString(R.string.match_already_full)
+                            }
                         }
                         return@observe
                     }
-                    loadReview()
+                    if ((reservation.userId == viewModel.userId
+                                || reservation.participants.contains(viewModel.userId))
+                        && participants.size == maxParticipants
+                    )
+                        loadReview()
                 }
             }
         }
@@ -240,16 +479,38 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         viewModel.deleteState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UiState.Loading -> {
-                    // TODO: Start Animation
+                    shimmerFrameLayoutRV.makeVisible()
+                    shimmerFrameLayoutRV.startShimmerRVAnimation(participantsRecyclerView)
+                    shimmerServiceRV.startShimmerRVAnimation(serviceRV)
+                    rowTitleParticipantRVShimmer.startShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.startShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.startShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    requestersLayout.makeGone()
+                    viewReservationButtons.makeInvisible()
                 }
 
                 is UiState.Failure -> {
-                    // TODO: Stop Animation
+                    shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
+                    rowTitleParticipantRVShimmer.stopShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
+                    shimmerFrameLayoutRV.makeGone()
+                    requestersLayout.makeGone()
+                    viewReservationButtons.makeInvisible()
                     toast(state.error ?: "Unable to delete reservation")
                 }
 
                 is UiState.Success -> {
-                    // TODO: Stop Animation
+                    shimmerFrameLayoutRV.stopShimmerRVAnimation(participantsRecyclerView)
+                    rowTitleParticipantRVShimmer.stopShimmerTextAnimation(participantsTitle)
+                    shimmerInviteB.stopShimmerMCVAnimation(inviteButtonMCV)
+                    shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
+                    shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
+                    shimmerFrameLayoutRV.makeGone()
                     findNavController().popBackStack()
                     toast("Reservation was successfully deleted")
                 }
@@ -262,6 +523,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         if (review == null) {
             reservationReviewMCV.makeInvisible()
             viewReservationButtons.removeAllViews()
+            viewReservationButtons.makeVisible()
             val inflater = LayoutInflater.from(requireContext())
             val viewAddReview = inflater.inflate(
                 R.layout.reservation_details_add_review_button,
@@ -286,6 +548,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
         // Review found
         viewReservationButtons.removeAllViews()
+        viewReservationButtons.makeVisible()
         val reviewEditButton =
             requireView().findViewById<MaterialButton>(R.id.modifyReviewButton)
         val reviewDeleteButton =
@@ -325,6 +588,38 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                 AddReviewDialogFragment.TAG
             )
         }
+    }
+
+    private fun showConfirmationDialog(user: User, mode: Int) {
+        //Requester being accepted
+        if (mode == 1) {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Accept the user")
+                .setMessage("Confirm to add ${user.username}?")
+                .setPositiveButton("Confirm") { dialog, _ ->
+                    dialog.dismiss()
+                    viewModel.addParticipantAndDeleteRequester(user.id) { message ->
+                        toast(message)
+                        viewModel.loadReservationAndSportCenterInformation()
+                    }
+                }.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+            //Requester being rejected
+        } else {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Reject the user")
+                .setMessage("Confirm to reject ${user.username}?")
+                .setPositiveButton("Confirm") { dialog, _ ->
+                    dialog.dismiss()
+                    viewModel.deleteRequester(user.id)
+                }.setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
+        }
+
     }
 
     override fun onResume() {

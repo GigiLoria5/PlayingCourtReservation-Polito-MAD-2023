@@ -49,6 +49,11 @@
         <item name="colorControlNormal">@android:color/transparent</item>
     </style>
 
+    <!-- Reservation Details -->
+    <style name="res_card_circle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
     <!-- Invite users -->
     <style name="card_circle">
         <item name="cornerFamily">rounded</item>

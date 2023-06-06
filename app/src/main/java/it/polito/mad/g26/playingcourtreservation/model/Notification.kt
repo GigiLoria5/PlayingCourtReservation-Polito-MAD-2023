@@ -26,12 +26,13 @@ data class Notification(
         fun invitationResponse(
             userId: String,
             reservationId: String,
+            userName: String,
             accepted: Boolean
         ): Notification {
             val message = if (accepted) {
-                "Your invitation was accepted by the recipient."
+                "Your invitation was accepted by $userName."
             } else {
-                "Your invitation was rejected by the recipient."
+                "Your invitation was rejected by $userName."
             }
             return Notification(userId = userId, reservationId = reservationId, message = message)
         }
@@ -66,6 +67,11 @@ data class Notification(
             } else {
                 "Your request to join a match has been rejected."
             }
+            return Notification(userId = userId, reservationId = reservationId, message = message)
+        }
+
+        fun invitationRemoved(userId: String, reservationId: String): Notification {
+            val message = "Your invite was deleted because the reservation is full."
             return Notification(userId = userId, reservationId = reservationId, message = message)
         }
     }

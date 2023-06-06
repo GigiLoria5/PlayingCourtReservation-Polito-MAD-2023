@@ -93,10 +93,21 @@
     <string name="profile">Profile</string>
     <!-- Reservations details-->
     <string name="reservation_details">Reservation Details</string>
-    <string name="delete_reservation_button">Delete</string>
-    <string name="edit_reservation_button">Edit</string>
+    <string name="delete_reservation_button">Delete match</string>
+    <string name="edit_reservation_button">Edit match</string>
     <string name="add_review_button">Add review</string>
     <string name="reservation_no_services_chosen">No services chosen</string>
+    <string name="default_players_title">Players 0/?</string>
+    <string name="search_player_button">Invite Player</string>
+    <string name="default_request_title">Request to join</string>
+    <string name="reject_button">Reject invite</string>
+    <string name="accept_button">Accept invite</string>
+    <string name="remove_button">Remove participation</string>
+    <string name="request_join_button">Request to join</string>
+    <string name="request_sent_button">Join request sent</string>
+    <string name="participants_concatenate_title">Participants %1$s/%2$s</string>
+    <string name="role_and_age_concatenation">%1$s, %2$s y.o.</string>
+    <string name="match_already_full">Match is already full</string>
     <!-- Edit reservations details-->
     <string name="edit_reservation_details">Edit Reservation</string>
     <string name="edit_date_time">Edit Date/time</string>
@@ -106,6 +117,7 @@
     <string name="set_text_with_euro">€%1$s</string>
     <string name="set_opening_hours">%1$s-%2$s</string>
     <string name="reservation_details_concatenation">%1$s, €%2$s</string>
+
     <!-- Edit profile-->
     <string name="sport_default">Beach soccer</string>
     <string name="delete_button_rating">x</string>

@@ -9,10 +9,10 @@
         android:id="@+id/reservationDetailsABL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/reviewDataCL"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -40,120 +40,165 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/customToolBar">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/sportCenterDataCL"
-                    android:layout_width="0dp"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/sportCenterDataMCVForShimmer"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/service_list"
                     app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:animateLayoutChanges="true">
+                    android:backgroundTint="@color/green_500"
+                    app:cardElevation="0dp">
 
-                    <TextView
-                        android:id="@+id/sportCenter_name"
-                        android:layout_width="0dp"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sportCenterDataCL"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_name"
-                        app:layout_constraintBottom_toTopOf="@id/address"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="@string/sport_center_name"
-                        tools:ignore="TextContrastCheck" />
 
-                    <TextView
-                        android:id="@+id/address"
-                        android:layout_width="0dp"
+                        android:animateLayoutChanges="true">
+
+                        <TextView
+                            android:id="@+id/sportCenter_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_name"
+                            app:layout_constraintBottom_toTopOf="@id/address"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="@string/sport_center_name"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/address"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/sportCenter_time"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sportCenter_name"
+                            tools:text="@string/sport_center_address"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/sportCenter_time"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/date"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/address"
+                            tools:text="@string/sport_center_opening_hours"
+                            tools:ignore="TextContrastCheck" />
+
+
+                        <TextView
+                            android:id="@+id/date"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/page_external_space"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/court_name"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sportCenter_time"
+                            tools:text="@string/selected_date_time"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/court_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/page_external_space"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/sport"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/date"
+                            tools:text="@string/court_name"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/sport"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/price"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/court_name"
+                            tools:text="@string/all_sports"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/price"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="@dimen/page_external_space"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintBottom_toTopOf="@id/service_title"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/sport"
+                            tools:text="@string/court_price"
+                            tools:ignore="TextContrastCheck" />
+
+                        <TextView
+                            android:id="@+id/service_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/chosen_services"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sport_center_secondary_info"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/price"
+                            tools:ignore="TextContrastCheck" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerTopBar"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintBottom_toTopOf="@id/service_list"
+                    app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/sportCenter_time"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sportCenter_name"
-                        tools:text="@string/sport_center_address"
-                        tools:ignore="TextContrastCheck" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/sportCenter_time"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/date"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/address"
-                        tools:text="@string/sport_center_opening_hours"
-                        tools:ignore="TextContrastCheck" />
+                        <include layout="@layout/reservation_details_topbar_placeholders" />
 
-
-                    <TextView
-                        android:id="@+id/date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/page_external_space"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/court_name"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sportCenter_time"
-                        tools:text="@string/selected_date_time"
-                        tools:ignore="TextContrastCheck" />
-
-                    <TextView
-                        android:id="@+id/court_name"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/page_external_space"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/sport"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/date"
-                        tools:text="@string/court_name"
-                        tools:ignore="TextContrastCheck" />
-
-                    <TextView
-                        android:id="@+id/sport"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toTopOf="@id/price"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/court_name"
-                        tools:text="@string/all_sports"
-                        tools:ignore="TextContrastCheck" />
-
-                    <TextView
-                        android:id="@+id/price"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/page_external_space"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/sport_center_secondary_info"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/sport"
-                        tools:text="@string/court_price"
-                        tools:ignore="TextContrastCheck" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/sportCenterInfoGL"
@@ -176,7 +221,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/sportCenterInfoGL"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/stat_sys_phone_call">
+                    app:srcCompat="@android:drawable/stat_sys_phone_call"
+                    tools:ignore="TouchTargetSizeCheck">
 
                     <ImageView
                         android:id="@+id/sportCenterPhoneNumberIV"
@@ -188,6 +234,65 @@
                         app:tint="@color/green_500" />
                 </com.google.android.material.card.MaterialCardView>
 
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerImageMCV"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintEnd_toEndOf="@id/sportCenterPhoneNumberMCV"
+                    app:layout_constraintStart_toStartOf="@id/sportCenterPhoneNumberMCV"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/sportCenterPhoneNumberMCV">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <include layout="@layout/reservation_details_phone_image_placeholder" />
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/service_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingVertical="5dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sportCenterDataMCVForShimmer"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:listitem="@layout/chip_service_item" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerServicesRV"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="4dp"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sportCenterDataMCVForShimmer"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <include layout="@layout/reservation_details_service_placeholder" />
+
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -196,185 +301,424 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/reviewDataCL"
+    <ScrollView
+        android:id="@+id/reservation_details_scrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="@dimen/page_external_space"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reservationDetailsABL"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reservationDetailsABL">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:isScrollContainer="true"
+        android:measureAllChildren="true"
+        android:fillViewport="true">
 
-
-        <TextView
-            android:id="@+id/service_title"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/reservation_details_scroll_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/chosen_services"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/service_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:paddingVertical="5dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/service_title"
-            tools:listitem="@layout/chip_service_item" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/reservationReviewMCV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/page_external_space"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/corner_radius"
-            app:cardElevation="0dp"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+            android:layout_marginTop="@dimen/margins_reservation_details">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/player_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
 
                 <TextView
-                    android:id="@+id/myReviewTV"
-                    android:layout_width="0dp"
+                    android:id="@+id/player_title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
-                    android:text="@string/my_review"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:textColor="@color/black"
-                    app:layout_constraintBottom_toTopOf="@id/reviewCL"
+                    android:layout_marginStart="4dp"
+                    android:text="@string/default_players_title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/relativeLayoutRV"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="VisualLintOverlap" />
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerParticipantTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
+
+                        <include
+                            layout="@layout/reservation_details_row_title_scrollview_placeholder"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5" />
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/inviteButtonMCVForShimmer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@id/relativeLayoutRV"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.96"
+                    app:layout_constraintStart_toEndOf="@id/player_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:cardElevation="0dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/search_players_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:backgroundTint="@color/green_500"
+                        android:text="@string/search_player_button"
+                        app:cornerRadius="16dp"
+                        android:visibility="invisible"
+                        tools:ignore="TextContrastCheck" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerParticipantButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
+
+                        <include
+                            layout="@layout/reservation_details_invitebutton_placeholders"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5" />
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutRV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/inviteButtonMCVForShimmer">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/player_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:nestedScrollingEnabled="false">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/shimmerViewRV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:shimmer_repeat_mode="restart"
+                        app:shimmer_shape="radial">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="0dp"
+                            android:orientation="vertical">
+
+                            <include layout="@layout/reservation_details_profile_participants_placeholder" />
+
+                            <include layout="@layout/reservation_details_profile_participants_placeholder" />
+
+
+                        </LinearLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                </RelativeLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/requester_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/player_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone">
+
+
+                <TextView
+                    android:id="@+id/requester_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_request_title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintBottom_toTopOf="@id/requester_list"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/reviewCL"
+                <!--  <com.facebook.shimmer.ShimmerFrameLayout
+                      android:id="@+id/shimmerRequesterTitle"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      app:shimmer_repeat_mode="restart"
+                      app:shimmer_shape="radial"
+                      android:layout_marginStart="4dp"
+                      app:layout_constraintStart_toStartOf="parent"
+                      app:layout_constraintTop_toTopOf="parent">
+
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="horizontal"
+                          android:baselineAligned="false">
+
+                          <include
+                              layout="@layout/reservation_details_row_title_scrollview_placeholder"
+                              android:layout_width="0dp"
+                              android:layout_height="match_parent"
+                              android:layout_weight="0.5" />
+
+                      </LinearLayout>
+                  </com.facebook.shimmer.ShimmerFrameLayout>-->
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/requester_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@id/reviewTextTV"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/requester_title"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/myReviewTV">
-
-                    <RatingBar
-                        android:id="@+id/rating"
-                        style="?android:attr/ratingBarStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/review_rating_description"
-                        android:isIndicator="true"
-                        android:numStars="5"
-
-                        android:rating="@fraction/default_rating"
-                        android:stepSize="0.5"
-
-                        android:theme="@style/ratingBar"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/reviewGL"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.67" />
-
-                    <TextView
-                        android:id="@+id/reviewDateTV"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        android:text="@string/default_date"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                        android:textColor="@color/black"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/reviewGL"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <TextView
-                    android:id="@+id/reviewTextTV"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="16dp"
-                    android:text="@string/review_list_text"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/black"
-                    app:layout_constraintBottom_toTopOf="@id/deleteAndEditReviewButtonCL"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/reviewCL" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/deleteAndEditReviewButtonCL"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/reviewTextTV">
+                    android:nestedScrollingEnabled="false">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/deleteReviewButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/red_dark"
-                        android:text="@string/delete_review_button"
-                        android:textColor="@color/white"
-                        app:cornerRadius="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/modifyReviewButton"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.recyclerview.widget.RecyclerView>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/modifyReviewButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/green_700"
-                        android:text="@string/edit_review_button"
-                        android:textColor="@color/white"
-                        app:cornerRadius="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/deleteReviewButton"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <!-- <com.facebook.shimmer.ShimmerFrameLayout
+                     android:id="@+id/shimmerRequesterRV"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     app:layout_constraintBottom_toBottomOf="parent"
+                     app:layout_constraintEnd_toEndOf="parent"
+                     app:layout_constraintStart_toStartOf="parent"
+                     app:layout_constraintTop_toBottomOf="@id/requester_title"
+                     app:layout_constraintVertical_bias="0.0"
+                     app:shimmer_repeat_mode="restart"
+                     app:shimmer_shape="radial">
+
+                     <LinearLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:orientation="vertical"
+                         android:paddingStart="8dp"
+                         android:paddingEnd="0dp">
+
+                         <include layout="@layout/reservation_details_profile_requester_placeholder" />
+
+                     </LinearLayout>
+                 </com.facebook.shimmer.ShimmerFrameLayout>-->
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/reservation_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/reviewDataCL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/page_external_space"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/requester_layout"
+                app:layout_constraintVertical_bias="1.0">
 
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/reservationReviewMCV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/page_external_space"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/grey_light_2"
+                    app:cardCornerRadius="@dimen/corner_radius"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintVertical_bias="1.0">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/myReviewTV"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:paddingBottom="8dp"
+                            android:text="@string/my_review"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@color/black"
+                            app:layout_constraintBottom_toTopOf="@id/reviewCL"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/reviewCL"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            app:layout_constraintBottom_toTopOf="@id/reviewTextTV"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/myReviewTV">
+
+                            <RatingBar
+                                android:id="@+id/rating"
+                                style="?android:attr/ratingBarStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/review_rating_description"
+                                android:isIndicator="true"
+                                android:numStars="5"
+
+                                android:rating="@fraction/default_rating"
+                                android:stepSize="0.5"
+
+                                android:theme="@style/ratingBar"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.constraintlayout.widget.Guideline
+                                android:id="@+id/reviewGL"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                app:layout_constraintGuide_percent="0.67" />
+
+                            <TextView
+                                android:id="@+id/reviewDateTV"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:text="@string/default_date"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                                android:textColor="@color/black"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/reviewGL"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
+                            android:id="@+id/reviewTextTV"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="16dp"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp"
+                            android:text="@string/review_list_text"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                            android:textColor="@color/black"
+                            app:layout_constraintBottom_toTopOf="@id/deleteAndEditReviewButtonCL"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/reviewCL" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/deleteAndEditReviewButtonCL"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/reviewTextTV">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/deleteReviewButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/red_dark"
+                                android:text="@string/delete_review_button"
+                                android:textColor="@color/white"
+                                app:cornerRadius="16dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@+id/modifyReviewButton"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/modifyReviewButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/green_700"
+                                android:text="@string/edit_review_button"
+                                android:textColor="@color/white"
+                                app:cornerRadius="16dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/deleteReviewButton"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/reservation_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
