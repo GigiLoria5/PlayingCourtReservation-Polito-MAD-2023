@@ -114,7 +114,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val price = view.findViewById<TextView>(R.id.price)
         val date = view.findViewById<TextView>(R.id.date)
         val serviceTitle = view.findViewById<TextView>(R.id.service_title)
-        serviceRV = view.findViewById<RecyclerView>(R.id.service_list)
+        serviceRV = view.findViewById(R.id.service_list)
         participantsRecyclerView = view.findViewById(R.id.player_list)
         val requesterRecyclerView = view.findViewById<RecyclerView>(R.id.requester_list)
         val requestersLayout = view.findViewById<ConstraintLayout>(R.id.requester_layout)
@@ -419,9 +419,9 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         }
                         return@observe
                     }
-                    if (reservation.userId == viewModel.userId || reservation.participants.contains(
-                            viewModel.userId
-                        )
+                    if ((reservation.userId == viewModel.userId
+                                || reservation.participants.contains(viewModel.userId))
+                        && participants.size == maxParticipants
                     )
                         loadReview()
                 }
