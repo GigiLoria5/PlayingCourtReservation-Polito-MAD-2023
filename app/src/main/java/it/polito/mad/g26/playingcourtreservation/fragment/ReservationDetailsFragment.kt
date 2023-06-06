@@ -211,10 +211,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     sharedReservationDetailsViewModel.reservationCourt = reservationCourt
                     val reservationServicesWithFee = reservationSportCenter.services
                         .filter { reservation.services.contains(it.name) }
-                    if (reservationServicesWithFee.isEmpty())
+                    if (reservationServicesWithFee.isEmpty()) {
                         serviceTitle.text =
                             getString(R.string.reservation_no_services_chosen)
-                    else {
+                        shimmerServiceRV.makeGone()
+                    } else {
                         val adapter = ServiceWithFeeAdapter(
                             reservationServicesWithFee,
                             isServiceNameInList = { false },
