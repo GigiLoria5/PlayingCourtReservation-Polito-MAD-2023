@@ -13,6 +13,8 @@ interface UserRepository {
 
     suspend fun getUserInformationById(userId: String): UiState<User>
 
+    suspend fun getUserInformationByUsername(username: String): UiState<User?>
+
     suspend fun getAllUsers(): UiState<List<User>>
 
     suspend fun updateCurrentUserInformation(updatedUserInformation: User): UiState<Unit>

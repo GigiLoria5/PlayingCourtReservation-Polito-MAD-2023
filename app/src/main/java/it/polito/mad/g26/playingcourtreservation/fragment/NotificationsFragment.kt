@@ -110,15 +110,17 @@ class NotificationsFragment : Fragment(R.layout.notification_fragment) {
             viewModel.loadingStateReservation.observe(viewLifecycleOwner) { state ->
                 when (state) {
                     is UiState.Loading -> {
-                        // TODO: Add loading animation
+                        notificationsShimmerView.startShimmerRVAnimation(notificationsRV)
                     }
 
                     is UiState.Failure -> {
+                        notificationsShimmerView.stopShimmerRVAnimation(notificationsRV)
                         toast(state.error ?: "Reservation no longer available")
                         viewModel.setNotificationAsRead(viewModel.notifications[position].id)
                     }
 
                     is UiState.Success -> {
+                        notificationsShimmerView.stopShimmerRVAnimation(notificationsRV)
                         viewModel.setNotificationAsRead(viewModel.notifications[position].id)
                         val action = NotificationsFragmentDirections
                             .actionNotificationFragmentToReservationDetailsFragment2(reservationId)

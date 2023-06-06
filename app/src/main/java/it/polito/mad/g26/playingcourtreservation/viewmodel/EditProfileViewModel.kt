@@ -43,6 +43,19 @@ class EditProfileViewModel @Inject constructor(
                 _updateState.value = UiState.Failure("Please make changes before saving")
                 return@launch
             }
+            // Check if username is unique
+            val userWithUsernameState = userRepository
+                .getUserInformationByUsername(updatedUserInformation.username)
+            if (userWithUsernameState is UiState.Failure) {
+                _updateState.value = userWithUsernameState
+                return@launch
+            }
+            val userWithUsername = (userWithUsernameState as UiState.Success).result
+            if (userWithUsername != null && userWithUsername.id != updatedUserInformation.id) {
+                _updateState.value =
+                    UiState.Failure("A user already exists with this username, choose another one")
+                return@launch
+            }
             // Update information and eventually avatar
             val deferredUserInfoUpdateState =
                 async { userRepository.updateCurrentUserInformation(updatedUserInformation) }
