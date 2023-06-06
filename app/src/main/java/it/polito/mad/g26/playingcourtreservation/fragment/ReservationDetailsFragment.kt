@@ -403,19 +403,31 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         } else {
                             //USER-> button to ask to join and become requester
                             viewReservationButtons.removeAllViews()
-                            val inflater = LayoutInflater.from(requireContext())
-                            val viewAsk = inflater.inflate(
-                                R.layout.reservation_details_user_button,
-                                viewReservationButtons,
-                                false
-                            )
-                            val askButton =
-                                viewAsk.findViewById<MaterialButton>(R.id.reservation_details_ask_button)
-                            viewReservationButtons.addView(viewAsk)
-                            askButton.setOnClickListener {
-                                viewModel.addRequester(currentUser.id)
+                            if (participants.size < maxParticipants) {
+                                val inflater = LayoutInflater.from(requireContext())
+                                val viewAsk = inflater.inflate(
+                                    R.layout.reservation_details_user_button,
+                                    viewReservationButtons,
+                                    false
+                                )
+                                val askButton =
+                                    viewAsk.findViewById<MaterialButton>(R.id.reservation_details_ask_button)
+                                viewReservationButtons.addView(viewAsk)
+                                askButton.setOnClickListener {
+                                    viewModel.addRequester(currentUser.id)
+                                }
+                            } else {
+                                val inflater = LayoutInflater.from(requireContext())
+                                val viewFull = inflater.inflate(
+                                    R.layout.reservation_details_requester_button,
+                                    viewReservationButtons,
+                                    false
+                                )
+                                viewReservationButtons.addView(viewFull)
+                                val removeButton =
+                                    viewFull.findViewById<MaterialButton>(R.id.reservation_details_ask_button)
+                                removeButton.text = getString(R.string.match_already_full)
                             }
-
                         }
                         return@observe
                     }

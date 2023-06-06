@@ -107,6 +107,7 @@
     <string name="request_sent_button">Join request sent</string>
     <string name="participants_concatenate_title">Participants %1$s/%2$s</string>
     <string name="role_and_age_concatenation">%1$s, %2$s y.o.</string>
+    <string name="match_already_full">Match is already full</string>
     <!-- Edit reservations details-->
     <string name="edit_reservation_details">Edit Reservation</string>
     <string name="edit_date_time">Edit Date/time</string>
