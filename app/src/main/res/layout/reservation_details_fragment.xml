@@ -48,7 +48,8 @@
                     app:layout_constraintEnd_toStartOf="@id/sportCenterInfoGL"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:backgroundTint="@color/green_500">
+                    android:backgroundTint="@color/green_500"
+                    app:cardElevation="0dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/sportCenterDataCL"
