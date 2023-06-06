@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 
                     R.id.searchCourtsFragment -> lockOrientationAndHideNav()
 
-                    R.id.courtReviewsFragment -> lockOrientationAndShowNav()
+                    R.id.courtReviewsFragment -> lockOrientationAndHideNav()
 
                     // Reservations
                     R.id.reservationsFragment -> {
