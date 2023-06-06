@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                     )
 
                     // Notifications
-                    R.id.notificationFragment -> lockOrientationAndShowNav()
+                    R.id.notificationFragment -> lockOrientationAndHideNav()
                 }
             }
         }
