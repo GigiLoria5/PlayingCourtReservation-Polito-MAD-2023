@@ -43,4 +43,10 @@
     <dimen name="sport_center_name">19sp</dimen>
     <dimen name="sport_center_secondary_info">16sp</dimen>
     <fraction name="logo_background_scale">0.8</fraction>
+
+    <!-- invite users -->
+    <dimen name="user_card_vertical_space">4dp</dimen>
+    <dimen name="user_card_vertical_padding">5dp</dimen>
+    <dimen name="user_filter_info">16sp</dimen>
+
 </resources>

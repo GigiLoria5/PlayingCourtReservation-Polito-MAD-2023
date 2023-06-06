@@ -25,7 +25,7 @@
         android:id="@+id/modify_reservation_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/green_700"
+        android:backgroundTint="@color/green_500"
         android:text="@string/edit_reservation_button"
         android:textColor="@color/white"
         app:cornerRadius="16dp"

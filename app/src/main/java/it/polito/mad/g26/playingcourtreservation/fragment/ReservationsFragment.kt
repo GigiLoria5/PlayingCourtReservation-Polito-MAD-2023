@@ -2,8 +2,6 @@ package it.polito.mad.g26.playingcourtreservation.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -33,10 +31,11 @@ import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
 import com.kizitonwose.calendar.view.WeekCalendarView
 import com.kizitonwose.calendar.view.WeekDayBinder
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.adapter.ReservationsAdapter
 import it.polito.mad.g26.playingcourtreservation.model.Reservation
-import it.polito.mad.g26.playingcourtreservation.model.ReservationWithDetails
+import it.polito.mad.g26.playingcourtreservation.util.UiState
 import it.polito.mad.g26.playingcourtreservation.util.VerticalSpaceItemDecoration
 import it.polito.mad.g26.playingcourtreservation.util.displayDay
 import it.polito.mad.g26.playingcourtreservation.util.displayText
@@ -48,26 +47,27 @@ import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setTextColorRes
 import it.polito.mad.g26.playingcourtreservation.util.setupActionBar
 import it.polito.mad.g26.playingcourtreservation.util.showActionBar
-import it.polito.mad.g26.playingcourtreservation.util.startShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.util.stopShimmerAnimation
-import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationWithDetailsVM
+import it.polito.mad.g26.playingcourtreservation.util.startShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.stopShimmerRVAnimation
+import it.polito.mad.g26.playingcourtreservation.util.toast
+import it.polito.mad.g26.playingcourtreservation.viewmodel.ReservationsViewModel
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Calendar.MONTH
 import java.util.Calendar.WEEK_OF_MONTH
 
-
+@AndroidEntryPoint
 class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
-    private val reservationWithDetailsVM by viewModels<ReservationWithDetailsVM>()
+    private val viewModel by viewModels<ReservationsViewModel>()
 
     private val reservationsAdapter = ReservationsAdapter()
-    private val reservations = mutableMapOf<LocalDate, LiveData<List<ReservationWithDetails>>>()
+    private val reservations = mutableMapOf<LocalDate, LiveData<List<Reservation>>>()
 
     private val today = LocalDate.now()
     private var selectedDate: LocalDate = today
-    private val reservationDatePattern = Reservation.getReservationDatePattern()
+    private val reservationDatePattern = Reservation.getDatePattern()
     private val selectionFormatter = DateTimeFormatter.ofPattern("EEEE, d MMM yyyy")
     private var calendarViewActive = WEEK_OF_MONTH
 
@@ -107,9 +107,6 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         weekCalendarView.scrollToDate(selectedDate)
         monthCalendarView.setup(startMonth, endMonth, firstDayOfWeekFromLocale())
         monthCalendarView.scrollToMonth(currentMonth)
-
-        // Start Shimmer loading
-        shimmerFrameLayout.startShimmerAnimation(reservationsRv)
 
         // Current Date Selected Text
         selectedDateTextView.text = selectionFormatter.format(selectedDate)
@@ -152,26 +149,37 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
         }
 
         // Get All Reservations
-        reservationWithDetailsVM.reservationWithDetails.observe(viewLifecycleOwner) {
-            reservations.clear()
-            it.forEach { reservationWithDetails ->
-                val localDate = LocalDate.parse(
-                    reservationWithDetails.reservation.date,
-                    DateTimeFormatter.ofPattern(reservationDatePattern)
-                )
-                val currentList = reservations[localDate]?.value ?: emptyList()
-                val updatedList = MutableLiveData(currentList + reservationWithDetails)
-                reservations[localDate] = updatedList
-                if (currentList.isNotEmpty()) weekCalendarView.notifyDateChanged(localDate) // To show dotView
+        viewModel.loadUserReservation()
+        viewModel.loadingState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is UiState.Loading -> {
+                    shimmerFrameLayout.startShimmerRVAnimation(reservationsRv)
+                }
+
+                is UiState.Failure -> {
+                    shimmerFrameLayout.stopShimmerRVAnimation(reservationsRv)
+                    toast(state.error ?: "Unable to get user reservations")
+                }
+
+                is UiState.Success -> {
+                    shimmerFrameLayout.stopShimmerRVAnimation(reservationsRv)
+                    reservations.clear()
+                    viewModel.reservations.forEach { reservation ->
+                        val localDate = LocalDate.parse(
+                            reservation.date,
+                            DateTimeFormatter.ofPattern(reservationDatePattern)
+                        )
+                        val currentList = reservations[localDate]?.value ?: emptyList()
+                        val updatedList = MutableLiveData(currentList + reservation)
+                        reservations[localDate] = updatedList
+                        if (currentList.isNotEmpty()) weekCalendarView.notifyDateChanged(localDate) // To show dotView
+                    }
+                    isSetupFinished = true
+                    configureBinders()
+                    updateSelectedDate(selectedDate) // Force update
+                    updateAdapterForDate(selectedDate)
+                }
             }
-            isSetupFinished = true
-            configureBinders()
-            updateSelectedDate(selectedDate) // Force update
-            updateAdapterForDate(selectedDate)
-            // Stop Shimmer loading
-            Handler(Looper.getMainLooper()).postDelayed({
-                shimmerFrameLayout.stopShimmerAnimation(reservationsRv)
-            }, 500)
         }
 
         // Set Up Reservations RecyclerView
@@ -217,7 +225,10 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateAdapterForDate(date: LocalDate) {
-        reservationsAdapter.updateData(reservations[date]?.value ?: emptyList())
+        reservationsAdapter.updateData(
+            reservations[date]?.value ?: listOf(),
+            viewModel.sportCenters
+        )
         reservationsAdapter.notifyDataSetChanged()
     }
 
@@ -333,6 +344,7 @@ class ReservationsFragment : Fragment(R.layout.reservations_fragment) {
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         showActionBar(activity)

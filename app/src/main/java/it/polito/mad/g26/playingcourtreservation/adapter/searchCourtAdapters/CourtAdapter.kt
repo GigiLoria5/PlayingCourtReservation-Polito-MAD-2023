@@ -10,41 +10,45 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import it.polito.mad.g26.playingcourtreservation.R
-import it.polito.mad.g26.playingcourtreservation.model.CourtWithDetails
-import it.polito.mad.g26.playingcourtreservation.model.custom.CourtReviewsSummary
+import it.polito.mad.g26.playingcourtreservation.enums.CourtStatus
+import it.polito.mad.g26.playingcourtreservation.model.Court
+import it.polito.mad.g26.playingcourtreservation.model.Reservation
+import it.polito.mad.g26.playingcourtreservation.model.Review
+import it.polito.mad.g26.playingcourtreservation.model.avg
 
 class CourtAdapter(
-    private var collection: List<CourtWithDetails>,
-    private var reviews: List<CourtReviewsSummary>,
-    private val isCourtAvailable: (Int) -> Boolean,
-    private val navigateToReviews: (Int) -> Unit,
-    private val navigateToChooseServices: (Int, String, Float, String) -> Unit
+    private var collection: List<Court>,
+    private val sportCenterId: String,
+    private var reviews: HashMap<String, List<Review>>,
+    private var reservations: HashMap<String, Reservation?>,
+    private val navigateToReviews: (String, String) -> Unit,
+    private val navigateToReservationDetails: (String) -> Unit,
+    private val navigateToCompleteReservation: (String, String, Float, String) -> Unit
 ) :
     RecyclerView.Adapter<CourtAdapter.CourtViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourtViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.search_courts_court_item, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.search_courts_court_item, parent, false)
         return CourtViewHolder(view)
     }
 
-
     override fun onBindViewHolder(holder: CourtViewHolder, position: Int) {
         val court = collection[position]
-        val courtReviews = reviews.find { it.courtId == court.court.id } ?: CourtReviewsSummary(
-            court.court.id,
-            0.0,
-            0
-        )
-        holder.bind(collection[position], courtReviews)
+        val courtReviews = reviews[court.id]!! // Each court has been added to the map
+        val courtReservation = reservations[court.id]
+        holder.bind(collection[position], courtReviews, courtReservation)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateCollection(
-        updatedCollection: List<CourtWithDetails>,
-        updatedReviews: List<CourtReviewsSummary>
+        updatedCollection: List<Court>,
+        updatedReviews: HashMap<String, List<Review>>,
+        updatedReservations: HashMap<String, Reservation?>
     ) {
         this.collection = updatedCollection
         this.reviews = updatedReviews
+        this.reservations = updatedReservations
         notifyDataSetChanged()
     }
 
@@ -96,47 +100,85 @@ class CourtAdapter(
             }
         }
 
-        fun bind(courtWithDetails: CourtWithDetails, courtReviews: CourtReviewsSummary) {
+        fun bind(court: Court, courtReviews: List<Review>, courtReservation: Reservation?) {
             courtReviewsTV.text = itemView.context.getString(
                 R.string.reviews_summary,
-                String.format("%.2f", courtReviews.avg),
-                courtReviews.count.toString()
+                String.format("%.2f", courtReviews.avg()),
+                courtReviews.size.toString()
             )
-            courtName.text = courtWithDetails.court.name
-            courtType.text = courtWithDetails.sport.name
-            courtPrice.text = itemView.context.getString(
-                R.string.hour_charge_court_short,
-                String.format("%.2f", courtWithDetails.court.hourCharge)
-            )
+            courtName.text = court.name
+            courtType.text = court.sport
 
-            if (courtReviews.count > 0) {
+            val numberOfRequiredParticipants = Court.getSportTotParticipants(court.sport)
+            val numberOfCurrentParticipants =
+                (courtReservation?.participants?.size ?: 0) + 1 //1 is the organizer
+            val numberOfMissingParticipants =
+                numberOfRequiredParticipants - numberOfCurrentParticipants
+
+            val courtStatus = when {
+                courtReservation == null -> CourtStatus.AVAILABLE
+                numberOfMissingParticipants > 0 -> CourtStatus.JOINABLE
+                else -> CourtStatus.UNAVAILABLE
+            }
+
+            if (courtReviews.isNotEmpty()) {
+                courtMCV.isClickable = true
                 courtReviewsMCV.setOnClickListener {
-                    navigateToReviews(courtWithDetails.court.id)
+                    navigateToReviews(court.id, sportCenterId)
                 }
+                courtReviewsMCV.alpha=1f
             } else {
                 courtReviewsMCV.isClickable = false
+                courtReviewsMCV.setOnClickListener(null)
                 courtReviewsMCV.alpha = 0.7f
             }
 
-            when (isCourtAvailable(courtWithDetails.court.id)) {
-                true -> {
+            when (courtStatus) {
+                CourtStatus.AVAILABLE -> {
                     setColors(R.color.grey_light_2, R.color.custom_black, R.color.grey, 1f)
+                    courtPrice.text = itemView.context.getString(
+                        R.string.hour_charge_court_short,
+                        String.format("%.2f", court.hourCharge)
+                    )
                     courtAvailability.text =
-                        itemView.context.getString(R.string.court_available)
+                        itemView.context.getString(R.string.court_available_to_reserve)
+                    courtMCV.isClickable = true
                     courtMCV.setOnClickListener {
-                        val court = courtWithDetails.court
-                        val sport = courtWithDetails.sport
-                        navigateToChooseServices(
-                            court.id, court.name, court.hourCharge, sport.name
+                        val sport = court.sport
+                        navigateToCompleteReservation(
+                            court.id, court.name, court.hourCharge, sport
                         )
                     }
                 }
 
-                false -> {
+                CourtStatus.JOINABLE -> {
+                    setColors(R.color.grey_light_2, R.color.custom_black, R.color.grey, 1f)
+                    courtPrice.text = itemView.context.getString(
+                        R.string.hour_charge_court_short,
+                        String.format("%.2f", courtReservation!!.amount)
+                    )
+                    courtAvailability.text =
+                        itemView.context.getString(
+                            R.string.court_available_to_join,
+                            numberOfMissingParticipants.toString(),
+                            if (numberOfMissingParticipants != 1) "s" else ""
+                        )
+                    courtMCV.isClickable = true
+                    courtMCV.setOnClickListener {
+                        navigateToReservationDetails(courtReservation!!.id)
+                    }
+                }
+
+                CourtStatus.UNAVAILABLE -> {
+                    courtPrice.text = itemView.context.getString(
+                        R.string.hour_charge_court_short,
+                        String.format("%.2f", court.hourCharge)
+                    )
                     setColors(R.color.grey_light_2, R.color.custom_black, R.color.grey, 0.7f)
                     courtAvailability.text =
                         itemView.context.getString(R.string.court_not_available)
                     courtMCV.elevation = 0F
+                    courtMCV.setOnClickListener(null)
                     courtMCV.isClickable = false
                 }
             }

@@ -5,35 +5,42 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 import it.polito.mad.g26.playingcourtreservation.R
+import it.polito.mad.g26.playingcourtreservation.fragment.ShowProfileFragment
 import it.polito.mad.g26.playingcourtreservation.util.isItemChecked
 import it.polito.mad.g26.playingcourtreservation.util.makeGone
 import it.polito.mad.g26.playingcourtreservation.util.makeVisible
 import it.polito.mad.g26.playingcourtreservation.util.setCheckedMenuItem
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNav: BottomNavigationView
+    private lateinit var navHostFragment: NavHostFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Setup late init variables
         bottomNav = findViewById(R.id.bottomNavigationView)
-        val navController = (supportFragmentManager.findFragmentById(R.id.frame_layout)
-                as NavHostFragment).navController
+        navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.frame_layout) as NavHostFragment
 
         // Handle Navigation between main fragments
+        val navController = navHostFragment.navController
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> navigateToFragment(
                     navController,
                     R.id.home,
-                    R.id.searchSportCentersHomeFragment
+                    R.id.homePageFragment
                 )
 
                 R.id.reservations -> navigateToFragment(
@@ -56,18 +63,18 @@ class MainActivity : AppCompatActivity() {
             Handler(Looper.getMainLooper()).post {
                 when (destination.id) {
                     // Home
-                    R.id.searchSportCentersHomeFragment -> {
+                    R.id.homePageFragment -> {
                         requestedOrientation = SCREEN_ORIENTATION_LOCKED
                         bottomNav.setCheckedMenuItem(R.id.home)
                     }
 
-                    R.id.searchSportCentersActionFragment -> lockOrientationAndHideNav()
+                    R.id.searchCitiesFragment -> lockOrientationAndHideNav()
 
                     R.id.searchSportCentersFragment -> lockOrientationAndShowNav()
 
                     R.id.searchCourtsFragment -> lockOrientationAndHideNav()
 
-                    R.id.courtReviewsFragment -> lockOrientationAndShowNav()
+                    R.id.courtReviewsFragment -> lockOrientationAndHideNav()
 
                     // Reservations
                     R.id.reservationsFragment -> {
@@ -75,7 +82,9 @@ class MainActivity : AppCompatActivity() {
                         bottomNav.setCheckedMenuItem(R.id.reservations)
                     }
 
-                    R.id.reservationDetailsFragment -> lockOrientationAndShowNav()
+                    R.id.reservationDetailsFragment -> lockOrientationAndHideNav()
+
+                    R.id.inviteUsersFragment -> lockOrientationAndHideNav()
 
                     R.id.modifyReservationDetailsFragment -> lockOrientationAndHideNav()
 
@@ -83,12 +92,23 @@ class MainActivity : AppCompatActivity() {
                     R.id.showProfileFragment -> {
                         requestedOrientation = SCREEN_ORIENTATION_UNSPECIFIED
                         bottomNav.setCheckedMenuItem(R.id.profile)
+                        val fragment = navHostFragment.childFragmentManager
+                            .fragments
+                            .firstOrNull() as? ShowProfileFragment
+                        val shouldShowBottomNav = fragment?.isCurrentUserProfile ?: true
+                        if (shouldShowBottomNav)
+                            bottomNav.makeVisible()
+                        else if (bottomNav.visibility == View.VISIBLE)
+                            bottomNav.makeGone()
                     }
 
                     R.id.editProfileFragment -> setOrientationAndVisibility(
                         SCREEN_ORIENTATION_UNSPECIFIED,
                         false
                     )
+
+                    // Notifications
+                    R.id.notificationFragment -> lockOrientationAndHideNav()
                 }
             }
         }

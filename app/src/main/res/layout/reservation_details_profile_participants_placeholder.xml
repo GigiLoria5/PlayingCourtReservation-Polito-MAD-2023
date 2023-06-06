@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/user_card_vertical_space">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/userMCV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/grey_light_2"
+        app:cardCornerRadius="@dimen/corner_radius"
+        app:cardElevation="@dimen/standard_elevation"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintEnd_toStartOf="@id/userMCV1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/user_card_vertical_padding"
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/page_external_space">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/avatar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@color/loading"
+                android:contentDescription="@string/avatar_description"
+                android:padding="@dimen/page_external_space"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/circular"
+                app:strokeColor="@color/black"
+                app:strokeWidth="0dp" />
+
+
+            <TextView
+                android:id="@+id/user_nameTV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/loading"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/custom_black"
+                app:layout_constraintBottom_toTopOf="@id/user_roleAndAgeTV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/user_roleAndAgeTV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/loading"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/grey"
+                app:layout_constraintBottom_toTopOf="@id/user_cityTV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar"
+                app:layout_constraintTop_toBottomOf="@id/user_nameTV" />
+
+
+            <TextView
+                android:id="@+id/user_cityTV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/loading"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/grey"
+                app:layout_constraintBottom_toTopOf="@id/ratingRB"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar"
+                app:layout_constraintTop_toBottomOf="@id/user_roleAndAgeTV" />
+
+            <TextView
+                android:id="@+id/ratingRB"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/loading"
+                android:contentDescription="@string/rating_description"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar"
+                app:layout_constraintTop_toBottomOf="@id/user_cityTV" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/userMCV1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/grey_light_2"
+        app:cardCornerRadius="@dimen/corner_radius"
+        app:cardElevation="@dimen/standard_elevation"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/userMCV"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/user_card_vertical_padding"
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/page_external_space">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/avatar1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@color/loading"
+                android:contentDescription="@string/avatar_description"
+                android:padding="@dimen/page_external_space"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/circular"
+                app:strokeColor="@color/black"
+                app:strokeWidth="0dp" />
+
+
+            <TextView
+                android:id="@+id/user_nameTV1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/loading"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/custom_black"
+                app:layout_constraintBottom_toTopOf="@id/user_roleAndAgeTV1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/user_roleAndAgeTV1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/loading"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/grey"
+                app:layout_constraintBottom_toTopOf="@id/user_cityTV1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar1"
+                app:layout_constraintTop_toBottomOf="@id/user_nameTV1" />
+
+
+            <TextView
+                android:id="@+id/user_cityTV1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/loading"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/grey"
+                app:layout_constraintBottom_toTopOf="@id/ratingRB1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar1"
+                app:layout_constraintTop_toBottomOf="@id/user_roleAndAgeTV1" />
+
+            <TextView
+                android:id="@+id/ratingRB1"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/loading"
+                android:contentDescription="@string/rating_description"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/avatar1"
+                app:layout_constraintTop_toBottomOf="@id/user_cityTV1" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

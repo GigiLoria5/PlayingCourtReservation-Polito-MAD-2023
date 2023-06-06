@@ -9,9 +9,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.g26.playingcourtreservation.R
 import it.polito.mad.g26.playingcourtreservation.model.Review
+import it.polito.mad.g26.playingcourtreservation.model.User
+import it.polito.mad.g26.playingcourtreservation.util.timestampToDate
 
 class ReviewsAdapter(
-    private var reviews: List<Review>
+    private var reviews: List<Review>,
+    private var userInformationMap: HashMap<String, User>
 ) : RecyclerView.Adapter<ReviewsAdapter.ReviewsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewsViewHolder {
@@ -25,8 +28,9 @@ class ReviewsAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateReviews(updatedCollection: List<Review>) {
+    fun updateReviews(updatedCollection: List<Review>, userInformationMap: HashMap<String, User>) {
         this.reviews = updatedCollection
+        this.userInformationMap = userInformationMap
         notifyDataSetChanged()
     }
 
@@ -36,11 +40,13 @@ class ReviewsAdapter(
         private val date = view.findViewById<TextView>(R.id.reviewDateTV)
         private val rating = view.findViewById<RatingBar>(R.id.rating)
         private val text = view.findViewById<TextView>(R.id.reviewTextTV)
+        private val username = view.findViewById<TextView>(R.id.usernameTV)
 
         fun bind(review: Review) {
-            date.text = review.date
+            date.text = timestampToDate(review.timestamp)
             rating.rating = review.rating
             text.text = review.text
+            username.text = userInformationMap[review.userId]!!.username
         }
     }
 }

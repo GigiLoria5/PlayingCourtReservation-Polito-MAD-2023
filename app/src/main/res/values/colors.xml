@@ -17,6 +17,7 @@
     <color name="yellow">#FFDF37</color>
     <color name="red">#FF4F37</color>
     <color name="red_dark">#B00020</color>
+    <color name="invisible">#00000000</color>
     <!-- Sport Colors -->
     <color name="sport_5_aside_football">#006400</color>
     <color name="sport_8_aside_football">#8B0000</color>
@@ -25,4 +26,5 @@
     <color name="sport_futsal">#333333</color>
     <!-- Profile Colors -->
     <color name="border_grey_light">#AAABAE</color>
+    <color name="custom_blue">#6200ee</color>
 </resources>
