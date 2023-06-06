@@ -65,7 +65,7 @@ class CourtReviewsViewModel @Inject constructor(
             _loadingState.value = reviewsState
             return@launch
         }
-        _courtReviews = (reviewsState as UiState.Success).result
+        _courtReviews = (reviewsState as UiState.Success).result.sortedByDescending { it.timestamp }
         // For each reviews get user information
         val deferredUsers = _courtReviews.map { review ->
             async {
