@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit
 data class User(
     val id: String = "",
     val username: String = "",
+    var usernameLowercase: String = "",
     val fullname: String = "Anonymous User",
     val birthDate: String? = null,
     val gender: String? = null,

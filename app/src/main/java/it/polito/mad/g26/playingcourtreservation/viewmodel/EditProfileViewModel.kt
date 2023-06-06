@@ -51,7 +51,7 @@ class EditProfileViewModel @Inject constructor(
                 return@launch
             }
             val userWithUsername = (userWithUsernameState as UiState.Success).result
-            if (userWithUsername != null) {
+            if (userWithUsername != null && userWithUsername.id != updatedUserInformation.id) {
                 _updateState.value =
                     UiState.Failure("A user already exists with this username, choose another one")
                 return@launch

@@ -202,6 +202,7 @@ class EditProfileFragment : Fragment(R.layout.edit_profile_fragment) {
                     R.id.confirm_menu_item -> {
                         val updatedUserInformation = viewModel.userInformation.copy(
                             username = usernameEditText.text.toString(),
+                            usernameLowercase = usernameEditText.text.toString().lowercase(),
                             fullname = fullNameEditText.text.toString(),
                             location = locationEditText.text.toString(),
                             gender = genderAutoComplete.text.toString(),

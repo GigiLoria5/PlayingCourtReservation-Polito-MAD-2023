@@ -31,7 +31,8 @@ class UserRepositoryImpl @Inject constructor(
             Log.d(TAG, "signInAnonymously: success")
             // Add user information to Firestore's collection
             val uid = result.user!!.uid
-            val user = User(id = uid, username = User.generateUsername(uid))
+            val username = User.generateUsername(uid)
+            val user = User(id = uid, username = username, usernameLowercase = username.lowercase())
             db.collection(FirestoreCollections.USERS)
                 .document(uid)
                 .set(user).await()
@@ -92,7 +93,7 @@ class UserRepositoryImpl @Inject constructor(
         return try {
             Log.d(TAG, "Performing getUserInformationByUsername for user with username $username")
             val result = db.collection(FirestoreCollections.USERS)
-                .whereEqualTo("username", username)
+                .whereEqualTo("usernameLowercase", username.lowercase())
                 .get().await()
             Log.d(
                 TAG,
@@ -134,6 +135,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun updateCurrentUserInformation(updatedUserInformation: User): UiState<Unit> {
         return try {
             val userId = currentUser!!.uid
+            updatedUserInformation.usernameLowercase = updatedUserInformation.username.lowercase()
             Log.d(TAG, "Performing updateCurrentUserInformation for user with id $userId")
             Log.d(TAG, "$updatedUserInformation")
             if (userId != updatedUserInformation.id)
