@@ -138,7 +138,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/card_circle">
 
-        <!-- TODO QUANDO C'è LA V E NON IL +, FAI BACKGROUND VERDE E ICONA GREYLIGHT2-->
         <ImageView
             android:id="@+id/customRemoveIconIV"
             android:layout_width="match_parent"

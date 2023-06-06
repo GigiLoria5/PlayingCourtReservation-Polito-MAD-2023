@@ -132,7 +132,6 @@ class ReservationDetailsViewModel @Inject constructor(
 
                 is UiState.Failure -> {
                     _loadingState.value = state
-                    // TODO: return@launch?
                 }
 
                 else -> {
@@ -156,7 +155,6 @@ class ReservationDetailsViewModel @Inject constructor(
 
                 is UiState.Failure -> {
                     _loadingState.value = state
-                    // TODO: return@launch?
                 }
 
                 else -> {
@@ -429,7 +427,6 @@ class ReservationDetailsViewModel @Inject constructor(
             _deleteState.value = state
             return@launch
         }
-        //TODO check returning
         //Send notification to invitees and requesters
         val requesters = reservation.requests
         val deferredRequestersNotifications = requesters.map { requesterId ->
