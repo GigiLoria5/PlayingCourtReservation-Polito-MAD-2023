@@ -73,6 +73,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     private lateinit var topBarMCV: MaterialCardView
     private lateinit var shimmerServiceRV: ShimmerFrameLayout
     private lateinit var serviceRV: RecyclerView
+    private lateinit var shimmerRequesterRV: ShimmerFrameLayout
+    private lateinit var requesterRecyclerView: RecyclerView
 
     // Action is performing
     private var reviewDeleteInProgress = false
@@ -97,6 +99,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
 
         // Setup late init variables and visual components
+        shimmerRequesterRV = view.findViewById(R.id.shimmerRequesterRV)
         shimmerServiceRV = view.findViewById(R.id.shimmerServicesRV)
         shimmerTopBarImage = view.findViewById(R.id.shimmerImageMCV)
         shimmerTopBar = view.findViewById(R.id.shimmerTopBar)
@@ -116,7 +119,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         val serviceTitle = view.findViewById<TextView>(R.id.service_title)
         serviceRV = view.findViewById(R.id.service_list)
         participantsRecyclerView = view.findViewById(R.id.player_list)
-        val requesterRecyclerView = view.findViewById<RecyclerView>(R.id.requester_list)
+        requesterRecyclerView = view.findViewById<RecyclerView>(R.id.requester_list)
         val requestersLayout = view.findViewById<ConstraintLayout>(R.id.requester_layout)
         participantsTitle = view.findViewById(R.id.player_title)
         val inviteButton = view.findViewById<MaterialButton>(R.id.search_players_button)
@@ -169,6 +172,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
                     shimmerTopBar.startShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.startShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    shimmerRequesterRV.startShimmerRVAnimation(requesterRecyclerView)
                 }
 
                 is UiState.Failure -> {
@@ -178,6 +182,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                     shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
+                    shimmerRequesterRV.stopShimmerRVAnimation(requesterRecyclerView)
                     shimmerFrameLayoutRV.makeGone()
                     toast(state.error ?: "Unable to get reservation details")
                 }
@@ -189,6 +194,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                     shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
+                    shimmerRequesterRV.stopShimmerRVAnimation(requesterRecyclerView)
                     shimmerFrameLayoutRV.makeGone()
                     if (reviewDeleteInProgress) { // It means the delete was successful
                         reviewDeleteInProgress = false
@@ -472,6 +478,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     rowTitleRVShimmer.startShimmerTextAnimation(participantsTitle)
                     shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
                     shimmerTopBar.startShimmerMCVAnimation(topBarMCV)
+                    shimmerRequesterRV.startShimmerRVAnimation(requesterRecyclerView)
                     shimmerTopBarImage.startShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                 }
 
@@ -482,6 +489,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                     shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
+                    shimmerRequesterRV.stopShimmerRVAnimation(requesterRecyclerView)
                     shimmerFrameLayoutRV.makeGone()
                     toast(state.error ?: "Unable to delete reservation")
                 }
@@ -493,6 +501,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                     shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
+                    shimmerRequesterRV.stopShimmerRVAnimation(requesterRecyclerView)
                     shimmerFrameLayoutRV.makeGone()
                     findNavController().popBackStack()
                     toast("Reservation was successfully deleted")

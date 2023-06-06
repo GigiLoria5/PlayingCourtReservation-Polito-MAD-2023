@@ -455,7 +455,6 @@
 
                             <include layout="@layout/reservation_details_profile_participants_placeholder" />
 
-                            <include layout="@layout/reservation_details_profile_participants_placeholder" />
 
                         </LinearLayout>
                     </com.facebook.shimmer.ShimmerFrameLayout>
@@ -472,7 +471,7 @@
                 app:layout_constraintTop_toBottomOf="@id/player_layout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="gone">
+                android:visibility="visible">
 
 
                 <TextView
@@ -501,6 +500,30 @@
                     android:nestedScrollingEnabled="false">
 
                 </androidx.recyclerview.widget.RecyclerView>
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerRequesterRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/requester_title"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:shimmer_repeat_mode="restart"
+                    app:shimmer_shape="radial">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="0dp">
+
+                        <include layout="@layout/reservation_details_profile_requester_placeholder" />
+
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
