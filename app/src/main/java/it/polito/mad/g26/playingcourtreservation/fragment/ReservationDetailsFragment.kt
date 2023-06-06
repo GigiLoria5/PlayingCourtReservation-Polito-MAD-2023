@@ -73,10 +73,8 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
     private lateinit var topBarMCV: MaterialCardView
     private lateinit var shimmerServiceRV: ShimmerFrameLayout
     private lateinit var serviceRV: RecyclerView
-    private lateinit var shimmerRequesterRV: ShimmerFrameLayout
     private lateinit var requesterRecyclerView: RecyclerView
-    private lateinit var rowTitleRequesterRVShimmer: ShimmerFrameLayout
-    private lateinit var requestersTitle: TextView
+    private lateinit var requestersLayout: ConstraintLayout
 
     // Action is performing
     private var reviewDeleteInProgress = false
@@ -101,8 +99,6 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
 
         // Setup late init variables and visual components
-        rowTitleRequesterRVShimmer = view.findViewById(R.id.shimmerRequesterTitle)
-        shimmerRequesterRV = view.findViewById(R.id.shimmerRequesterRV)
         shimmerServiceRV = view.findViewById(R.id.shimmerServicesRV)
         shimmerTopBarImage = view.findViewById(R.id.shimmerImageMCV)
         shimmerTopBar = view.findViewById(R.id.shimmerTopBar)
@@ -123,12 +119,11 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         serviceRV = view.findViewById(R.id.service_list)
         participantsRecyclerView = view.findViewById(R.id.player_list)
         requesterRecyclerView = view.findViewById(R.id.requester_list)
-        val requestersLayout = view.findViewById<ConstraintLayout>(R.id.requester_layout)
+        requestersLayout = view.findViewById(R.id.requester_layout)
         participantsTitle = view.findViewById(R.id.player_title)
         val inviteButton = view.findViewById<MaterialButton>(R.id.search_players_button)
         inviteButtonMCV = view.findViewById(R.id.inviteButtonMCVForShimmer)
         topBarMCV = view.findViewById(R.id.sportCenterDataMCVForShimmer)
-        requestersTitle = view.findViewById(R.id.requester_title)
 
         /* CUSTOM TOOLBAR MANAGEMENT*/
         val customToolBar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.customToolBar)
@@ -170,14 +165,14 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             when (state) {
                 is UiState.Loading -> {
                     shimmerFrameLayoutRV.makeVisible()
-                    rowTitleRequesterRVShimmer.startShimmerTextAnimation(requestersTitle)
                     shimmerFrameLayoutRV.startShimmerRVAnimation(participantsRecyclerView)
                     shimmerServiceRV.startShimmerRVAnimation(serviceRV)
                     rowTitleParticipantRVShimmer.startShimmerTextAnimation(participantsTitle)
                     shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
                     shimmerTopBar.startShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.startShimmerMCVAnimation(sportCenterPhoneNumberMCV)
-                    shimmerRequesterRV.startShimmerRVAnimation(requesterRecyclerView)
+                    requestersLayout.makeGone()
+                    viewReservationButtons.makeInvisible()
                 }
 
                 is UiState.Failure -> {
@@ -187,9 +182,9 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                     shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
-                    shimmerRequesterRV.stopShimmerRVAnimation(requesterRecyclerView)
-                    rowTitleRequesterRVShimmer.stopShimmerTextAnimation(requestersTitle)
                     shimmerFrameLayoutRV.makeGone()
+                    requestersLayout.makeGone()
+                    viewReservationButtons.makeInvisible()
                     toast(state.error ?: "Unable to get reservation details")
                 }
 
@@ -200,8 +195,6 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                     shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
-                    shimmerRequesterRV.stopShimmerRVAnimation(requesterRecyclerView)
-                    rowTitleRequesterRVShimmer.stopShimmerTextAnimation(requestersTitle)
                     shimmerFrameLayoutRV.makeGone()
                     if (reviewDeleteInProgress) { // It means the delete was successful
                         reviewDeleteInProgress = false
@@ -343,6 +336,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                     viewModel.removeAllInviteesAndRequesters()
                             }
                             // Inflate button to edit/delete reservation
+                            viewReservationButtons.makeVisible()
                             val inflater = LayoutInflater.from(requireContext())
                             val viewDeleteAndEdit = inflater.inflate(
                                 R.layout.reservation_details_delete_and_edit_buttons,
@@ -368,6 +362,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         } else if (reservation.participants.contains(currentUser.id)) {
                             //PARTICIPANT-> button to remove itself and send notification
                             viewReservationButtons.removeAllViews()
+                            viewReservationButtons.makeVisible()
                             val inflater = LayoutInflater.from(requireContext())
                             val viewRemoveFromReservation = inflater.inflate(
                                 R.layout.reservation_details_participant_button,
@@ -383,6 +378,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         } else if (reservation.requests.contains(currentUser.id)) {
                             //REQUESTER-> button not clickable already sent invite
                             viewReservationButtons.removeAllViews()
+                            viewReservationButtons.makeVisible()
                             val inflater = LayoutInflater.from(requireContext())
                             val viewRequest = inflater.inflate(
                                 R.layout.reservation_details_requester_button,
@@ -393,6 +389,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         } else if (reservation.invitees.contains(currentUser.id)) {
                             //INVITEES(invited by creator)-> button accept or reject
                             viewReservationButtons.removeAllViews()
+                            viewReservationButtons.makeVisible()
                             val inflater = LayoutInflater.from(requireContext())
                             val viewAcceptOrReject = inflater.inflate(
                                 R.layout.reservation_details_invited_buttons,
@@ -417,6 +414,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                         } else {
                             //USER-> button to ask to join and become requester
                             viewReservationButtons.removeAllViews()
+                            viewReservationButtons.makeVisible()
                             if (participants.size < maxParticipants) {
                                 val inflater = LayoutInflater.from(requireContext())
                                 val viewAsk = inflater.inflate(
@@ -431,6 +429,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                                     viewModel.addRequester(currentUser.id)
                                 }
                             } else {
+                                viewReservationButtons.makeVisible()
                                 val inflater = LayoutInflater.from(requireContext())
                                 val viewFull = inflater.inflate(
                                     R.layout.reservation_details_requester_button,
@@ -480,14 +479,14 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
             when (state) {
                 is UiState.Loading -> {
                     shimmerFrameLayoutRV.makeVisible()
-                    rowTitleRequesterRVShimmer.startShimmerTextAnimation(requestersTitle)
                     shimmerFrameLayoutRV.startShimmerRVAnimation(participantsRecyclerView)
                     shimmerServiceRV.startShimmerRVAnimation(serviceRV)
                     rowTitleParticipantRVShimmer.startShimmerTextAnimation(participantsTitle)
                     shimmerInviteB.startShimmerMCVAnimation(inviteButtonMCV)
                     shimmerTopBar.startShimmerMCVAnimation(topBarMCV)
-                    shimmerRequesterRV.startShimmerRVAnimation(requesterRecyclerView)
                     shimmerTopBarImage.startShimmerMCVAnimation(sportCenterPhoneNumberMCV)
+                    requestersLayout.makeGone()
+                    viewReservationButtons.makeInvisible()
                 }
 
                 is UiState.Failure -> {
@@ -497,9 +496,9 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                     shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
-                    shimmerRequesterRV.stopShimmerRVAnimation(requesterRecyclerView)
-                    rowTitleRequesterRVShimmer.stopShimmerTextAnimation(requestersTitle)
                     shimmerFrameLayoutRV.makeGone()
+                    requestersLayout.makeGone()
+                    viewReservationButtons.makeInvisible()
                     toast(state.error ?: "Unable to delete reservation")
                 }
 
@@ -510,8 +509,6 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
                     shimmerTopBar.stopShimmerMCVAnimation(topBarMCV)
                     shimmerTopBarImage.stopShimmerMCVAnimation(sportCenterPhoneNumberMCV)
                     shimmerServiceRV.stopShimmerRVAnimation(serviceRV)
-                    shimmerRequesterRV.stopShimmerRVAnimation(requesterRecyclerView)
-                    rowTitleRequesterRVShimmer.stopShimmerTextAnimation(requestersTitle)
                     shimmerFrameLayoutRV.makeGone()
                     findNavController().popBackStack()
                     toast("Reservation was successfully deleted")
@@ -525,6 +522,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         if (review == null) {
             reservationReviewMCV.makeInvisible()
             viewReservationButtons.removeAllViews()
+            viewReservationButtons.makeVisible()
             val inflater = LayoutInflater.from(requireContext())
             val viewAddReview = inflater.inflate(
                 R.layout.reservation_details_add_review_button,
@@ -549,6 +547,7 @@ class ReservationDetailsFragment : Fragment(R.layout.reservation_details_fragmen
         }
         // Review found
         viewReservationButtons.removeAllViews()
+        viewReservationButtons.makeVisible()
         val reviewEditButton =
             requireView().findViewById<MaterialButton>(R.id.modifyReviewButton)
         val reviewDeleteButton =
