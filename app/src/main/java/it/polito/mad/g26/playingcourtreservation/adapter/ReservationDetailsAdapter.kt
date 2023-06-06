@@ -1,5 +1,6 @@
 package it.polito.mad.g26.playingcourtreservation.adapter
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +56,8 @@ class ReservationDetailsAdapter(
             is ReservationDetailsViewHolderParticipant -> holder.bind(
                 l[position],
                 sport,
-                userPicture
+                userPicture,
+                position
             )
 
             is ReservationDetailsViewHolderRequester -> holder.bind(l[position], sport, userPicture)
@@ -116,7 +118,7 @@ class ReservationDetailsAdapter(
         private val card = v.findViewById<MaterialCardView>(R.id.userMCV)
         private val avatar = v.findViewById<ShapeableImageView>(R.id.avatar)
 
-        fun bind(u: User, sport: String, userPicture: ByteArray?) {
+        fun bind(u: User, sport: String, userPicture: ByteArray?, position: Int) {
             username.text = u.username
             roleAndAge.text = itemView.context.getString(
                 R.string.role_and_age_concatenation,
@@ -141,6 +143,8 @@ class ReservationDetailsAdapter(
                     )
                 )
             }
+            if (position == 0)
+                username.setTypeface(null, Typeface.BOLD)
         }
     }
 
