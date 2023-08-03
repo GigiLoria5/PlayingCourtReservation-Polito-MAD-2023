@@ -27,9 +27,9 @@ confirmation, as well as cancel or modify an existing reservation. Users can als
 courts or fields based on their quality and facilities.
 
 <p align="center">
-  <img width="200" height="355" src="https://github.com/GigiLoria5/mad2023-G26-PlayingCourtReservation/assets/41837640/b8024500-d24b-4f2b-b897-9c5404b00dff">
-    <img width="200" height="355" src="https://github.com/GigiLoria5/mad2023-G26-PlayingCourtReservation/assets/41837640/26cb249e-18bb-44f9-b0c4-a83bf84cffc9">
-    <img width="200" height="355" src="https://github.com/GigiLoria5/mad2023-G26-PlayingCourtReservation/assets/41837640/87c42106-fdee-443b-8058-6575b60ac76a">
+  <img width="200" height="355" src="https://i.imgur.com/ijWVuXO.png">
+    <img width="200" height="355" src="https://i.imgur.com/mUTUxCU.png">
+    <img width="200" height="355" src="https://i.imgur.com/JDM0AIM.png">
 </p>
 
 ## Notification System, Calendar View, and Inviting New Players
@@ -41,9 +41,9 @@ new players based on specific filters, such as skill level or position, making i
 play with other sports enthusiasts.
 
 <p align="center">
-  <img width="200" height="355" src="https://github.com/GigiLoria5/mad2023-G26-PlayingCourtReservation/assets/41837640/213fabe4-fedb-4cce-baad-e2f1c9f859ea">
-    <img width="200" height="355" src="https://github.com/GigiLoria5/mad2023-G26-PlayingCourtReservation/assets/41837640/a9bf4f54-fc97-4171-bc8c-bc88a65e71a5">
-    <img width="200" height="355" src="https://github.com/GigiLoria5/mad2023-G26-PlayingCourtReservation/assets/41837640/5881fcd3-bf81-494f-b7fd-ce2db53a25e5">
+  <img width="200" height="355" src="https://i.imgur.com/QgVSLrZ.png">
+    <img width="200" height="355" src="https://i.imgur.com/70Vs6W4.png">
+    <img width="200" height="355" src="https://i.imgur.com/mQMXRWD.png">
 </p>
 
 ## User Profile Management
@@ -52,9 +52,9 @@ The app allows users to manage their own profile, choosing the sports they are i
 declaring their own mastery level and achievements.
 
 <p align="center">
-  <img width="200" height="355" src="https://github.com/GigiLoria5/mad2023-G26-PlayingCourtReservation/assets/41837640/5cb8747d-1e2f-426c-ab56-d2c9966356fb">
-    <img width="200" height="355" src="https://github.com/GigiLoria5/mad2023-G26-PlayingCourtReservation/assets/41837640/ab5eb13e-6f8c-4ac2-b851-d1bef0af2791">
-    <img width="200" height="355" src="https://github.com/GigiLoria5/mad2023-G26-PlayingCourtReservation/assets/41837640/74276be9-795c-41dd-ae1b-6b1dfd11786f">
+  <img width="200" height="355" src="https://i.imgur.com/J1mjD6n.png">
+    <img width="200" height="355" src="https://i.imgur.com/D05fDkX.png">
+    <img width="200" height="355" src="https://i.imgur.com/dRK69VM.png">
 </p>
 
 
